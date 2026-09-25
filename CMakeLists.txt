@@ -18,6 +18,8 @@ endif()
 add_library(maxfx_ldb STATIC
     src/maxfx/core/Stream.cpp
     src/maxfx/core/Fs.cpp
+    src/maxfx/script/Script.cpp
+    src/maxfx/levels/Levels.cpp
     src/maxfx/ldb/LdbReader.cpp
     src/maxfx/image/Image.cpp
 )
@@ -25,6 +27,12 @@ target_include_directories(maxfx_ldb PUBLIC src third_party)
 
 add_executable(ldb-dump src/apps/ldb_dump.cpp)
 target_link_libraries(ldb-dump PRIVATE maxfx_ldb)
+
+add_executable(levels-dump src/apps/levels_dump.cpp)
+target_link_libraries(levels-dump PRIVATE maxfx_ldb)
+
+add_executable(levels-test src/apps/levels_test.cpp)
+target_link_libraries(levels-test PRIVATE maxfx_ldb)
 
 if(MAXFX_BUILD_VIEWER)
     find_package(SDL3 CONFIG QUIET)

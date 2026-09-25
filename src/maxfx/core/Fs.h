@@ -23,6 +23,10 @@ std::string executableDir();
 // Non-recursive listing. `extension` is like ".ldb" (case-insensitive).
 std::vector<std::string> listFilesWithExtension(const std::string& dir, const char* extension);
 
+// Read a whole file as binary-safe bytes, then treat as a Latin-1/ASCII text
+// string (MAX-FX scripts are not UTF-8). Throws std::runtime_error on failure.
+std::string readFileText(const std::string& path);
+
 }  // namespace maxfx
 
 #endif  // MAXFX_CORE_FS_H

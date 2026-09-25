@@ -1,4 +1,6 @@
-# Minimal GNU Make build for the parser / dump tool (no SDL required).
+# Minimal GNU Make build for the parsers / dump tools (no SDL required).
+#   make dump     → ldb-dump, levels-dump, levels-test
+#   make test     → run the levels.txt self-test
 # Level viewer:
 #   cmake -S . -B build && cmake --build build
 # (see CMakeLists.txt / README.md)
@@ -7,22 +9,36 @@ CXX      ?= g++
 CXXFLAGS ?= -std=c++11 -O2 -Wall -Wextra -I src -I third_party
 LDFLAGS  ?=
 
-DUMP_SRCS = \
+CORE_SRCS = \
 	src/maxfx/core/Stream.cpp \
 	src/maxfx/core/Fs.cpp \
+	src/maxfx/script/Script.cpp \
+	src/maxfx/levels/Levels.cpp \
 	src/maxfx/ldb/LdbReader.cpp \
-	src/maxfx/image/Image.cpp \
-	src/apps/ldb_dump.cpp
+	src/maxfx/image/Image.cpp
 
-.PHONY: all dump clean
+DUMP_SRCS = $(CORE_SRCS) src/apps/ldb_dump.cpp
+LEVELS_DUMP_SRCS = $(CORE_SRCS) src/apps/levels_dump.cpp
+LEVELS_TEST_SRCS = $(CORE_SRCS) src/apps/levels_test.cpp
+
+.PHONY: all dump test clean
 
 all: dump
 
-dump: ldb-dump
+dump: ldb-dump levels-dump levels-test
 
 ldb-dump: $(DUMP_SRCS)
 	$(CXX) $(CXXFLAGS) -o $@ $(DUMP_SRCS) $(LDFLAGS) -lm
 
+levels-dump: $(LEVELS_DUMP_SRCS)
+	$(CXX) $(CXXFLAGS) -o $@ $(LEVELS_DUMP_SRCS) $(LDFLAGS) -lm
+
+levels-test: $(LEVELS_TEST_SRCS)
+	$(CXX) $(CXXFLAGS) -o $@ $(LEVELS_TEST_SRCS) $(LDFLAGS) -lm
+
+test: levels-test
+	./levels-test
+
 clean:
-	rm -f ldb-dump ldb-viewer
+	rm -f ldb-dump ldb-viewer levels-dump levels-test
 	rm -rf build

@@ -3,6 +3,8 @@
 /out/
 /ldb-dump
 /ldb-viewer
+/levels-dump
+/levels-test
 *.o
 *.obj
 *.exe

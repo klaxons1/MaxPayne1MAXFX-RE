@@ -2,7 +2,9 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
@@ -191,5 +193,37 @@ std::vector<std::string> listFilesWithExtension(const std::string& dir, const ch
 }
 
 #endif
+
+std::string readFileText(const std::string& path) {
+    std::FILE* f = std::fopen(path.c_str(), "rb");
+    if (f == 0) {
+        throw std::runtime_error("cannot open file \"" + path + "\"");
+    }
+    if (std::fseek(f, 0, SEEK_END) != 0) {
+        std::fclose(f);
+        throw std::runtime_error("cannot seek file \"" + path + "\"");
+    }
+    const long sz = std::ftell(f);
+    if (sz < 0) {
+        std::fclose(f);
+        throw std::runtime_error("cannot size file \"" + path + "\"");
+    }
+    if (std::fseek(f, 0, SEEK_SET) != 0) {
+        std::fclose(f);
+        throw std::runtime_error("cannot rewind file \"" + path + "\"");
+    }
+    std::string out;
+    out.resize(static_cast<std::size_t>(sz));
+    if (sz > 0) {
+        const std::size_t n = std::fread(&out[0], 1, out.size(), f);
+        std::fclose(f);
+        if (n != out.size()) {
+            throw std::runtime_error("short read of \"" + path + "\"");
+        }
+    } else {
+        std::fclose(f);
+    }
+    return out;
+}
 
 }  // namespace maxfx

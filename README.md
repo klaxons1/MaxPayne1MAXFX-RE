@@ -1,7 +1,8 @@
 # MAX-FX reverse engineering — LDB level viewer
 
-C++11 toolkit for Max Payne 1 `*.ldb` level databases: a complete tagged-binary
-parser plus an SDL3 / OpenGL 3.3 fly-through viewer.
+C++11 toolkit for Max Payne 1: a complete tagged-binary `*.ldb` parser, an
+SDL3 / OpenGL 3.3 fly-through viewer, and an `R_Script` parser for
+`data/database/levels/levels.txt` (`X_SharedDBLevel`).
 
 The long-term goal is a source port of the MAX-FX engine. This tree is the
 first brick — load every block of a PC LDB (version 32) and look at the level.
@@ -39,6 +40,8 @@ See `docs/LDB.md` for the tagged type table.
 ```bash
 make dump
 ./ldb-dump docs/Part1_Level1.ldb
+./levels-dump docs/levels.txt
+make test
 ```
 
 ### Level viewer (SDL3 + OpenGL 3.3)
@@ -112,13 +115,20 @@ Lit shading is `diffuse * lightmap * 2`, the classic MAX-FX look.
 ## Layout
 
 ```
-src/maxfx/core     tagged stream + math
+src/maxfx/core     tagged stream + math + filesystem helpers
+src/maxfx/script   R_Script / R_ScriptLoader (.txt databases)
+src/maxfx/levels   levels.txt → X_SharedDBLevel
 src/maxfx/ldb      LDB structures + reader
 src/maxfx/image    JPG/TGA (stb) + PCX decoder
 src/viewer         SDL3 OpenGL viewer
-src/apps           ldb-dump, ldb-viewer
-docs/              Android decompile, sample Part1_Level1.ldb
+src/apps           ldb-dump, ldb-viewer, levels-dump, levels-test
+docs/              Android decompile, sample LDB, sample levels.txt
 ```
+
+`levels.txt` field tables and the script grammar are documented in
+`docs/LEVELS.md`. Drop the real game file at
+`data/database/levels/levels.txt` (next to the `.ldb` files) and run
+`levels-dump` with no arguments.
 
 ## PC vs Android
 
