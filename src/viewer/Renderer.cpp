@@ -1,0 +1,857 @@
+#include "viewer/Renderer.h"
+
+#include "maxfx/image/Image.h"
+
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+
+namespace maxfx {
+namespace {
+
+const char* kMeshVS =
+    "#version 330 core\n"
+    "layout(location=0) in vec3 aPos;\n"
+    "layout(location=1) in vec3 aNrm;\n"
+    "layout(location=2) in vec2 aUV;\n"
+    "layout(location=3) in vec2 aLM;\n"
+    "uniform mat4 uViewProj;\n"
+    "out vec2 vUV;\n"
+    "out vec2 vLM;\n"
+    "void main(){\n"
+    "  gl_Position = uViewProj * vec4(aPos,1.0);\n"
+    "  vUV = aUV;\n"
+    "  vLM = aLM;\n"
+    "}\n";
+
+const char* kMeshFS =
+    "#version 330 core\n"
+    "in vec2 vUV;\n"
+    "in vec2 vLM;\n"
+    "uniform sampler2D uDiffuse;\n"
+    "uniform sampler2D uLightmap;\n"
+    "uniform int uMode;\n"
+    "uniform int uAlphaTest;\n"
+    "uniform float uLmScale;\n"
+    "out vec4 frag;\n"
+    "void main(){\n"
+    "  vec4 diff = texture(uDiffuse, vUV);\n"
+    "  if (uAlphaTest != 0 && diff.a < 0.45) discard;\n"
+    "  vec3 lm = texture(uLightmap, vLM).rgb * uLmScale;\n"
+    "  vec3 color;\n"
+    "  if (uMode == 1) color = diff.rgb;\n"
+    "  else if (uMode == 2) color = texture(uLightmap, vLM).rgb;\n"
+    "  else if (uMode == 3) color = vec3(0.62);\n"
+    "  else color = diff.rgb * lm;\n"
+    "  frag = vec4(color, 1.0);\n"
+    "}\n";
+
+const char* kLineVS =
+    "#version 330 core\n"
+    "layout(location=0) in vec3 aPos;\n"
+    "layout(location=1) in vec4 aColor;\n"
+    "uniform mat4 uViewProj;\n"
+    "out vec4 vColor;\n"
+    "void main(){\n"
+    "  gl_Position = uViewProj * vec4(aPos,1.0);\n"
+    "  vColor = aColor;\n"
+    "}\n";
+
+const char* kLineFS =
+    "#version 330 core\n"
+    "in vec4 vColor;\n"
+    "out vec4 frag;\n"
+    "void main(){ frag = vColor; }\n";
+
+const char* kFontVS =
+    "#version 330 core\n"
+    "layout(location=0) in vec2 aPos;\n"
+    "layout(location=1) in vec2 aUV;\n"
+    "layout(location=2) in vec3 aColor;\n"
+    "out vec2 vUV;\n"
+    "out vec3 vColor;\n"
+    "void main(){\n"
+    "  gl_Position = vec4(aPos, 0.0, 1.0);\n"
+    "  vUV = aUV;\n"
+    "  vColor = aColor;\n"
+    "}\n";
+
+const char* kFontFS =
+    "#version 330 core\n"
+    "in vec2 vUV;\n"
+    "in vec3 vColor;\n"
+    "uniform sampler2D uFont;\n"
+    "out vec4 frag;\n"
+    "void main(){\n"
+    "  float a = texture(uFont, vUV).a;\n"
+    "  if (a < 0.5) discard;\n"
+    "  frag = vec4(vColor, 1.0);\n"
+    "}\n";
+
+Vec3 mirrorX(const Vec3& v) { return Vec3(-v.x, v.y, v.z); }
+
+Mat4x3 roomTransform(const Level& level, int roomId) {
+    const Room* room = level.findRoom(roomId);
+    if (room == 0 || room->staticMeshes.empty()) {
+        return Mat4x3();
+    }
+    const StaticMesh* mesh = level.findStaticMesh(room->staticMeshes[0]);
+    if (mesh == 0) {
+        return Mat4x3();
+    }
+    return mesh->transform;
+}
+
+Vec3 worldPoint(const Mat4x3& roomXform, const Mat4x3& objectToRoom) {
+    return mirrorX(transformPoint(combine(roomXform, objectToRoom), Vec3(0, 0, 0)));
+}
+
+float yawFromTransform(const Mat4x3& roomXform, const Mat4x3& objectToRoom) {
+    const Mat4x3 world = combine(roomXform, objectToRoom);
+    const Vec3 fwd = mirrorX(transformVector(world, Vec3(0, 0, 1)));
+    return std::atan2(fwd.x, -fwd.z);
+}
+
+// Public-domain 8x8 font, ASCII 32..127 (row-major, LSB = leftmost pixel).
+const unsigned char kFont8x8[96][8] = {
+    {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}, {0x18,0x18,0x18,0x18,0x18,0x00,0x18,0x00},
+    {0x6C,0x6C,0x6C,0x00,0x00,0x00,0x00,0x00}, {0x36,0x36,0x7F,0x36,0x7F,0x36,0x36,0x00},
+    {0x0C,0x3F,0x68,0x3E,0x0B,0x7E,0x18,0x00}, {0x60,0x66,0x0C,0x18,0x30,0x66,0x06,0x00},
+    {0x38,0x6C,0x38,0x70,0xDE,0xCC,0x76,0x00}, {0x18,0x18,0x30,0x00,0x00,0x00,0x00,0x00},
+    {0x0C,0x18,0x30,0x30,0x30,0x18,0x0C,0x00}, {0x30,0x18,0x0C,0x0C,0x0C,0x18,0x30,0x00},
+    {0x00,0x66,0x3C,0xFF,0x3C,0x66,0x00,0x00}, {0x00,0x18,0x18,0x7E,0x18,0x18,0x00,0x00},
+    {0x00,0x00,0x00,0x00,0x00,0x18,0x18,0x30}, {0x00,0x00,0x00,0x7E,0x00,0x00,0x00,0x00},
+    {0x00,0x00,0x00,0x00,0x00,0x18,0x18,0x00}, {0x03,0x06,0x0C,0x18,0x30,0x60,0xC0,0x00},
+    {0x3C,0x66,0x6E,0x7E,0x76,0x66,0x3C,0x00}, {0x18,0x38,0x18,0x18,0x18,0x18,0x7E,0x00},
+    {0x3C,0x66,0x06,0x0C,0x18,0x30,0x7E,0x00}, {0x3C,0x66,0x06,0x1C,0x06,0x66,0x3C,0x00},
+    {0x0C,0x1C,0x3C,0x6C,0x7E,0x0C,0x0C,0x00}, {0x7E,0x60,0x7C,0x06,0x06,0x66,0x3C,0x00},
+    {0x1C,0x30,0x60,0x7C,0x66,0x66,0x3C,0x00}, {0x7E,0x06,0x0C,0x18,0x30,0x30,0x30,0x00},
+    {0x3C,0x66,0x66,0x3C,0x66,0x66,0x3C,0x00}, {0x3C,0x66,0x66,0x3E,0x06,0x0C,0x38,0x00},
+    {0x00,0x18,0x18,0x00,0x00,0x18,0x18,0x00}, {0x00,0x18,0x18,0x00,0x00,0x18,0x18,0x30},
+    {0x0C,0x18,0x30,0x60,0x30,0x18,0x0C,0x00}, {0x00,0x00,0x7E,0x00,0x7E,0x00,0x00,0x00},
+    {0x30,0x18,0x0C,0x06,0x0C,0x18,0x30,0x00}, {0x3C,0x66,0x06,0x0C,0x18,0x00,0x18,0x00},
+    {0x3C,0x66,0x6E,0x6A,0x6E,0x60,0x3C,0x00}, {0x18,0x3C,0x66,0x66,0x7E,0x66,0x66,0x00},
+    {0x7C,0x66,0x66,0x7C,0x66,0x66,0x7C,0x00}, {0x3C,0x66,0x60,0x60,0x60,0x66,0x3C,0x00},
+    {0x78,0x6C,0x66,0x66,0x66,0x6C,0x78,0x00}, {0x7E,0x60,0x60,0x7C,0x60,0x60,0x7E,0x00},
+    {0x7E,0x60,0x60,0x7C,0x60,0x60,0x60,0x00}, {0x3C,0x66,0x60,0x6E,0x66,0x66,0x3C,0x00},
+    {0x66,0x66,0x66,0x7E,0x66,0x66,0x66,0x00}, {0x7E,0x18,0x18,0x18,0x18,0x18,0x7E,0x00},
+    {0x3E,0x0C,0x0C,0x0C,0x0C,0x6C,0x38,0x00}, {0x66,0x6C,0x78,0x70,0x78,0x6C,0x66,0x00},
+    {0x60,0x60,0x60,0x60,0x60,0x60,0x7E,0x00}, {0x63,0x77,0x7F,0x6B,0x63,0x63,0x63,0x00},
+    {0x66,0x76,0x7E,0x7E,0x6E,0x66,0x66,0x00}, {0x3C,0x66,0x66,0x66,0x66,0x66,0x3C,0x00},
+    {0x7C,0x66,0x66,0x7C,0x60,0x60,0x60,0x00}, {0x3C,0x66,0x66,0x66,0x6A,0x6C,0x36,0x00},
+    {0x7C,0x66,0x66,0x7C,0x6C,0x66,0x66,0x00}, {0x3C,0x66,0x60,0x3C,0x06,0x66,0x3C,0x00},
+    {0x7E,0x18,0x18,0x18,0x18,0x18,0x18,0x00}, {0x66,0x66,0x66,0x66,0x66,0x66,0x3C,0x00},
+    {0x66,0x66,0x66,0x66,0x66,0x3C,0x18,0x00}, {0x63,0x63,0x63,0x6B,0x7F,0x77,0x63,0x00},
+    {0x66,0x66,0x3C,0x18,0x3C,0x66,0x66,0x00}, {0x66,0x66,0x66,0x3C,0x18,0x18,0x18,0x00},
+    {0x7E,0x06,0x0C,0x18,0x30,0x60,0x7E,0x00}, {0x3C,0x30,0x30,0x30,0x30,0x30,0x3C,0x00},
+    {0xC0,0x60,0x30,0x18,0x0C,0x06,0x03,0x00}, {0x3C,0x0C,0x0C,0x0C,0x0C,0x0C,0x3C,0x00},
+    {0x18,0x3C,0x66,0x00,0x00,0x00,0x00,0x00}, {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF},
+    {0x18,0x18,0x0C,0x00,0x00,0x00,0x00,0x00}, {0x00,0x00,0x3C,0x06,0x3E,0x66,0x3E,0x00},
+    {0x60,0x60,0x7C,0x66,0x66,0x66,0x7C,0x00}, {0x00,0x00,0x3C,0x66,0x60,0x66,0x3C,0x00},
+    {0x06,0x06,0x3E,0x66,0x66,0x66,0x3E,0x00}, {0x00,0x00,0x3C,0x66,0x7E,0x60,0x3C,0x00},
+    {0x1C,0x30,0x7C,0x30,0x30,0x30,0x30,0x00}, {0x00,0x00,0x3E,0x66,0x66,0x3E,0x06,0x3C},
+    {0x60,0x60,0x7C,0x66,0x66,0x66,0x66,0x00}, {0x18,0x00,0x38,0x18,0x18,0x18,0x3C,0x00},
+    {0x0C,0x00,0x1C,0x0C,0x0C,0x0C,0x6C,0x38}, {0x60,0x60,0x66,0x6C,0x78,0x6C,0x66,0x00},
+    {0x38,0x18,0x18,0x18,0x18,0x18,0x3C,0x00}, {0x00,0x00,0x76,0x7F,0x6B,0x63,0x63,0x00},
+    {0x00,0x00,0x7C,0x66,0x66,0x66,0x66,0x00}, {0x00,0x00,0x3C,0x66,0x66,0x66,0x3C,0x00},
+    {0x00,0x00,0x7C,0x66,0x66,0x7C,0x60,0x60}, {0x00,0x00,0x3E,0x66,0x66,0x3E,0x06,0x06},
+    {0x00,0x00,0x6C,0x76,0x60,0x60,0x60,0x00}, {0x00,0x00,0x3E,0x60,0x3C,0x06,0x7C,0x00},
+    {0x30,0x30,0x7C,0x30,0x30,0x30,0x1C,0x00}, {0x00,0x00,0x66,0x66,0x66,0x66,0x3E,0x00},
+    {0x00,0x00,0x66,0x66,0x66,0x3C,0x18,0x00}, {0x00,0x00,0x63,0x6B,0x7F,0x3E,0x36,0x00},
+    {0x00,0x00,0x66,0x3C,0x18,0x3C,0x66,0x00}, {0x00,0x00,0x66,0x66,0x66,0x3E,0x06,0x3C},
+    {0x00,0x00,0x7E,0x0C,0x18,0x30,0x7E,0x00}, {0x0E,0x18,0x18,0x70,0x18,0x18,0x0E,0x00},
+    {0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x00}, {0x70,0x18,0x18,0x0E,0x18,0x18,0x70,0x00},
+    {0x76,0xDC,0x00,0x00,0x00,0x00,0x00,0x00}, {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
+};
+
+void addLine(std::vector<LineVertex>& lines, const Vec3& a, const Vec3& b, float r, float g, float bl,
+             float alpha = 1.0f) {
+    LineVertex va;
+    va.x = a.x;
+    va.y = a.y;
+    va.z = a.z;
+    va.r = r;
+    va.g = g;
+    va.b = bl;
+    va.a = alpha;
+    LineVertex vb = va;
+    vb.x = b.x;
+    vb.y = b.y;
+    vb.z = b.z;
+    lines.push_back(va);
+    lines.push_back(vb);
+}
+
+void addAxes(std::vector<LineVertex>& lines, const Vec3& p, const Vec3& x, const Vec3& y, const Vec3& z,
+             float s) {
+    addLine(lines, p, p + x * s, 1, 0.25f, 0.25f);
+    addLine(lines, p, p + y * s, 0.25f, 1, 0.25f);
+    addLine(lines, p, p + z * s, 0.35f, 0.55f, 1);
+}
+
+void addDiamond(std::vector<LineVertex>& lines, const Vec3& p, float s, float r, float g, float b) {
+    const Vec3 px(s, 0, 0), py(0, s, 0), pz(0, 0, s);
+    addLine(lines, p + py, p + px, r, g, b);
+    addLine(lines, p + py, p - px, r, g, b);
+    addLine(lines, p + py, p + pz, r, g, b);
+    addLine(lines, p + py, p - pz, r, g, b);
+    addLine(lines, p - py, p + px, r, g, b);
+    addLine(lines, p - py, p - px, r, g, b);
+    addLine(lines, p - py, p + pz, r, g, b);
+    addLine(lines, p - py, p - pz, r, g, b);
+}
+
+void addCircle(std::vector<LineVertex>& lines, const Vec3& p, float radius, float r, float g, float b) {
+    const int seg = 24;
+    Vec3 prev = p + Vec3(radius, 0, 0);
+    for (int i = 1; i <= seg; ++i) {
+        const float a = (6.2831853f * static_cast<float>(i)) / static_cast<float>(seg);
+        const Vec3 cur = p + Vec3(std::cos(a) * radius, 0.0f, std::sin(a) * radius);
+        addLine(lines, prev, cur, r, g, b);
+        prev = cur;
+    }
+}
+
+}  // namespace
+
+Renderer::Renderer()
+    : meshProgram_(0),
+      lineProgram_(0),
+      fontProgram_(0),
+      whiteTex_(0),
+      greyTex_(0),
+      fontTex_(0),
+      persistentTextureCount_(0),
+      lineVao_(0),
+      lineVbo_(0),
+      lineCount_(0),
+      hudVao_(0),
+      hudVbo_(0),
+      shading_(kShadeLit),
+      wireframe_(false),
+      showDynamic_(true),
+      showHelpers_(true),
+      showHud_(true),
+      isolatedRoom_(-1),
+      width_(1),
+      height_(1),
+      triangleCount_(0) {}
+
+Renderer::~Renderer() {
+    // GPU objects are released by shutdown() while the GL context is still alive.
+}
+
+bool Renderer::init(char* error, std::size_t errorSize) {
+    meshProgram_ = compileProgram(kMeshVS, kMeshFS, error, errorSize);
+    if (meshProgram_ == 0) {
+        return false;
+    }
+    lineProgram_ = compileProgram(kLineVS, kLineFS, error, errorSize);
+    if (lineProgram_ == 0) {
+        return false;
+    }
+    fontProgram_ = compileProgram(kFontVS, kFontFS, error, errorSize);
+    if (fontProgram_ == 0) {
+        return false;
+    }
+    whiteTex_ = makeSolidTexture(255, 255, 255);
+    greyTex_ = makeSolidTexture(128, 128, 128);
+    buildFont();
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    persistentTextureCount_ = ownedTextures_.size();
+    return true;
+}
+
+void Renderer::clearLevel() { clearLevelGpu(); }
+
+void Renderer::clearLevelGpu() {
+    if (glDeleteBuffers == 0) {
+        return;
+    }
+    for (std::size_t i = 0; i < batches_.size(); ++i) {
+        glDeleteVertexArrays(1, &batches_[i].vao);
+        glDeleteBuffers(1, &batches_[i].vbo);
+        glDeleteBuffers(1, &batches_[i].ebo);
+    }
+    batches_.clear();
+    cpuBatches_.clear();
+    cpuKeys_.clear();
+    triangleCount_ = 0;
+    spawns_.clear();
+    isolatedRoom_ = -1;
+    lineCount_ = 0;
+    if (lineVao_) {
+        glDeleteVertexArrays(1, &lineVao_);
+        lineVao_ = 0;
+    }
+    if (lineVbo_) {
+        glDeleteBuffers(1, &lineVbo_);
+        lineVbo_ = 0;
+    }
+    while (ownedTextures_.size() > persistentTextureCount_) {
+        GLuint tex = ownedTextures_.back();
+        ownedTextures_.pop_back();
+        glDeleteTextures(1, &tex);
+    }
+}
+
+void Renderer::shutdown() {
+    if (glDeleteProgram == 0) {
+        return;
+    }
+    for (std::size_t i = 0; i < batches_.size(); ++i) {
+        glDeleteVertexArrays(1, &batches_[i].vao);
+        glDeleteBuffers(1, &batches_[i].vbo);
+        glDeleteBuffers(1, &batches_[i].ebo);
+    }
+    batches_.clear();
+    if (!ownedTextures_.empty()) {
+        glDeleteTextures(static_cast<GLsizei>(ownedTextures_.size()), &ownedTextures_[0]);
+        ownedTextures_.clear();
+    }
+    if (lineVao_) {
+        glDeleteVertexArrays(1, &lineVao_);
+        lineVao_ = 0;
+    }
+    if (lineVbo_) {
+        glDeleteBuffers(1, &lineVbo_);
+        lineVbo_ = 0;
+    }
+    if (hudVao_) {
+        glDeleteVertexArrays(1, &hudVao_);
+        hudVao_ = 0;
+    }
+    if (hudVbo_) {
+        glDeleteBuffers(1, &hudVbo_);
+        hudVbo_ = 0;
+    }
+    if (meshProgram_) {
+        glDeleteProgram(meshProgram_);
+        meshProgram_ = 0;
+    }
+    if (lineProgram_) {
+        glDeleteProgram(lineProgram_);
+        lineProgram_ = 0;
+    }
+    if (fontProgram_) {
+        glDeleteProgram(fontProgram_);
+        fontProgram_ = 0;
+    }
+    whiteTex_ = greyTex_ = fontTex_ = 0;
+}
+
+GLuint Renderer::uploadTexture(const unsigned char* rgba, int w, int h, bool mipmaps, bool clamp) {
+    GLuint tex = 0;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+    if (mipmaps) {
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    } else {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    ownedTextures_.push_back(tex);
+    return tex;
+}
+
+GLuint Renderer::makeSolidTexture(unsigned char r, unsigned char g, unsigned char b) {
+    unsigned char px[4] = {r, g, b, 255};
+    return uploadTexture(px, 1, 1, false, true);
+}
+
+void Renderer::buildFont() {
+    const int cols = 16;
+    const int rows = 6;
+    const int w = cols * 8;
+    const int h = rows * 8;
+    std::vector<unsigned char> pixels(static_cast<std::size_t>(w * h), 0);
+    for (int ch = 0; ch < 96; ++ch) {
+        const int cx = (ch % cols) * 8;
+        const int cy = (ch / cols) * 8;
+        for (int row = 0; row < 8; ++row) {
+            unsigned char bits = kFont8x8[ch][row];
+            for (int col = 0; col < 8; ++col) {
+                if (bits & (0x80 >> col)) {
+                    pixels[static_cast<std::size_t>((cy + row) * w + (cx + col))] = 255;
+                }
+            }
+        }
+    }
+    std::vector<unsigned char> rgba(static_cast<std::size_t>(w * h * 4));
+    for (int i = 0; i < w * h; ++i) {
+        rgba[static_cast<std::size_t>(i * 4 + 0)] = 255;
+        rgba[static_cast<std::size_t>(i * 4 + 1)] = 255;
+        rgba[static_cast<std::size_t>(i * 4 + 2)] = 255;
+        rgba[static_cast<std::size_t>(i * 4 + 3)] = pixels[static_cast<std::size_t>(i)];
+    }
+    fontTex_ = uploadTexture(&rgba[0], w, h, false, true);
+
+    glGenVertexArrays(1, &hudVao_);
+    glGenBuffers(1, &hudVbo_);
+    glBindVertexArray(hudVao_);
+    glBindBuffer(GL_ARRAY_BUFFER, hudVbo_);
+    glBufferData(GL_ARRAY_BUFFER, 64 * 1024, 0, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+                          reinterpret_cast<void*>(2 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+                          reinterpret_cast<void*>(4 * sizeof(float)));
+    glBindVertexArray(0);
+}
+
+bool Renderer::loadLevel(const Level& level, char* error, std::size_t errorSize) {
+    (void)error;
+    (void)errorSize;
+    clearLevelGpu();
+
+    std::vector<GLuint> texGpu(level.textures.size(), whiteTex_);
+    for (std::size_t i = 0; i < level.textures.size(); ++i) {
+        Image img;
+        if (decodeEmbeddedImage(level.textures[i].fileType,
+                                level.textures[i].data.empty() ? 0 : &level.textures[i].data[0],
+                                level.textures[i].data.size(), img, 0) &&
+            !img.empty()) {
+            texGpu[i] = uploadTexture(&img.pixels[0], img.width, img.height, true, false);
+        }
+    }
+
+    std::vector<GLuint> lmGpu(level.lightmaps.size(), greyTex_);
+    for (std::size_t i = 0; i < level.lightmaps.size(); ++i) {
+        Image img;
+        if (decodeEmbeddedImage(level.lightmaps[i].fileType,
+                                level.lightmaps[i].data.empty() ? 0 : &level.lightmaps[i].data[0],
+                                level.lightmaps[i].data.size(), img, 0) &&
+            !img.empty()) {
+            const std::size_t id = static_cast<std::size_t>(level.lightmaps[i].id);
+            GLuint t = uploadTexture(&img.pixels[0], img.width, img.height, false, true);
+            if (id < lmGpu.size()) {
+                lmGpu[id] = t;
+            }
+        }
+    }
+
+    std::vector<GLuint> matTex(level.materials.size(), whiteTex_);
+    for (std::size_t i = 0; i < level.materials.size(); ++i) {
+        const int diff = level.materials[i].diffuseTexture;
+        if (diff >= 0 && static_cast<std::size_t>(diff) < texGpu.size()) {
+            const std::size_t id = static_cast<std::size_t>(level.materials[i].id);
+            if (id < matTex.size()) {
+                matTex[id] = texGpu[static_cast<std::size_t>(diff)];
+            }
+        }
+    }
+
+    for (std::size_t i = 0; i < level.staticMeshes.size(); ++i) {
+        const StaticMesh& mesh = level.staticMeshes[i];
+        int roomId = -1;
+        for (std::size_t r = 0; r < level.rooms.size(); ++r) {
+            for (std::size_t s = 0; s < level.rooms[r].staticMeshes.size(); ++s) {
+                if (level.rooms[r].staticMeshes[s] == mesh.groupId) {
+                    roomId = level.rooms[r].id;
+                }
+            }
+        }
+        appendMesh(mesh.vertices, mesh.normals, level.staticTextureVertices, mesh.polygons,
+                   mesh.transform, roomId, false, level, matTex, lmGpu);
+    }
+
+    for (std::size_t i = 0; i < level.dynamicMeshes.size(); ++i) {
+        const DynamicMesh& mesh = level.dynamicMeshes[i];
+        const Mat4x3 roomX = roomTransform(level, mesh.properties.roomId);
+        const Mat4x3 world = combine(roomX, mesh.properties.objectToRoom);
+        appendMesh(mesh.vertices, mesh.normals, level.dynamicTextureVertices, mesh.polygons, world,
+                   mesh.properties.roomId, true, level, matTex, lmGpu);
+    }
+
+    uploadBatches();
+    buildHelpers(level);
+
+    for (std::size_t i = 0; i < level.waypoints.size(); ++i) {
+        const Waypoint& wp = level.waypoints[i];
+        if (wp.type == 0) {
+            continue;
+        }
+        SpawnPoint sp;
+        sp.name = wp.sharedName;
+        const Mat4x3 roomX = roomTransform(level, wp.properties.roomId);
+        sp.position = worldPoint(roomX, wp.properties.objectToRoom);
+        sp.position.y += 1.6f;
+        sp.yaw = yawFromTransform(roomX, wp.properties.objectToRoom);
+        sp.roomId = wp.properties.roomId;
+        spawns_.push_back(sp);
+    }
+    return true;
+}
+
+void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<Vec3>& normals,
+                         const std::vector<TextureVertex>& texVerts, const std::vector<Polygon>& polygons,
+                         const Mat4x3& transform, int roomId, bool dynamic, const Level& level,
+                         const std::vector<GLuint>& materialTextures,
+                         const std::vector<GLuint>& lightmapTextures) {
+    for (std::size_t p = 0; p < polygons.size(); ++p) {
+        const Polygon& poly = polygons[p];
+        if (poly.vertexCount < 3) {
+            continue;
+        }
+        GLuint diff = whiteTex_;
+        GLuint lm = greyTex_;
+        bool alpha = false;
+        if (poly.materialId >= 0 && static_cast<std::size_t>(poly.materialId) < materialTextures.size()) {
+            diff = materialTextures[static_cast<std::size_t>(poly.materialId)];
+            const Material* mat = level.findMaterialByIndex(poly.materialId);
+            if (mat) {
+                alpha = mat->alphaTest;
+            }
+        }
+        if (poly.lightmapId >= 0 && static_cast<std::size_t>(poly.lightmapId) < lightmapTextures.size()) {
+            lm = lightmapTextures[static_cast<std::size_t>(poly.lightmapId)];
+        }
+
+        int batchIndex = -1;
+        for (std::size_t b = 0; b < cpuKeys_.size(); ++b) {
+            if (cpuKeys_[b].diffuse == diff && cpuKeys_[b].lightmap == lm && cpuKeys_[b].roomId == roomId &&
+                cpuKeys_[b].alphaTest == alpha && cpuKeys_[b].dynamic == dynamic) {
+                batchIndex = static_cast<int>(b);
+                break;
+            }
+        }
+        if (batchIndex < 0) {
+            BatchKey key;
+            key.diffuse = diff;
+            key.lightmap = lm;
+            key.roomId = roomId;
+            key.alphaTest = alpha;
+            key.dynamic = dynamic;
+            cpuKeys_.push_back(key);
+            cpuBatches_.push_back(GpuMesh());
+            batchIndex = static_cast<int>(cpuKeys_.size() - 1);
+        }
+        GpuMesh& gpu = cpuBatches_[static_cast<std::size_t>(batchIndex)];
+        const unsigned int base = static_cast<unsigned int>(gpu.vertices.size() / 10);
+
+        for (int i = 0; i < poly.vertexCount; ++i) {
+            const int tvi = poly.textureVertexStart + i;
+            if (tvi < 0 || static_cast<std::size_t>(tvi) >= texVerts.size()) {
+                continue;
+            }
+            const TextureVertex& tv = texVerts[static_cast<std::size_t>(tvi)];
+            if (tv.vertexIndex < 0 || static_cast<std::size_t>(tv.vertexIndex) >= vertices.size()) {
+                continue;
+            }
+            const Vec3 pos = mirrorX(transformPoint(transform, vertices[static_cast<std::size_t>(tv.vertexIndex)]));
+            Vec3 nrm(0, 1, 0);
+            if (static_cast<std::size_t>(tv.vertexIndex) < normals.size()) {
+                nrm = mirrorX(transformVector(transform, normals[static_cast<std::size_t>(tv.vertexIndex)]));
+            }
+            gpu.vertices.push_back(pos.x);
+            gpu.vertices.push_back(pos.y);
+            gpu.vertices.push_back(pos.z);
+            gpu.vertices.push_back(nrm.x);
+            gpu.vertices.push_back(nrm.y);
+            gpu.vertices.push_back(nrm.z);
+            gpu.vertices.push_back(tv.uv.x);
+            gpu.vertices.push_back(1.0f - tv.uv.y);
+            gpu.vertices.push_back(tv.lightmapUv.x);
+            gpu.vertices.push_back(1.0f - tv.lightmapUv.y);
+        }
+
+        const unsigned int emitted = static_cast<unsigned int>(gpu.vertices.size() / 10) - base;
+        if (emitted < 3) {
+            continue;
+        }
+        for (unsigned int i = 1; i + 1 < emitted; ++i) {
+            // Reverse winding together with the X-mirror so faces stay front-facing.
+            gpu.indices.push_back(base + 0);
+            gpu.indices.push_back(base + i + 1);
+            gpu.indices.push_back(base + i);
+            ++triangleCount_;
+        }
+    }
+}
+
+void Renderer::uploadBatches() {
+    for (std::size_t i = 0; i < batches_.size(); ++i) {
+        glDeleteVertexArrays(1, &batches_[i].vao);
+        glDeleteBuffers(1, &batches_[i].vbo);
+        glDeleteBuffers(1, &batches_[i].ebo);
+    }
+    batches_.clear();
+    batches_.reserve(cpuBatches_.size());
+    for (std::size_t i = 0; i < cpuBatches_.size(); ++i) {
+        GpuMesh& mesh = cpuBatches_[i];
+        if (mesh.indices.empty()) {
+            continue;
+        }
+        DrawBatch batch;
+        batch.diffuse = cpuKeys_[i].diffuse;
+        batch.lightmap = cpuKeys_[i].lightmap;
+        batch.roomId = cpuKeys_[i].roomId;
+        batch.alphaTest = cpuKeys_[i].alphaTest;
+        batch.dynamic = cpuKeys_[i].dynamic;
+        batch.indexCount = static_cast<int>(mesh.indices.size());
+        glGenVertexArrays(1, &batch.vao);
+        glGenBuffers(1, &batch.vbo);
+        glGenBuffers(1, &batch.ebo);
+        glBindVertexArray(batch.vao);
+        glBindBuffer(GL_ARRAY_BUFFER, batch.vbo);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(mesh.vertices.size() * sizeof(float)),
+                     &mesh.vertices[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     static_cast<GLsizeiptr>(mesh.indices.size() * sizeof(unsigned int)), &mesh.indices[0],
+                     GL_STATIC_DRAW);
+        const GLsizei stride = 10 * sizeof(float);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(3 * sizeof(float)));
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(6 * sizeof(float)));
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(8 * sizeof(float)));
+        glBindVertexArray(0);
+        batches_.push_back(batch);
+    }
+    cpuBatches_.clear();
+    cpuKeys_.clear();
+}
+
+void Renderer::buildHelpers(const Level& level) {
+    std::vector<LineVertex> lines;
+    for (std::size_t i = 0; i < level.waypoints.size(); ++i) {
+        const Waypoint& wp = level.waypoints[i];
+        const Mat4x3 roomX = roomTransform(level, wp.properties.roomId);
+        const Mat4x3 world = combine(roomX, wp.properties.objectToRoom);
+        const Vec3 p = mirrorX(transformPoint(world, Vec3(0, 0, 0)));
+        const Vec3 x = normalize(mirrorX(transformVector(world, Vec3(1, 0, 0))));
+        const Vec3 y = normalize(mirrorX(transformVector(world, Vec3(0, 1, 0))));
+        const Vec3 z = normalize(mirrorX(transformVector(world, Vec3(0, 0, 1))));
+        addAxes(lines, p, x, y, z, 0.6f);
+    }
+    for (std::size_t i = 0; i < level.triggers.size(); ++i) {
+        const Trigger& tr = level.triggers[i];
+        const Mat4x3 roomX = roomTransform(level, tr.properties.roomId);
+        const Vec3 p = worldPoint(roomX, tr.properties.objectToRoom);
+        addCircle(lines, p, tr.radius > 0.05f ? tr.radius : 0.4f, 0.2f, 0.9f, 1.0f);
+    }
+    for (std::size_t i = 0; i < level.characters.size(); ++i) {
+        const Character& ch = level.characters[i];
+        const Mat4x3 roomX = roomTransform(level, ch.properties.roomId);
+        addDiamond(lines, worldPoint(roomX, ch.properties.objectToRoom) + Vec3(0, 0.9f, 0), 0.35f, 1, 0.2f,
+                   0.2f);
+    }
+    for (std::size_t i = 0; i < level.items.size(); ++i) {
+        const LevelItem& it = level.items[i];
+        const Mat4x3 roomX = roomTransform(level, it.properties.roomId);
+        addDiamond(lines, worldPoint(roomX, it.properties.objectToRoom), 0.2f, 1, 0.3f, 0.9f);
+    }
+    for (std::size_t i = 0; i < level.pointLights.size(); ++i) {
+        const PointLight& pl = level.pointLights[i];
+        const Mat4x3 roomX = roomTransform(level, pl.properties.roomId);
+        addDiamond(lines, worldPoint(roomX, pl.properties.objectToRoom), 0.15f, pl.r, pl.g, pl.b);
+    }
+    for (std::size_t i = 0; i < level.exits.size(); ++i) {
+        const Exit& ex = level.exits[i];
+        const Mat4x3 roomX = roomTransform(level, ex.roomId);
+        if (ex.vertices.size() < 2) {
+            continue;
+        }
+        std::vector<Vec3> pts;
+        pts.reserve(ex.vertices.size());
+        for (std::size_t v = 0; v < ex.vertices.size(); ++v) {
+            pts.push_back(mirrorX(transformPoint(combine(roomX, ex.transform), ex.vertices[v])));
+        }
+        for (std::size_t v = 0; v < pts.size(); ++v) {
+            addLine(lines, pts[v], pts[(v + 1) % pts.size()], 0.3f, 0.6f, 1.0f);
+        }
+    }
+
+    if (lineVao_) {
+        glDeleteVertexArrays(1, &lineVao_);
+        lineVao_ = 0;
+    }
+    if (lineVbo_) {
+        glDeleteBuffers(1, &lineVbo_);
+        lineVbo_ = 0;
+    }
+    lineCount_ = static_cast<int>(lines.size());
+    if (lines.empty()) {
+        return;
+    }
+    glGenVertexArrays(1, &lineVao_);
+    glGenBuffers(1, &lineVbo_);
+    glBindVertexArray(lineVao_);
+    glBindBuffer(GL_ARRAY_BUFFER, lineVbo_);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(lines.size() * sizeof(LineVertex)), &lines[0],
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(LineVertex), 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(LineVertex),
+                          reinterpret_cast<void*>(3 * sizeof(float)));
+    glBindVertexArray(0);
+}
+
+void Renderer::resize(int width, int height) {
+    width_ = width < 1 ? 1 : width;
+    height_ = height < 1 ? 1 : height;
+    glViewport(0, 0, width_, height_);
+}
+
+void Renderer::cycleShading() {
+    shading_ = static_cast<ShadingMode>((static_cast<int>(shading_) + 1) % 4);
+}
+
+void Renderer::cycleRoom(int delta, int roomCount) {
+    if (roomCount <= 0) {
+        isolatedRoom_ = -1;
+        return;
+    }
+    if (isolatedRoom_ < 0) {
+        isolatedRoom_ = delta > 0 ? 0 : roomCount - 1;
+        return;
+    }
+    isolatedRoom_ += delta;
+    if (isolatedRoom_ < 0 || isolatedRoom_ >= roomCount) {
+        isolatedRoom_ = -1;
+    }
+}
+
+void Renderer::drawBatches(bool alphaPass) {
+    for (std::size_t i = 0; i < batches_.size(); ++i) {
+        const DrawBatch& b = batches_[i];
+        if (b.alphaTest != alphaPass) {
+            continue;
+        }
+        if (b.dynamic && !showDynamic_) {
+            continue;
+        }
+        if (isolatedRoom_ >= 0 && b.roomId != isolatedRoom_) {
+            continue;
+        }
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, b.diffuse);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, b.lightmap);
+        glUniform1i(glGetUniformLocation(meshProgram_, "uAlphaTest"), b.alphaTest ? 1 : 0);
+        if (b.alphaTest) {
+            glDisable(GL_CULL_FACE);
+        } else {
+            glEnable(GL_CULL_FACE);
+        }
+        glBindVertexArray(b.vao);
+        glDrawElements(GL_TRIANGLES, b.indexCount, GL_UNSIGNED_INT, 0);
+    }
+}
+
+void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
+    (void)cameraPos;
+    const float aspect = static_cast<float>(width_) / static_cast<float>(height_);
+    const Mat4 proj = perspectiveRH(toRadians(70.0f), aspect, 0.05f, 400.0f);
+    const Mat4 vp = multiply(proj, view);
+
+    glViewport(0, 0, width_, height_);
+    glClearColor(0.02f, 0.02f, 0.03f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glPolygonMode(GL_FRONT_AND_BACK, wireframe_ ? GL_LINE : GL_FILL);
+
+    glUseProgram(meshProgram_);
+    glUniformMatrix4fv(glGetUniformLocation(meshProgram_, "uViewProj"), 1, GL_FALSE, vp.m);
+    glUniform1i(glGetUniformLocation(meshProgram_, "uDiffuse"), 0);
+    glUniform1i(glGetUniformLocation(meshProgram_, "uLightmap"), 1);
+    glUniform1i(glGetUniformLocation(meshProgram_, "uMode"), static_cast<int>(shading_));
+    glUniform1f(glGetUniformLocation(meshProgram_, "uLmScale"), 2.0f);
+    drawBatches(false);
+    drawBatches(true);
+    glEnable(GL_CULL_FACE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    if (showHelpers_ && lineCount_ > 0) {
+        glUseProgram(lineProgram_);
+        glUniformMatrix4fv(glGetUniformLocation(lineProgram_, "uViewProj"), 1, GL_FALSE, vp.m);
+        glBindVertexArray(lineVao_);
+        glDrawArrays(GL_LINES, 0, lineCount_);
+    }
+}
+
+void Renderer::drawHudText(int x, int y, const char* text, float r, float g, float b) {
+    if (text == 0 || width_ <= 0 || height_ <= 0) {
+        return;
+    }
+    const float gw = 8.0f;
+    const float gh = 12.0f;
+    const float invW = 2.0f / static_cast<float>(width_);
+    const float invH = 2.0f / static_cast<float>(height_);
+    int cx = x;
+    for (const char* p = text; *p; ++p) {
+        if (*p == '\n') {
+            cx = x;
+            y += static_cast<int>(gh + 2);
+            continue;
+        }
+        int ch = static_cast<unsigned char>(*p);
+        if (ch < 32 || ch > 127) {
+            ch = '?';
+        }
+        ch -= 32;
+        const float u0 = static_cast<float>(ch % 16) / 16.0f;
+        const float v0 = static_cast<float>(ch / 16) / 6.0f;
+        const float u1 = u0 + 1.0f / 16.0f;
+        const float v1 = v0 + 1.0f / 6.0f;
+        const float x0 = static_cast<float>(cx) * invW - 1.0f;
+        const float y0 = 1.0f - static_cast<float>(y) * invH;
+        const float x1 = static_cast<float>(cx + static_cast<int>(gw)) * invW - 1.0f;
+        const float y1 = 1.0f - static_cast<float>(y + static_cast<int>(gh)) * invH;
+        const float quad[6][7] = {
+            {x0, y0, u0, v0, r, g, b}, {x0, y1, u0, v1, r, g, b}, {x1, y0, u1, v0, r, g, b},
+            {x1, y0, u1, v0, r, g, b}, {x0, y1, u0, v1, r, g, b}, {x1, y1, u1, v1, r, g, b},
+        };
+        for (int i = 0; i < 6; ++i) {
+            for (int k = 0; k < 7; ++k) {
+                hudVerts_.push_back(quad[i][k]);
+            }
+        }
+        cx += static_cast<int>(gw);
+    }
+}
+
+void Renderer::presentHud() { flushHud(); }
+
+void Renderer::flushHud() {
+    if (!showHud_ || hudVerts_.empty()) {
+        hudVerts_.clear();
+        return;
+    }
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glUseProgram(fontProgram_);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, fontTex_);
+    glUniform1i(glGetUniformLocation(fontProgram_, "uFont"), 0);
+    glBindVertexArray(hudVao_);
+    glBindBuffer(GL_ARRAY_BUFFER, hudVbo_);
+    glBufferSubData(GL_ARRAY_BUFFER, 0,
+                    static_cast<GLsizeiptr>(hudVerts_.size() * sizeof(float)), &hudVerts_[0]);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(hudVerts_.size() / 7));
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    hudVerts_.clear();
+}
+
+}  // namespace maxfx

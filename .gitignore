@@ -1,0 +1,13 @@
+/build/
+/cmake-build-*/
+/out/
+/ldb-dump
+/ldb-viewer
+*.o
+*.obj
+*.exe
+*.user
+.DS_Store
+.cache/
+.idea/
+.vscode/
