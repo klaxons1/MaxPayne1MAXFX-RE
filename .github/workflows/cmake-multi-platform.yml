@@ -1,0 +1,30 @@
+name: Build MaxPayne1MAXFX-RE
+
+on:
+  push:
+    branches: [ "main" ] # Поменяйте на вашу ветку по умолчанию, если она называется иначе (например, master)
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: # Позволяет запускать сборку вручную через интерфейс GitHub
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        ref: 'arena/01a0d9d9-maxpayne1maxfx-re' # Автоматически переключается на нужную вам ветку
+
+    - name: Configure CMake
+      run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+
+    - name: Build Project
+      run: cmake --build build --config Release --parallel
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: maxpayne-re-release
+        path: build/Release/ # Измените путь, если исполняемые файлы компилируются в другую подпапку
