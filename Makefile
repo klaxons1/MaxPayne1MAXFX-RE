@@ -18,7 +18,9 @@ CORE_SRCS = \
 	src/maxfx/image/Image.cpp \
 	src/maxfx/kf2/Kf2.cpp \
 	src/maxfx/db/Database.cpp \
-	src/maxfx/sound/Sound.cpp
+	src/maxfx/sound/Sound.cpp \
+	src/maxfx/collision/Collision.cpp \
+	src/maxfx/char/Character.cpp
 
 DUMP_SRCS = $(CORE_SRCS) src/apps/ldb_dump.cpp
 LEVELS_DUMP_SRCS = $(CORE_SRCS) src/apps/levels_dump.cpp

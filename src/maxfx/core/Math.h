@@ -241,6 +241,68 @@ inline float clamp(float v, float lo, float hi) {
     return v;
 }
 
+inline Vec3 lerp(const Vec3& a, const Vec3& b, float t) {
+    return Vec3(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
+}
+
+inline float wrapAngle(float a) {
+    const float pi = 3.14159265358979323846f;
+    const float two = pi * 2.0f;
+    while (a > pi) {
+        a -= two;
+    }
+    while (a < -pi) {
+        a += two;
+    }
+    return a;
+}
+
+// Inverse of a rigid (rotation + translation) 4x3. Scale is treated as
+// orthonormal; callers that need scaled bones should orthonormalize first.
+inline Mat4x3 inverseRigid(const Mat4x3& t) {
+    Mat4x3 inv;
+    inv.rows[0] = Vec3(t.rows[0].x, t.rows[1].x, t.rows[2].x);
+    inv.rows[1] = Vec3(t.rows[0].y, t.rows[1].y, t.rows[2].y);
+    inv.rows[2] = Vec3(t.rows[0].z, t.rows[1].z, t.rows[2].z);
+    const Vec3 tr = t.rows[3];
+    inv.rows[3] = Vec3(-(tr.x * inv.rows[0].x + tr.y * inv.rows[1].x + tr.z * inv.rows[2].x),
+                       -(tr.x * inv.rows[0].y + tr.y * inv.rows[1].y + tr.z * inv.rows[2].y),
+                       -(tr.x * inv.rows[0].z + tr.y * inv.rows[1].z + tr.z * inv.rows[2].z));
+    return inv;
+}
+
+inline Mat4x3 lerpMat(const Mat4x3& a, const Mat4x3& b, float t) {
+    Mat4x3 out;
+    for (int i = 0; i < 4; ++i) {
+        out.rows[i] = lerp(a.rows[i], b.rows[i], t);
+    }
+    out.rows[0] = normalize(out.rows[0]);
+    Vec3 y = out.rows[1];
+    y = y - out.rows[0] * dot(out.rows[0], y);
+    if (length(y) > 1.0e-6f) {
+        out.rows[1] = normalize(y);
+    }
+    out.rows[2] = normalize(cross(out.rows[0], out.rows[1]));
+    out.rows[1] = normalize(cross(out.rows[2], out.rows[0]));
+    return out;
+}
+
+inline Mat4x3 rotationY(float yaw) {
+    Mat4x3 m;
+    const float c = std::cos(yaw);
+    const float s = std::sin(yaw);
+    m.rows[0] = Vec3(c, 0.0f, -s);
+    m.rows[1] = Vec3(0.0f, 1.0f, 0.0f);
+    m.rows[2] = Vec3(s, 0.0f, c);
+    return m;
+}
+
+inline Mat4x3 makeEntity(const Vec3& position, float yaw) {
+    Mat4x3 m = rotationY(yaw);
+    m.rows[3] = position;
+    return m;
+}
+
 }  // namespace maxfx
 
 #endif  // MAXFX_CORE_MATH_H

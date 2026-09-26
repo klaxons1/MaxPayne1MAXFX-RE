@@ -7,6 +7,7 @@
 #ifndef MAXFX_DB_DATABASE_H
 #define MAXFX_DB_DATABASE_H
 
+#include "maxfx/char/Character.h"
 #include "maxfx/kf2/Kf2.h"
 
 #include <map>
@@ -47,6 +48,7 @@ struct SkinDef {
     std::string sourcePath;
     std::string skeleton;
     std::vector<GeometryRef> lods;
+    CharacterConfig character;
 };
 
 struct ItemDef {

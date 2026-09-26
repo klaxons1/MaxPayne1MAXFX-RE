@@ -25,6 +25,8 @@ add_library(maxfx_ldb STATIC
     src/maxfx/kf2/Kf2.cpp
     src/maxfx/db/Database.cpp
     src/maxfx/sound/Sound.cpp
+    src/maxfx/collision/Collision.cpp
+    src/maxfx/char/Character.cpp
 )
 target_include_directories(maxfx_ldb PUBLIC src third_party)
 

@@ -481,6 +481,13 @@ Database DatabaseReader::load(const std::string& root) {
                     }
                 }
                 collectGeometry(script.root(), root, dir, skin.name, &skin.lods);
+                fillCharacterConfig(skin.character, script.root(), files[i], root);
+                if (skin.character.skeleton.empty()) {
+                    skin.character.skeleton = skin.skeleton;
+                }
+                if (skin.skeleton.empty()) {
+                    skin.skeleton = skin.character.skeleton;
+                }
                 db.skins.push_back(skin);
             } else if (isUnder(files[i], "level_items")) {
                 ItemDef item;
@@ -502,6 +509,22 @@ Database DatabaseReader::load(const std::string& root) {
             ++db.failedScripts;
         }
         db.scripts.push_back(entry);
+    }
+    for (std::size_t s = 0; s < db.skins.size(); ++s) {
+        SkinDef& skin = db.skins[s];
+        if (skin.skeleton.empty()) {
+            continue;
+        }
+        const std::string skelPath =
+            existingPathIgnoreCase(joinPath(joinPath(root, "skeletons"), skin.skeleton + ".txt"));
+        if (skelPath.empty() || !isFile(skelPath)) {
+            continue;
+        }
+        try {
+            const Script skel = Script::loadFile(skelPath, false);
+            mergeSkeletonConfig(skin.character, skel.root(), skelPath, root);
+        } catch (...) {
+        }
     }
     return db;
 }

@@ -1,9 +1,10 @@
 # MAX-FX reverse engineering — current status
 
-Last updated 2026-09-26. Comments and this file are in English; the code is
-C++11. The target is the **PC** Max Payne 1 MAX-FX format. The Android
-`libMaxPayne.so` decompile in `docs/` is used for names and version numbers
-only — its loaders were stripped and can disagree with the PC layout.
+Last updated 2026-09-26 (characters / AI / collision). Comments and this file
+are in English; the code is C++11. The target is the **PC** Max Payne 1
+MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
+names and version numbers only — its loaders were stripped and can disagree
+with the PC layout.
 
 ## Goal
 
@@ -80,15 +81,29 @@ demand and cached.
 
 Same chunk format for all three (KFS = mesh, SKD = skin weights, KF2 = mesh
 and/or keyframe animation). Material lists, meshes (geometry, triangles, UV,
-polygon materials, node transforms), and skin chunks are parsed. Lights,
-cameras and animation chunks are skipped without desynchronising.
+polygon materials, node transforms), skin chunks, and **keyframe animation**
+channels are parsed.
+
+A character clip (`Walk.kf2`, `Widepose.kf2`, …) is one `0x00010012`
+`KeyframeAnimation` chunk per bone. Layout matches
+`KeyframeAnimationChunk::operator>>` in the decompile:
+
+```
+nested Animation 0x00010013: target name, frame rate, looping
+parent name, loop interpolation, total keyframes, key count
+keys: {int frame, Mat4x3 objectToParent}   // stride 52 on Android
+version > 0: visibility keys; > 1: loop-to-frame; > 2: lerp method; > 3: maintain scale
+```
 
 `kf2BuildDrawMeshes` produces triangle lists in node-local space, including
 v2 primitive-local index rebasing. Bind-pose world matrices follow the node
-parent chain.
+parent chain. `kf2BuildSkinnedDrawMeshes` does linear-blend skinning
+(KFS mesh + SKD weights + CHARANIM_POSE bind + current clip) and writes
+vertices in model space so the renderer applies only the entity transform
+(avoids the double-transform that made some characters look inverted).
 
-Self-test: `beretta_levelitem.kf2` (339 verts, 336 triangles) and
-`Alex_Balder_L0.kfs`.
+Self-test: `beretta_levelitem.kf2`, `Alex_Balder_L0.kfs` + `.SKD`,
+`Widepose.kf2` / `Walk.kf2`.
 
 ### Images (`src/maxfx/image`)
 
@@ -131,25 +146,65 @@ Every parsed LDB entity is placed in the room:
 - Point / static lights and FSMs: small solid cubes plus helper overlays.
 
 KF2 batches are vertex-lit, two-sided, and never hidden as service geometry.
+Vertex-lit shading no longer multiplies `uLmScale` (the lightmap ×2 boost)
+and no longer lifts vertex colour by `0.45*c+0.55`, which is what made
+untextured characters read as fully white / inverted-overexposed. Missing
+KF2 textures use the grey placeholder and search the material list's
+`textureDirs` plus `sharedtextures`.
+
 The stripped sample database has weapon KF2s and one character KFS
-(`balder_alex`); missing skins show the red placeholder.
+(`balder_alex`); missing skins show the red placeholder. Characters with a
+KFS/SKD are **not** baked in bind pose: they are skinned every frame from
+`CHARANIM_STAND` / `WALK` / combat clips.
 
 PCM WAV loader (`src/maxfx/sound`) plus an SDL3 mixer (`src/viewer/Audio.cpp`)
 loops the level theme when the official banks are next to the exe. The
 stripped tree only ships silent `placeholder.wav`; the HUD then reads
 `wavs not extracted`. F7 mutes.
 
+### Character AI (`src/maxfx/char`)
+
+Skin `[AI]` / `[Properties]` (capsule, health, CHARANIM clips) plus
+`skeletons/default_skeleton.txt` are parsed into `CharacterConfig`. The
+runtime `CharacterActor` implements the activity set named by
+`X_AIStateMachineStack` (bodies stripped in the decompile):
+
+| Activity | When | Clip |
+| --- | --- | --- |
+| Idle | nothing perceived | CHARANIM_STAND / W_STAND |
+| Alert | player in visual or general radius | stand, turn at `TurnLeftRightSpeed` |
+| Hunt | last seen, out of shooting cone | CHARANIM_WALK toward last seen |
+| Combat | inside `ShootingCone` and ~10 m | W_STAND, face player |
+| Patrol | idle timeout | slow walk |
+| Pain / Dead | health API | GETDAMAGE / RANDOMDEATH1 |
+
+Perception uses `VisualPerceivingRadius` (LOS ray vs BSP) and
+`GeneralPerceivingRadius`. `ActivateOtherCharactersRadius` wakes neighbours.
+This is the official script contract, not a viewer hack; projectile fire,
+dodge FSM, and the binary `.ai` graph next to each LDB are still engine debt.
+
+### Collision (`src/maxfx/collision`)
+
+`CollisionWorld` fan-triangulates `Level::bsp` (the same polygons the BSP
+nodes index). `X_Character::collideObjects` is object-object dispatch
+(characters, items, triggers, dynamic meshes); world collision is the
+capsule vs those triangles. The viewer:
+
+- slides the camera as a 0.22 m sphere (LDB space, X-unmirrored)
+- drops each character capsule onto the floor and separates overlaps
+
 ## What is still missing (engine-port debt, not viewer hacks)
 
-- Skeletal animation playback (KF2 keyframe chunks + SKD weights + default
-  skeleton). Rest pose is drawn.
+- Projectile traces, hitscan damage, and CHARANIM_SHOOT* overlay
+- Dodge / cover / wounded locomotion (clips are parsed, not selected)
+- Binary `.ai` path graph next to each `.ldb` (tagged, not R_Script)
+- Full FSM / `[Message]` execution (`C_DisplayCrosshair`, `A_Play3DSound`, …)
 - 3D positional cues attached to FSM A_PlaySound (scripts are parsed; the
   viewer only loops the level theme / first available WAV)
 - SCX / DDS texture decode
 - Graphic-novel page KF2s (environment chunk is skipped; pages are not
   placed in the level viewer)
-- Full FSM / message execution
-- Collision, AI, projectiles, particles
+- Particles
 - MAX-ED editor-only maps that the PC file still stores but the game ignores
 
 ## Tests
@@ -157,6 +212,7 @@ stripped tree only ships silent `placeholder.wav`; the HUD then reads
 ```
 make test    # levels-test: R_Script (nested quotes, 3DSound), levels.txt,
              # unbraced blocks, PCX alpha, KF2 beretta + alex KFS,
+             # keyframe animation + skin AI + BSP capsule collision,
              # materials / items / skins / sounds / music, placeholder.wav
 ```
 
@@ -170,11 +226,13 @@ src/maxfx/core     TaggedReader, math, filesystem
 src/maxfx/script   R_Script
 src/maxfx/levels   levels.txt
 src/maxfx/ldb      Level database
-src/maxfx/kf2      KF2 / KFS / SKD
-src/maxfx/db       shared text database
-src/maxfx/sound    WAV
-src/maxfx/image    texture decode
-src/viewer         SDL3 OpenGL viewer + mixer
+src/maxfx/kf2         KF2 / KFS / SKD + keyframe animation / skinning
+src/maxfx/db          shared text database (skins include [AI] / clips)
+src/maxfx/char        CharacterConfig + activity FSM
+src/maxfx/collision   BSP triangle soup, sphere slide, capsule
+src/maxfx/sound       WAV
+src/maxfx/image       texture decode
+src/viewer            SDL3 OpenGL viewer + mixer + AI / collision
 docs/STATUS.md     this file
 ```
 

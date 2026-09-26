@@ -1,7 +1,10 @@
 // Self-test for the R_Script loader and levels.txt parser. No extra deps.
 // Built as `levels-test` from the Makefile.
 
+#include "maxfx/char/Character.h"
+#include "maxfx/collision/Collision.h"
 #include "maxfx/core/Fs.h"
+#include "maxfx/core/Math.h"
 #include "maxfx/db/Database.h"
 #include "maxfx/image/Image.h"
 #include "maxfx/kf2/Kf2.h"
@@ -434,6 +437,84 @@ static void testDatabase() {
     check(!db.worldSpherePath.empty() && maxfx::isFile(db.worldSpherePath), "worldsphere intro kf2");
 }
 
+static void testCollisionAndMath() {
+    maxfx::CollisionWorld world;
+    world.addTriangle(maxfx::Vec3(0, 0, 0), maxfx::Vec3(2, 0, 0), maxfx::Vec3(0, 0, 2), 0, 1);
+    const maxfx::CollisionHit hit = world.raycast(maxfx::Vec3(0.2f, 1.0f, 0.2f),
+                                                  maxfx::Vec3(0.0f, -1.0f, 0.0f), 5.0f);
+    check(hit.hit, "ray hits floor triangle");
+    checkNear(hit.point.y, 0.0f, "floor y");
+    const maxfx::Vec3 moved =
+        world.moveSphere(maxfx::Vec3(0.3f, 0.5f, 0.3f), maxfx::Vec3(0.0f, -1.0f, 0.0f), 0.25f);
+    check(moved.y > 0.2f, "sphere rests on floor");
+    maxfx::Mat4x3 m = maxfx::makeEntity(maxfx::Vec3(1, 2, 3), 0.4f);
+    maxfx::Mat4x3 inv = maxfx::inverseRigid(m);
+    maxfx::Vec3 p(0.5f, 0.25f, -0.1f);
+    maxfx::Vec3 back = maxfx::transformPoint(inv, maxfx::transformPoint(m, p));
+    checkNear(back.x, p.x, "inverseRigid x");
+    checkNear(back.y, p.y, "inverseRigid y");
+    checkNear(back.z, p.z, "inverseRigid z");
+}
+
+static void testKf2AnimationAndSkinAi() {
+    const std::string pose = "docs/database/skeletons/default_skeleton/anim/Widepose.kf2";
+    const std::string walk = "docs/database/skeletons/default_skeleton/anim/Walk.kf2";
+    if (!maxfx::isFile(pose) || !maxfx::isFile(walk)) {
+        std::fprintf(stderr, "skip kf2 animation (clips missing)\n");
+        return;
+    }
+    const maxfx::Kf2File poseFile = maxfx::Kf2Reader::loadFromFile(pose);
+    check(!poseFile.animations.empty(), "widepose has bone channels");
+    bool hasPelvis = false;
+    for (std::size_t i = 0; i < poseFile.animations.size(); ++i) {
+        if (poseFile.animations[i].targetName == "Pelvis") {
+            hasPelvis = true;
+            check(!poseFile.animations[i].keys.empty(), "pelvis has a key");
+        }
+    }
+    check(hasPelvis, "widepose pelvis channel");
+    const maxfx::Kf2File walkFile = maxfx::Kf2Reader::loadFromFile(walk);
+    check(walkFile.animations.size() >= poseFile.animations.size() / 2, "walk has many channels");
+    check(maxfx::kf2AnimationDuration(walkFile) > 0.1f, "walk duration");
+    std::vector<std::string> names;
+    std::vector<maxfx::Mat4x3> worlds;
+    maxfx::kf2BuildSkeletonWorlds(walkFile, 0.1f, &poseFile, &names, &worlds);
+    check(!names.empty() && names.size() == worlds.size(), "sampled skeleton worlds");
+
+    const std::string root = maxfx::DatabaseReader::locateRoot("docs");
+    if (root.empty()) {
+        return;
+    }
+    maxfx::Database db = maxfx::DatabaseReader::load(root);
+    const maxfx::SkinDef* mickey = db.findSkin("C1_All_Mickey");
+    check(mickey != 0, "mickey skin");
+    if (mickey != 0) {
+        checkNear(mickey->character.capsule.radius, 0.31f, "mickey capsule radius");
+        checkNear(mickey->character.ai.visualPerceivingRadius, 50.0f, "mickey visual radius");
+        check(mickey->character.maxHealth > 1.0f, "mickey health");
+        check(maxfx::findAnimClip(mickey->character, maxfx::kCharAnimStand) != 0 ||
+                  maxfx::findAnimClip(mickey->character, maxfx::kCharAnimWalk) != 0,
+              "mickey has stand or walk clip");
+        const maxfx::CharacterAnimClip* walkClip =
+            maxfx::findAnimClip(mickey->character, maxfx::kCharAnimWalk);
+        if (walkClip != 0) {
+            check(maxfx::isFile(walkClip->resolvedPath), "walk clip resolves to kf2");
+        }
+    }
+
+    const std::string kfs = "docs/database/skins/balder_alex/Alex_Balder_L0.kfs";
+    const std::string skd = "docs/database/skins/balder_alex/ALEX_BALDER_L0.SKD";
+    if (maxfx::isFile(kfs) && maxfx::isFile(skd)) {
+        const maxfx::Kf2File mesh = maxfx::Kf2Reader::loadFromFile(kfs);
+        const maxfx::Kf2File skin = maxfx::Kf2Reader::loadFromFile(skd);
+        check(!skin.skins.empty(), "alex skd has skin chunk");
+        std::vector<maxfx::Kf2DrawMesh> posed;
+        maxfx::kf2BuildSkinnedDrawMeshes(mesh, &skin, &poseFile, &walkFile, 0.2f, posed);
+        check(!posed.empty(), "skinned draw meshes");
+        check(posed[0].modelSpace, "skinned mesh is model-space");
+    }
+}
+
 static void testWavPlaceholder() {
     if (!maxfx::isFile("docs/database/sounds/placeholder.wav")) {
         std::fprintf(stderr, "skip wav (placeholder.wav missing)\\n");
@@ -455,6 +536,8 @@ int main() {
     testPcxAlpha();
     testKf2Beretta();
     testDatabase();
+    testCollisionAndMath();
+    testKf2AnimationAndSkinAi();
     testWavPlaceholder();
 
     // Official sample shipped in docs/.

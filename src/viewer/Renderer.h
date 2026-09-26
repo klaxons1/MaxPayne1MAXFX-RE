@@ -6,6 +6,7 @@
 #include "maxfx/ldb/Ldb.h"
 #include "viewer/GL.h"
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -55,6 +56,11 @@ public:
     bool loadLevel(const Level& level, const Database* database, char* error, std::size_t errorSize);
     void clearLevel();
     void shutdown();
+
+    void beginAnimated();
+    int appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, const Kf2File* bindAnim,
+                                const Kf2File* playAnim, float timeSeconds, const Mat4x3& entity,
+                                int roomId);
 
     void resize(int width, int height);
     void render(const Mat4& view, const Vec3& cameraPos);
@@ -143,6 +149,8 @@ private:
     void appendOrientedBox(const Mat4x3& entity, int roomId, float hx, float hy, float hz,
                            const Vec3& color);
     GpuMesh& batchFor(const BatchKey& key);
+    void destroyAnimatedGpu();
+    void uploadAnimated();
     Vec3 shadeVertex(const Vec3& worldPos, const Vec3& worldNrm, const std::vector<WorldLight>& lights) const;
     GLuint textureFromFile(const std::string& path);
     void uploadBatches();
@@ -188,6 +196,14 @@ private:
     unsigned int entityTriangleCount_;
     unsigned int entityPlaceholderCount_;
     std::vector<SpawnPoint> spawns_;
+
+    const Database* database_;
+    std::vector<WorldLight> lights_;
+    std::map<std::string, GLuint> textureByPath_;
+    bool recordingAnimated_;
+    std::vector<GpuMesh> animCpu_;
+    std::vector<BatchKey> animKeys_;
+    std::vector<DrawBatch> animBatches_;
 };
 
 }  // namespace maxfx

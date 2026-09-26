@@ -52,7 +52,7 @@ const char* kMeshFS =
     "  if (uMode == 1) color = diff.rgb;\n"
     "  else if (uMode == 2) color = texture(uLightmap, vLM).rgb;\n"
     "  else if (uMode == 3) color = diff.rgb * vColor;\n"
-    "  else if (uVertexLit != 0) color = diff.rgb * vColor * uLmScale;\n"
+    "  else if (uVertexLit != 0) color = diff.rgb * vColor;\n"
     "  else color = diff.rgb * lm;\n"
     "  frag = vec4(color, diff.a);\n"
     "}\n";
@@ -100,6 +100,48 @@ const char* kFontFS =
     "}\n";
 
 Vec3 mirrorX(const Vec3& v) { return Vec3(-v.x, v.y, v.z); }
+
+void splitDirs(const std::string& s, std::vector<std::string>* out) {
+    std::string cur;
+    for (std::size_t i = 0; i <= s.size(); ++i) {
+        if (i == s.size() || s[i] == ';') {
+            if (!cur.empty()) {
+                out->push_back(nativeSeparators(cur));
+                cur.clear();
+            }
+        } else {
+            cur.push_back(s[i]);
+        }
+    }
+}
+
+std::string locateKf2Texture(const std::string& texName, const std::string& modelDir,
+                             const std::string& textureDirs, const Database* database) {
+    const std::string file = fileName(nativeSeparators(texName));
+    std::vector<std::string> dirs;
+    splitDirs(textureDirs, &dirs);
+    std::vector<std::string> cands;
+    cands.push_back(joinPath(joinPath(modelDir, "textures"), file));
+    cands.push_back(joinPath(modelDir, nativeSeparators(texName)));
+    cands.push_back(joinPath(modelDir, file));
+    cands.push_back(joinPath(joinPath(parentDir(modelDir), "textures"), file));
+    for (std::size_t i = 0; i < dirs.size(); ++i) {
+        cands.push_back(joinPath(joinPath(modelDir, dirs[i]), file));
+        cands.push_back(joinPath(joinPath(parentDir(modelDir), dirs[i]), file));
+    }
+    if (database != 0 && !database->root.empty()) {
+        cands.push_back(joinPath(joinPath(database->root, "sharedtextures"), file));
+        cands.push_back(joinPath(joinPath(joinPath(database->root, "skins"), "sharedtextures"), file));
+        cands.push_back(joinPath(joinPath(database->root, "textures"), file));
+    }
+    for (std::size_t i = 0; i < cands.size(); ++i) {
+        const std::string hit = existingPathIgnoreCase(cands[i]);
+        if (!hit.empty()) {
+            return hit;
+        }
+    }
+    return std::string();
+}
 
 Mat4x3 roomTransform(const Level& level, int roomId) {
     const Room* room = level.findRoom(roomId);
@@ -250,7 +292,9 @@ Renderer::Renderer()
       triangleCount_(0),
       entityMeshCount_(0),
       entityTriangleCount_(0),
-      entityPlaceholderCount_(0) {}
+      entityPlaceholderCount_(0),
+      database_(0),
+      recordingAnimated_(false) {}
 
 Renderer::~Renderer() {
     // GPU objects are released by shutdown() while the GL context is still alive.
@@ -296,6 +340,13 @@ void Renderer::clearLevelGpu() {
     batches_.clear();
     cpuBatches_.clear();
     cpuKeys_.clear();
+    destroyAnimatedGpu();
+    animCpu_.clear();
+    animKeys_.clear();
+    textureByPath_.clear();
+    lights_.clear();
+    database_ = 0;
+    recordingAnimated_ = false;
     triangleCount_ = 0;
     entityMeshCount_ = 0;
     entityTriangleCount_ = 0;
@@ -437,6 +488,7 @@ bool Renderer::loadLevel(const Level& level, const Database* database, char* err
     (void)error;
     (void)errorSize;
     clearLevelGpu();
+    database_ = database;
 
     std::vector<Image> decodedTex(level.textures.size());
     std::vector<char> decodedOk(level.textures.size(), 0);
@@ -540,6 +592,7 @@ bool Renderer::loadLevel(const Level& level, const Database* database, char* err
         w.falloff = sl.falloffRange;
         lights.push_back(w);
     }
+    lights_ = lights;
 
     for (std::size_t i = 0; i < level.staticMeshes.size(); ++i) {
         const StaticMesh& mesh = level.staticMeshes[i];
@@ -597,7 +650,9 @@ bool Renderer::loadLevel(const Level& level, const Database* database, char* err
         }
         int added = 0;
         if (kf != 0) {
-            added = appendKf2File(*kf, entity, ch.properties.roomId, lights, database);
+            // Skinned characters are posed every frame in beginAnimated /
+            // appendAnimatedCharacter so the bind-pose T-pose is not baked.
+            added = 1;
         }
         if (added <= 0) {
             Mat4x3 body = entity;
@@ -656,14 +711,16 @@ bool Renderer::loadLevel(const Level& level, const Database* database, char* err
 }
 
 Renderer::GpuMesh& Renderer::batchFor(const BatchKey& key) {
-    for (std::size_t b = 0; b < cpuKeys_.size(); ++b) {
-        if (cpuKeys_[b] == key) {
-            return cpuBatches_[b];
+    std::vector<BatchKey>& keys = recordingAnimated_ ? animKeys_ : cpuKeys_;
+    std::vector<GpuMesh>& batches = recordingAnimated_ ? animCpu_ : cpuBatches_;
+    for (std::size_t b = 0; b < keys.size(); ++b) {
+        if (keys[b] == key) {
+            return batches[b];
         }
     }
-    cpuKeys_.push_back(key);
-    cpuBatches_.push_back(GpuMesh());
-    return cpuBatches_.back();
+    keys.push_back(key);
+    batches.push_back(GpuMesh());
+    return batches.back();
 }
 
 Vec3 Renderer::shadeVertex(const Vec3& worldPos, const Vec3& worldNrm,
@@ -686,18 +743,26 @@ Vec3 Renderer::shadeVertex(const Vec3& worldPos, const Vec3& worldNrm,
         lit.y += L.color.y * w;
         lit.z += L.color.z * w;
     }
-    lit.x = clamp(lit.x, 0.05f, 4.0f);
-    lit.y = clamp(lit.y, 0.05f, 4.0f);
-    lit.z = clamp(lit.z, 0.05f, 4.0f);
+    lit.x = clamp(lit.x, 0.12f, 1.15f);
+    lit.y = clamp(lit.y, 0.12f, 1.15f);
+    lit.z = clamp(lit.z, 0.12f, 1.15f);
     return lit;
 }
 
 GLuint Renderer::textureFromFile(const std::string& path) {
+    const std::string key = lowerCopy(path);
+    std::map<std::string, GLuint>::const_iterator it = textureByPath_.find(key);
+    if (it != textureByPath_.end()) {
+        return it->second;
+    }
     Image img;
     if (!loadImageFile(path, img, 0) || img.empty()) {
-        return whiteTex_;
+        textureByPath_[key] = greyTex_;
+        return greyTex_;
     }
-    return uploadTexture(&img.pixels[0], img.width, img.height, true, false);
+    const GLuint tex = uploadTexture(&img.pixels[0], img.width, img.height, true, false);
+    textureByPath_[key] = tex;
+    return tex;
 }
 
 void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<Vec3>& normals,
@@ -818,22 +883,15 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
 void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int roomId,
                             const std::vector<WorldLight>& lights, const Database* database,
                             const std::string& modelDir) {
-    (void)database;
     for (std::size_t p = 0; p < mesh.parts.size(); ++p) {
         const Kf2DrawPart& part = mesh.parts[p];
         if (part.vertices.size() < 3) {
             continue;
         }
-        GLuint diff = whiteTex_;
+        GLuint diff = greyTex_;
         if (!part.textureFiles.empty()) {
-            const std::string texName = nativeSeparators(part.textureFiles[0]);
-            std::string hit = existingPathIgnoreCase(joinPath(joinPath(modelDir, "textures"), fileName(texName)));
-            if (hit.empty()) {
-                hit = existingPathIgnoreCase(joinPath(modelDir, texName));
-            }
-            if (hit.empty()) {
-                hit = existingPathIgnoreCase(joinPath(joinPath(parentDir(modelDir), "textures"), fileName(texName)));
-            }
+            const std::string hit =
+                locateKf2Texture(part.textureFiles[0], modelDir, mesh.textureDirs, database);
             if (!hit.empty()) {
                 diff = textureFromFile(hit);
             }
@@ -843,7 +901,7 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
         key.lightmap = whiteTex_;
         key.roomId = roomId;
         key.alphaTest = part.textureFiles.size() > 1;
-        key.dynamic = false;
+        key.dynamic = recordingAnimated_;
         key.service = false;
         key.writesZ = true;
         key.vertexLit = true;
@@ -854,9 +912,9 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
             const Vec3 pos = mirrorX(transformPoint(world, part.vertices[v].position));
             const Vec3 nrm = mirrorX(transformVector(world, part.vertices[v].normal));
             Vec3 col = shadeVertex(pos, nrm, lights);
-            col.x = col.x * 0.45f + 0.55f;
-            col.y = col.y * 0.45f + 0.55f;
-            col.z = col.z * 0.45f + 0.55f;
+            col.x = clamp(col.x * part.diffuseColor.x, 0.05f, 1.0f);
+            col.y = clamp(col.y * part.diffuseColor.y, 0.05f, 1.0f);
+            col.z = clamp(col.z * part.diffuseColor.z, 0.05f, 1.0f);
             gpu.vertices.push_back(pos.x);
             gpu.vertices.push_back(pos.y);
             gpu.vertices.push_back(pos.z);
@@ -876,8 +934,10 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
             gpu.indices.push_back(base + i + 0);
             gpu.indices.push_back(base + i + 2);
             gpu.indices.push_back(base + i + 1);
-            ++triangleCount_;
-            ++entityTriangleCount_;
+            if (!recordingAnimated_) {
+                ++triangleCount_;
+                ++entityTriangleCount_;
+            }
         }
     }
 }
@@ -904,10 +964,102 @@ int Renderer::appendKf2File(const Kf2File& kf, const Mat4x3& entity, int roomId,
                 break;
             }
         }
-        const Mat4x3 world = found ? combine(entity, local) : entity;
+        Mat4x3 world = entity;
+        if (!draws[m].modelSpace && found) {
+            world = combine(entity, local);
+        }
         appendKf2Mesh(draws[m], world, roomId, lights, database, modelDir);
     }
     return static_cast<int>(entityTriangleCount_ - before);
+}
+
+void Renderer::destroyAnimatedGpu() {
+    for (std::size_t i = 0; i < animBatches_.size(); ++i) {
+        if (animBatches_[i].vao) {
+            glDeleteVertexArrays(1, &animBatches_[i].vao);
+        }
+        if (animBatches_[i].vbo) {
+            glDeleteBuffers(1, &animBatches_[i].vbo);
+        }
+        if (animBatches_[i].ebo) {
+            glDeleteBuffers(1, &animBatches_[i].ebo);
+        }
+    }
+    animBatches_.clear();
+}
+
+void Renderer::beginAnimated() {
+    recordingAnimated_ = true;
+    destroyAnimatedGpu();
+    animCpu_.clear();
+    animKeys_.clear();
+}
+
+int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, const Kf2File* bindAnim,
+                                      const Kf2File* playAnim, float timeSeconds, const Mat4x3& entity,
+                                      int roomId) {
+    recordingAnimated_ = true;
+    std::vector<Kf2DrawMesh> draws;
+    kf2BuildSkinnedDrawMeshes(mesh, skin, bindAnim, playAnim, timeSeconds, draws);
+    if (draws.empty()) {
+        return appendKf2File(mesh, entity, roomId, lights_, database_);
+    }
+    const std::string modelDir = parentDir(mesh.sourcePath);
+    const unsigned int before = entityTriangleCount_;
+    for (std::size_t m = 0; m < draws.size(); ++m) {
+        Mat4x3 world = entity;
+        if (!draws[m].modelSpace) {
+            world = combine(entity, draws[m].objectToParent);
+        }
+        appendKf2Mesh(draws[m], world, roomId, lights_, database_, modelDir);
+    }
+    return static_cast<int>(entityTriangleCount_ - before);
+}
+
+void Renderer::uploadAnimated() {
+    recordingAnimated_ = false;
+    destroyAnimatedGpu();
+    for (std::size_t i = 0; i < animCpu_.size(); ++i) {
+        GpuMesh& mesh = animCpu_[i];
+        if (mesh.indices.empty()) {
+            continue;
+        }
+        DrawBatch batch;
+        batch.diffuse = animKeys_[i].diffuse;
+        batch.lightmap = animKeys_[i].lightmap;
+        batch.roomId = animKeys_[i].roomId;
+        batch.alphaTest = animKeys_[i].alphaTest;
+        batch.dynamic = true;
+        batch.service = false;
+        batch.writesZ = true;
+        batch.vertexLit = true;
+        batch.detailOffset = 0;
+        batch.indexCount = static_cast<int>(mesh.indices.size());
+        glGenVertexArrays(1, &batch.vao);
+        glGenBuffers(1, &batch.vbo);
+        glGenBuffers(1, &batch.ebo);
+        glBindVertexArray(batch.vao);
+        glBindBuffer(GL_ARRAY_BUFFER, batch.vbo);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(mesh.vertices.size() * sizeof(float)),
+                     &mesh.vertices[0], GL_STREAM_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     static_cast<GLsizeiptr>(mesh.indices.size() * sizeof(unsigned int)),
+                     &mesh.indices[0], GL_STREAM_DRAW);
+        const GLsizei stride = 13 * sizeof(float);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(3 * sizeof(float)));
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(6 * sizeof(float)));
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(8 * sizeof(float)));
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(10 * sizeof(float)));
+        glBindVertexArray(0);
+        animBatches_.push_back(batch);
+    }
 }
 
 void Renderer::appendOrientedBox(const Mat4x3& entity, int roomId, float hx, float hy, float hz,
@@ -1142,8 +1294,10 @@ void Renderer::cycleRoom(int delta, int roomCount) {
 }
 
 void Renderer::drawBatches(bool alphaPass) {
-    for (std::size_t i = 0; i < batches_.size(); ++i) {
-        const DrawBatch& b = batches_[i];
+    for (int pass = 0; pass < 2; ++pass) {
+    const std::vector<DrawBatch>& list = pass == 0 ? batches_ : animBatches_;
+    for (std::size_t i = 0; i < list.size(); ++i) {
+        const DrawBatch& b = list[i];
         if (b.alphaTest != alphaPass) {
             continue;
         }
@@ -1179,6 +1333,7 @@ void Renderer::drawBatches(bool alphaPass) {
         glBindVertexArray(b.vao);
         glDrawElements(GL_TRIANGLES, b.indexCount, GL_UNSIGNED_INT, 0);
     }
+    }
     glDepthMask(GL_TRUE);
     glDisable(GL_POLYGON_OFFSET_FILL);
 }
@@ -1204,6 +1359,9 @@ void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
     glUniform1f(glGetUniformLocation(meshProgram_, "uLmScale"), 2.0f);
     glUniform1i(glGetUniformLocation(meshProgram_, "uVertexLit"), 0);
     glUniform1f(glGetUniformLocation(meshProgram_, "uAlphaRef"), 0.45f);
+    if (recordingAnimated_) {
+        uploadAnimated();
+    }
     drawBatches(false);
     drawBatches(true);
     glEnable(GL_CULL_FACE);

@@ -3,6 +3,7 @@
 #include "maxfx/core/Fs.h"
 #include "maxfx/core/Stream.h"
 
+#include <cmath>
 #include <map>
 
 namespace maxfx {
@@ -492,9 +493,19 @@ Kf2Skin parseSkin(TaggedReader& in, const ChunkHeader& header) {
                 sv.weights.push_back(weight);
             }
         }
+        int maxIndex = -1;
         for (std::map<int, Kf2SkinVertex>::iterator it = byVertex.begin(); it != byVertex.end();
              ++it) {
-            skin.vertices.push_back(it->second);
+            if (it->first > maxIndex) {
+                maxIndex = it->first;
+            }
+        }
+        if (maxIndex >= 0) {
+            skin.vertices.assign(static_cast<std::size_t>(maxIndex + 1), Kf2SkinVertex());
+            for (std::map<int, Kf2SkinVertex>::iterator it = byVertex.begin(); it != byVertex.end();
+                 ++it) {
+                skin.vertices[static_cast<std::size_t>(it->first)] = it->second;
+            }
         }
         const int nSkin = in.readInt();
         for (int i = 0; i < nSkin; ++i) {
@@ -504,9 +515,19 @@ Kf2Skin parseSkin(TaggedReader& in, const ChunkHeader& header) {
         for (int i = 0; i < nSkel; ++i) {
             skin.skeletonObjectNames.push_back(in.readString());
         }
-        const int extra = in.readInt();
-        for (int i = 0; i < extra; ++i) {
-            in.readInt();
+        // Trailing per-vertex extras vary by exporter; stop on a non-int tag
+        // rather than dropping the whole skin chunk.
+        try {
+            if (!in.eof() && in.peekTag() != kKf2ChunkTag) {
+                const int extra = in.readInt();
+                for (int i = 0; i < extra; ++i) {
+                    if (in.eof() || in.peekTag() == kKf2ChunkTag) {
+                        break;
+                    }
+                    in.readInt();
+                }
+            }
+        } catch (const ReadError&) {
         }
     } else {
         // Version 1 stores several tagged vectors with a leading type tag we
@@ -575,6 +596,66 @@ Kf2Skin parseSkin(TaggedReader& in, const ChunkHeader& header) {
         }
     }
     return skin;
+}
+
+Kf2NodeAnimation parseKeyframeAnimation(TaggedReader& in, const ChunkHeader& header) {
+    Kf2NodeAnimation anim;
+    anim.version = static_cast<int>(header.version);
+    if (in.peekTag() == kKf2ChunkTag) {
+        ChunkHeader sub;
+        sub.id = 0;
+        sub.version = 0;
+        sub.size = 0;
+        if (tryReadChunk(in, sub)) {
+            if (sub.id == kKf2Animation) {
+                anim.targetName = in.readString();
+                anim.frameRate = in.readInt();
+                anim.looping = readKf2Bool(in);
+            } else {
+                skipUnknownChunk(in, sub);
+            }
+        }
+    }
+    if (in.eof() || in.peekTag() == kKf2ChunkTag) {
+        return anim;
+    }
+    anim.parentName = in.readString();
+    if (in.eof() || in.peekTag() == kKf2ChunkTag) {
+        return anim;
+    }
+    anim.loopInterpolation = readKf2Bool(in);
+    anim.totalKeyframeCount = in.readInt();
+    const int keyCount = in.readInt();
+    anim.keys.reserve(static_cast<std::size_t>(keyCount < 0 ? 0 : keyCount));
+    for (int i = 0; i < keyCount; ++i) {
+        Kf2AnimKey key;
+        key.frame = in.readInt();
+        key.objectToParent = in.readMat4x3();
+        anim.keys.push_back(key);
+    }
+    if (header.version > 0 && !in.eof() && in.peekTag() != kKf2ChunkTag) {
+        const int visCount = in.readInt();
+        anim.visibility.reserve(static_cast<std::size_t>(visCount < 0 ? 0 : visCount));
+        for (int i = 0; i < visCount; ++i) {
+            Kf2VisibilityKey v;
+            v.frame = in.readInt();
+            v.visibility = in.readFloat();
+            anim.visibility.push_back(v);
+        }
+    }
+    if (header.version > 1 && !in.eof() && in.peekTag() != kKf2ChunkTag) {
+        anim.loopToFrame = in.readInt();
+    }
+    if (header.version > 2 && !in.eof() && in.peekTag() != kKf2ChunkTag) {
+        anim.interpolationMethod = in.readInt();
+    }
+    if (header.version > 3 && !in.eof() && in.peekTag() != kKf2ChunkTag) {
+        anim.maintainMatrixScaling = readKf2Bool(in);
+    }
+    if (header.version <= 4 && anim.totalKeyframeCount >= 0) {
+        anim.totalKeyframeCount += 1;
+    }
+    return anim;
 }
 
 const Kf2Material* findMaterial(const Kf2File& file, const std::string& name) {
@@ -700,6 +781,9 @@ Kf2File Kf2Reader::loadFromMemory(const std::uint8_t* data, std::size_t size,
                 case kKf2Skin:
                     file.skins.push_back(parseSkin(in, header));
                     break;
+                case kKf2KeyframeAnimation:
+                    file.animations.push_back(parseKeyframeAnimation(in, header));
+                    break;
                 default:
                     ++file.skippedChunks;
                     skipUnknownChunk(in, header);
@@ -759,6 +843,10 @@ void kf2NodeWorldTransforms(const Kf2File& file, std::vector<std::string>* names
 
 void kf2BuildDrawMeshes(const Kf2File& file, std::vector<Kf2DrawMesh>& out) {
     out.clear();
+    std::string dirs;
+    if (!file.materialLists.empty()) {
+        dirs = file.materialLists[0].textureDirs;
+    }
     for (std::size_t i = 0; i < file.meshes.size(); ++i) {
         const Kf2Mesh* src = &file.meshes[i];
         Kf2Mesh resolved = *src;
@@ -775,6 +863,7 @@ void kf2BuildDrawMeshes(const Kf2File& file, std::vector<Kf2DrawMesh>& out) {
             }
         }
         Kf2DrawMesh dm;
+        dm.textureDirs = dirs;
         if (resolved.hasNode) {
             dm.nodeName = resolved.node.name;
             dm.parentName = resolved.node.parentName;
@@ -784,6 +873,286 @@ void kf2BuildDrawMeshes(const Kf2File& file, std::vector<Kf2DrawMesh>& out) {
         if (!dm.parts.empty()) {
             out.push_back(dm);
         }
+    }
+}
+
+float kf2AnimationDuration(const Kf2File& file) {
+    float best = 0.0f;
+    for (std::size_t i = 0; i < file.animations.size(); ++i) {
+        const Kf2NodeAnimation& a = file.animations[i];
+        const float fps = a.frameRate > 0 ? static_cast<float>(a.frameRate) : 30.0f;
+        float frames = static_cast<float>(a.totalKeyframeCount);
+        if (!a.keys.empty()) {
+            const float last = static_cast<float>(a.keys.back().frame);
+            if (last + 1.0f > frames) {
+                frames = last + 1.0f;
+            }
+        }
+        const float d = frames / fps;
+        if (d > best) {
+            best = d;
+        }
+    }
+    return best;
+}
+
+Mat4x3 sampleChannel(const Kf2NodeAnimation& a, float timeSeconds) {
+    if (a.keys.empty()) {
+        return Mat4x3();
+    }
+    const float fps = a.frameRate > 0 ? static_cast<float>(a.frameRate) : 30.0f;
+    float duration = static_cast<float>(a.totalKeyframeCount) / fps;
+    if (duration < 1.0e-4f) {
+        duration = (static_cast<float>(a.keys.back().frame) + 1.0f) / fps;
+    }
+    if (duration < 1.0e-4f) {
+        return a.keys[0].objectToParent;
+    }
+    float t = timeSeconds;
+    if (a.looping) {
+        t = t - duration * std::floor(t / duration);
+        if (t < 0.0f) {
+            t += duration;
+        }
+    } else if (t > duration) {
+        t = duration;
+    }
+    if (t < 0.0f) {
+        t = 0.0f;
+    }
+    const float frame = t * fps;
+    if (a.keys.size() == 1 || frame <= static_cast<float>(a.keys.front().frame)) {
+        return a.keys.front().objectToParent;
+    }
+    if (frame >= static_cast<float>(a.keys.back().frame)) {
+        return a.keys.back().objectToParent;
+    }
+    for (std::size_t i = 0; i + 1 < a.keys.size(); ++i) {
+        const float f0 = static_cast<float>(a.keys[i].frame);
+        const float f1 = static_cast<float>(a.keys[i + 1].frame);
+        if (frame > f1) {
+            continue;
+        }
+        if (f1 <= f0 + 1.0e-4f || a.interpolationMethod == 0) {
+            return a.keys[i].objectToParent;
+        }
+        const float u = (frame - f0) / (f1 - f0);
+        return lerpMat(a.keys[i].objectToParent, a.keys[i + 1].objectToParent, u);
+    }
+    return a.keys.back().objectToParent;
+}
+
+void kf2SampleAnimation(const Kf2File& file, float timeSeconds, std::vector<std::string>* names,
+                        std::vector<Mat4x3>* locals) {
+    names->clear();
+    locals->clear();
+    names->reserve(file.animations.size());
+    locals->reserve(file.animations.size());
+    for (std::size_t i = 0; i < file.animations.size(); ++i) {
+        names->push_back(file.animations[i].targetName);
+        locals->push_back(sampleChannel(file.animations[i], timeSeconds));
+    }
+}
+
+int findNameIndex(const std::vector<std::string>& names, const std::string& key) {
+    const std::string k = lowerAscii(key);
+    for (std::size_t i = 0; i < names.size(); ++i) {
+        if (lowerAscii(names[i]) == k) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
+}
+
+void worldsFromLocals(const std::vector<std::string>& names, const std::vector<Mat4x3>& locals,
+                      const std::vector<std::string>& parents, std::vector<Mat4x3>* worlds) {
+    worlds->assign(locals.begin(), locals.end());
+    for (std::size_t i = 0; i < names.size(); ++i) {
+        Mat4x3 world = locals[i];
+        std::string walk = names[i];
+        int guard = 0;
+        while (guard++ < 64) {
+            const int idx = findNameIndex(names, walk);
+            if (idx < 0 || parents[static_cast<std::size_t>(idx)].empty()) {
+                break;
+            }
+            walk = parents[static_cast<std::size_t>(idx)];
+            const int p = findNameIndex(names, walk);
+            if (p < 0) {
+                break;
+            }
+            world = combine(locals[static_cast<std::size_t>(p)], world);
+        }
+        (*worlds)[i] = world;
+    }
+}
+
+void kf2BuildSkeletonWorlds(const Kf2File& anim, float timeSeconds, const Kf2File* bind,
+                            std::vector<std::string>* names, std::vector<Mat4x3>* worlds) {
+    names->clear();
+    worlds->clear();
+    std::vector<std::string> localsNames;
+    std::vector<Mat4x3> locals;
+    std::vector<std::string> parents;
+    if (bind != 0) {
+        kf2SampleAnimation(*bind, 0.0f, &localsNames, &locals);
+        parents.assign(localsNames.size(), std::string());
+        for (std::size_t i = 0; i < bind->animations.size(); ++i) {
+            const int idx = findNameIndex(localsNames, bind->animations[i].targetName);
+            if (idx >= 0) {
+                parents[static_cast<std::size_t>(idx)] = bind->animations[i].parentName;
+            }
+        }
+    }
+    std::vector<std::string> playNames;
+    std::vector<Mat4x3> playLocals;
+    kf2SampleAnimation(anim, timeSeconds, &playNames, &playLocals);
+    for (std::size_t i = 0; i < playNames.size(); ++i) {
+        const int idx = findNameIndex(localsNames, playNames[i]);
+        if (idx >= 0) {
+            locals[static_cast<std::size_t>(idx)] = playLocals[i];
+        } else {
+            localsNames.push_back(playNames[i]);
+            locals.push_back(playLocals[i]);
+            std::string parent;
+            for (std::size_t a = 0; a < anim.animations.size(); ++a) {
+                if (lowerAscii(anim.animations[a].targetName) == lowerAscii(playNames[i])) {
+                    parent = anim.animations[a].parentName;
+                    break;
+                }
+            }
+            parents.push_back(parent);
+        }
+    }
+    if (localsNames.empty()) {
+        return;
+    }
+    worldsFromLocals(localsNames, locals, parents, worlds);
+    *names = localsNames;
+}
+
+const Kf2Skin* pickSkin(const Kf2File& meshFile, const Kf2File* skinFile) {
+    if (skinFile != 0 && !skinFile->skins.empty()) {
+        return &skinFile->skins[0];
+    }
+    if (!meshFile.skins.empty()) {
+        return &meshFile.skins[0];
+    }
+    return 0;
+}
+
+Mat4x3 lookupWorld(const std::vector<std::string>& names, const std::vector<Mat4x3>& worlds,
+                   const std::string& key, bool* found) {
+    const int idx = findNameIndex(names, key);
+    if (idx >= 0) {
+        if (found) {
+            *found = true;
+        }
+        return worlds[static_cast<std::size_t>(idx)];
+    }
+    if (found) {
+        *found = false;
+    }
+    return Mat4x3();
+}
+
+void poseGeometry(Kf2Mesh& mesh, const Kf2Skin* skin, const std::vector<std::string>& bindNames,
+                  const std::vector<Mat4x3>& bindWorlds, const std::vector<std::string>& playNames,
+                  const std::vector<Mat4x3>& playWorlds) {
+    if (!mesh.hasGeometry) {
+        return;
+    }
+    bool dummy = false;
+    const Mat4x3 meshBind = mesh.hasNode
+                                ? lookupWorld(bindNames, bindWorlds, mesh.node.name, &dummy)
+                                : Mat4x3();
+    const Mat4x3 meshPlay = mesh.hasNode
+                                ? lookupWorld(playNames, playWorlds, mesh.node.name, &dummy)
+                                : Mat4x3();
+    std::vector<Vec3>& verts = mesh.geometry.vertices;
+    std::vector<Vec3>& nrms = mesh.geometry.normals;
+    for (std::size_t i = 0; i < verts.size(); ++i) {
+        const Vec3 vLocal = verts[i];
+        const Vec3 nLocal = i < nrms.size() ? nrms[i] : Vec3(0.0f, 1.0f, 0.0f);
+        Vec3 posed = transformPoint(meshPlay, vLocal);
+        Vec3 posedN = transformVector(meshPlay, nLocal);
+        if (skin != 0 && i < skin->vertices.size() && !skin->vertices[i].bones.empty()) {
+            const Kf2SkinVertex& sv = skin->vertices[i];
+            const Vec3 vBind = transformPoint(meshBind, vLocal);
+            const Vec3 nBind = transformVector(meshBind, nLocal);
+            Vec3 acc(0.0f, 0.0f, 0.0f);
+            Vec3 accN(0.0f, 0.0f, 0.0f);
+            float wsum = 0.0f;
+            for (std::size_t b = 0; b < sv.bones.size(); ++b) {
+                const int bi = sv.bones[b];
+                if (bi < 0 || bi >= static_cast<int>(skin->skeletonObjectNames.size())) {
+                    continue;
+                }
+                const std::string& bone = skin->skeletonObjectNames[static_cast<std::size_t>(bi)];
+                bool hasBind = false;
+                bool hasPlay = false;
+                const Mat4x3 bw = lookupWorld(bindNames, bindWorlds, bone, &hasBind);
+                const Mat4x3 pw = lookupWorld(playNames, playWorlds, bone, &hasPlay);
+                if (!hasBind || !hasPlay) {
+                    continue;
+                }
+                const float w = b < sv.weights.size() ? sv.weights[b] : 1.0f;
+                const Mat4x3 invB = inverseRigid(bw);
+                acc += transformPoint(pw, transformPoint(invB, vBind)) * w;
+                accN += transformVector(pw, transformVector(invB, nBind)) * w;
+                wsum += w;
+            }
+            if (wsum > 1.0e-5f) {
+                posed = acc * (1.0f / wsum);
+                posedN = accN * (1.0f / wsum);
+            }
+        }
+        verts[i] = posed;
+        if (i < nrms.size()) {
+            nrms[i] = normalize(posedN);
+        }
+    }
+    if (mesh.hasNode) {
+        mesh.node.objectToParent = Mat4x3();
+        mesh.node.hasParent = false;
+        mesh.node.parentName.clear();
+    }
+}
+
+void kf2BuildSkinnedDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile,
+                               const Kf2File* bindAnim, const Kf2File* playAnim, float timeSeconds,
+                               std::vector<Kf2DrawMesh>& out) {
+    const Kf2File* play = playAnim != 0 ? playAnim : bindAnim;
+    std::vector<std::string> bindNames;
+    std::vector<Mat4x3> bindWorlds;
+    std::vector<std::string> playNames;
+    std::vector<Mat4x3> playWorlds;
+    if (bindAnim != 0 && !bindAnim->animations.empty()) {
+        kf2BuildSkeletonWorlds(*bindAnim, 0.0f, 0, &bindNames, &bindWorlds);
+    } else {
+        kf2NodeWorldTransforms(meshFile, &bindNames, &bindWorlds);
+    }
+    if (play != 0 && !play->animations.empty()) {
+        kf2BuildSkeletonWorlds(*play, timeSeconds, bindAnim, &playNames, &playWorlds);
+    } else {
+        playNames = bindNames;
+        playWorlds = bindWorlds;
+    }
+
+    const Kf2Skin* skin = pickSkin(meshFile, skinFile);
+    if (skin == 0) {
+        kf2BuildDrawMeshes(meshFile, out);
+        return;
+    }
+    Kf2File posed = meshFile;
+    for (std::size_t i = 0; i < posed.meshes.size(); ++i) {
+        poseGeometry(posed.meshes[i], skin, bindNames, bindWorlds, playNames, playWorlds);
+    }
+    kf2BuildDrawMeshes(posed, out);
+    for (std::size_t i = 0; i < out.size(); ++i) {
+        out[i].modelSpace = true;
+        out[i].objectToParent = Mat4x3();
+        out[i].parentName.clear();
     }
 }
 

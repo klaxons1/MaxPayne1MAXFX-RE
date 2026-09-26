@@ -1,6 +1,8 @@
 #ifndef MAXFX_VIEWER_APP_H
 #define MAXFX_VIEWER_APP_H
 
+#include "maxfx/char/Character.h"
+#include "maxfx/collision/Collision.h"
 #include "maxfx/db/Database.h"
 #include "maxfx/ldb/Ldb.h"
 #include "maxfx/levels/Levels.h"
@@ -34,6 +36,8 @@ private:
     void cycleLevel(int delta);
     void handleKeyDown(int scancode, int key);
     void update(float dt);
+    void spawnActors();
+    void updateActors(float dt);
     void drawHud(float dt);
     void drawLoadingFrame(const std::string& message);
 
@@ -44,6 +48,8 @@ private:
     Renderer renderer_;
     ViewerAudio audio_;
     Camera camera_;
+    CollisionWorld collision_;
+    std::vector<CharacterActor> actors_;
     bool running_;
     bool mouseCaptured_;
     bool showHelp_;

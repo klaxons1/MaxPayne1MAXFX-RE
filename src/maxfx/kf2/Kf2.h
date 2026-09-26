@@ -207,11 +207,53 @@ struct Kf2Skin {
     Kf2Skin() : version(0) {}
 };
 
+struct Kf2AnimKey {
+    int frame;
+    Mat4x3 objectToParent;
+
+    Kf2AnimKey() : frame(0) {}
+};
+
+struct Kf2VisibilityKey {
+    int frame;
+    float visibility;
+
+    Kf2VisibilityKey() : frame(0), visibility(1.0f) {}
+};
+
+// One bone channel. PC files emit one kKf2KeyframeAnimation chunk per node
+// (see KeyframeAnimationChunk::operator>> in the Android decompile).
+struct Kf2NodeAnimation {
+    int version;
+    std::string targetName;
+    std::string parentName;
+    int frameRate;
+    bool looping;
+    bool loopInterpolation;
+    int totalKeyframeCount;
+    int loopToFrame;
+    int interpolationMethod;
+    bool maintainMatrixScaling;
+    std::vector<Kf2AnimKey> keys;
+    std::vector<Kf2VisibilityKey> visibility;
+
+    Kf2NodeAnimation()
+        : version(0),
+          frameRate(30),
+          looping(false),
+          loopInterpolation(false),
+          totalKeyframeCount(0),
+          loopToFrame(0),
+          interpolationMethod(1),
+          maintainMatrixScaling(false) {}
+};
+
 struct Kf2File {
     std::string sourcePath;
     std::vector<Kf2MaterialList> materialLists;
     std::vector<Kf2Mesh> meshes;
     std::vector<Kf2Skin> skins;
+    std::vector<Kf2NodeAnimation> animations;
     int skippedChunks;
     int unknownChunks;
 
@@ -238,7 +280,11 @@ struct Kf2DrawMesh {
     std::string nodeName;
     std::string parentName;
     Mat4x3 objectToParent;
+    std::string textureDirs;  // copied from the file's material list
+    bool modelSpace;          // true after skinning / pose (renderer uses entity only)
     std::vector<Kf2DrawPart> parts;
+
+    Kf2DrawMesh() : modelSpace(false) {}
 };
 
 class Kf2Reader {
@@ -255,6 +301,23 @@ void kf2NodeWorldTransforms(const Kf2File& file, std::vector<std::string>* names
 // Triangle lists in node-local space. Meshes that only reference another
 // object's geometry are expanded.
 void kf2BuildDrawMeshes(const Kf2File& file, std::vector<Kf2DrawMesh>& out);
+
+float kf2AnimationDuration(const Kf2File& file);
+
+// Sample every bone channel at `timeSeconds` (loops when the clip says so).
+void kf2SampleAnimation(const Kf2File& file, float timeSeconds, std::vector<std::string>* names,
+                        std::vector<Mat4x3>* locals);
+
+// Parent-chain worlds for an animation clip. Missing bones fall back to
+// `bind` (typically CHARANIM_POSE).
+void kf2BuildSkeletonWorlds(const Kf2File& anim, float timeSeconds, const Kf2File* bind,
+                            std::vector<std::string>* names, std::vector<Mat4x3>* worlds);
+
+// Linear-blend skin: KFS mesh + SKD weights + pose clip (bind) + current clip.
+// Output vertices are in model space (`modelSpace = true`).
+void kf2BuildSkinnedDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile,
+                               const Kf2File* bindAnim, const Kf2File* playAnim, float timeSeconds,
+                               std::vector<Kf2DrawMesh>& out);
 
 inline const char* kf2ChunkName(unsigned int id) {
     switch (id) {

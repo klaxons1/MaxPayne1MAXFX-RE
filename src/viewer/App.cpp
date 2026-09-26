@@ -1,7 +1,10 @@
 #include "viewer/App.h"
 
+#include "maxfx/char/Character.h"
+#include "maxfx/collision/Collision.h"
 #include "maxfx/core/Fs.h"
 #include "maxfx/db/Database.h"
+#include "maxfx/kf2/Kf2.h"
 #include "maxfx/ldb/LdbReader.h"
 #include "maxfx/levels/Levels.h"
 #include "maxfx/script/Script.h"
@@ -9,6 +12,7 @@
 
 #include <SDL3/SDL.h>
 
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
@@ -302,6 +306,7 @@ bool ViewerApp::loadLevelIndex(int index, bool showLoading) {
     levelIndex_ = index;
     statusMessage_.clear();
     renderer_.resize(width_, height_);
+    spawnActors();
     placeAtSpawn(-1);
 
     char title[256];
@@ -473,8 +478,59 @@ void ViewerApp::update(float dt) {
         u -= 1;
     }
     const bool sprint = keys[SDL_SCANCODE_LSHIFT] != 0;
+    const Vec3 before = camera_.position;
     camera_.fly(f, r, u, dt, sprint);
+    const Vec3 after = camera_.position;
+    const Vec3 ldbBefore(-before.x, before.y, before.z);
+    const Vec3 ldbAfter(-after.x, after.y, after.z);
+    const Vec3 ldbNew = collision_.moveSphere(ldbBefore, ldbAfter - ldbBefore, 0.22f);
+    camera_.position = Vec3(-ldbNew.x, ldbNew.y, ldbNew.z);
+    updateActors(dt);
     audio_.pump();
+}
+
+void ViewerApp::spawnActors() {
+    collision_.clear();
+    collision_.addBsp(level_.bsp);
+    actors_.clear();
+    for (std::size_t i = 0; i < level_.characters.size(); ++i) {
+        const Character& ch = level_.characters[i];
+        const Mat4x3 roomX = roomWorldTransform(level_, ch.properties.roomId);
+        const Mat4x3 world = combine(roomX, ch.properties.objectToRoom);
+        const Vec3 z = world.zAxis();
+        const float yaw = std::atan2(z.x, z.z);
+        const SkinDef* def = database_.findSkin(ch.characterName);
+        CharacterActor actor;
+        actor.spawn(world.translation(), yaw, ch.properties.roomId,
+                    def != 0 ? &def->character : 0, ch.characterName);
+        actors_.push_back(actor);
+    }
+}
+
+void ViewerApp::updateActors(float dt) {
+    const Vec3 playerLdb(-camera_.position.x, camera_.position.y - 1.6f, camera_.position.z);
+    for (std::size_t i = 0; i < actors_.size(); ++i) {
+        actors_[i].update(dt, playerLdb, collision_, &actors_);
+    }
+    renderer_.beginAnimated();
+    for (std::size_t i = 0; i < actors_.size(); ++i) {
+        CharacterActor& actor = actors_[i];
+        const SkinDef* def = database_.findSkin(actor.skinName);
+        if (def == 0 || def->lods.empty()) {
+            continue;
+        }
+        const Kf2File* mesh = database_.model(def->lods[0].resolvedExport);
+        if (mesh == 0) {
+            continue;
+        }
+        const Kf2File* skin = database_.model(def->lods[0].resolvedSkin);
+        const CharacterAnimClip* poseClip = findAnimClip(def->character, kCharAnimPose);
+        const CharacterAnimClip* playClip = findAnimClip(def->character, actor.animIndex);
+        const Kf2File* bindAnim = poseClip != 0 ? database_.model(poseClip->resolvedPath) : 0;
+        const Kf2File* playAnim = playClip != 0 ? database_.model(playClip->resolvedPath) : bindAnim;
+        renderer_.appendAnimatedCharacter(*mesh, skin, bindAnim, playAnim, actor.animTime,
+                                          actor.entityTransform(), actor.roomId);
+    }
 }
 
 void ViewerApp::drawHud(float dt) {
@@ -522,11 +578,12 @@ void ViewerApp::drawHud(float dt) {
                   dt > 1.0e-4f ? 1.0f / dt : 0.0f, shade, roomName, spawnName);
     renderer_.drawHudText(12, 44, line, 0.70f, 0.75f, 0.80f);
 
+    const char* act = actors_.empty() ? "-" : characterActivityName(actors_[0].activity);
     std::snprintf(line, sizeof(line),
-                  "service %s  entities %u  kf2 tris %u  placeholders %u  items %zu  chars %zu",
+                  "service %s  entities %u  kf2 tris %u  placeholders %u  items %zu  chars %zu  ai %s",
                   renderer_.showService() ? "on" : "off", renderer_.entityMeshCount(),
                   renderer_.entityTriangleCount(), renderer_.entityPlaceholderCount(),
-                  level_.items.size(), level_.characters.size());
+                  level_.items.size(), level_.characters.size(), act);
     renderer_.drawHudText(12, 60, line, 0.65f, 0.70f, 0.75f);
 
     std::snprintf(line, sizeof(line), "%s%s", audio_.statusLine(), audio_.muted() ? "  MUTE" : "");
