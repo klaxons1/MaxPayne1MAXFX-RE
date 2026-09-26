@@ -29,7 +29,8 @@ enum GameMode {
 enum MenuScreen {
     kMenuRoot = 0,
     kMenuJumpLevel,
-    kMenuComic
+    kMenuComic,
+    kMenuComicPages
 };
 
 struct PlayerState {
@@ -94,6 +95,8 @@ struct GameRuntime {
     std::vector<DoorState> doors;
     std::vector<char> itemTaken;
     int comicIndex;
+    int comicChapter;
+    bool comicFromMenu;
     std::string prompt;
     std::string lastEvent;
     std::vector<std::string> log;
@@ -104,7 +107,7 @@ struct GameRuntime {
     void resetLevel(const Level& level, const LevelInfo* info, const Vec3& spawnLdb, float spawnYaw);
     void applyPlayerOnInit(const CharacterConfig* playerCfg);
 
-    void menuMove(int delta, int levelCount, int pageCount);
+    void menuMove(int delta, int levelCount);
     bool menuChoose(int* jumpLevel, int* openPage, bool* quit, bool* newGame);
 
     void setLook(float yawView, float pitch);
@@ -130,6 +133,20 @@ struct GameRuntime {
 
     void pushLog(const std::string& line);
 };
+
+// A_Play3DSound / A_PlaySound / A_PlayFloating3DSound from FSM startup
+// (X_LevelRuntimeFSM receive X_AudioMessage_Play3DSound in MP.exe).
+struct SoundCueRequest {
+    std::string category;
+    std::string name;
+    Vec3 origin;
+    bool is3d;
+    bool floating;
+
+    SoundCueRequest() : is3d(true), floating(false) {}
+};
+
+void collectLevelSoundCues(const Level& level, std::vector<SoundCueRequest>* out);
 
 // LDB feet from a viewer-space camera that has already applied mirrorX.
 Vec3 ldbFromView(const Vec3& viewPos, float eyeHeight);

@@ -1,14 +1,17 @@
-// SDL3 software mixer for database music / WAV cues.
+// OpenAL Soft mixer: 2D music plus S_SoundOmni 3D cues (A_Play3DSound).
 #ifndef MAXFX_VIEWER_AUDIO_H
 #define MAXFX_VIEWER_AUDIO_H
 
+#include "maxfx/core/Math.h"
 #include "maxfx/db/Database.h"
-#include "maxfx/sound/Sound.h"
+#include "maxfx/game/Runtime.h"
 
+#include <map>
 #include <string>
 #include <vector>
 
-struct SDL_AudioStream;
+typedef struct ALCdevice_struct ALCdevice;
+typedef struct ALCcontext_struct ALCcontext;
 
 namespace maxfx {
 
@@ -20,32 +23,58 @@ public:
     bool init();
     void shutdown();
 
-    // Pick looping music for this level (max_payne, else first existing wav).
+    // Looping level theme (max_payne, else first existing music wav).
     void playLevel(const Database& db, const std::string& worldSphereName);
+    // FSM startup A_Play3DSound emitters (Hotspot / FallOff omni).
+    void startCues(const Database& db, const std::vector<SoundCueRequest>& cues);
+    // One-shot 2D (graphic-novel OnInit A_PlaySound).
+    void play2d(const Database& db, const std::string& category, const std::string& name);
+    void stop2d();
+    void setListener(const Vec3& ldbPos, const Vec3& ldbForward);
+    void setEnvPaused(bool on);
     void setMuted(bool on);
     bool muted() const { return muted_; }
     void toggleMuted() { setMuted(!muted_); }
 
-    // Queue mixed PCM into the SDL stream. Call once per frame.
     void pump();
 
     const char* statusLine() const { return status_.c_str(); }
     int musicCount() const { return musicCount_; }
     int soundCount() const { return soundCount_; }
-    bool playing() const { return !muted_ && !musicPcm_.empty(); }
+    int emitterCount() const { return emitterWanted_; }
+    int emitterPlaying() const { return emitterHave_; }
+    bool playing() const { return !muted_ && (musicSource_ != 0 || !envSources_.empty()); }
 
 private:
-    void mixFrames(short* dst, int frames);
-    bool loadMusicPcm(const std::string& path);
+    struct Buffer {
+        unsigned int id;
+        int channels;
+        int rate;
 
-    SDL_AudioStream* stream_;
+        Buffer() : id(0), channels(0), rate(0) {}
+    };
+
+    unsigned int loadBuffer(const std::string& path, bool forceMono);
+    unsigned int makeSource();
+    void stopSource(unsigned int* src);
+    void clearEnv();
+    void applyMute();
+    void refreshStatus();
+
+    ALCdevice* device_;
+    ALCcontext* context_;
     bool muted_;
+    bool envPaused_;
     int musicCount_;
     int soundCount_;
+    int emitterWanted_;
+    int emitterHave_;
     std::string status_;
     std::string musicName_;
-    std::vector<short> musicPcm_;  // interleaved s16 stereo 44100
-    int musicPos_;
+    unsigned int musicSource_;
+    unsigned int storySource_;
+    std::vector<unsigned int> envSources_;
+    std::map<std::string, Buffer> buffers_;
 };
 
 }  // namespace maxfx

@@ -36,6 +36,7 @@ private:
     void placeAtSpawn(int index);
     void cycleLevel(int delta);
     void handleKeyDown(int scancode, int key);
+    void handleMouseButton(float x, float y, int button);
     void update(float dt);
     void spawnActors();
     void updateActors(float dt);
@@ -44,6 +45,10 @@ private:
     void drawComicHud();
     void drawLoadingFrame(const std::string& message);
     void enterLevel(int index);
+    void enterComic(int page, bool fromMenu);
+    void leaveComic();
+    void stepComic(int delta);
+    void playComicSound();
     void syncCameraFromPlayer();
     Vec3 playerLookLdb() const;
 
@@ -69,6 +74,7 @@ private:
     std::vector<std::string> levelPaths_;
     std::vector<LevelInfo> levelInfos_;
     int levelIndex_;
+    int lastComicPage_;
     std::string statusMessage_;
     std::string startPlace_;
 };

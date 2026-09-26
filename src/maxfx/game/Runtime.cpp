@@ -126,7 +126,9 @@ GameRuntime::GameRuntime()
       menu(kMenuRoot),
       menuCursor(0),
       menuScroll(0),
-      comicIndex(0) {}
+      comicIndex(0),
+      comicChapter(0),
+      comicFromMenu(false) {}
 
 void GameRuntime::loadCatalog(const std::string& dbRoot) { catalog = loadGameCatalog(dbRoot); }
 
@@ -201,12 +203,18 @@ void GameRuntime::setLook(float yawView, float pitch) {
     player.pitch = pitch;
 }
 
-void GameRuntime::menuMove(int delta, int levelCount, int pageCount) {
+void GameRuntime::menuMove(int delta, int levelCount) {
     int n = 4;
     if (menu == kMenuJumpLevel) {
         n = std::max(1, levelCount);
     } else if (menu == kMenuComic) {
-        n = std::max(1, pageCount);
+        n = std::max(1, static_cast<int>(catalog.chapters.size()));
+    } else if (menu == kMenuComicPages) {
+        if (comicChapter >= 0 && static_cast<std::size_t>(comicChapter) < catalog.chapters.size()) {
+            n = std::max(1, static_cast<int>(catalog.chapters[static_cast<std::size_t>(comicChapter)].pageIndices.size()));
+        } else {
+            n = std::max(1, static_cast<int>(catalog.pages.size()));
+        }
     }
     menuCursor += delta;
     while (menuCursor < 0) {
@@ -247,8 +255,29 @@ bool GameRuntime::menuChoose(int* jumpLevel, int* openPage, bool* quit, bool* ne
         return true;
     }
     if (menu == kMenuComic) {
-        *openPage = menuCursor;
-        comicIndex = menuCursor;
+        if (catalog.chapters.empty()) {
+            *openPage = menuCursor;
+            comicIndex = menuCursor;
+            comicFromMenu = true;
+            mode = kModeGraphicNovel;
+            return true;
+        }
+        comicChapter = menuCursor;
+        menu = kMenuComicPages;
+        menuCursor = 0;
+        return false;
+    }
+    if (menu == kMenuComicPages) {
+        int page = menuCursor;
+        if (comicChapter >= 0 && static_cast<std::size_t>(comicChapter) < catalog.chapters.size()) {
+            const GraphicNovelChapter& ch = catalog.chapters[static_cast<std::size_t>(comicChapter)];
+            if (menuCursor >= 0 && static_cast<std::size_t>(menuCursor) < ch.pageIndices.size()) {
+                page = ch.pageIndices[static_cast<std::size_t>(menuCursor)];
+            }
+        }
+        *openPage = page;
+        comicIndex = page;
+        comicFromMenu = true;
         mode = kModeGraphicNovel;
         return true;
     }
@@ -491,6 +520,7 @@ void GameRuntime::dispatch(const GameMessage& msg, const Level& level, std::vect
         for (std::size_t i = 0; i < catalog.pages.size(); ++i) {
             if (lowerCopy(catalog.pages[i].id) == id) {
                 comicIndex = static_cast<int>(i);
+                comicFromMenu = false;
                 mode = kModeGraphicNovel;
                 pushLog(std::string("MPGNM_PickUpNote ") + id);
                 return;
@@ -747,6 +777,67 @@ bool GameRuntime::tryShoot(const Level& level, CollisionWorld& world, std::vecto
         dispatch(act, level, actors, hit.triggerIndex);
     }
     return true;
+}
+
+void collectCuesFromText(const std::string& text, const Vec3& origin, std::vector<SoundCueRequest>* out) {
+    const std::vector<GameMessage> msgs = parseGameMessages(text);
+    for (std::size_t i = 0; i < msgs.size(); ++i) {
+        const GameMessage& m = msgs[i];
+        SoundCueRequest q;
+        q.origin = origin;
+        if (methodIs(m, "a_play3dsound")) {
+            q.is3d = true;
+            q.floating = false;
+        } else if (methodIs(m, "a_playfloating3dsound")) {
+            q.is3d = true;
+            q.floating = true;
+        } else if (methodIs(m, "a_playsound")) {
+            q.is3d = false;
+            q.floating = false;
+        } else {
+            continue;
+        }
+        if (m.args.size() >= 2) {
+            q.category = lowerCopy(m.args[0]);
+            q.name = lowerCopy(m.args[1]);
+        } else if (!m.args.empty()) {
+            q.name = lowerCopy(m.args[0]);
+        } else {
+            continue;
+        }
+        out->push_back(q);
+    }
+}
+
+Vec3 fsmOrigin(const Level& level, const EntityProperties& p) {
+    const Mat4x3 roomX = roomWorldTransform(level, p.roomId);
+    return transformPoint(combine(roomX, p.objectToRoom), Vec3(0, 0, 0));
+}
+
+void collectLevelSoundCues(const Level& level, std::vector<SoundCueRequest>* out) {
+    if (out == 0) {
+        return;
+    }
+    for (std::size_t i = 0; i < level.fsms.size(); ++i) {
+        const Fsm& fsm = level.fsms[i];
+        const Vec3 origin = fsmOrigin(level, fsm.properties);
+        for (std::size_t k = 0; k < fsm.startupBefore.messages.size(); ++k) {
+            collectCuesFromText(fsm.startupBefore.messages[k], origin, out);
+        }
+        for (std::size_t k = 0; k < fsm.startupAfter.messages.size(); ++k) {
+            collectCuesFromText(fsm.startupAfter.messages[k], origin, out);
+        }
+        for (std::size_t k = 0; k < fsm.startupStateSpecific.size(); ++k) {
+            collectCuesFromText(fsm.startupStateSpecific[k], origin, out);
+        }
+    }
+    for (std::size_t i = 0; i < level.characters.size(); ++i) {
+        const Character& ch = level.characters[i];
+        const Vec3 origin = fsmOrigin(level, ch.properties);
+        for (std::size_t k = 0; k < ch.onStartup.messages.size(); ++k) {
+            collectCuesFromText(ch.onStartup.messages[k], origin, out);
+        }
+    }
 }
 
 }  // namespace maxfx

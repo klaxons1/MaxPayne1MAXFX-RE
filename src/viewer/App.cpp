@@ -47,6 +47,85 @@ int findPathIndex(const std::vector<std::string>& paths, const std::string& path
     return -1;
 }
 
+bool frameComicCamera(const Kf2File& kf, float aspect, Camera* cam) {
+    std::vector<Kf2DrawMesh> draws;
+    kf2BuildDrawMeshes(kf, draws);
+    if (draws.empty()) {
+        return false;
+    }
+    Vec3 mn(1.0e9f, 1.0e9f, 1.0e9f);
+    Vec3 mx(-1.0e9f, -1.0e9f, -1.0e9f);
+    bool any = false;
+    std::vector<std::string> names;
+    std::vector<Mat4x3> worlds;
+    kf2NodeWorldTransforms(kf, &names, &worlds);
+    for (std::size_t m = 0; m < draws.size(); ++m) {
+        Mat4x3 local;
+        for (std::size_t n = 0; n < names.size(); ++n) {
+            if (names[n] == draws[m].nodeName) {
+                local = worlds[n];
+                break;
+            }
+        }
+        for (std::size_t p = 0; p < draws[m].parts.size(); ++p) {
+            const Kf2DrawPart& part = draws[m].parts[p];
+            for (std::size_t v = 0; v < part.vertices.size(); ++v) {
+                Vec3 pos = transformPoint(local, part.vertices[v].position);
+                pos.x = -pos.x;
+                if (!any) {
+                    mn = mx = pos;
+                    any = true;
+                } else {
+                    if (pos.x < mn.x) {
+                        mn.x = pos.x;
+                    }
+                    if (pos.y < mn.y) {
+                        mn.y = pos.y;
+                    }
+                    if (pos.z < mn.z) {
+                        mn.z = pos.z;
+                    }
+                    if (pos.x > mx.x) {
+                        mx.x = pos.x;
+                    }
+                    if (pos.y > mx.y) {
+                        mx.y = pos.y;
+                    }
+                    if (pos.z > mx.z) {
+                        mx.z = pos.z;
+                    }
+                }
+            }
+        }
+    }
+    if (!any) {
+        return false;
+    }
+    const Vec3 center((mn.x + mx.x) * 0.5f, (mn.y + mx.y) * 0.5f, (mn.z + mx.z) * 0.5f);
+    const float halfW = (mx.x - mn.x) * 0.5f * 1.08f;
+    const float halfH = (mx.y - mn.y) * 0.5f * 1.08f;
+    const float fov = toRadians(40.0f);
+    const float tanHalf = std::tan(fov * 0.5f);
+    float dist = 0.25f;
+    if (tanHalf > 1.0e-4f) {
+        const float distH = halfH / tanHalf;
+        const float distW = aspect > 0.1f ? halfW / (tanHalf * aspect) : distH;
+        dist = distH > distW ? distH : distW;
+    }
+    if (dist < 0.12f) {
+        dist = 0.12f;
+    }
+    cam->position = Vec3(center.x, center.y, center.z + dist);
+    cam->yaw = 0.0f;
+    cam->pitch = 0.0f;
+    return true;
+}
+
+bool hitRow(float x, float y, int x0, int y0, int w, int h) {
+    return x >= static_cast<float>(x0) && x <= static_cast<float>(x0 + w) &&
+           y >= static_cast<float>(y0) && y <= static_cast<float>(y0 + h);
+}
+
 }  // namespace
 
 ViewerApp::ViewerApp()
@@ -59,7 +138,8 @@ ViewerApp::ViewerApp()
       spawnIndex_(-1),
       width_(1280),
       height_(720),
-      levelIndex_(-1) {}
+      levelIndex_(-1),
+      lastComicPage_(-1) {}
 
 ViewerApp::~ViewerApp() { destroyWindow(); }
 
@@ -293,8 +373,12 @@ bool ViewerApp::loadLevelIndex(int index, bool showLoading) {
         }
         DatabaseReader::loadWorldSphere(database_, sphere);
         audio_.playLevel(database_, sphere);
+        std::vector<SoundCueRequest> cues;
+        collectLevelSoundCues(loaded, &cues);
+        audio_.startCues(database_, cues);
     } else {
         audio_.playLevel(database_, std::string());
+        audio_.startCues(database_, std::vector<SoundCueRequest>());
     }
 
     char error[1024];
@@ -413,10 +497,187 @@ Vec3 ViewerApp::playerLookLdb() const {
 
 void ViewerApp::enterLevel(int index) { loadLevelIndex(index, true); }
 
+void ViewerApp::enterComic(int page, bool fromMenu) {
+    game_.comicIndex = page;
+    game_.comicFromMenu = fromMenu;
+    game_.mode = kModeGraphicNovel;
+    mouseCaptured_ = false;
+    if (window_) {
+        SDL_SetWindowRelativeMouseMode(window_, false);
+    }
+    lastComicPage_ = -1;
+    playComicSound();
+}
+
+void ViewerApp::leaveComic() {
+    audio_.stop2d();
+    lastComicPage_ = -1;
+    if (game_.comicFromMenu || !levelLoaded_) {
+        game_.mode = kModeMenu;
+        game_.menu = kMenuComicPages;
+        if (game_.catalog.chapters.empty()) {
+            game_.menu = kMenuComic;
+        }
+        mouseCaptured_ = false;
+        if (window_) {
+            SDL_SetWindowRelativeMouseMode(window_, false);
+        }
+        return;
+    }
+    game_.mode = kModePlaying;
+    mouseCaptured_ = true;
+    if (window_) {
+        SDL_SetWindowRelativeMouseMode(window_, true);
+    }
+}
+
+void ViewerApp::stepComic(int delta) {
+    const int n = static_cast<int>(game_.catalog.pages.size());
+    if (n <= 0) {
+        return;
+    }
+    int next = game_.comicIndex + delta;
+    if (next < 0) {
+        next = 0;
+    }
+    if (next >= n) {
+        next = n - 1;
+    }
+    if (next == game_.comicIndex) {
+        return;
+    }
+    game_.comicIndex = next;
+    playComicSound();
+}
+
+void ViewerApp::playComicSound() {
+    if (game_.comicIndex < 0 ||
+        static_cast<std::size_t>(game_.comicIndex) >= game_.catalog.pages.size()) {
+        return;
+    }
+    if (game_.comicIndex == lastComicPage_) {
+        return;
+    }
+    lastComicPage_ = game_.comicIndex;
+    const GraphicNovelPageDef& page = game_.catalog.pages[static_cast<std::size_t>(game_.comicIndex)];
+    const std::vector<GameMessage> msgs = parseGameMessages(page.initSound);
+    bool played = false;
+    for (std::size_t i = 0; i < msgs.size(); ++i) {
+        if (methodIs(msgs[i], "a_playsound") && msgs[i].args.size() >= 2) {
+            audio_.play2d(database_, msgs[i].args[0], msgs[i].args[1]);
+            played = true;
+            break;
+        }
+    }
+    if (!played) {
+        audio_.stop2d();
+    }
+}
+
+void ViewerApp::handleMouseButton(float x, float y, int button) {
+    if (button != SDL_BUTTON_LEFT && button != SDL_BUTTON_RIGHT) {
+        return;
+    }
+    if (game_.mode == kModeGraphicNovel) {
+        if (button == SDL_BUTTON_RIGHT || x < 80.0f) {
+            stepComic(-1);
+        } else {
+            stepComic(1);
+        }
+        return;
+    }
+    if (game_.mode != kModeMenu) {
+        return;
+    }
+    if (game_.menu == kMenuRoot) {
+        for (int i = 0; i < 4; ++i) {
+            if (hitRow(x, y, 36, 76 + i * 20, 270, 18)) {
+                game_.menuCursor = i;
+                int jump = -1;
+                int page = -1;
+                bool quit = false;
+                bool newGame = false;
+                game_.menuChoose(&jump, &page, &quit, &newGame);
+                if (quit) {
+                    running_ = false;
+                } else if (newGame) {
+                    int start = 0;
+                    for (std::size_t k = 0; k < levelInfos_.size(); ++k) {
+                        if (levelInfos_[k].startupLevel) {
+                            start = static_cast<int>(k);
+                            break;
+                        }
+                    }
+                    enterLevel(start);
+                }
+                return;
+            }
+        }
+        return;
+    }
+    if (game_.menu == kMenuJumpLevel) {
+        int start = game_.menuCursor - 8;
+        if (start < 0) {
+            start = 0;
+        }
+        const int n = static_cast<int>(levelPaths_.size());
+        for (int i = start; i < n && i < start + 16; ++i) {
+            if (hitRow(x, y, 36, 90 + (i - start) * 16, 510, 16)) {
+                enterLevel(i);
+                return;
+            }
+        }
+        return;
+    }
+    if (game_.menu == kMenuComic) {
+        int start = game_.menuCursor - 8;
+        if (start < 0) {
+            start = 0;
+        }
+        const int n = static_cast<int>(game_.catalog.chapters.size());
+        for (int i = start; i < n && i < start + 16; ++i) {
+            if (hitRow(x, y, 36, 90 + (i - start) * 16, 550, 16)) {
+                game_.menuCursor = i;
+                game_.comicChapter = i;
+                game_.menu = kMenuComicPages;
+                game_.menuCursor = 0;
+                return;
+            }
+        }
+        return;
+    }
+    if (game_.menu == kMenuComicPages) {
+        int start = game_.menuCursor - 8;
+        if (start < 0) {
+            start = 0;
+        }
+        const GraphicNovelChapter* ch = 0;
+        if (game_.comicChapter >= 0 &&
+            static_cast<std::size_t>(game_.comicChapter) < game_.catalog.chapters.size()) {
+            ch = &game_.catalog.chapters[static_cast<std::size_t>(game_.comicChapter)];
+        }
+        const int n =
+            ch ? static_cast<int>(ch->pageIndices.size()) : static_cast<int>(game_.catalog.pages.size());
+        for (int i = start; i < n && i < start + 16; ++i) {
+            if (hitRow(x, y, 36, 106 + (i - start) * 16, 550, 16)) {
+                int page = i;
+                if (ch && static_cast<std::size_t>(i) < ch->pageIndices.size()) {
+                    page = ch->pageIndices[static_cast<std::size_t>(i)];
+                }
+                enterComic(page, true);
+                return;
+            }
+        }
+    }
+}
+
 void ViewerApp::handleKeyDown(int scancode, int key) {
     if (game_.mode == kModeMenu) {
         if (key == SDLK_ESCAPE) {
-            if (game_.menu != kMenuRoot) {
+            if (game_.menu == kMenuComicPages) {
+                game_.menu = kMenuComic;
+                game_.menuCursor = game_.comicChapter;
+            } else if (game_.menu != kMenuRoot) {
                 game_.menu = kMenuRoot;
                 game_.menuCursor = 0;
             } else {
@@ -425,13 +686,11 @@ void ViewerApp::handleKeyDown(int scancode, int key) {
             return;
         }
         if (scancode == SDL_SCANCODE_UP || scancode == SDL_SCANCODE_W) {
-            game_.menuMove(-1, static_cast<int>(levelPaths_.size()),
-                           static_cast<int>(game_.catalog.pages.size()));
+            game_.menuMove(-1, static_cast<int>(levelPaths_.size()));
             return;
         }
         if (scancode == SDL_SCANCODE_DOWN || scancode == SDL_SCANCODE_S) {
-            game_.menuMove(1, static_cast<int>(levelPaths_.size()),
-                           static_cast<int>(game_.catalog.pages.size()));
+            game_.menuMove(1, static_cast<int>(levelPaths_.size()));
             return;
         }
         if (key == SDLK_RETURN || key == SDLK_KP_ENTER) {
@@ -453,6 +712,8 @@ void ViewerApp::handleKeyDown(int scancode, int key) {
                 enterLevel(start);
             } else if (jump >= 0) {
                 enterLevel(jump);
+            } else if (page >= 0) {
+                enterComic(page, true);
             }
             return;
         }
@@ -460,21 +721,16 @@ void ViewerApp::handleKeyDown(int scancode, int key) {
     }
     if (game_.mode == kModeGraphicNovel) {
         if (key == SDLK_ESCAPE) {
-            game_.mode = levelLoaded_ ? kModePlaying : kModeMenu;
-            mouseCaptured_ = levelLoaded_;
-            SDL_SetWindowRelativeMouseMode(window_, mouseCaptured_);
+            leaveComic();
             return;
         }
         if (scancode == SDL_SCANCODE_LEFT || scancode == SDL_SCANCODE_A) {
-            if (game_.comicIndex > 0) {
-                --game_.comicIndex;
-            }
+            stepComic(-1);
             return;
         }
-        if (scancode == SDL_SCANCODE_RIGHT || scancode == SDL_SCANCODE_D || key == SDLK_RETURN) {
-            if (game_.comicIndex + 1 < static_cast<int>(game_.catalog.pages.size())) {
-                ++game_.comicIndex;
-            }
+        if (scancode == SDL_SCANCODE_RIGHT || scancode == SDL_SCANCODE_D || key == SDLK_RETURN ||
+            key == SDLK_SPACE) {
+            stepComic(1);
             return;
         }
         return;
@@ -535,10 +791,18 @@ void ViewerApp::handleKeyDown(int scancode, int key) {
 }
 
 void ViewerApp::update(float dt) {
-    if (game_.mode != kModePlaying || !levelLoaded_) {
+    if (game_.mode == kModeGraphicNovel) {
+        audio_.setEnvPaused(true);
+        playComicSound();
         audio_.pump();
         return;
     }
+    if (game_.mode != kModePlaying || !levelLoaded_) {
+        audio_.setEnvPaused(true);
+        audio_.pump();
+        return;
+    }
+    audio_.setEnvPaused(false);
     const bool* keys = SDL_GetKeyboardState(0);
     const bool jump = keys[SDL_SCANCODE_SPACE] != 0;
     const bool use = keys[SDL_SCANCODE_E] != 0;
@@ -551,11 +815,23 @@ void ViewerApp::update(float dt) {
     const Vec3 look = playerLookLdb();
     const Vec3 eye = Vec3(game_.player.position.x, game_.player.position.y + game_.player.eyeHeight,
                           game_.player.position.z);
+    audio_.setListener(eye, look);
     static bool useWasDown = false;
     const bool usePress = use && !useWasDown;
     useWasDown = use;
     game_.tickDoors(dt, level_);
     game_.tickTriggers(dt, level_, usePress, look, actors_);
+    if (game_.mode == kModeGraphicNovel) {
+        mouseCaptured_ = false;
+        if (window_) {
+            SDL_SetWindowRelativeMouseMode(window_, false);
+        }
+        lastComicPage_ = -1;
+        playComicSound();
+        audio_.setEnvPaused(true);
+        audio_.pump();
+        return;
+    }
     updateActors(dt);
     audio_.pump();
 }
@@ -610,13 +886,19 @@ void ViewerApp::updateActors(float dt) {
 }
 
 void ViewerApp::drawMenuHud() {
+    renderer_.drawHudQuad(0, 0, width_, height_, 0.04f, 0.04f, 0.05f, 0.92f);
+    renderer_.drawHudQuad(0, 0, width_, 56, 0.08f, 0.06f, 0.03f, 0.95f);
     renderer_.drawHudText(24, 24, "MAX PAYNE  /  MAX-FX", 0.95f, 0.82f, 0.35f);
     renderer_.drawHudText(24, 44, "PC message table  C_  DO_  T_  GM_  MPGNM_", 0.55f, 0.55f, 0.58f);
     if (game_.menu == kMenuRoot) {
+        renderer_.drawHudQuad(32, 72, 280, 88, 0.10f, 0.09f, 0.07f, 0.85f);
         const char* items[4] = {"New Game", "Jump to Level", "Graphic Novel", "Quit"};
         for (int i = 0; i < 4; ++i) {
             const bool sel = game_.menuCursor == i;
-            renderer_.drawHudText(40, 80 + i * 18, items[i], sel ? 1.0f : 0.7f, sel ? 0.9f : 0.7f,
+            if (sel) {
+                renderer_.drawHudQuad(36, 76 + i * 20, 270, 18, 0.45f, 0.28f, 0.08f, 0.85f);
+            }
+            renderer_.drawHudText(48, 80 + i * 20, items[i], sel ? 1.0f : 0.72f, sel ? 0.9f : 0.7f,
                                   sel ? 0.4f : 0.7f);
         }
         renderer_.drawHudText(24, height_ - 36, "Up/Down  Enter  Esc", 0.55f, 0.55f, 0.5f);
@@ -629,6 +911,7 @@ void ViewerApp::drawMenuHud() {
         if (start < 0) {
             start = 0;
         }
+        renderer_.drawHudQuad(32, 86, 520, 16 * 16 + 8, 0.08f, 0.07f, 0.05f, 0.8f);
         for (int i = start; i < n && i < start + 16; ++i) {
             char line[256];
             const char* name = fileName(levelPaths_[static_cast<std::size_t>(i)]).c_str();
@@ -638,34 +921,85 @@ void ViewerApp::drawMenuHud() {
             }
             std::snprintf(line, sizeof(line), "%s %s", game_.menuCursor == i ? ">" : " ", name);
             const bool sel = game_.menuCursor == i;
+            if (sel) {
+                renderer_.drawHudQuad(36, 90 + (i - start) * 16, 510, 16, 0.45f, 0.28f, 0.08f, 0.85f);
+            }
             renderer_.drawHudText(40, 92 + (i - start) * 16, line, sel ? 1.0f : 0.7f, sel ? 0.9f : 0.7f,
                                   sel ? 0.4f : 0.7f);
         }
+        renderer_.drawHudText(24, height_ - 36, "Enter load   Esc back", 0.55f, 0.55f, 0.5f);
         return;
     }
-    renderer_.drawHudText(24, 70, "Graphic Novel pages", 0.85f, 0.75f, 0.4f);
-    const int n = static_cast<int>(game_.catalog.pages.size());
+    if (game_.menu == kMenuComic) {
+        renderer_.drawHudText(24, 70, "The Graphic Novel  —  chapters", 0.92f, 0.78f, 0.38f);
+        const int n = static_cast<int>(game_.catalog.chapters.size());
+        int start = game_.menuCursor - 8;
+        if (start < 0) {
+            start = 0;
+        }
+        renderer_.drawHudQuad(32, 86, 560, 16 * 16 + 8, 0.08f, 0.07f, 0.05f, 0.8f);
+        for (int i = start; i < n && i < start + 16; ++i) {
+            const GraphicNovelChapter& ch = game_.catalog.chapters[static_cast<std::size_t>(i)];
+            char line[256];
+            std::snprintf(line, sizeof(line), "%s %s   (%zu pages)", game_.menuCursor == i ? ">" : " ",
+                          ch.title.c_str(), ch.pageIndices.size());
+            const bool sel = game_.menuCursor == i;
+            if (sel) {
+                renderer_.drawHudQuad(36, 90 + (i - start) * 16, 550, 16, 0.45f, 0.28f, 0.08f, 0.85f);
+            }
+            renderer_.drawHudText(40, 92 + (i - start) * 16, line, sel ? 1.0f : 0.72f, sel ? 0.88f : 0.7f,
+                                  sel ? 0.4f : 0.68f);
+        }
+        if (n <= 0) {
+            renderer_.drawHudText(40, 96, "No graphicnovelpages.txt", 1.0f, 0.4f, 0.4f);
+        }
+        renderer_.drawHudText(24, height_ - 36, "Enter chapter   Esc back", 0.55f, 0.55f, 0.5f);
+        return;
+    }
+    renderer_.drawHudText(24, 70, "The Graphic Novel  —  pages", 0.92f, 0.78f, 0.38f);
+    const GraphicNovelChapter* ch = 0;
+    if (game_.comicChapter >= 0 &&
+        static_cast<std::size_t>(game_.comicChapter) < game_.catalog.chapters.size()) {
+        ch = &game_.catalog.chapters[static_cast<std::size_t>(game_.comicChapter)];
+        renderer_.drawHudText(24, 86, ch->title.c_str(), 0.75f, 0.65f, 0.4f);
+    }
+    const int n = ch ? static_cast<int>(ch->pageIndices.size()) : static_cast<int>(game_.catalog.pages.size());
     int start = game_.menuCursor - 8;
     if (start < 0) {
         start = 0;
     }
+    renderer_.drawHudQuad(32, 102, 560, 16 * 16 + 8, 0.08f, 0.07f, 0.05f, 0.8f);
     for (int i = start; i < n && i < start + 16; ++i) {
+        int pi = i;
+        if (ch && static_cast<std::size_t>(i) < ch->pageIndices.size()) {
+            pi = ch->pageIndices[static_cast<std::size_t>(i)];
+        }
+        const GraphicNovelPageDef& p = game_.catalog.pages[static_cast<std::size_t>(pi)];
         char line[256];
-        std::snprintf(line, sizeof(line), "%s %s%s", game_.menuCursor == i ? ">" : " ",
-                      game_.catalog.pages[static_cast<std::size_t>(i)].id.c_str(),
-                      game_.catalog.pages[static_cast<std::size_t>(i)].resolvedKf2.empty() ? "  (kf2 missing)"
-                                                                                          : "");
+        std::snprintf(line, sizeof(line), "%s Panel %s%s%s", game_.menuCursor == i ? ">" : " ",
+                      graphicNovelPageLabel(p.id).c_str(), p.newChapter ? "   chapter card" : "",
+                      p.resolvedKf2.empty() ? "   (missing kf2)" : "");
         const bool sel = game_.menuCursor == i;
-        renderer_.drawHudText(40, 92 + (i - start) * 16, line, sel ? 1.0f : 0.7f, sel ? 0.9f : 0.7f,
-                              sel ? 0.4f : 0.7f);
+        if (sel) {
+            renderer_.drawHudQuad(36, 106 + (i - start) * 16, 550, 16, 0.45f, 0.28f, 0.08f, 0.85f);
+        }
+        renderer_.drawHudText(40, 108 + (i - start) * 16, line, sel ? 1.0f : 0.72f, sel ? 0.88f : 0.7f,
+                              sel ? 0.4f : 0.68f);
     }
+    renderer_.drawHudText(24, height_ - 36, "Enter read   Esc chapters", 0.55f, 0.55f, 0.5f);
 }
 
 void ViewerApp::drawComicHud() {
     char line[256];
     const int n = static_cast<int>(game_.catalog.pages.size());
+    renderer_.drawHudQuad(0, 0, width_, 40, 0.0f, 0.0f, 0.0f, 0.82f);
+    renderer_.drawHudQuad(0, height_ - 44, width_, 44, 0.0f, 0.0f, 0.0f, 0.82f);
+    renderer_.drawHudQuad(0, 40, width_, 2, 0.72f, 0.55f, 0.18f, 0.9f);
+    renderer_.drawHudQuad(0, height_ - 46, width_, 2, 0.72f, 0.55f, 0.18f, 0.9f);
+    renderer_.drawHudText(20, 14, "THE GRAPHIC NOVEL", 0.95f, 0.82f, 0.38f);
     if (n <= 0) {
-        renderer_.drawHudText(24, 24, "No graphicnovelpages.txt", 1, 0.4f, 0.4f);
+        renderer_.drawHudText(24, height_ / 2, "No graphicnovelpages.txt", 1.0f, 0.4f, 0.4f);
+        renderer_.drawHudText(20, height_ - 28, "Esc back", 0.6f, 0.55f, 0.45f);
         return;
     }
     if (game_.comicIndex < 0) {
@@ -675,11 +1009,30 @@ void ViewerApp::drawComicHud() {
         game_.comicIndex = n - 1;
     }
     const GraphicNovelPageDef& p = game_.catalog.pages[static_cast<std::size_t>(game_.comicIndex)];
-    std::snprintf(line, sizeof(line), "Graphic Novel  %d/%d   %s", game_.comicIndex + 1, n, p.id.c_str());
-    renderer_.drawHudText(24, 24, line, 0.95f, 0.85f, 0.4f);
-    renderer_.drawHudText(24, 44, p.resolvedKf2.empty() ? "KF2 not extracted" : p.resolvedKf2.c_str(),
-                          0.7f, 0.7f, 0.7f);
-    renderer_.drawHudText(24, height_ - 36, "Left/Right page   Esc back", 0.55f, 0.55f, 0.5f);
+    const std::string chapter = graphicNovelChapterTitle(graphicNovelChapterKey(p.id));
+    renderer_.drawHudText(width_ - 8 * static_cast<int>(chapter.size()) - 20, 14, chapter.c_str(), 0.85f,
+                          0.72f, 0.38f);
+    if (p.resolvedKf2.empty()) {
+        const int pw = width_ * 3 / 5;
+        const int ph = height_ * 3 / 5;
+        const int px = (width_ - pw) / 2;
+        const int py = (height_ - ph) / 2;
+        renderer_.drawHudQuad(px - 6, py - 6, pw + 12, ph + 12, 0.72f, 0.55f, 0.18f, 0.95f);
+        renderer_.drawHudQuad(px, py, pw, ph, 0.12f, 0.08f, 0.06f, 0.95f);
+        const std::string label = graphicNovelPageLabel(p.id);
+        renderer_.drawHudText(px + 16, py + 20, "PANEL", 0.55f, 0.48f, 0.35f);
+        renderer_.drawHudText(px + 16, py + 40, label.c_str(), 0.95f, 0.85f, 0.45f);
+        renderer_.drawHudText(px + 16, py + 64, "KF2 textures not extracted", 0.65f, 0.55f, 0.45f);
+    }
+    std::snprintf(line, sizeof(line), "Panel %s", graphicNovelPageLabel(p.id).c_str());
+    renderer_.drawHudText(20, height_ - 28, line, 0.8f, 0.72f, 0.45f);
+    std::snprintf(line, sizeof(line), "%d / %d", game_.comicIndex + 1, n);
+    const int mid = width_ / 2 - 4 * static_cast<int>(std::strlen(line));
+    renderer_.drawHudText(mid, height_ - 28, line, 0.92f, 0.82f, 0.4f);
+    renderer_.drawHudText(20, height_ - 14, "< PREV", game_.comicIndex > 0 ? 0.9f : 0.35f, 0.75f, 0.4f);
+    renderer_.drawHudText(width_ - 20 - 8 * 6, height_ - 14, "NEXT >",
+                          game_.comicIndex + 1 < n ? 0.9f : 0.35f, 0.75f, 0.4f);
+    renderer_.drawHudText(width_ / 2 - 40, height_ - 14, "Esc close  click next", 0.5f, 0.48f, 0.4f);
 }
 
 void ViewerApp::drawHud(float dt) {
@@ -822,6 +1175,8 @@ int ViewerApp::run(const char* pathOrNull) {
                 } else if (!mouseCaptured_ && game_.mode == kModePlaying) {
                     mouseCaptured_ = true;
                     SDL_SetWindowRelativeMouseMode(window_, true);
+                } else if (game_.mode == kModeMenu || game_.mode == kModeGraphicNovel) {
+                    handleMouseButton(ev.button.x, ev.button.y, static_cast<int>(ev.button.button));
                 }
             } else if (ev.type == SDL_EVENT_MOUSE_MOTION && mouseCaptured_ &&
                        game_.mode == kModePlaying) {
@@ -841,9 +1196,15 @@ int ViewerApp::run(const char* pathOrNull) {
         if (dt > 0.1f) {
             dt = 0.1f;
         }
-        if (game_.mode == kModePlaying) {
+        if (game_.mode == kModePlaying || game_.mode == kModeGraphicNovel) {
             update(dt);
+        } else {
+            audio_.setEnvPaused(true);
+            audio_.pump();
         }
+        renderer_.setSkipWorld(game_.mode == kModeGraphicNovel || game_.mode == kModeMenu);
+        renderer_.setFovY(game_.mode == kModeGraphicNovel ? 40.0f : 70.0f);
+        Camera renderCam = camera_;
         if (game_.mode == kModeGraphicNovel && game_.comicIndex >= 0 &&
             static_cast<std::size_t>(game_.comicIndex) < game_.catalog.pages.size() &&
             !game_.catalog.pages[static_cast<std::size_t>(game_.comicIndex)].resolvedKf2.empty()) {
@@ -852,12 +1213,14 @@ int ViewerApp::run(const char* pathOrNull) {
             const Kf2File* kf = database_.loadModel(page.resolvedKf2);
             if (kf != 0) {
                 renderer_.beginAnimated();
-                const Mat4x3 billboard = makeEntity(
-                    ldbFromView(camera_.position, 0.0f) + playerLookLdb() * 2.0f, game_.player.yaw);
-                renderer_.appendOverlayKf2(*kf, billboard);
+                Mat4x3 identity;
+                renderer_.appendOverlayKf2(*kf, identity);
+                const float aspect = height_ > 0 ? static_cast<float>(width_) / static_cast<float>(height_)
+                                                 : 1.777f;
+                frameComicCamera(*kf, aspect, &renderCam);
             }
         }
-        renderer_.render(camera_.viewMatrix(), camera_.position);
+        renderer_.render(renderCam.viewMatrix(), renderCam.position);
         drawHud(dt);
         SDL_GL_SwapWindow(window_);
     }

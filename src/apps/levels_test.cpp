@@ -12,6 +12,7 @@
 #include "maxfx/image/Image.h"
 #include "maxfx/kf2/Kf2.h"
 #include "maxfx/ldb/Ldb.h"
+#include "maxfx/ldb/LdbReader.h"
 #include "maxfx/levels/Levels.h"
 #include "maxfx/script/Script.h"
 #include "maxfx/sound/Sound.h"
@@ -21,7 +22,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <exception>
 #include <string>
+#include <vector>
 
 using maxfx::LevelDatabase;
 using maxfx::LevelsReader;
@@ -716,6 +719,19 @@ static void testGameMessagesAndCatalog() {
         check(bullet->damagesCharacter, "beretta damages character");
     }
     check(!cat.pages.empty(), "graphic novel pages parsed");
+    check(!cat.chapters.empty(), "graphic novel chapters grouped");
+    bool cineInReader = false;
+    for (std::size_t c = 0; c < cat.chapters.size(); ++c) {
+        for (std::size_t p = 0; p < cat.chapters[c].pageIndices.size(); ++p) {
+            const int pi = cat.chapters[c].pageIndices[p];
+            if (pi >= 0 && static_cast<std::size_t>(pi) < cat.pages.size() && cat.pages[static_cast<std::size_t>(pi)].cine) {
+                cineInReader = true;
+            }
+        }
+    }
+    check(!cineInReader, "chapter list skips cine pages");
+    checkEq(maxfx::graphicNovelChapterKey("p1l0a_005_ok"), "p1l0a", "chapter key strips _ok");
+    checkEq(maxfx::graphicNovelPageLabel("p1l0a_003"), "003", "page label is panel number");
 
     maxfx::GameRuntime rt;
     rt.loadCatalog(root);
@@ -725,6 +741,44 @@ static void testGameMessagesAndCatalog() {
     check(rt.player.velocity.y > 1.0f, "C_Jump / space applies jump velocity");
     check(std::strcmp(maxfx::triggerTypeName(maxfx::kTriggerActionButton), "action_button") == 0,
           "action_button name");
+}
+
+static void testSoundOmniAndFsmCues() {
+    checkNear(maxfx::soundOmniGain(0.5f, 1.0f, 10.0f), 1.0f, "inside hotspot full gain");
+    checkNear(maxfx::soundOmniGain(1.0f, 1.0f, 10.0f), 1.0f, "at hotspot full gain");
+    checkNear(maxfx::soundOmniGain(10.0f, 1.0f, 10.0f), 0.0f, "at falloff silent");
+    checkNear(maxfx::soundOmniGain(20.0f, 1.0f, 10.0f), 0.0f, "past falloff silent");
+    checkNear(maxfx::soundOmniGain(5.5f, 1.0f, 10.0f), 0.5f, "mid falloff half gain");
+
+    const std::vector<maxfx::GameMessage> msgs = maxfx::parseGameMessages(
+        "this->A_Play3DSound( ambient, ac_fan_loop, \"\" ); this->A_PlaySound( story, P1L0a_001 );");
+    check(msgs.size() == 2, "A_Play3DSound + A_PlaySound parse");
+    check(maxfx::methodIs(msgs[0], "a_play3dsound"), "method a_play3dsound");
+    check(msgs[0].args.size() >= 2, "3d sound category+name");
+    if (msgs[0].args.size() >= 2) {
+        checkEq(msgs[0].args[0], "ambient", "3d category");
+        checkEq(msgs[0].args[1], "ac_fan_loop", "3d cue name");
+    }
+
+    if (!maxfx::isFile("docs/Part1_Level1.ldb")) {
+        std::fprintf(stderr, "skip fsm 3d cues (Part1_Level1.ldb missing)\n");
+        return;
+    }
+    try {
+        const maxfx::Level level = maxfx::LdbReader::loadFromFile("docs/Part1_Level1.ldb");
+        std::vector<maxfx::SoundCueRequest> cues;
+        maxfx::collectLevelSoundCues(level, &cues);
+        int n3d = 0;
+        for (std::size_t i = 0; i < cues.size(); ++i) {
+            if (cues[i].is3d) {
+                ++n3d;
+            }
+        }
+        check(n3d >= 11, "Part1_Level1 FSM startup has 11 A_Play3DSound");
+    } catch (const std::exception& ex) {
+        std::fprintf(stderr, "FAIL: Part1_Level1.ldb cues: %s\n", ex.what());
+        ++gFails;
+    }
 }
 
 static void testWavPlaceholder() {
@@ -751,6 +805,7 @@ int main() {
     testCollisionAndMath();
     testKf2AnimationAndSkinAi();
     testGameMessagesAndCatalog();
+    testSoundOmniAndFsmCues();
     testWavPlaceholder();
 
     // Official sample shipped in docs/.

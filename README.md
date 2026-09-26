@@ -55,7 +55,9 @@ cmake --build build -j
 ./build/ldb-viewer docs/Part1_Level1.ldb
 ```
 
-CMake will `find_package(SDL3)` or fetch SDL 3.2 from GitHub.
+CMake will `find_package(SDL3)` / `find_package(OpenAL)` or fetch SDL 3.2
+and OpenAL Soft 1.23.1 from GitHub. 3D environmental cues use OpenAL
+`AL_LINEAR_DISTANCE_CLAMPED` (Hotspot / FallOff from the sound scripts).
 
 ### Windows (Visual Studio 2022)
 
@@ -68,7 +70,7 @@ cmake --build build --config Release --parallel
 
 Or run `scripts\build-windows.bat`.
 
-The viewer is linked against static SDL3 and the static MSVC runtime, so
+The viewer is linked against static SDL3, static OpenAL Soft, and the static MSVC runtime, so
 `build\Release\ldb-viewer.exe` is a single file. Copy it next to the game
 `data` folder:
 

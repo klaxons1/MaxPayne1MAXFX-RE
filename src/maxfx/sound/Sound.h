@@ -32,6 +32,27 @@ struct WavFile {
 // Returns false and writes `error` (if non-null) on failure.
 bool loadWavFile(const std::string& path, WavFile& out, std::string* error = 0);
 
+// S_SoundOmni / DirectSound linear rolloff: full gain inside Hotspot,
+// silence past FallOff (PC X_SharedDB 3D sound requires both).
+inline float soundOmniGain(float dist, float hotspot, float falloff) {
+    if (dist < 0.0f) {
+        dist = 0.0f;
+    }
+    if (hotspot < 0.01f) {
+        hotspot = 0.01f;
+    }
+    if (falloff <= hotspot) {
+        falloff = hotspot + 0.01f;
+    }
+    if (dist <= hotspot) {
+        return 1.0f;
+    }
+    if (dist >= falloff) {
+        return 0.0f;
+    }
+    return (falloff - dist) / (falloff - hotspot);
+}
+
 }  // namespace maxfx
 
 #endif  // MAXFX_SOUND_SOUND_H

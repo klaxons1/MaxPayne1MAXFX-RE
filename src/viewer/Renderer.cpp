@@ -79,9 +79,9 @@ const char* kFontVS =
     "#version 330 core\n"
     "layout(location=0) in vec2 aPos;\n"
     "layout(location=1) in vec2 aUV;\n"
-    "layout(location=2) in vec3 aColor;\n"
+    "layout(location=2) in vec4 aColor;\n"
     "out vec2 vUV;\n"
-    "out vec3 vColor;\n"
+    "out vec4 vColor;\n"
     "void main(){\n"
     "  gl_Position = vec4(aPos, 0.0, 1.0);\n"
     "  vUV = aUV;\n"
@@ -91,13 +91,17 @@ const char* kFontVS =
 const char* kFontFS =
     "#version 330 core\n"
     "in vec2 vUV;\n"
-    "in vec3 vColor;\n"
+    "in vec4 vColor;\n"
     "uniform sampler2D uFont;\n"
     "out vec4 frag;\n"
     "void main(){\n"
+    "  if (vUV.x < 0.0) {\n"
+    "    frag = vColor;\n"
+    "    return;\n"
+    "  }\n"
     "  float a = texture(uFont, vUV).a;\n"
     "  if (a < 0.5) discard;\n"
-    "  frag = vec4(vColor, 1.0);\n"
+    "  frag = vec4(vColor.rgb, vColor.a);\n"
     "}\n";
 
 Vec3 mirrorX(const Vec3& v) { return Vec3(-v.x, v.y, v.z); }
@@ -330,7 +334,10 @@ Renderer::Renderer()
       entityPlaceholderCount_(0),
       database_(0),
       recordingAnimated_(false),
-      recordingSky_(false) {}
+      recordingSky_(false),
+      recordingUnlit_(false),
+      skipWorld_(false),
+      fovY_(70.0f) {}
 
 Renderer::~Renderer() {
     // GPU objects are released by shutdown() while the GL context is still alive.
@@ -513,12 +520,12 @@ void Renderer::buildFont() {
     // with garbage glyphs.
     glBufferData(GL_ARRAY_BUFFER, 4, 0, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                           reinterpret_cast<void*>(2 * sizeof(float)));
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float),
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                           reinterpret_cast<void*>(4 * sizeof(float)));
     glBindVertexArray(0);
 }
@@ -996,7 +1003,7 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
             const Vec3 pos = mirrorX(transformPoint(world, part.vertices[v].position));
             const Vec3 nrm = mirrorX(transformVector(world, part.vertices[v].normal));
             Vec3 col;
-            if (recordingSky_) {
+            if (recordingSky_ || recordingUnlit_) {
                 col = Vec3(1.0f, 1.0f, 1.0f);
             } else if (recordingAnimated_) {
                 const float lift = 0.40f + 0.60f * clamp(0.5f + 0.5f * nrm.y, 0.0f, 1.0f);
@@ -1038,7 +1045,10 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
 
 int Renderer::appendOverlayKf2(const Kf2File& kf, const Mat4x3& entity) {
     recordingAnimated_ = true;
-    return appendKf2File(kf, entity, -1, lights_, database_);
+    recordingUnlit_ = true;
+    const int n = appendKf2File(kf, entity, -1, lights_, database_);
+    recordingUnlit_ = false;
+    return n;
 }
 
 int Renderer::appendKf2File(const Kf2File& kf, const Mat4x3& entity, int roomId,
@@ -1434,6 +1444,9 @@ void Renderer::cycleRoom(int delta, int roomCount) {
 void Renderer::drawBatches(bool alphaPass, const Vec3& cameraPos) {
     for (int skyPass = 1; skyPass >= 0; --skyPass) {
     for (int pass = 0; pass < 2; ++pass) {
+    if (skipWorld_ && pass == 0) {
+        continue;
+    }
     const std::vector<DrawBatch>& list = pass == 0 ? batches_ : animBatches_;
     for (std::size_t i = 0; i < list.size(); ++i) {
         const DrawBatch& b = list[i];
@@ -1503,11 +1516,16 @@ void Renderer::drawBatches(bool alphaPass, const Vec3& cameraPos) {
 
 void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
     const float aspect = static_cast<float>(width_) / static_cast<float>(height_);
-    const Mat4 proj = perspectiveRH(toRadians(70.0f), aspect, 0.05f, 400.0f);
+    const float fov = fovY_ > 1.0f ? fovY_ : 70.0f;
+    const Mat4 proj = perspectiveRH(toRadians(fov), aspect, skipWorld_ ? 0.01f : 0.05f, 400.0f);
     const Mat4 vp = multiply(proj, view);
 
     glViewport(0, 0, width_, height_);
-    glClearColor(0.02f, 0.02f, 0.03f, 1.0f);
+    if (skipWorld_) {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    } else {
+        glClearColor(0.02f, 0.02f, 0.03f, 1.0f);
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
@@ -1533,7 +1551,7 @@ void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBindVertexArray(0);
 
-    if (showHelpers_ && lineCount_ > 0) {
+    if (showHelpers_ && lineCount_ > 0 && !skipWorld_) {
         glUseProgram(lineProgram_);
         glUniformMatrix4fv(glGetUniformLocation(lineProgram_, "uViewProj"), 1, GL_FALSE, vp.m);
         glBindVertexArray(lineVao_);
@@ -1570,16 +1588,39 @@ void Renderer::drawHudText(int x, int y, const char* text, float r, float g, flo
         const float y0 = 1.0f - static_cast<float>(y) * invH;
         const float x1 = static_cast<float>(cx + static_cast<int>(gw)) * invW - 1.0f;
         const float y1 = 1.0f - static_cast<float>(y + static_cast<int>(gh)) * invH;
-        const float quad[6][7] = {
-            {x0, y0, u0, v0, r, g, b}, {x0, y1, u0, v1, r, g, b}, {x1, y0, u1, v0, r, g, b},
-            {x1, y0, u1, v0, r, g, b}, {x0, y1, u0, v1, r, g, b}, {x1, y1, u1, v1, r, g, b},
+        const float quad[6][8] = {
+            {x0, y0, u0, v0, r, g, b, 1.0f}, {x0, y1, u0, v1, r, g, b, 1.0f},
+            {x1, y0, u1, v0, r, g, b, 1.0f}, {x1, y0, u1, v0, r, g, b, 1.0f},
+            {x0, y1, u0, v1, r, g, b, 1.0f}, {x1, y1, u1, v1, r, g, b, 1.0f},
         };
         for (int i = 0; i < 6; ++i) {
-            for (int k = 0; k < 7; ++k) {
+            for (int k = 0; k < 8; ++k) {
                 hudVerts_.push_back(quad[i][k]);
             }
         }
         cx += static_cast<int>(gw);
+    }
+}
+
+void Renderer::drawHudQuad(int x, int y, int w, int h, float r, float g, float b, float a) {
+    if (width_ <= 0 || height_ <= 0 || w <= 0 || h <= 0) {
+        return;
+    }
+    const float invW = 2.0f / static_cast<float>(width_);
+    const float invH = 2.0f / static_cast<float>(height_);
+    const float x0 = static_cast<float>(x) * invW - 1.0f;
+    const float y0 = 1.0f - static_cast<float>(y) * invH;
+    const float x1 = static_cast<float>(x + w) * invW - 1.0f;
+    const float y1 = 1.0f - static_cast<float>(y + h) * invH;
+    const float u = -1.0f;
+    const float quad[6][8] = {
+        {x0, y0, u, u, r, g, b, a}, {x0, y1, u, u, r, g, b, a}, {x1, y0, u, u, r, g, b, a},
+        {x1, y0, u, u, r, g, b, a}, {x0, y1, u, u, r, g, b, a}, {x1, y1, u, u, r, g, b, a},
+    };
+    for (int i = 0; i < 6; ++i) {
+        for (int k = 0; k < 8; ++k) {
+            hudVerts_.push_back(quad[i][k]);
+        }
     }
 }
 
@@ -1606,7 +1647,7 @@ void Renderer::flushHud() {
     glBufferData(GL_ARRAY_BUFFER,
                  static_cast<GLsizeiptr>(hudVerts_.size() * sizeof(float)), &hudVerts_[0],
                  GL_DYNAMIC_DRAW);
-    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(hudVerts_.size() / 7));
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(hudVerts_.size() / 8));
     glBindVertexArray(0);
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);

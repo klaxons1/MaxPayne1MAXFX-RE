@@ -1,6 +1,6 @@
 # MAX-FX reverse engineering — current status
 
-Last updated 2026-09-26 (menu, player, hitscan, triggers, comics).
+Last updated 2026-09-26 (OpenAL Soft 3D env sounds, graphic-novel reader UI).
 Comments and this file are in English; the code is C++11. The target is the **PC** Max Payne 1
 MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
 names and version numbers only — its loaders were stripped and can disagree
@@ -192,15 +192,21 @@ PC `MP.exe` message table plus the database scripts:
 | Hitscan | `CROSSHAIR_CASTLENGTH` / beretta `[Attributes]` + `bullet_beretta` Damage |
 | Triggers | LDB type 0..4 = action / player collide / projectile / character / look-at; `T_Activate` |
 | Doors | `DO_Animate` / `DO_InvertAnimation` on dynamic-mesh clips |
-| Comics | `graphicnovelpages.txt` + `MPGNM_PickUpNote` |
+| Comics | `graphicnovelpages.txt` chapters + full-screen reader (KF2 plate, not a world billboard) |
 | OnInit | `C_PickupWeapon`, `C_PickupAmmo`, `C_SetHealth`, `C_DisplayCrosshair`, `GM_SetPlayerControls` |
 
 Esc opens the menu. WASD walk, Space jump, E use, LMB shoot.
 
-PCM WAV loader (`src/maxfx/sound`) plus an SDL3 mixer (`src/viewer/Audio.cpp`)
-loops the level theme when the official banks are next to the exe. The
-stripped tree only ships silent `placeholder.wav`; the HUD then reads
-`wavs not extracted`. F7 mutes.
+PCM WAV loader (`src/maxfx/sound`) plus **OpenAL Soft** in the viewer
+(`src/viewer/Audio.cpp`). Music is a 2D relative source. FSM startup
+`A_Play3DSound` (Part1_Level1 has 11: fans, speakers, coke hum, drip)
+becomes `S_SoundOmni` voices: `AL_LINEAR_DISTANCE_CLAMPED` with
+`AL_REFERENCE_DISTANCE = Hotspot` and `AL_MAX_DISTANCE = FallOff`.
+`Database::findSound(category, name)` falls back to name-only so
+`ambient, electric_hum_loop` still resolves from `dynamic.txt`.
+CMake fetches OpenAL Soft 1.23.1 if the system has none. The stripped
+tree only ships silent `placeholder.wav`; the HUD then reads
+`3d 0/N  (wavs not extracted)` while the emitters still start. F7 mutes.
 
 ### Character AI (`src/maxfx/char`)
 
@@ -246,16 +252,14 @@ triggers, dynamic meshes). The viewer:
 - Dodge / cover / wounded locomotion (clips are parsed, not selected)
 - Dynamic-mesh GPU transform (doors animate in state; textured mesh stays at bind)
 - Binary `.ai` path graph next to each `.ldb` (tagged, not R_Script)
-- Full FSM / `[Message]` execution (`C_DisplayCrosshair`, `A_Play3DSound`, …)
-- Triggers (radius / look-at / collide) and level-exit streaming
+- Level-exit streaming
 - Runtime bullet-hole / blood decals from `decals/decals.txt`
 - Dynamic mesh animation (doors, trains)
 - Particles (sparks, shells, smoke)
-- HUD (health, ammo, graphic novel), menus, save/load
-- 3D positional cues attached to FSM A_PlaySound (scripts are parsed; the
-  viewer only loops the level theme / first available WAV)
+- Save / load
+- Full FSM / `[Message]` execution beyond startup A_Play3DSound / comics OnInit
 - SCX / DDS texture decode
-- Graphic-novel page KF2s (environment chunk is skipped)
+- Graphic-novel KF2 cameras (pages are framed from the plate AABB)
 - KF2 cameras / point-light animation chunks
 - Additive light halos (currently alpha-blend)
 - MAX-ED editor-only maps that the PC file still stores but the game ignores
@@ -266,11 +270,13 @@ triggers, dynamic meshes). The viewer:
 make test    # levels-test: R_Script (nested quotes, 3DSound), levels.txt,
              # unbraced blocks, PCX alpha, KF2 beretta + alex KFS,
              # keyframe animation + skin AI + BSP capsule collision,
-             # materials / items / skins / sounds / music, placeholder.wav
+             # materials / items / skins / sounds / music, placeholder.wav,
+             # S_SoundOmni gain, FSM A_Play3DSound collect, comic chapters
 ```
 
 No SDL required. The viewer is `cmake -S . -B build && cmake --build build`
-(needs OpenGL 3.3 + SDL3, fetched if missing).
+(needs OpenGL 3.3 + SDL3 + OpenAL Soft; both SDL3 and OpenAL Soft are
+fetched if missing).
 
 ## Layout
 
@@ -283,9 +289,9 @@ src/maxfx/kf2         KF2 / KFS / SKD + keyframe animation / skinning
 src/maxfx/db          shared text database (skins include [AI] / clips)
 src/maxfx/char        CharacterConfig + activity FSM
 src/maxfx/collision   BSP triangle soup, sphere slide, capsule
-src/maxfx/sound       WAV
+src/maxfx/sound       WAV + S_SoundOmni gain
 src/maxfx/image       texture decode
-src/viewer            SDL3 OpenGL viewer + mixer + AI / collision
+src/viewer            SDL3 OpenGL + OpenAL Soft + AI / collision
 docs/STATUS.md     this file
 ```
 

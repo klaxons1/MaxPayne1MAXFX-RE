@@ -166,10 +166,14 @@ void loadPages(const std::string& dbRoot, GameCatalog* cat) {
             if (gen) {
                 page.newChapter = truthy(assignmentOf(*gen, "newchapter"));
             }
-            const ScriptBlock* init = childNamed(b, "oninitmessage");
-            if (init) {
-                page.initSound = assignmentOf(*init, "string");
+            for (std::size_t c = 0; c < b.children.size(); ++c) {
+                if (b.children[c].name == "oninitmessage" && page.initSound.empty()) {
+                    page.initSound = assignmentOf(b.children[c], "string");
+                }
             }
+            const std::string exp = lowerCopy(page.exportData);
+            const std::string pid = lowerCopy(page.id);
+            page.cine = exp.find("cine") != std::string::npos || pid.find("cine") != std::string::npos;
             if (!page.exportData.empty()) {
                 const std::string rel = nativeFromScript(page.exportData);
                 std::vector<std::string> cands;
@@ -185,6 +189,7 @@ void loadPages(const std::string& dbRoot, GameCatalog* cat) {
             }
             cat->pages.push_back(page);
         }
+        buildGraphicNovelChapters(cat->pages, &cat->chapters);
     } catch (...) {
     }
 }
@@ -205,6 +210,106 @@ const ProjectileDef* GameCatalog::findProjectile(const std::string& name) const 
         return 0;
     }
     return &it->second;
+}
+
+const GraphicNovelPageDef* GameCatalog::findPage(const std::string& name) const {
+    const std::string key = lowerCopy(name);
+    for (std::size_t i = 0; i < pages.size(); ++i) {
+        if (pages[i].id == key) {
+            return &pages[i];
+        }
+    }
+    return 0;
+}
+
+std::string graphicNovelChapterKey(const std::string& pageId) {
+    std::string s = lowerCopy(pageId);
+    if (s.size() > 3 && s.compare(s.size() - 3, 3, "_ok") == 0) {
+        s = s.substr(0, s.size() - 3);
+    }
+    const std::size_t us = s.rfind('_');
+    if (us != std::string::npos && us > 0) {
+        return s.substr(0, us);
+    }
+    return s;
+}
+
+std::string graphicNovelChapterTitle(const std::string& chapterId) {
+    const std::string key = lowerCopy(chapterId);
+    std::string part = "Graphic Novel";
+    if (key.size() >= 2 && key[0] == 'p') {
+        if (key[1] == '1') {
+            part = "Part I";
+        } else if (key[1] == '2') {
+            part = "Part II";
+        } else if (key[1] == '3') {
+            part = "Part III";
+        }
+    }
+    std::string rest;
+    for (std::size_t i = 0; i < key.size(); ++i) {
+        const char c = key[i];
+        if (c >= 'a' && c <= 'z') {
+            rest.push_back(static_cast<char>(c - 'a' + 'A'));
+        } else {
+            rest.push_back(c);
+        }
+    }
+    if (rest.empty()) {
+        return part;
+    }
+    return part + "  " + rest;
+}
+
+std::string graphicNovelPageLabel(const std::string& pageId) {
+    std::string s = pageId;
+    if (s.size() > 3 && s.compare(s.size() - 3, 3, "_ok") == 0) {
+        s = s.substr(0, s.size() - 3);
+    }
+    const std::size_t us = s.rfind('_');
+    if (us != std::string::npos && us + 1 < s.size()) {
+        s = s.substr(us + 1);
+    }
+    for (std::size_t i = 0; i < s.size(); ++i) {
+        if (s[i] >= 'a' && s[i] <= 'z') {
+            s[i] = static_cast<char>(s[i] - 'a' + 'A');
+        }
+    }
+    return s;
+}
+
+void buildGraphicNovelChapters(const std::vector<GraphicNovelPageDef>& pages,
+                               std::vector<GraphicNovelChapter>* out) {
+    if (out == 0) {
+        return;
+    }
+    out->clear();
+    std::map<std::string, int> index;
+    for (std::size_t i = 0; i < pages.size(); ++i) {
+        if (pages[i].cine) {
+            continue;
+        }
+        const std::string key = graphicNovelChapterKey(pages[i].id);
+        std::map<std::string, int>::iterator it = index.find(key);
+        if (it == index.end()) {
+            GraphicNovelChapter ch;
+            ch.id = key;
+            ch.title = graphicNovelChapterTitle(key);
+            index[key] = static_cast<int>(out->size());
+            out->push_back(ch);
+            it = index.find(key);
+        }
+        (*out)[static_cast<std::size_t>(it->second)].pageIndices.push_back(static_cast<int>(i));
+    }
+    if (out->empty() && !pages.empty()) {
+        GraphicNovelChapter ch;
+        ch.id = "all";
+        ch.title = "Graphic Novel";
+        for (std::size_t i = 0; i < pages.size(); ++i) {
+            ch.pageIndices.push_back(static_cast<int>(i));
+        }
+        out->push_back(ch);
+    }
 }
 
 GameCatalog loadGameCatalog(const std::string& dbRoot) {

@@ -88,6 +88,11 @@ public:
     void setShowHud(bool on) { showHud_ = on; }
     bool showHud() const { return showHud_; }
 
+    void setSkipWorld(bool on) { skipWorld_ = on; }
+    bool skipWorld() const { return skipWorld_; }
+    void setFovY(float degrees) { fovY_ = degrees; }
+    float fovY() const { return fovY_; }
+
     unsigned int entityMeshCount() const { return entityMeshCount_; }
     unsigned int entityTriangleCount() const { return entityTriangleCount_; }
     unsigned int entityPlaceholderCount() const { return entityPlaceholderCount_; }
@@ -102,6 +107,7 @@ public:
     const std::vector<SpawnPoint>& spawns() const { return spawns_; }
 
     void drawHudText(int x, int y, const char* text, float r, float g, float b);
+    void drawHudQuad(int x, int y, int w, int h, float r, float g, float b, float a);
     void presentHud();
 
 private:
@@ -213,6 +219,9 @@ private:
     std::map<std::string, std::vector<Kf2DrawMesh> > posedKf2Draws_;
     bool recordingAnimated_;
     bool recordingSky_;
+    bool recordingUnlit_;
+    bool skipWorld_;
+    float fovY_;
     std::vector<GpuMesh> animCpu_;
     std::vector<BatchKey> animKeys_;
     std::vector<DrawBatch> animBatches_;

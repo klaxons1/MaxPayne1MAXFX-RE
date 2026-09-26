@@ -49,18 +49,33 @@ struct GraphicNovelPageDef {
     std::string resolvedKf2;
     std::string initSound;
     bool newChapter;
+    bool cine;
 
-    GraphicNovelPageDef() : newChapter(false) {}
+    GraphicNovelPageDef() : newChapter(false), cine(false) {}
+};
+
+struct GraphicNovelChapter {
+    std::string id;
+    std::string title;
+    std::vector<int> pageIndices;
 };
 
 struct GameCatalog {
     std::map<std::string, WeaponDef> weapons;
     std::map<std::string, ProjectileDef> projectiles;
     std::vector<GraphicNovelPageDef> pages;
+    std::vector<GraphicNovelChapter> chapters;
 
     const WeaponDef* findWeapon(const std::string& name) const;
     const ProjectileDef* findProjectile(const std::string& name) const;
+    const GraphicNovelPageDef* findPage(const std::string& id) const;
 };
+
+std::string graphicNovelChapterKey(const std::string& pageId);
+std::string graphicNovelChapterTitle(const std::string& chapterId);
+std::string graphicNovelPageLabel(const std::string& pageId);
+void buildGraphicNovelChapters(const std::vector<GraphicNovelPageDef>& pages,
+                               std::vector<GraphicNovelChapter>* out);
 
 GameCatalog loadGameCatalog(const std::string& dbRoot);
 
