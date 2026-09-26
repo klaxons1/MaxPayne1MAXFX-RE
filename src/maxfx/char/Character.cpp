@@ -253,6 +253,15 @@ void fillCharacterConfig(CharacterConfig& cfg, const ScriptBlock& root,
             applyAiBlock(cfg.ai, ch);
         } else if (ch.name == "properties") {
             applyProperties(cfg, ch);
+        } else if (ch.name == "oninit") {
+            for (std::size_t m = 0; m < ch.children.size(); ++m) {
+                if (ch.children[m].name == "message") {
+                    const std::string s = assignmentOf(ch.children[m], "string");
+                    if (!s.empty()) {
+                        cfg.onInitMessages.push_back(s);
+                    }
+                }
+            }
         }
     }
     collectClips(root, scriptPath, cfg.skeleton, dbRoot, &cfg.animations);
@@ -303,6 +312,20 @@ int pickAnimIndex(const CharacterConfig& cfg, int preferred) {
         return cfg.animations[0].index;
     }
     return preferred;
+}
+
+void CharacterActor::applyDamage(float amount) {
+    health -= amount;
+    if (health <= 0.0f) {
+        health = 0.0f;
+        activity = kCharDead;
+        animIndex = config != 0 ? pickAnimIndex(*config, kCharAnimRandomDeath1) : kCharAnimRandomDeath1;
+        clipLock = 2.0f;
+    } else {
+        activity = kCharPain;
+        animIndex = config != 0 ? pickAnimIndex(*config, kCharAnimGetDamage) : kCharAnimGetDamage;
+        clipLock = 0.4f;
+    }
 }
 
 void CharacterActor::spawn(const Vec3& pos, float yawRadians, int room, const CharacterConfig* cfg,

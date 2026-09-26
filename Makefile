@@ -20,7 +20,10 @@ CORE_SRCS = \
 	src/maxfx/db/Database.cpp \
 	src/maxfx/sound/Sound.cpp \
 	src/maxfx/collision/Collision.cpp \
-	src/maxfx/char/Character.cpp
+	src/maxfx/char/Character.cpp \
+	src/maxfx/game/Message.cpp \
+	src/maxfx/game/Catalog.cpp \
+	src/maxfx/game/Runtime.cpp
 
 DUMP_SRCS = $(CORE_SRCS) src/apps/ldb_dump.cpp
 LEVELS_DUMP_SRCS = $(CORE_SRCS) src/apps/levels_dump.cpp

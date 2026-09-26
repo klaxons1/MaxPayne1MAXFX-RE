@@ -1036,6 +1036,11 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
     }
 }
 
+int Renderer::appendOverlayKf2(const Kf2File& kf, const Mat4x3& entity) {
+    recordingAnimated_ = true;
+    return appendKf2File(kf, entity, -1, lights_, database_);
+}
+
 int Renderer::appendKf2File(const Kf2File& kf, const Mat4x3& entity, int roomId,
                             const std::vector<WorldLight>& lights, const Database* database) {
     std::vector<Kf2DrawMesh> draws;

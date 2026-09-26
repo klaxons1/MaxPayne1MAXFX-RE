@@ -6,6 +6,9 @@
 #include "maxfx/core/Fs.h"
 #include "maxfx/core/Math.h"
 #include "maxfx/db/Database.h"
+#include "maxfx/game/Catalog.h"
+#include "maxfx/game/Message.h"
+#include "maxfx/game/Runtime.h"
 #include "maxfx/image/Image.h"
 #include "maxfx/kf2/Kf2.h"
 #include "maxfx/ldb/Ldb.h"
@@ -669,6 +672,61 @@ static void testKf2AnimationAndSkinAi() {
     }
 }
 
+static void testGameMessagesAndCatalog() {
+    const std::vector<maxfx::GameMessage> jump =
+        maxfx::parseGameMessages("this->C_Jump( 7.5  );");
+    check(jump.size() == 1, "parse C_Jump");
+    check(maxfx::methodIs(jump[0], "c_jump"), "C_Jump method");
+    if (!jump.empty() && !jump[0].args.empty()) {
+        check(jump[0].args[0].find("7") != std::string::npos, "C_Jump arg");
+    }
+    const std::vector<maxfx::GameMessage> many = maxfx::parseGameMessages(
+        "this->c_pickupweapon ( beretta ); this->c_pickupammo ( beretta, 20); "
+        "maxpayne_gamemode->gm_setplayercontrols(true);");
+    check(many.size() == 3, "three oninit messages");
+    bool sawGun = false, sawAmmo = false, sawCtrl = false;
+    for (std::size_t i = 0; i < many.size(); ++i) {
+        if (maxfx::methodIs(many[i], "c_pickupweapon")) {
+            sawGun = true;
+        }
+        if (maxfx::methodIs(many[i], "c_pickupammo")) {
+            sawAmmo = true;
+        }
+        if (maxfx::methodIs(many[i], "gm_setplayercontrols")) {
+            sawCtrl = true;
+        }
+    }
+    check(sawGun && sawAmmo && sawCtrl, "OnInit C_PickupWeapon / C_PickupAmmo / GM_SetPlayerControls");
+
+    const std::string root = maxfx::DatabaseReader::locateRoot("docs");
+    if (root.empty()) {
+        return;
+    }
+    const maxfx::GameCatalog cat = maxfx::loadGameCatalog(root);
+    check(!cat.weapons.empty() || !maxfx::isDirectory(maxfx::joinPath(root, "weapons")),
+          "weapon catalog");
+    const maxfx::WeaponDef* beretta = cat.findWeapon("beretta");
+    if (beretta) {
+        check(beretta->clipSize == 18, "beretta clip 18");
+        check(beretta->castLength > 1.0f, "beretta cast length");
+    }
+    const maxfx::ProjectileDef* bullet = cat.findProjectile("bullet_beretta");
+    if (bullet) {
+        check(bullet->damage == 5.0f, "beretta bullet damage 5");
+        check(bullet->damagesCharacter, "beretta damages character");
+    }
+    check(!cat.pages.empty(), "graphic novel pages parsed");
+
+    maxfx::GameRuntime rt;
+    rt.loadCatalog(root);
+    maxfx::CollisionWorld emptyWorld;
+    rt.player.grounded = true;
+    rt.tickPlayer(0.05f, true, false, false, false, true, false, emptyWorld);
+    check(rt.player.velocity.y > 1.0f, "C_Jump / space applies jump velocity");
+    check(std::strcmp(maxfx::triggerTypeName(maxfx::kTriggerActionButton), "action_button") == 0,
+          "action_button name");
+}
+
 static void testWavPlaceholder() {
     if (!maxfx::isFile("docs/database/sounds/placeholder.wav")) {
         std::fprintf(stderr, "skip wav (placeholder.wav missing)\\n");
@@ -692,6 +750,7 @@ int main() {
     testDatabase();
     testCollisionAndMath();
     testKf2AnimationAndSkinAi();
+    testGameMessagesAndCatalog();
     testWavPlaceholder();
 
     // Official sample shipped in docs/.

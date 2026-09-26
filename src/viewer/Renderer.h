@@ -64,6 +64,7 @@ public:
     int appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, const Kf2File* bindAnim,
                                 const Kf2File* playAnim, float timeSeconds, const Mat4x3& entity,
                                 int roomId);
+    int appendOverlayKf2(const Kf2File& kf, const Mat4x3& entity);
 
     void resize(int width, int height);
     void render(const Mat4& view, const Vec3& cameraPos);

@@ -1,6 +1,6 @@
 # MAX-FX reverse engineering — current status
 
-Last updated 2026-09-26 (skin lerp + whole-skeleton root lock + hitch cuts).
+Last updated 2026-09-26 (menu, player, hitscan, triggers, comics).
 Comments and this file are in English; the code is C++11. The target is the **PC** Max Payne 1
 MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
 names and version numbers only — its loaders were stripped and can disagree
@@ -178,8 +178,24 @@ KFS/SKD are skinned every frame from cached `CHARANIM_POSE` + STAND / WALK
 clips (not the bind T-pose). Rest topology is cached per KFS; posed verts
 are written in place. KF2 texture paths and `existingPathIgnoreCase` are
 cached (the per-frame directory list was the hitch on Windows). Animated
-CPU buffers keep capacity; GPU VBOs stay `GL_STREAM_DRAW`. Camera has no
-collision (fly through geometry).
+CPU buffers keep capacity; GPU VBOs stay `GL_STREAM_DRAW`. The default
+camera is the player capsule (walk / jump / gravity). F10 toggles noclip.
+
+### Game runtime (`src/maxfx/game`)
+
+PC `MP.exe` message table plus the database scripts:
+
+| Piece | Source |
+| --- | --- |
+| Menu | `MaxPayne_MenuMode` + custom **Jump to Level** (`levels.txt`) |
+| Player | `max_payne.txt` (`PLAYER_MOVEMENT` 4.2, `AirborneSpeed` 2.5, `C_Jump(7.5)`), gravity −9.81 m/s² (levels.txt −981 cm/s²) |
+| Hitscan | `CROSSHAIR_CASTLENGTH` / beretta `[Attributes]` + `bullet_beretta` Damage |
+| Triggers | LDB type 0..4 = action / player collide / projectile / character / look-at; `T_Activate` |
+| Doors | `DO_Animate` / `DO_InvertAnimation` on dynamic-mesh clips |
+| Comics | `graphicnovelpages.txt` + `MPGNM_PickUpNote` |
+| OnInit | `C_PickupWeapon`, `C_PickupAmmo`, `C_SetHealth`, `C_DisplayCrosshair`, `GM_SetPlayerControls` |
+
+Esc opens the menu. WASD walk, Space jump, E use, LMB shoot.
 
 PCM WAV loader (`src/maxfx/sound`) plus an SDL3 mixer (`src/viewer/Audio.cpp`)
 loops the level theme when the official banks are next to the exe. The
@@ -226,9 +242,9 @@ triggers, dynamic meshes). The viewer:
 
 ## What is still missing (engine-port debt, not viewer hacks)
 
-- Player controller (walk / shootdodge / bullet-time) — viewer is still a flycam
-- Weapons, hitscan, projectiles, ammo, CHARANIM_SHOOT* overlay
+- Shootdodge / bullet-time / CHARANIM_SHOOT* first-person overlay
 - Dodge / cover / wounded locomotion (clips are parsed, not selected)
+- Dynamic-mesh GPU transform (doors animate in state; textured mesh stays at bind)
 - Binary `.ai` path graph next to each `.ldb` (tagged, not R_Script)
 - Full FSM / `[Message]` execution (`C_DisplayCrosshair`, `A_Play3DSound`, …)
 - Triggers (radius / look-at / collide) and level-exit streaming

@@ -27,6 +27,9 @@ add_library(maxfx_ldb STATIC
     src/maxfx/sound/Sound.cpp
     src/maxfx/collision/Collision.cpp
     src/maxfx/char/Character.cpp
+    src/maxfx/game/Message.cpp
+    src/maxfx/game/Catalog.cpp
+    src/maxfx/game/Runtime.cpp
 )
 target_include_directories(maxfx_ldb PUBLIC src third_party)
 

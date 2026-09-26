@@ -173,6 +173,7 @@ struct CharacterActor {
 
     void spawn(const Vec3& pos, float yawRadians, int room, const CharacterConfig* cfg,
                const std::string& skin);
+    void applyDamage(float amount);
     void update(float dt, const Vec3& playerPos, CollisionWorld& world,
                 std::vector<CharacterActor>* others);
     Mat4x3 entityTransform() const;

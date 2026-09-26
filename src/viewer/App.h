@@ -4,6 +4,7 @@
 #include "maxfx/char/Character.h"
 #include "maxfx/collision/Collision.h"
 #include "maxfx/db/Database.h"
+#include "maxfx/game/Runtime.h"
 #include "maxfx/ldb/Ldb.h"
 #include "maxfx/levels/Levels.h"
 #include "viewer/Audio.h"
@@ -39,7 +40,12 @@ private:
     void spawnActors();
     void updateActors(float dt);
     void drawHud(float dt);
+    void drawMenuHud();
+    void drawComicHud();
     void drawLoadingFrame(const std::string& message);
+    void enterLevel(int index);
+    void syncCameraFromPlayer();
+    Vec3 playerLookLdb() const;
 
     SDL_Window* window_;
     void* glContext_;
@@ -50,7 +56,9 @@ private:
     Camera camera_;
     CollisionWorld collision_;
     std::vector<CharacterActor> actors_;
+    GameRuntime game_;
     bool running_;
+    bool levelLoaded_;
     bool mouseCaptured_;
     bool showHelp_;
     int spawnIndex_;
