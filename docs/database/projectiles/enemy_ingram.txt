@@ -1,0 +1,56 @@
+#include <..\projectiles.h>
+#include <..\projectileanimid.h>
+#include <..\object_lods.h>
+
+// -------------------------------------------------------------------
+// Discard ingram projectile
+// -------------------------------------------------------------------
+                                                                      
+[LOD]
+{
+	[Geometry]
+	ExportData = ..\..\weapons\ingram\ingram_lod0.kf2;
+	Distance = PROJECTILE_LOD_DRAW_ALWAYS ;
+}
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = ..\..\weapons\ingram\ingram_WeaponToProjectile.kf2;
+	[Animation] Index = PROJECTILEANIM_RICOCHET; Filename = ..\..\weapons\ingram\ingram_Ricochet.kf2;
+	[Properties]
+	{
+		[Message] Frame = 0; String ="this->A_Play3DSound( projectiles, handgun_ricochet, \"\");";
+	}
+}
+
+[Decal] String = "this->LI_CreateLevelItem( ingram );";
+
+[Attributes]
+Direction 	= ( 0.25, 0.5, 0.25 );
+Accuracy 	= 100;
+Speed 		= 1.0;
+SpeedRandom = 10%;
+Damage 		= 0;
+
+RicochetMaximumAngle 	= PROJECTILE_WEAPON_RICOCHET_MAXIMUMANGLE;		
+RicochetSpeedMultiplier = PROJECTILE_WEAPON_RICOCHET_SPEEDMULTIPLIER;	    
+RicochetMinimumSpeed 	= PROJECTILE_WEAPON_RICOCHET_MINIMUMSPEED;		
+RicochetUntilOnGround	= true; // true for projectiles that create level items
+VisibilityMaximumSpeed  = 100;
+
+SmallProjectile	 		= FALSE;
+Debris 					= FALSE;	
+RandomizeDirection 		= FALSE;	
+RandomizeRotation		= FALSE;
+
+CollisionExplosion		= FALSE;
+DelayedExplosion 		= FALSE;
+ExplosionDelay			= 0.0; 	
+GravityMultiplier		= 1.0;	
+UseLookAt				= FALSE;
+DamagesCharacter		= FALSE;
+ItemsToCache			= 1;
+MeshesToCache			= 1;
+DeathCause				= PROJECTILEDEATH_RANDOM;
+AdultContent			= FALSE;
+BloodProjectile			= FALSE;	// uses same detail level settings as debris but is not debris

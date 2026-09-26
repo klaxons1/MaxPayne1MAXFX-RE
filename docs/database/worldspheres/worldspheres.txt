@@ -1,0 +1,67 @@
+// Animation can be used but not activated for any skyboxes
+
+[intro] // docks rotated 180deg, used in intro
+{
+	[Geometry]
+	ExportData = bg_intro.kf2;
+}
+
+[asgard] // sky only, used in asgard
+{
+	[Geometry]
+	ExportData = bg_asgard.kf2;
+}
+
+[coldsteel] // used in coldsteel, bunker
+{
+	[Geometry]
+	ExportData = bg_coldsteel.kf2;
+}
+
+[sunset] //used in maxhome
+{
+	[Geometry]
+	ExportData = bg_sunset.kf2;
+}
+
+[docks] // used in docks A and B
+{
+	[Geometry]
+	ExportData = bg_docks.kf2;
+}
+
+[lowereastside] // used in garage
+{
+	[Geometry]
+	ExportData = bg_lowereastside.kf2;
+}
+
+[skyscrapers_streetlevel] // used in intro (?)
+{
+	[Geometry]
+	ExportData = bg_skyscrapers_streetlevel.kf2;
+}
+
+[skyscrapers_midheight] //used in aesir HQ
+{
+	[Geometry]
+	ExportData = bg_skyscrapers_midheight.kf2;
+}
+
+[skyscrapers_penthouse] //used in nicole horne penthouse
+{
+	[Geometry]
+	ExportData = bg_skyscrapers_penthouse.kf2;
+}
+
+[skyscrapers_penthouse_high] //used in nicole horne penthouse
+{
+	[Geometry]
+	ExportData = bg_skyscrapers_penthouse_high.kf2;
+}
+
+[bronx] // used in subway, hotels, tenements, rooftops
+{
+	[Geometry]
+	ExportData = bg_bronx.kf2;
+}

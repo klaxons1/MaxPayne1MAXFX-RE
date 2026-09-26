@@ -1,0 +1,17 @@
+#include <..\projectiles.h>
+#include <..\projectileanimid.h>
+#include <..\object_lods.h>
+
+#include <stain_grey.h>
+
+[LOD]
+{
+	[Geometry] exportdata = ..\stain_grey_medium\stain_grey.kf2; Distance = PROJECTILE_LOD_FAR ;
+}
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = ..\stain_grey_medium\stain_grey_default.kf2;
+	[Animation] Index = PROJECTILEANIM_RICOCHET; Filename = ..\stain_grey_medium\stain_grey_default.kf2;
+	[Animation] Index = PROJECTILEANIM_FROZEN; Filename = ..\stain_grey_medium\stain_grey_small_frozen.kf2;
+}

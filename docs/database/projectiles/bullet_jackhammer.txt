@@ -1,0 +1,52 @@
+#include <..\object_lods.h>
+#include <..\projectileanimid.h>
+#include <..\projectiles.h>
+#include <..\shooting.h>
+
+// -------------------------------------------------------------------
+// Jackhammer single Projectile
+// -------------------------------------------------------------------
+
+[LOD] { [Geometry] exportdata = ..\bullet_shared\tracer_12ga_lod0.kf2; Distance = PROJECTILE_LOD_NEAR ; }      
+[LOD] { [Geometry] exportdata = ..\bullet_shared\tracer_12ga_lod1.kf2; Distance = PROJECTILE_LOD_MEDIUM ;}     
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = ..\bullet_shared\tracer_12ga_default.kf2;
+}
+
+[Decal]
+String = "this->D_CreateDecal( bullethit_shotgun );";
+
+[CharacterHit]
+String = "this->P_CreateProjectile( blood_bullet_small, 1 );";
+
+[Attributes]
+Direction 	= (0,0,1);				
+Accuracy 	= JACKHAMMER_BULLETSPREAD ;
+Speed 		= BULLET_DEFAULTVELOCITY ;
+Speedrandom = 10%;
+Damage 		= JACKHAMMER_BULLETDAMAGE ;
+
+RicochetMaximumAngle 	= 0;
+RicochetSpeedMultiplier = 0;
+RicochetMinimumSpeed 	= 0;
+RicochetUntilOnGround	= false; // true for projectiles that create level items
+VisibilityMaximumSpeed  = BULLET_VISIBILITYSPEED ;
+
+SmallProjectile			= TRUE;
+Debris 					= FALSE;	
+RandomizeDirection 		= FALSE;	
+RandomizeRotation		= FALSE;
+
+CollisionExplosion		= FALSE;	// play explosion animation when collides first time
+DelayedExplosion 		= FALSE;	// play explosion animation after ExplosionDelay
+ExplosionDelay			= 0.0; 		// matters only if DelayedExplosion == TRUE
+GravityMultiplier		= 0.0;		// keep 1.0 for normal gravity
+UseLookAt				= TRUE;		// TRUE: align to fly direction, FALSE: for discarded weapons
+DamagesCharacter		= TRUE;		// TRUE: projectile makes damage to character, otherwise FALSE
+ItemsToCache			= 6;
+MeshesToCache			= 5;
+DeathCause				= PROJECTILEDEATH_SHOTGUN;
+AdultContent			= FALSE;
+BloodProjectile			= FALSE;	// uses same detail level settings as debris but is not debris

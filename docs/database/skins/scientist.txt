@@ -1,0 +1,127 @@
+// --------------------------------------------------------
+// DiCola Alan, Scientist, Max Payne Skeleton
+// --------------------------------------------------------
+
+#include <..\ai_ranges.h>
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponid.h>
+#include <..\weaponanimid.h>
+#include <..\object_lods.h>
+
+[AI]
+AimingSpeed 				= AI_MOBSTER_AIMING_SPEED ;
+AimingSpeedCone 			= AI_MOBSTER_AIMING_SPEEDCONE ;
+AimUpDownSpeed 				= 30.0;
+TurnLeftRightSpeed 			= AI_MOBSTER_TURNING_SPEED ;
+VisualPerceivingRadius 		= AI_MOBSTER_VISUAL_RADIUS ;
+GeneralPerceivingRadius 	= AI_MOBSTER_GENERAL_RADIUS ;
+ActivationReactionTime 		= AI_MOBSTER_REACTION_TIME ;
+ShootingCone 				= AI_MOBSTER_SHOOTING_CONE ;
+PerceivingGroupOneRadius 	= AI_MOBSTER_GROUP_ONE ;
+PerceivingGroupTwoRadius 	= AI_MOBSTER_GROUP_TWO ;
+PerceivingGroupThreeRadius 	= AI_MOBSTER_GROUP_THREE ;
+EnemyInterestTime 			= AI_MOBSTER_INTEREST_TIME ;
+ActivateOtherCharactersRadius = AI_MOBSTER_ACTIVATE_OTHER_CHARACTERS_RADIUS;
+
+[Properties]
+Skeleton = default_skeleton;
+CapsuleTop = 1.95;
+CapsuleBottom = 0.0;
+CapsuleRadius = ENEMY_COLLISION_RADIUS ;
+AirborneSpeed = 1.5;
+CanShootDodgeFrame = 13;
+CanAbortShootDodgeFrame = 85;
+RandomizeTextureSet = FALSE;
+MaximumHealth = 30;
+WoundedHealth = 10;
+HealthBonusForKiller = HEALTHBONUS_MEDIUM;
+SlowMotionBonusForKiller = BONUS_SLOWMOTION; // percents of full slowmotion
+WoundedHealthUpperLimit = 15;
+AutoAimTarget = NO;
+ShootingFrequencyMultiplier = 0.5;
+ShadowsEnabled = true;
+CanPlayerSwitchToThisSkin = true; // true=player is able to change to this skin with PGUP/PGDN
+GiveTimedModeBonusForKiller = false; // timed mode bonus defined in levels.txt
+
+[Target]
+{
+	[General] name = "Head"; Multiplier = MULTIPLIER_HEAD ;
+	[Bone] name = "Head";
+	[Bone] name = "Neck";
+}
+
+[Target]
+{
+	[General] name = "Arms"; Multiplier = MULTIPLIER_ARMS ;
+	[Bone] name = "UpArm-R";
+	[Bone] name = "LoArm-R";
+	[Bone] name = "Hand-R";
+	[Bone] name = "UpArm-L";
+	[Bone] name = "LoArm-L";
+	[Bone] name = "Hand-L";
+}
+
+[Target]
+{
+	[General] name = "Legs"; Multiplier = MULTIPLIER_LEGS ;
+	[Bone] name = "UpLeg-R";
+	[Bone] name = "LoLeg-R";
+	[Bone] name = "Foot-R";
+	[Bone] name = "Toe-R";
+	[Bone] name = "UpLeg-L";
+	[Bone] name = "LoLeg-L";
+	[Bone] name = "Foot-L";
+	[Bone] name = "Toe-L";
+}
+
+[OnInit]
+{
+	[Message] String = "this->c_removeallweapons( "empty" );";
+}
+
+[OnDeath]
+{
+	[Message] String = "this->A_StopAll3DSounds(head);";
+}
+
+[TextureAnimation]
+Texturename = "FaceTexture";
+GroupIndex = 0;
+
+[LOD] 	// LOD 0 Polygons: 1500
+{
+	[Geometry] ExportData = dicola_alan_l0.kfs; SkinData = dicola_alan_l0.skd;
+	Distance = SKIN_LOD_FAR;
+
+	EnableBoundingSphere	= TRUE;
+	BoundingSphereRadius	= 1.90;
+	EnableBoundingBox		= FALSE;
+}
+
+[Modifiers]
+{
+	[Animation] Index = CHARANIM_W_CUSTOMIDLE1; Filename = anim\idle_scientist_holler.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 0 ); Rotation = ( 0, 0, 0 );
+	}
+	[Revert] From = CHARANIM_W_2_CUSTOMIDLE1; To = CHARANIM_W_CUSTOMIDLE1;
+
+	[Animation] Index = CHARANIM_CUSTOMIDLE2; Filename = anim\Idle_TransitCop_Talk.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 50; String = "this->A_Play3DSound ( bunker, P3L3a_16b-e, head );";
+	}
+}
+
+//========================================
+// LODS MISSING
+//========================================
+
+[TextureSet]
+ExportData = Dicola_Alan_Set01.kfs;
+
+[TextureSet]
+ExportData = Dicola_Alan_Set02.kfs;

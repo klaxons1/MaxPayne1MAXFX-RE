@@ -1,0 +1,635 @@
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponanimid.h>
+
+#define		RAT_WALK	0.455
+#define		RAT_RUN		0.65
+
+[Skeleton]
+{
+	[Geometry]
+	ExportData = pigrat-collision.kfs; CrossMode = Orthonormalized;
+
+	[Animation] Index = CHARANIM_POSE; Filename = pigrat-collision.kfs;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+
+	[Animation] Index = CHARANIM_WALK; Filename = anim\rat_walk.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, RAT_WALK ); Rotation = (0,0,0); 
+		[Message] Frame = 0; String = "this->a_play3Dsound( characters, rat_walk, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_RUN; Filename = anim\rat_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, RAT_RUN ); Rotation = (0,0,0); 
+		[Message] Frame = 0; String = "this->a_play3Dsound( characters, rat_run, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_FORWARDRIGHT; Filename = anim\rat_run_forwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( RAT_WALK , 0, RAT_WALK ); Rotation = (0,0,0); 
+//		[Message] Frame = 0; String = "this->a_play3Dsound( characters, rat_run, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_STRAFERIGHT; Filename = anim\rat_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( RAT_WALK , 0, 0 ); Rotation = (0,0,0); 
+//		[Message] Frame = 0; String = "this->a_play3Dsound( characters, rat_walk, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_BACKWARDRIGHT; Filename = anim\rat_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( RAT_WALK , 0, - RAT_WALK ); Rotation = (0,0,0); 
+		[Message] Frame = 0; String = "this->a_play3Dsound( characters, rat_walk, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_WALKBACKWARD; Filename = anim\rat_walk.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, - RAT_WALK ); Rotation = (0,0,0); 
+		[Message] Frame = 0; String = "this->a_play3Dsound( characters, rat_walk, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_BACKWARDLEFT; Filename = anim\rat_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - RAT_WALK , 0, - RAT_WALK ); Rotation = (0,0,0); 
+		[Message] Frame = 0; String = "this->a_play3Dsound( characters, rat_walk, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_STRAFELEFT; Filename = anim\rat_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - RAT_WALK , 0, 0 ); Rotation = (0,0,0); 
+//		[Message] Frame = 10; String = "this->a_play3Dsound( characters, rat_walk, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_FORWARDLEFT; Filename = anim\rat_run_forwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - RAT_WALK , 0, RAT_WALK ); Rotation = (0,0,0); 
+//		[Message] Frame = 10; String = "this->a_play3Dsound( characters, rat_run, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_TURNLEFT; Filename = anim\rat_turnleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0 , 0, 0 ); Rotation = (0,0,0); 
+	}
+
+	[Animation] Index = CHARANIM_TURNRIGHT; Filename = anim\rat_turnright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0 , 0, 0 ); Rotation = (0,0,0); 
+	}
+
+	[Animation] Index = CHARANIM_STAND; Filename = anim\rat_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+		[Message] Frame = 40; String = "this->a_play3Dsound( characters, rat_idle, pelvis );";
+	}
+
+	[Revert] From = CHARANIM_CROUCH; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_CUSTOMIDLE1; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_CUSTOMIDLE2; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_CUSTOMIDLE3; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_CUSTOMIDLE4; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_DODGELEFT; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_DODGERIGHT; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_DODGEFORWARD; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_DODGEBACKWARD; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_DODGEFORWARDLEFT; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_DODGEFORWARDRIGHT; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_DODGEBACKWARDLEFT; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_DODGEBACKWARDRIGHT; To = CHARANIM_STAND;
+	[Animation] Index = CHARANIM_SHOOTDODGELEFT; Filename = anim\rat_stand_pose.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+	[Animation] Index = CHARANIM_SHOOTDODGERIGHT; Filename = anim\rat_stand_pose.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARD; Filename = anim\rat_stand_pose.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARD; Filename = anim\rat_stand_pose.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+ 		[Message] Frame = 10; String = "this->C_Jump( 5 );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARDLEFT; Filename = anim\rat_stand_pose.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARDRIGHT; Filename = anim\rat_stand_pose.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARDLEFT; Filename = anim\rat_stand_pose.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARDRIGHT; Filename = anim\rat_stand_pose.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+	[Revert] From = CHARANIM_SHOOTDODGELEFT_GETUP; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_SHOOTDODGERIGHT_GETUP; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_SHOOTDODGEFORWARD_GETUP; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_SHOOTDODGEBACKWARD_GETUP; To = CHARANIM_STAND;
+
+	[Animation] Index = CHARANIM_JUMP; Filename = anim\rat_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 0 ); Rotation = ( 0, 0, 0 ); 
+ 		[Message] Frame = 0; String = "this->C_Jump( 5 );";
+	}
+
+	[Animation] Index = CHARANIM_JUMPFORWARD; Filename = anim\rat_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 0.5 ); Rotation = ( 0, 0, 0 ); 
+ 		[Message] Frame = 0; String = "this->C_Jump( 5 );";
+	}
+
+	[Revert] From = CHARANIM_JUMPFORWARDLEFT; To = CHARANIM_JUMP;
+	[Revert] From = CHARANIM_JUMPFORWARDRIGHT; To = CHARANIM_JUMP;
+	[Revert] From = CHARANIM_FALL; To = CHARANIM_STAND;
+
+	[Animation] Index = CHARANIM_LAND; Filename = anim\rat_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 0 ); Rotation = ( 0, 0, 0 ); 
+		[Message] Frame = 10; String = "this->a_play3Dsound( characters, rat_death, pelvis );";
+	}
+
+	[Revert] From = CHARANIM_USE; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_GETWEAPON; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_HOLSTERWEAPON; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_GETDAMAGE; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_GETDAMAGECROUCHED; To = CHARANIM_STAND;
+
+	[Animation] Index = CHARANIM_RANDOMDEATH1; Filename = anim\rat_death_a.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0.19235, 0, 0 ); Rotation = (0,0,0); 
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 1, torso );";
+		[Message] Frame = 10; String = "this->a_play3Dsound( characters, rat_death, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_RANDOMDEATH2; Filename = anim\rat_death_b.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0 , 0, -0.6849 ); Rotation = (0,0,0); 
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 1, torso );";
+		[Message] Frame = 10; String = "this->a_play3Dsound( characters, rat_death, pelvis );";
+	}
+
+	[Revert] From = CHARANIM_RANDOMDEATH3; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_RANDOMDEATH4; To = CHARANIM_RANDOMDEATH2;
+	[Revert] From = CHARANIM_SHOTGUNDEATH; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_SHOTGUNDEATH2; To = CHARANIM_RANDOMDEATH2;
+
+	[Animation] Index = CHARANIM_BURNINGDEATH; Filename = anim\rat_death_a.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0.19235, 0, 0 ); Rotation = (0,0,0); 
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 1, torso );";
+		[Message] Frame = 0; String = "this->PS_StartEffect( fire_death, torso );";
+		[Message] Frame = 10; String = "this->a_play3Dsound( characters, rat_death, pelvis );";
+	}
+
+	[Revert] From = CHARANIM_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_FALLINGDEATH; To = CHARANIM_RANDOMDEATH1;
+
+	[Animation] Index = CHARANIM_GRENADEDEATH; Filename = anim\rat_death_b.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -1.5 ); Rotation = (0,0,0); 
+// 		[Message] Frame = 0; String = "this->C_Jump(1);";
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 1, torso );";
+		[Message] Frame = 10; String = "this->a_play3Dsound( characters, rat_death, pelvis );";
+	}
+
+	[Revert] From = CHARANIM_CUSTOMDEATH1; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_CUSTOMDEATH2; To = CHARANIM_STAND;
+                                                             
+	[Revert] From = CHARANIM_W_WALK; To = CHARANIM_WALK;
+	[Revert] From = CHARANIM_W_RUN; To = CHARANIM_RUN;
+	[Revert] From = CHARANIM_W_WALKBACKWARD; To = CHARANIM_WALKBACKWARD;
+	[Revert] From = CHARANIM_W_STRAFELEFT; To = CHARANIM_STRAFELEFT;
+	[Revert] From = CHARANIM_W_STRAFERIGHT; To = CHARANIM_STRAFERIGHT;
+	[Revert] From = CHARANIM_W_TURNLEFT; To = CHARANIM_TURNLEFT;
+	[Revert] From = CHARANIM_W_TURNRIGHT; To = CHARANIM_TURNRIGHT;
+	[Revert] From = CHARANIM_W_STAND; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_W_CROUCH; To = CHARANIM_CROUCH;
+	[Revert] From = CHARANIM_W_CUSTOMIDLE1; To = CHARANIM_CUSTOMIDLE1;
+	[Revert] From = CHARANIM_W_CUSTOMIDLE2; To = CHARANIM_CUSTOMIDLE2;
+	[Revert] From = CHARANIM_W_CUSTOMIDLE3; To = CHARANIM_CUSTOMIDLE3;
+	[Revert] From = CHARANIM_W_CUSTOMIDLE4; To = CHARANIM_CUSTOMIDLE4;
+	[Revert] From = CHARANIM_W_DODGELEFT; To = CHARANIM_DODGELEFT;
+	[Revert] From = CHARANIM_W_DODGERIGHT; To = CHARANIM_DODGERIGHT;
+	[Revert] From = CHARANIM_W_DODGEFORWARD; To = CHARANIM_DODGEFORWARD;
+	[Revert] From = CHARANIM_W_DODGEBACKWARD; To = CHARANIM_DODGEBACKWARD;
+	[Revert] From = CHARANIM_W_DODGEFORWARDLEFT; To = CHARANIM_DODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_W_DODGEFORWARDRIGHT; To = CHARANIM_DODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_DODGEBACKWARDLEFT; To = CHARANIM_DODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_W_DODGEBACKWARDRIGHT; To = CHARANIM_DODGEBACKWARDRIGHT;
+	[Revert] From = CHARANIM_W_SHOOTDODGELEFT; To = CHARANIM_SHOOTDODGELEFT;
+	[Revert] From = CHARANIM_W_SHOOTDODGERIGHT; To = CHARANIM_SHOOTDODGERIGHT;
+	[Revert] From = CHARANIM_W_SHOOTDODGEFORWARD; To = CHARANIM_SHOOTDODGEFORWARD;
+	[Revert] From = CHARANIM_W_SHOOTDODGEBACKWARD; To = CHARANIM_SHOOTDODGEBACKWARD;
+	[Revert] From = CHARANIM_W_SHOOTDODGEFORWARDLEFT; To = CHARANIM_SHOOTDODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_W_SHOOTDODGEFORWARDRIGHT; To = CHARANIM_SHOOTDODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_SHOOTDODGEBACKWARDLEFT; To = CHARANIM_SHOOTDODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_W_SHOOTDODGEBACKWARDRIGHT; To = CHARANIM_SHOOTDODGEBACKWARDRIGHT;
+	[Revert] From = CHARANIM_W_SHOOTDODGELEFT_GETUP; To = CHARANIM_SHOOTDODGELEFT_GETUP;
+	[Revert] From = CHARANIM_W_SHOOTDODGERIGHT_GETUP; To = CHARANIM_SHOOTDODGERIGHT_GETUP;
+	[Revert] From = CHARANIM_W_SHOOTDODGEFORWARD_GETUP; To = CHARANIM_SHOOTDODGEFORWARD_GETUP;
+	[Revert] From = CHARANIM_W_SHOOTDODGEBACKWARD_GETUP; To = CHARANIM_SHOOTDODGEBACKWARD_GETUP;
+	[Revert] From = CHARANIM_W_JUMP; To = CHARANIM_JUMP;
+	[Revert] From = CHARANIM_W_JUMPFORWARD; To = CHARANIM_JUMPFORWARD;
+	[Revert] From = CHARANIM_W_JUMPFORWARDLEFT; To = CHARANIM_JUMPFORWARDLEFT;
+	[Revert] From = CHARANIM_W_JUMPFORWARDRIGHT; To = CHARANIM_JUMPFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_FALL; To = CHARANIM_FALL;
+	[Revert] From = CHARANIM_W_LAND; To = CHARANIM_LAND;
+	[Revert] From = CHARANIM_W_USE; To = CHARANIM_USE;
+	[Revert] From = CHARANIM_W_GETWEAPON; To = CHARANIM_GETWEAPON;
+	[Revert] From = CHARANIM_W_HOLSTERWEAPON; To = CHARANIM_HOLSTERWEAPON;
+	[Revert] From = CHARANIM_W_GETDAMAGE; To = CHARANIM_GETDAMAGE;
+	[Revert] From = CHARANIM_W_GETDAMAGECROUCHED; To = CHARANIM_GETDAMAGECROUCHED;
+	[Revert] From = CHARANIM_W_RANDOMDEATH1; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_RANDOMDEATH2; To = CHARANIM_RANDOMDEATH2;
+	[Revert] From = CHARANIM_W_RANDOMDEATH3; To = CHARANIM_RANDOMDEATH3;
+	[Revert] From = CHARANIM_W_RANDOMDEATH4; To = CHARANIM_RANDOMDEATH4;
+	[Revert] From = CHARANIM_W_SHOTGUNDEATH; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_W_SHOTGUNDEATH2; To = CHARANIM_SHOTGUNDEATH2;
+	[Revert] From = CHARANIM_W_BURNINGDEATH; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_W_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH2;
+	[Revert] From = CHARANIM_W_FALLINGDEATH; To = CHARANIM_FALLINGDEATH;
+	[Revert] From = CHARANIM_W_GRENADEDEATH; To = CHARANIM_GRENADEDEATH;
+	[Revert] From = CHARANIM_W_CUSTOMDEATH1; To = CHARANIM_CUSTOMDEATH1;
+	[Revert] From = CHARANIM_W_CUSTOMDEATH2; To = CHARANIM_CUSTOMDEATH2;
+	[Revert] From = CHARANIM_W_FORWARDLEFT; To = CHARANIM_FORWARDLEFT;
+	[Revert] From = CHARANIM_W_FORWARDRIGHT; To = CHARANIM_FORWARDRIGHT;
+	[Revert] From = CHARANIM_W_BACKWARDLEFT; To = CHARANIM_BACKWARDLEFT;
+	[Revert] From = CHARANIM_W_BACKWARDRIGHT; To = CHARANIM_BACKWARDRIGHT;
+                                                             
+	[Revert] From = CHARANIM_2_WALK; To = CHARANIM_WALK;
+	[Revert] From = CHARANIM_2_RUN; To = CHARANIM_RUN;
+	[Revert] From = CHARANIM_2_WALKBACKWARD; To = CHARANIM_WALKBACKWARD;
+	[Revert] From = CHARANIM_2_STRAFELEFT; To = CHARANIM_STRAFELEFT;
+	[Revert] From = CHARANIM_2_STRAFERIGHT; To = CHARANIM_STRAFERIGHT;
+	[Revert] From = CHARANIM_2_TURNLEFT; To = CHARANIM_TURNLEFT;
+	[Revert] From = CHARANIM_2_TURNRIGHT; To = CHARANIM_TURNRIGHT;
+	[Revert] From = CHARANIM_2_STAND; To = CHARANIM_STAND;
+	[Revert] From = CHARANIM_2_CROUCH; To = CHARANIM_CROUCH;
+	[Revert] From = CHARANIM_2_CUSTOMIDLE1; To = CHARANIM_CUSTOMIDLE1;
+	[Revert] From = CHARANIM_2_CUSTOMIDLE2; To = CHARANIM_CUSTOMIDLE2;
+	[Revert] From = CHARANIM_2_CUSTOMIDLE3; To = CHARANIM_CUSTOMIDLE3;
+	[Revert] From = CHARANIM_2_CUSTOMIDLE4; To = CHARANIM_CUSTOMIDLE4;
+	[Revert] From = CHARANIM_2_DODGELEFT; To = CHARANIM_DODGELEFT;
+	[Revert] From = CHARANIM_2_DODGERIGHT; To = CHARANIM_DODGERIGHT;
+	[Revert] From = CHARANIM_2_DODGEFORWARD; To = CHARANIM_DODGEFORWARD;
+	[Revert] From = CHARANIM_2_DODGEBACKWARD; To = CHARANIM_DODGEBACKWARD;
+	[Revert] From = CHARANIM_2_DODGEFORWARDLEFT; To = CHARANIM_DODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_2_DODGEFORWARDRIGHT; To = CHARANIM_DODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_2_DODGEBACKWARDLEFT; To = CHARANIM_DODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_2_DODGEBACKWARDRIGHT; To = CHARANIM_DODGEBACKWARDRIGHT;
+	[Revert] From = CHARANIM_2_SHOOTDODGELEFT; To = CHARANIM_SHOOTDODGELEFT;
+	[Revert] From = CHARANIM_2_SHOOTDODGERIGHT; To = CHARANIM_SHOOTDODGERIGHT;
+	[Revert] From = CHARANIM_2_SHOOTDODGEFORWARD; To = CHARANIM_SHOOTDODGEFORWARD;
+	[Revert] From = CHARANIM_2_SHOOTDODGEBACKWARD; To = CHARANIM_SHOOTDODGEBACKWARD;
+	[Revert] From = CHARANIM_2_SHOOTDODGEFORWARDLEFT; To = CHARANIM_SHOOTDODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_2_SHOOTDODGEFORWARDRIGHT; To = CHARANIM_SHOOTDODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_2_SHOOTDODGEBACKWARDLEFT; To = CHARANIM_SHOOTDODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_2_SHOOTDODGEBACKWARDRIGHT; To = CHARANIM_SHOOTDODGEBACKWARDRIGHT;
+	[Revert] From = CHARANIM_2_SHOOTDODGELEFT_GETUP; To = CHARANIM_SHOOTDODGELEFT_GETUP;
+	[Revert] From = CHARANIM_2_SHOOTDODGERIGHT_GETUP; To = CHARANIM_SHOOTDODGERIGHT_GETUP;
+	[Revert] From = CHARANIM_2_SHOOTDODGEFORWARD_GETUP; To = CHARANIM_SHOOTDODGEFORWARD_GETUP;
+	[Revert] From = CHARANIM_2_SHOOTDODGEBACKWARD_GETUP; To = CHARANIM_SHOOTDODGEBACKWARD_GETUP;
+	[Revert] From = CHARANIM_2_JUMP; To = CHARANIM_JUMP;
+	[Revert] From = CHARANIM_2_JUMPFORWARD; To = CHARANIM_JUMPFORWARD;
+	[Revert] From = CHARANIM_2_JUMPFORWARDLEFT; To = CHARANIM_JUMPFORWARDLEFT;
+	[Revert] From = CHARANIM_2_JUMPFORWARDRIGHT; To = CHARANIM_JUMPFORWARDRIGHT;	
+	[Revert] From = CHARANIM_2_FALL; To = CHARANIM_FALL;
+	[Revert] From = CHARANIM_2_LAND; To = CHARANIM_LAND;
+	[Revert] From = CHARANIM_2_USE; To = CHARANIM_USE;
+	[Revert] From = CHARANIM_2_GETWEAPON; To = CHARANIM_GETWEAPON;
+	[Revert] From = CHARANIM_2_HOLSTERWEAPON; To = CHARANIM_HOLSTERWEAPON;
+	[Revert] From = CHARANIM_2_GETDAMAGE; To = CHARANIM_GETDAMAGE;
+	[Revert] From = CHARANIM_2_GETDAMAGECROUCHED; To = CHARANIM_GETDAMAGECROUCHED;
+	[Revert] From = CHARANIM_2_RANDOMDEATH1; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_2_RANDOMDEATH2; To = CHARANIM_RANDOMDEATH2;
+	[Revert] From = CHARANIM_2_RANDOMDEATH3; To = CHARANIM_RANDOMDEATH3;
+	[Revert] From = CHARANIM_2_RANDOMDEATH4; To = CHARANIM_RANDOMDEATH4;
+	[Revert] From = CHARANIM_2_SHOTGUNDEATH; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_2_SHOTGUNDEATH2; To = CHARANIM_SHOTGUNDEATH2;
+	[Revert] From = CHARANIM_2_BURNINGDEATH; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_2_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH2;
+	[Revert] From = CHARANIM_2_FALLINGDEATH; To = CHARANIM_FALLINGDEATH;
+	[Revert] From = CHARANIM_2_GRENADEDEATH; To = CHARANIM_GRENADEDEATH;
+	[Revert] From = CHARANIM_2_CUSTOMDEATH1; To = CHARANIM_CUSTOMDEATH1;
+	[Revert] From = CHARANIM_2_CUSTOMDEATH2; To = CHARANIM_CUSTOMDEATH2;
+	[Revert] From = CHARANIM_2_FORWARDLEFT; To = CHARANIM_FORWARDLEFT;
+	[Revert] From = CHARANIM_2_FORWARDRIGHT; To = CHARANIM_FORWARDRIGHT;
+	[Revert] From = CHARANIM_2_BACKWARDLEFT; To = CHARANIM_BACKWARDLEFT;
+	[Revert] From = CHARANIM_2_BACKWARDRIGHT; To = CHARANIM_BACKWARDRIGHT;
+
+	[Revert] From = CHARANIM_W_2_WALK; To = CHARANIM_2_WALK;
+	[Revert] From = CHARANIM_W_2_RUN; To = CHARANIM_2_RUN;
+	[Revert] From = CHARANIM_W_2_WALKBACKWARD; To = CHARANIM_2_WALKBACKWARD;
+	[Revert] From = CHARANIM_W_2_STRAFELEFT; To = CHARANIM_2_STRAFELEFT;
+	[Revert] From = CHARANIM_W_2_STRAFERIGHT; To = CHARANIM_2_STRAFERIGHT;
+	[Revert] From = CHARANIM_W_2_TURNLEFT; To = CHARANIM_2_TURNLEFT;
+	[Revert] From = CHARANIM_W_2_TURNRIGHT; To = CHARANIM_2_TURNRIGHT;
+	[Revert] From = CHARANIM_W_2_STAND; To = CHARANIM_2_STAND;
+	[Revert] From = CHARANIM_W_2_CROUCH; To = CHARANIM_2_CROUCH;
+	[Revert] From = CHARANIM_W_2_CUSTOMIDLE1; To = CHARANIM_2_CUSTOMIDLE1;
+	[Revert] From = CHARANIM_W_2_CUSTOMIDLE2; To = CHARANIM_2_CUSTOMIDLE2;
+	[Revert] From = CHARANIM_W_2_CUSTOMIDLE3; To = CHARANIM_2_CUSTOMIDLE3;
+	[Revert] From = CHARANIM_W_2_CUSTOMIDLE4; To = CHARANIM_2_CUSTOMIDLE4;
+	[Revert] From = CHARANIM_W_2_DODGELEFT; To = CHARANIM_2_DODGELEFT;
+	[Revert] From = CHARANIM_W_2_DODGERIGHT; To = CHARANIM_2_DODGERIGHT;
+	[Revert] From = CHARANIM_W_2_DODGEFORWARD; To = CHARANIM_2_DODGEFORWARD;
+	[Revert] From = CHARANIM_W_2_DODGEBACKWARD; To = CHARANIM_2_DODGEBACKWARD;
+	[Revert] From = CHARANIM_W_2_DODGEFORWARDLEFT; To = CHARANIM_2_DODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_W_2_DODGEFORWARDRIGHT; To = CHARANIM_2_DODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_2_DODGEBACKWARDLEFT; To = CHARANIM_2_DODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_W_2_DODGEBACKWARDRIGHT; To = CHARANIM_2_DODGEBACKWARDRIGHT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGELEFT; To = CHARANIM_2_SHOOTDODGELEFT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGERIGHT; To = CHARANIM_2_SHOOTDODGERIGHT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEFORWARD; To = CHARANIM_2_SHOOTDODGEFORWARD;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEBACKWARD; To = CHARANIM_2_SHOOTDODGEBACKWARD;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEFORWARDLEFT; To = CHARANIM_2_SHOOTDODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEFORWARDRIGHT; To = CHARANIM_2_SHOOTDODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEBACKWARDLEFT; To = CHARANIM_2_SHOOTDODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEBACKWARDRIGHT; To = CHARANIM_2_SHOOTDODGEBACKWARDRIGHT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGELEFT_GETUP; To = CHARANIM_2_SHOOTDODGELEFT_GETUP;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGERIGHT_GETUP; To = CHARANIM_2_SHOOTDODGERIGHT_GETUP;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEFORWARD_GETUP; To = CHARANIM_2_SHOOTDODGEFORWARD_GETUP;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEBACKWARD_GETUP; To = CHARANIM_2_SHOOTDODGEBACKWARD_GETUP;
+	[Revert] From = CHARANIM_W_2_JUMP; To = CHARANIM_2_JUMP;
+	[Revert] From = CHARANIM_W_2_JUMPFORWARD; To = CHARANIM_2_JUMPFORWARD;
+	[Revert] From = CHARANIM_W_2_JUMPFORWARDLEFT; To = CHARANIM_2_JUMPFORWARDLEFT;
+	[Revert] From = CHARANIM_W_2_JUMPFORWARDRIGHT; To = CHARANIM_2_JUMPFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_2_FALL; To = CHARANIM_2_FALL;
+	[Revert] From = CHARANIM_W_2_LAND; To = CHARANIM_2_LAND;
+	[Revert] From = CHARANIM_W_2_USE; To = CHARANIM_2_USE;
+	[Revert] From = CHARANIM_W_2_GETWEAPON; To = CHARANIM_2_GETWEAPON;
+	[Revert] From = CHARANIM_W_2_HOLSTERWEAPON; To = CHARANIM_2_HOLSTERWEAPON;
+	[Revert] From = CHARANIM_W_2_GETDAMAGE; To = CHARANIM_2_GETDAMAGE;
+	[Revert] From = CHARANIM_W_2_GETDAMAGECROUCHED; To = CHARANIM_2_GETDAMAGECROUCHED;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH1; To = CHARANIM_2_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH2; To = CHARANIM_2_RANDOMDEATH2;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH3; To = CHARANIM_2_RANDOMDEATH3;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH4; To = CHARANIM_2_RANDOMDEATH4;
+	[Revert] From = CHARANIM_W_2_SHOTGUNDEATH; To = CHARANIM_2_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_W_2_SHOTGUNDEATH2; To = CHARANIM_2_SHOTGUNDEATH2;
+	[Revert] From = CHARANIM_W_2_BURNINGDEATH; To = CHARANIM_2_BURNINGDEATH;
+	[Revert] From = CHARANIM_W_2_BURNINGDEATH2; To = CHARANIM_2_BURNINGDEATH2;
+	[Revert] From = CHARANIM_W_2_FALLINGDEATH; To = CHARANIM_2_FALLINGDEATH;
+	[Revert] From = CHARANIM_W_2_GRENADEDEATH; To = CHARANIM_2_GRENADEDEATH;
+	[Revert] From = CHARANIM_W_2_CUSTOMDEATH1; To = CHARANIM_2_CUSTOMDEATH1;
+	[Revert] From = CHARANIM_W_2_CUSTOMDEATH2; To = CHARANIM_2_CUSTOMDEATH2;
+	[Revert] From = CHARANIM_W_2_FORWARDLEFT; To = CHARANIM_2_FORWARDLEFT;
+	[Revert] From = CHARANIM_W_2_FORWARDRIGHT; To = CHARANIM_2_FORWARDRIGHT;
+	[Revert] From = CHARANIM_W_2_BACKWARDLEFT; To = CHARANIM_2_BACKWARDLEFT;
+	[Revert] From = CHARANIM_W_2_BACKWARDRIGHT; To = CHARANIM_2_BACKWARDRIGHT;
+
+// Reload
+	[Revert]	From = CHARANIM_RELOADEMPTY; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADLEADPIPE; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADBASEBALLBAT; To = CHARANIM_RELOADBERETTA;
+	[Animation] Index = CHARANIM_RELOADBERETTA; Filename = anim\rat_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_Reload();";
+	}
+
+	[Revert]	From = CHARANIM_RELOADBERETTADUAL; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADDESERTEAGLE; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADSAWEDSHOTGUN; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADPUMPSHOTGUN;  To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADINGRAM; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADINGRAMDUAL; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADSNIPER; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADMP5; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADJACKHAMMER; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADMOLOTOV; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADGRENADE; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADM79; To = CHARANIM_RELOADBERETTA;
+	[Revert]	From = CHARANIM_RELOADPAINKILLER; To = CHARANIM_RELOADBERETTA;
+
+// Shoot
+	[Revert]	From = CHARANIM_SHOOTEMPTY; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLEADPIPE; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTBASEBALLBAT; To = CHARANIM_SHOOTBERETTA;
+	[Animation] Index = CHARANIM_SHOOTBERETTA; Filename = anim\rat_shoot.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Revert]	From = CHARANIM_SHOOTBERETTADUAL; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTDESERTEAGLE; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTSAWEDSHOTGUN; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTPUMPSHOTGUN;  To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTINGRAM; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTINGRAMDUAL; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTSNIPER; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTMP5; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTJACKHAMMER; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTMOLOTOV; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTGRENADE; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTM79; To = CHARANIM_SHOOTBERETTA;
+	[Revert]	From = CHARANIM_SHOOTPAINKILLER; To = CHARANIM_SHOOTBERETTA;
+
+// Shoothigh
+	[Revert]	From = CHARANIM_SHOOTHIGHEMPTY; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHLEADPIPE; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHBASEBALLBAT; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Animation] Index = CHARANIM_SHOOTHIGHBERETTA; Filename = anim\rat_shoot_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Revert]	From = CHARANIM_SHOOTHIGHBERETTADUAL; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHDESERTEAGLE; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHSAWEDSHOTGUN; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHPUMPSHOTGUN;  To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHINGRAM; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHINGRAMDUAL; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHSNIPER; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHMP5; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHJACKHAMMER; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHMOLOTOV; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHGRENADE; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHM79; To = CHARANIM_SHOOTHIGHBERETTA;
+	[Revert]	From = CHARANIM_SHOOTHIGHPAINKILLER; To = CHARANIM_SHOOTHIGHBERETTA;
+
+// Shootlow
+	[Revert]	From = CHARANIM_SHOOTLOWEMPTY; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWLEADPIPE; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWBASEBALLBAT; To = CHARANIM_SHOOTLOWBERETTA;
+	[Animation] Index = CHARANIM_SHOOTLOWBERETTA; Filename = anim\rat_shoot_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Revert]	From = CHARANIM_SHOOTLOWBERETTADUAL; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWDESERTEAGLE; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWSAWEDSHOTGUN; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWPUMPSHOTGUN;  To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWINGRAM; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWINGRAMDUAL; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWSNIPER; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWMP5; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWJACKHAMMER; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWMOLOTOV; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWGRENADE; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWM79; To = CHARANIM_SHOOTLOWBERETTA;
+	[Revert]	From = CHARANIM_SHOOTLOWPAINKILLER; To = CHARANIM_SHOOTLOWBERETTA;
+
+// Discard
+	[Revert]	From = CHARANIM_DISCARDEMPTY; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDLEADPIPE; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDBASEBALLBAT; To = CHARANIM_DISCARDBERETTA;
+	[Animation] Index = CHARANIM_DISCARDBERETTA; Filename = anim\rat_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Revert]	From = CHARANIM_DISCARDBERETTADUAL; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDDESERTEAGLE; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDSAWEDSHOTGUN; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDPUMPSHOTGUN;  To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDINGRAM; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDINGRAMDUAL; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDSNIPER; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDMP5; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDJACKHAMMER; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDMOLOTOV; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDGRENADE; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDM79; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDPAINKILLER; To = CHARANIM_DISCARDBERETTA;
+
+// Modeswitch
+	[Revert]	From = CHARANIM_MODESWITCHEMPTY; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHLEADPIPE; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHBASEBALLBAT; To = CHARANIM_MODESWITCHBERETTA;
+	[Animation] Index = CHARANIM_MODESWITCHBERETTA; Filename = anim\rat_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Revert]	From = CHARANIM_MODESWITCHBERETTADUAL; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHDESERTEAGLE; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHSAWEDSHOTGUN; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHPUMPSHOTGUN;  To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHINGRAM; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHINGRAMDUAL; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHSNIPER; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHMP5; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHJACKHAMMER; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHMOLOTOV; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHGRENADE; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHM79; To = CHARANIM_MODESWITCHBERETTA;
+	[Revert]	From = CHARANIM_MODESWITCHPAINKILLER; To = CHARANIM_MODESWITCHBERETTA;
+}
+
+[Attributes]
+LeaningAngleWhileRunning = 2;		// in degrees
+LeaningSpeedWhileRunning = 30;		// in degrees per second
+
+DefaultAimingPointOffset 		= ( 0.0, 0.02, 0.00 );
+CrouchingAimingPointOffset 		= ( 0.0, 0.01, 0.00 ); // this is  not in use
+ShootDodgingAimingPointOffset	= ( 0.0, 0.01, 0.00 ); // this is  not in use
+
+DefaultCameraPointOffset		= ( 0.0, 0.02, 0.00 ); 
+CrouchingCameraPointOffset		= ( 0.0, 0.01, 0.00 );
+ShootDodgingCameraPointOffset	= ( 0.0, 0.01, 0.00 );
+
+SoundListenerPointOffset 	= ( 0.00, 0.01, 0.00 );
+LeftHandWeaponOffset = (0, 0, 0);
+
+LookAtBoneName 			= "Head";
+LookAtPivotBoneName 	= "Torso";
+LookAtHorizontalLimit	= 90.0;		// in degrees
+LookAtVerticalLimit		= 70.0;		// in degrees
+LookAtBlendTime			= 0.15;		// in seconds
+
+RightShadowBoneName		= "BkLeg-R";
+LeftShadowBoneName		= "BkLeg-L";
+
+AutoAimTargetBoneName	= "Torso";
+AIAimingTargetBoneName	= "Torso";
+
+DeadBodyMidpointBoneName		= "Torso";
+DeadBodyCapsuleRadiusMultiplier	= 1.0;
+DeadBodyCapsuleHeightMultiplier	= 0.1;
+
+DeathAngleAdjustingEnabled = false;
+DeathAngleHeadBoneName = "head";
+DeathAngleLeftFootBoneName = "bkleg-l";
+DeathAngleRightFootBoneName = "bkleg-r";
+
+// One handed Boneset
+[OneHandedLowerBodyBone] Name = "Pelvis";		// Lower Body Pelvis
+[OneHandedLowerBodyBone]  Name = "BkLeg-L";		// Lower left leg
+[OneHandedLowerBodyBone]  Name = "BkLeg-R";		// Lower right leg
+[OneHandedLowerBodyBone]  Name = "Tail";		// Tail
+
+[OneHandedUpperBodyBone]  Name = "Torso";		// Upper Body Torso
+[OneHandedUpperBodyBone]   Name = "FtLeg-L";	// Upper left leg
+[OneHandedUpperBodyBone]   Name = "Gun";		// Upper right leg
+[OneHandedUpperBodyBone]   Name = "Head";		// Head
+
+// -------------------------------------------------------------------------
+[TwoHandedLowerBodyBone] Name = "Pelvis";		// Lower Body Pelvis
+[TwoHandedLowerBodyBone]  Name = "BkLeg-L";		// Lower left leg
+[TwoHandedLowerBodyBone]  Name = "BkLeg-R";		// Lower right leg
+[TwoHandedLowerBodyBone]  Name = "Tail";		// Tail
+
+[TwoHandedUpperBodyBone]  Name = "Torso";		// Upper Body Torso
+[TwoHandedUpperBodyBone]   Name = "FtLeg-L";	// Upper left leg
+[TwoHandedUpperBodyBone]   Name = "Gun";		// Upper right leg
+[TwoHandedUpperBodyBone]   Name = "Head";		// Head
+
+// Two Handed Boneset
+// GunBones
+[RightHandGunBone] Name = "gun";
+[LeftHandGunBone] Name = "FtLeg-L";
+
+// Aiming pivot bones
+[OneHandedAimingPivotBone] Name = "Torso";
+[TwoHandedAimingPivotBone] Name = "Torso";

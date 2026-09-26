@@ -1,0 +1,48 @@
+#include <..\projectiles.h>
+#include <..\projectileanimid.h>
+#include <..\object_lods.h>
+
+// -------------------------------------------------------------------
+// Creates a blood decal when hitting the floor
+// -------------------------------------------------------------------
+
+[LOD] { [Geometry] exportdata = ..\dummy\dummy_l0.kf2; Distance = 0.001 ; }
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = ..\dummy\dummy_l0.kf2;
+	[Animation] Index = PROJECTILEANIM_RICOCHET; Filename = ..\dummy\dummy_l0.kf2;
+}
+
+[Decal]
+String ="this->d_createdecal( blood_small );";
+
+[Attributes]
+Direction 	= ( 0, 0, 1 );
+Accuracy 	= 500;
+Speed 		= 8 ;
+SpeedRandom = 5%;
+Damage 		= 0;			 
+
+RicochetMaximumAngle 	= 0;
+RicochetSpeedMultiplier = 0.3;
+RicochetMinimumSpeed 	= 0;
+RicochetUntilOnGround	= false; // true for projectiles that create level items
+VisibilityMaximumSpeed  = 0;
+
+SmallProjectile	 		= FALSE;
+Debris 					= FALSE;	
+RandomizeDirection 		= FALSE;	
+RandomizeRotation		= FALSE;
+
+CollisionExplosion		= FALSE;
+DelayedExplosion 		= FALSE;
+ExplosionDelay			= 0.0;
+GravityMultiplier		= 1.0;
+UseLookAt				= FALSE;
+DamagesCharacter		= FALSE;
+ItemsToCache			= 13;	// Shotguns have 5 pellets
+MeshesToCache			= 1;
+DeathCause				= PROJECTILEDEATH_RANDOM;
+AdultContent			= FALSE;
+BloodProjectile			= TRUE;	// uses same detail level settings as debris but is not debris

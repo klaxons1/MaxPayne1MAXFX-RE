@@ -1,0 +1,39 @@
+#include <..\level_items.h>
+#include <..\object_lods.h>
+#include <..\weaponid.h>
+
+[LOD]
+{
+    [Geometry]
+	ExportData = ..\..\weapons\sawedshotgun\sawedshotgun_LevelItem.kf2;
+    Distance = PROJECTILE_LOD_DRAW_ALWAYS;
+}
+
+[Properties]
+TriggerRadius = RADIUS_sawedshotgun;
+CantPickupMessagesTimeout = CANTPICKUP_TIMEOUT;
+MatchingWeaponID = WEAPONID_SAWEDSHOTGUN;
+PickupIfNewWeapon = true;
+PickupIfAmmoNotFull = true;
+
+[OnFirstPickup]
+{
+	[Message] string = "activator->C_PickupWeapon( "sawedshotgun" );";
+	[Message] string = "activator->C_PickupAmmo( "sawedshotgun"," PICKUPAMMO_SAWEDSHOTGUN ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_handgun );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_SAWEDSHOTGUN\" );";
+}
+
+[OnPickUp]
+{
+	[Message] string = "activator->C_PickupWeapon( "sawedshotgun" );";
+	[Message] string = "activator->C_PickupAmmo( "sawedshotgun"," PICKUPAMMO_SAWEDSHOTGUN ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_handgun );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_SAWEDSHOTGUN\" );";
+}
+
+[OnCantPickup]
+{
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_ammo_full );";
+	[Message] string = "maxpayne_hudmode->mphm_print( HUDPRINT_PICKUP_SHOTGUN_AMMO_FULL );";
+}

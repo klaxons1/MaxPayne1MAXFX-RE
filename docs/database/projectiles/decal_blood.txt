@@ -1,0 +1,47 @@
+#include <..\projectiles.h>
+#include <..\projectileanimid.h>
+#include <..\object_lods.h>
+
+// -------------------------------------------------------------------
+// Creates only a decal. No sounds, particles or damage.
+// -------------------------------------------------------------------
+
+[LOD] { [Geometry] exportdata = ..\dummy\dummy_l0.kf2; Distance = 0.0001; }
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = ..\dummy\dummy_l0.kf2;
+}
+
+[Decal]
+String = "this->D_CreateDecal( blood );";
+
+[Attributes]
+Direction 	= ( 0, 0, 1 );				
+Accuracy 	= 500;
+Speed 		= 100;				 
+SpeedRandom = 0%;
+Damage 		= 0;			 
+
+RicochetMaximumAngle 	= 0;
+RicochetSpeedMultiplier = 0;
+RicochetMinimumSpeed 	= 0;
+RicochetUntilOnGround	= false; // true for projectiles that create level items
+VisibilityMaximumSpeed  = 0;
+
+SmallProjectile	 		= FALSE;
+Debris 					= FALSE;	
+RandomizeDirection 		= FALSE;	
+RandomizeRotation		= FALSE;
+
+CollisionExplosion		= FALSE;	// play explosion animation when collides first time
+DelayedExplosion 		= FALSE;	// play explosion animation after ExplosionDelay
+ExplosionDelay			= 0.0; 		// matters only if DelayedExplosion == TRUE
+GravityMultiplier		= 0.0;		// keep 1.0 for normal gravity
+UseLookAt				= FALSE;		// TRUE: align to fly direction, FALSE: for discarded weapons
+DamagesCharacter		= FALSE;		// TRUE: projectile makes damage to character, otherwise FALSE
+ItemsToCache			= 7;
+MeshesToCache			= 1;
+DeathCause				= PROJECTILEDEATH_RANDOM;
+AdultContent			= FALSE;
+BloodProjectile			= FALSE;	// uses same detail level settings as debris but is not debris

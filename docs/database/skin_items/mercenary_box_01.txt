@@ -1,0 +1,17 @@
+// Mercenary Backpack
+
+#include <..\object_lods.h>
+
+[LOD]
+{
+	[Geometry]
+	ExportData = mercenary_box_01.kf2;
+	Distance = SKIN_LOD_FAR;
+}
+
+[Animationset]
+{
+	[Animation]
+	Index = 0;
+	Filename = mercenary_box_01.kf2;
+}

@@ -1,0 +1,19 @@
+//LOD Distance definitions for all objects
+
+#define PROJECTILE_LOD_NEAR				1.0
+#define PROJECTILE_LOD_MEDIUM			8.0
+#define PROJECTILE_LOD_FAR 				20.0
+#define PROJECTILE_LOD_DRAW_ALWAYS		100.0
+
+#define BIG_PROJECTILE_LOD_NEAR			8.0
+#define BIG_PROJECTILE_LOD_MEDIUM		16.0
+#define BIG_PROJECTILE_LOD_FAR 			32.0
+#define BIG_PROJECTILE_LOD_DRAW_ALWAYS	100.0
+
+#define SKIN_LOD_NEAR					4.0
+#define SKIN_LOD_MEDIUM					50.0
+#define SKIN_LOD_FAR 					100.0
+
+#define WEAPON_LOD_NEAR					2.0
+#define WEAPON_LOD_MEDIUM				8.0
+#define WEAPON_LOD_FAR 					200.0

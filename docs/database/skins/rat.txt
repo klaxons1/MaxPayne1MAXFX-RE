@@ -1,0 +1,66 @@
+// --------------------------------------------------------
+// Rat, uses experimental pigrat skeleton
+// --------------------------------------------------------
+
+#include <..\ai_ranges.h>
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponid.h>
+#include <..\weaponanimid.h>
+#include <..\object_lods.h>
+
+[AI]
+AimingSpeed 				= AI_MOBSTER_AIMING_SPEED ;
+AimingSpeedCone 			= AI_MOBSTER_AIMING_SPEEDCONE ;
+AimUpDownSpeed 				= 30.0;
+TurnLeftRightSpeed 			= AI_MOBSTER_TURNING_SPEED ;
+VisualPerceivingRadius 		= AI_MOBSTER_VISUAL_RADIUS ;
+GeneralPerceivingRadius 	= AI_MOBSTER_GENERAL_RADIUS ;
+ActivationReactionTime 		= AI_MOBSTER_REACTION_TIME ;
+ShootingCone 				= AI_MOBSTER_SHOOTING_CONE ;
+PerceivingGroupOneRadius 	= AI_MOBSTER_GROUP_ONE ;
+PerceivingGroupTwoRadius 	= AI_MOBSTER_GROUP_TWO ;
+PerceivingGroupThreeRadius 	= AI_MOBSTER_GROUP_THREE ;
+EnemyInterestTime 			= AI_MOBSTER_INTEREST_TIME ;
+ActivateOtherCharactersRadius = AI_MOBSTER_ACTIVATE_OTHER_CHARACTERS_RADIUS;
+
+[Properties]
+Skeleton = pigrat;
+CapsuleTop = 0.2;
+CapsuleBottom = 0.0;
+CapsuleRadius = 0.09;
+AirborneSpeed = 1.5;
+CanShootDodgeFrame = 10;
+CanAbortShootDodgeFrame = 20;
+RandomizeTextureSet = FALSE;
+MaximumHealth = 2;
+WoundedHealth = 1;
+HealthBonusForKiller = 0;
+SlowMotionBonusForKiller = 0%;
+WoundedHealthUpperLimit = 2;
+AutoAimTarget = NO;
+ShootingFrequencyMultiplier = 0.5;
+ShadowsEnabled = false;
+CanPlayerSwitchToThisSkin = false; // true=player is able to change to this skin with PGUP/PGDN
+GiveTimedModeBonusForKiller = false; // timed mode bonus defined in levels.txt
+
+[OnInit]
+{
+	[Message] String = "this->C_PickupWeapon ( "empty" );";
+	[Message] String = "this->C_SetInfiniteAmmo ( "empty", 1 );";
+}
+
+[OnDeath]
+{
+	[Message] String = "this->A_StopAll3DSounds(head);";
+}
+
+[LOD] 	// LOD 0 Polygons: 1500
+{
+	[Geometry] ExportData = rat_l0.kfs; SkinData = rat_l0.skd;
+	Distance = SKIN_LOD_FAR;
+
+	EnableBoundingSphere	= TRUE;
+	BoundingSphereRadius	= 0.25;
+	EnableBoundingBox		= FALSE;
+}

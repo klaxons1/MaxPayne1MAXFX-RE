@@ -1,0 +1,42 @@
+#include <..\level_items.h>
+#include <..\object_lods.h>
+#include <..\weaponid.h>
+
+[LOD]
+{
+    [Geometry]
+	ExportData = ..\..\weapons\beretta\beretta_LevelItem.kf2;
+    Distance = PROJECTILE_LOD_DRAW_ALWAYS;
+}
+
+[Properties]
+TriggerRadius = RADIUS_BERETTA;
+CantPickupMessagesTimeout = CANTPICKUP_TIMEOUT;
+MatchingWeaponID = WEAPONID_BERETTA;
+PickupIfNewWeapon = true;
+PickupIfAmmoNotFull = true;
+
+[OnFirstPickup]
+{
+	[Message] string = "activator->C_PickupWeapon( "beretta" );";
+	[Message] string = "activator->C_PickupWeapon( "berettadual" );";
+	[Message] string = "activator->C_PickupAmmo( "beretta"," PICKUPAMMO_BERETTA ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_handgun );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_BERETTA\" );";
+}
+
+[OnPickUp]
+{
+	[Message] string = "activator->C_PickupWeapon( "beretta" );";
+	[Message] string = "activator->C_PickupWeapon( "berettadual" );";
+	[Message] string = "activator->C_PickupAmmo( "beretta"," PICKUPAMMO_BERETTA ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_handgun );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_BERETTA\" );";
+}
+
+[OnCantPickup]
+{
+	[Message] string = "activator->C_PickupWeapon( "berettadual" );";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_ammo_full );";
+	[Message] string = "maxpayne_hudmode->mphm_print( HUDPRINT_PICKUP_BERETTA_AMMO_FULL );";
+}

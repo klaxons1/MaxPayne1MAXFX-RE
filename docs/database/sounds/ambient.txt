@@ -1,0 +1,472 @@
+
+#include <..\soundid.h>
+#define AMBIENT_SMALLHOTSPOT	1
+#define AMBIENT_SMALLFALLOFF	10	
+#define AMBIENT_MEDIUMHOTSPOT	0.1	
+#define AMBIENT_MEDIUMFALLOFF	20	
+#define AMBIENT_LARGEHOTSPOT	0.1	
+#define AMBIENT_LARGEFALLOFF	50	
+
+[ac_fan_loop]  				// The flapping of an old AC fan going round and round 
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\ac\ac_fan_loop.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = ID_FAN_HOTSPOT;
+		FallOff = ID_FAN_FALLOFF;
+		Priority = ID_FAN_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[ac_hum_loop]  				// The normal AC hum
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\ac\ac_hum_loop.wav;
+		Volume = 1.5;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = ID_FAN_HOTSPOT;
+		FallOff = ID_FAN_FALLOFF;
+		Priority = ID_FAN_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[alarm_car_loop]  
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\alarm\alarm_car_loop.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = ID_ALARM_HOTSPOT;
+		FallOff = ID_ALARM_FALLOFF;
+		Priority = ID_ALARM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[alarm_hitech_loop]  		// a hitech military base alarm
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\alarm\alarm_hitech_loop1.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = ID_ALARM_HOTSPOT;
+		FallOff = ID_ALARM_FALLOFF;
+		Priority = ID_ALARM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[computer_noise_loop]  			// Air conditioning, a few beeps, low volume
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\computer\ambience_computer_room02.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 4;
+		FallOff = 20;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[computer_room_loop]  			// Matrix printers in the background
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\computer\ambience_computer_room01.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 4;
+		FallOff = 20;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[electric_hum_loop]			// The humming of a device left on (looping) (variations)
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\electric\electric_hum_whine.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = ID_ELECTRIC_HOTSPOT;
+		FallOff = ID_ELECTRIC_FALLOFF;
+		Priority = ID_ELECTRIC_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[light_flare]  		// Flare or torch sound looping
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\light\flare.wav;
+		Volume = 0.75;
+		Pitch = 33100;
+		Random = 2%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = 0.4;
+		FallOff = 6;
+		Priority = 1;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[pipes_creaking]  			// Pipes cranking and creaking, groaning in cold
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\pipes\pipe_whistling_test.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = ID_PIPES_HOTSPOT;
+		FallOff = ID_PIPES_FALLOFF;
+		Priority = ID_PIPES_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[pipes_flowing_loop]		// Water tricking and flowing in pipes
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\pipes\pipes_flowing2.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = ID_PIPES_HOTSPOT;
+		FallOff = ID_PIPES_FALLOFF;
+		Priority = ID_PIPES_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[water_dripping_bucket]		// Water drops dripping into a bucket
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\water\water_dripping_cave_01.wav;
+		Volume = 1.0;
+		Pitch = 26000;
+		Random = 2%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = ID_WATER_DRIPPING_HOTSPOT;
+		FallOff = ID_WATER_DRIPPING_FALLOFF;
+		Priority = ID_WATER_DRIPPING_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[water_dripping_tunnel]		// Water drops dripping in a cave
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\water\water_dripping_cave_01.wav;
+		Volume = 1.0;
+		Pitch = 26000;
+		Random = 2%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = ID_WATER_DRIPPING_HOTSPOT;
+		FallOff = ID_WATER_DRIPPING_FALLOFF;
+		Priority = ID_WATER_DRIPPING_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[radio_hum_loop]  			// The static of a radio, with station almost found every now and then
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\radio\tv_static2.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 0.3;
+		FallOff = 10;
+		Priority = ID_NOISE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[storm_loud_loop]  			// the roar and scream of the winter storm in an open place (top of a skyscraper)
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\storm\storm_loud2.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = ID_WIND_HOTSPOT;
+		FallOff = ID_WIND_FALLOFF;
+		Priority = ID_WIND_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[subway_train_loop]             //subway train rumble
+{
+    [Properties] ID = ID_LOOPING;
+    [Default]
+	{
+        [Sound]
+        Filename = ambient\subway\subway_train_close_loop.wav;
+        Volume = 0.8;
+        Pitch = 22050;
+        Random = 2%;
+        3DSound = YES;
+        Looping = YES;
+        Streamed = NO;
+        Hotspot = 4;
+        FallOff = 100;
+        Priority = 50;
+        ItemsToCache = 1;
+        FrequencyScaling = TRUE;
+    }
+}
+
+[subway_train_slowing]  		// subway slowing down, muted interior sound, 12s
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\subway\Subway_Train_Stops_Interior.wav;
+		Volume = 0.5;
+		Pitch = 33050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 40;
+		FallOff = 50;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[subway_train_leaving]  		// subway accelerating and fades out, 15s
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\subway\Subway_Train_Leaves.wav;
+		Volume = 0.5;
+		Pitch = 33050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 40;
+		FallOff = 50;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[subway_train_braking]  		//subway braking
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\subway\subway-braking.wav;
+		Volume = 0.5;
+		Pitch = 28000;
+		Random = 2%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = ID_HUGE_HOTSPOT;
+		FallOff = ID_HUGE_FALLOFF;
+		Priority = ID_HUGE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[subway_train_stops]  		//subway stops
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\subway\trainstops.wav;
+		Volume = 0.5;
+		Pitch = 26000;
+		Random = 2%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = ID_HUGE_HOTSPOT;
+		FallOff = ID_HUGE_FALLOFF;
+		Priority = ID_HUGE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[wind_subway_loop]					// Looping wind
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\wind\wind_small_clanking2.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = ID_WIND_HOTSPOT;
+		FallOff = ID_WIND_FALLOFF;
+		Priority = ID_WIND_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[cars_passing_medium]					// Cars passing in the distance
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\street\cars_passing_medium.wav;
+		Volume = 0.4;
+		Pitch = 22000;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = ID_WIND_HOTSPOT;
+		FallOff = ID_WIND_FALLOFF;
+		Priority = ID_WIND_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[cars_passing_medium_muffled]			// Cars passing in the distance (muffled), use indoors only
+{
+	[Properties] ID = ID_LOOPING;
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\street\cars_passing_medium_muffled.wav;
+		Volume = 0.4;
+		Pitch = 22000;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = ID_WIND_HOTSPOT;
+		FallOff = ID_WIND_FALLOFF;
+		Priority = ID_WIND_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+// End of list

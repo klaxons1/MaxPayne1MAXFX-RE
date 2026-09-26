@@ -1,0 +1,54 @@
+#include <..\projectiles.h>
+#include <..\projectileanimid.h>
+#include <..\object_lods.h>
+
+
+// -------------------------------------------------------------------
+// Test explosion
+// -------------------------------------------------------------------
+
+[LOD] { [Geometry] exportdata = Flashball_l0.kf2; Distance = PROJECTILE_LOD_DRAW_ALWAYS ; }
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = Flashball_default.kf2;
+	[Animation] Index = PROJECTILEANIM_RICOCHET; Filename = Flashball_ricochet.kfs;
+	[Animation] Index = PROJECTILEANIM_EXPLODE; Filename = Flashball_ricochet.kfs;
+	[Animation] Index = PROJECTILEANIM_FROZEN; Filename = Flashball_ricochet.kfs;
+}
+
+
+//[TextureAnimation]
+//TextureName = "Explosion";
+
+[Attributes] //From Flare
+
+Direction 	= ( 0,0,1);
+Accuracy 	= 0;					
+Speed 		= 14;				 
+SpeedRandom = 0%;					
+Damage 		= 0;			 
+
+RicochetMaximumAngle 	= PROJECTILE_THROW_RICOCHET_MAXIMUMANGLE;	   	
+RicochetSpeedMultiplier = 1.0;	
+RicochetMinimumSpeed 	= PROJECTILE_THROW_RICOCHET_MINIMUMSPEED;				
+RicochetUntilOnGround	= false; // true for projectiles that create level items
+VisibilityMaximumSpeed  = 30; // m/s
+
+SmallProjectile			= FALSE;
+Debris 					= TRUE;	
+RandomizeDirection 		= FALSE;
+RandomizeRotation		= FALSE;
+
+CollisionExplosion 		= FALSE;
+DelayedExplosion 		= FALSE;
+ExplosionDelay			= 3.0;
+GravityMultiplier		= 1.0;		// keep 1.0 for normal gravity
+UseLookAt				= TRUE;		// TRUE: align to fly direction, FALSE: for discarded weapons
+DamagesCharacter		= TRUE;		// TRUE: projectile makes damage to character, otherwise FALSE
+ItemsToCache			= 0;
+MeshesToCache			= 0;
+DeathCause				= PROJECTILEDEATH_RANDOM;
+AdultContent			= FALSE;
+BloodProjectile			= FALSE;	// uses same detail level settings as debris but is not debris
+

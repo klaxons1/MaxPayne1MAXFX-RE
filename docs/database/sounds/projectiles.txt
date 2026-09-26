@@ -1,0 +1,2654 @@
+#include <..\soundid.h>
+
+// -------------------------------------------------------------------
+// Bullethits, all materials
+// -------------------------------------------------------------------
+
+[Bullethit_Generic]
+{
+	[Properties] ID = 0; Probability = 100%;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\bullethit\default_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 15%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\bullethit\default_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 15%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\bullethit\default_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 15%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\bullethit\default_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 15%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\bullethit\default_hit_05.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 15%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\bullethit\default_hit_06.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 15%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\bullethit\default_hit_07.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 15%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\bullethit\default_hit_08.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 15%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "cardboard";
+
+		[Sound]
+        Filename = projectiles\bullethit\cardboard_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\cardboard_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\cardboard_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\cardboard_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "carpet";
+
+		[Sound]
+        Filename = projectiles\bullethit\carpet_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 15%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\carpet_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 15%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+
+	[Material]
+	{
+		[General]
+		Name = "character";
+
+		[Sound]
+        Filename = projectiles\bullethit\character_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 30;
+		Priority = 1000;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\character_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 30;
+		Priority = 1000;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\character_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 30;
+		Priority = 1000;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "couch";
+
+		[Sound]
+        Filename = projectiles\bullethit\carpet_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 15%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\carpet_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 15%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "electricpanel";
+
+		[Sound]
+        Filename = projectiles\bullethit\electric_panel_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\electric_panel_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\electric_panel_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\electric_panel_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "glass";
+
+		[Sound]
+        Filename = projectiles\bullethit\glass_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\glass_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\glass_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "glass_bulletproof";
+
+		[Sound]
+        Filename = projectiles\bullethit\glass_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\glass_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\glass_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "gravel";
+
+		[Sound]
+        Filename = projectiles\bullethit\gravel_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22000;
+		Random = 6%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\gravel_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22000;
+		Random = 6%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\gravel_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22000;
+		Random = 6%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	} 
+
+	[Material]
+	{
+		[General]
+		Name = "lights";
+
+		[Sound]
+        Filename = projectiles\bullethit\electric_panel_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\electric_panel_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "marble";
+
+		[Sound]
+        Filename = projectiles\bullethit\marble_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\marble_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal";
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal_hollow";
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hollow_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hollow_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hollow_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hollow_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal_outside";
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal_solid";
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_solid_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 33050;
+		Random = 8%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_solid_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 33050;
+		Random = 8%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_solid_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 33050;
+		Random = 8%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_solid_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 33050;
+		Random = 8%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	} 
+
+	[Material]
+	{
+		[General]
+		Name = "paper";
+
+		[Sound]
+        Filename = projectiles\bullethit\paper_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\paper_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\paper_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\paper_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "pipes";
+
+		[Sound]
+        Filename = projectiles\bullethit\pipe_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\pipe_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\pipe_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\pipe_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "pipes_steam";
+
+		[Sound]
+        Filename = projectiles\bullethit\pipe_hit2_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\pipe_hit2_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\pipe_hit2_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\pipe_hit2_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "skybox";
+
+		[Sound]
+        Filename = placeholder.wav;
+		Volume = 0.0;
+		Pitch = 44100;
+		Random = 0%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = 0.01;
+		FallOff = 0.02;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "snow";
+
+		[Sound]
+        Filename = projectiles\bullethit\snow_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 10%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\snow_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 10%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+		
+		[Sound]
+        Filename = projectiles\bullethit\snow_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 10%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+		
+		[Sound]
+        Filename = projectiles\bullethit\snow_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 10%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+
+
+	[Material]
+	{
+		[General]
+		Name = "tile";
+
+		[Sound]
+        Filename = projectiles\bullethit\tile_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 15%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\tile_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 15%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\tile_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "water";
+
+		[Sound]
+        Filename = projectiles\bullethit\water_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\water_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\water_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\water_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "watertank";
+
+		[Sound]
+        Filename = projectiles\bullethit\watertank_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 10%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "wireframe";
+
+		[Sound]
+        Filename = projectiles\bullethit\wireframe_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\wireframe_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "winebarrel";
+
+		[Sound]
+        Filename = projectiles\bullethit\watertank_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 10%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "wood";
+
+		[Sound]
+        Filename = projectiles\bullethit\wood_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\wood_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\wood_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\bullethit\wood_hit_04.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 32000;
+		Random = 2%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = ID_BULLETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Bullethit_40mm]
+{
+	[Properties] ID = 0; Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\explosion_grenade.wav;
+		Volume = 1.0;
+		Pitch = 44100;
+		Random = 6%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_EXPLOSION_HOTSPOT;
+		FallOff = ID_EXPLOSION_FALLOFF;
+		Priority = ID_EXPLOSION_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "skybox";
+
+		[Sound]
+        Filename = placeholder.wav;
+		Volume = 0.0;
+		Pitch = 44100;
+		Random = 0%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = 0.01;
+		FallOff = 0.02;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "Water";
+
+		[Sound]
+		Filename = projectiles\explosion_grenade_water.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 6%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_EXPLOSION_HOTSPOT;
+		FallOff = ID_EXPLOSION_FALLOFF;
+		Priority = ID_EXPLOSION_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "Water_Bottom";
+
+		[Sound]
+		Filename = projectiles\explosion_grenade_water.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 6%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_EXPLOSION_HOTSPOT;
+		FallOff = ID_EXPLOSION_FALLOFF;
+		Priority = ID_EXPLOSION_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Bullethit_Grenade]	// Grenade collision sound, Note: No material dependencies
+{
+	[Properties] ID = 0; Probability = 100%;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\grenade_ricochet.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_RICOCHET_HOTSPOT;
+		FallOff = ID_RICOCHET_FALLOFF;
+		Priority = ID_RICOCHET_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Bullethit_Grenade_Harmless]	// A level item being created, not a dangerous sound
+{
+	[Properties] ID = 0; Probability = 100%;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\grenade_ricochet_carpet.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_RICOCHET_HOTSPOT;
+		FallOff = ID_RICOCHET_FALLOFF;
+		Priority = ID_RICOCHET_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Explosion_Molotov]		// Molotov Cocktail explodes on impact. Glass breaks, fire rumbles
+{
+	[Properties] ID = 0; Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\explosion_molotov.wav;
+		Volume = 0.8;
+		Pitch = 33050;
+		Random = 2%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_EXPLOSION_HOTSPOT;
+		FallOff = ID_EXPLOSION_FALLOFF;
+		Priority = ID_EXPLOSION_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+/*
+[Bullethit_MolotovFrag] // Single fragment sound, accumulates, so use only low probabilities 
+{
+	[Properties] ID = ID_RICOCHET; Probability = 25%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\bullethit_molotovfrag_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22500;
+		Random = 10%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_RICOCHET_HOTSPOT;
+		FallOff = ID_RICOCHET_FALLOFF;
+		Priority = ID_RICOCHET_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\bullethit_molotovfrag_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22500;
+		Random = 10%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_RICOCHET_HOTSPOT;
+		FallOff = ID_RICOCHET_FALLOFF;
+		Priority = ID_RICOCHET_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\bullethit_molotovfrag_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22500;
+		Random = 10%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_RICOCHET_HOTSPOT;
+		FallOff = ID_RICOCHET_FALLOFF;
+		Priority = ID_RICOCHET_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+	}
+}	
+*/
+
+[bullethit_baseballbat] // Baseball bat - connecting sound
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = projectiles\melee_hit\baseball_default_hit.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "character";
+
+		[Sound]
+        Filename = projectiles\melee_hit\character_hit_01.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\melee_hit\character_hit_02.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\melee_hit\character_hit_03.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "couch";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_default_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "glass";
+
+		[Sound]
+        Filename = projectiles\melee_hit\baseball_glass_hit.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "glass_bulletproof";
+
+		[Sound]
+        Filename = projectiles\melee_hit\baseball_glass_hit.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal";
+
+		[Sound]
+        Filename = projectiles\melee_hit\baseball_metal_hit.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal_hollow";
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hollow_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal_solid";
+
+		[Sound]
+        Filename = projectiles\melee_hit\baseball_metal_solid_hit.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "pipes";
+
+		[Sound]
+        Filename = projectiles\melee_hit\baseball_metal_solid_hit.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "pipes_steam";
+
+		[Sound]
+        Filename = projectiles\melee_hit\baseball_metal_solid_hit.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "wood";
+
+		[Sound]
+        Filename = projectiles\melee_hit\baseball_wood_hit.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "woodframe";
+
+		[Sound]
+        Filename = projectiles\melee_hit\baseball_wood_hit.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[bullethit_leadpipe] // Baseball bat - connecting sound
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_default_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "cardboard";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_wood_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "character";
+
+		[Sound]
+        Filename = projectiles\melee_hit\character_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = projectiles\melee_hit\character_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "electricpanel";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_metal_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "glass";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_glass_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "glass_bulletproof";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_glass_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_metal_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal_hollow";
+
+		[Sound]
+        Filename = projectiles\bullethit\metal_hollow_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "metal_solid";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_metal_solid_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "pipes";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_metal_solid_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "pipes_steam";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_metal_solid_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "wood";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_wood_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = "woodframe";
+
+		[Sound]
+        Filename = projectiles\melee_hit\leadpipe_wood_hit.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = NO;
+		Streamed = NO;
+        3DSound = YES;
+		Hotspot = ID_BULLETHIT_HOTSPOT;
+		FallOff = ID_BULLETHIT_FALLOFF;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+// ------------------------------------------------------
+// Begin cases   -  Empty case sounds (empty shells)
+// ------------------------------------------------------
+
+
+[Casehit_Generic] // Empty case sounds, needs some material variation
+{
+	[Properties] ID = 0;
+
+	[Default]
+	{
+
+		[Sound]
+		Filename = projectiles\cases\shell_ricochet_01.wav;
+		Volume = 0.4;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 12;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\cases\shell_ricochet_02.wav;
+		Volume = 0.4;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 12;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Casehit_50cal] // Empty case sounds for Desert Eagle (somewhat lower)
+{
+	[Properties] ID = 0;
+
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\cases\shell_ricochet_01.wav;
+		Volume = 0.4;
+		Pitch = 38000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\cases\shell_ricochet_02.wav;
+		Volume = 0.4;
+		Pitch = 38000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[case_12ga_Ricochet] // 12 gauge shotgun shells - need material variations
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\cases\case_12ga_ricochet01.wav;
+		Volume = 0.8;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 3;
+		FrequencyScaling = TRUE;
+
+
+		[Sound]
+		Filename = projectiles\cases\case_12ga_ricochet02.wav;
+		Volume = 0.8;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 3;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+
+[case_12ga_Freeze] // 12 gauge shotgun shell stops moving
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\cases\case_12ga_freeze01.wav;
+		Volume = 0.7;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[case_40mm_ricochet] //Empty case for M79 (big metallic shell) bounces
+{
+	[Properties] ID = 0;
+
+	[Default]
+	{
+
+		[Sound]
+		Filename = projectiles\cases\case_40mm_ricochet01.wav;
+		Volume = 0.2;
+		Pitch = 44000;
+		Random = 10%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[case_40mm_freeze] //Empty case for M79 (big metallic shell) stops moving
+{
+	[Properties] ID = 0;
+
+	[Default]
+	{
+
+		[Sound]
+		Filename = projectiles\cases\case_40mm_freeze.wav;
+		Volume = 0.1;
+		Pitch = 44000;
+		Random = 10%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+// ------------------------------------------------
+// Hitting sounds
+// ------------------------------------------------
+
+[FragHit_Generic] //default fragment sound, used by handgrenades
+{
+	[Properties] ID = 0; Probability = 10%;
+
+	[Default]
+	{
+
+		[Sound]
+		Filename = Placeholder.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 20%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_SHELLS_HOTSPOT;
+		FallOff = ID_SHELLS_FALLOFF;
+		Priority = ID_SHELLS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Explosion_Generic] // Used by Frag grenade
+{
+	[Properties] ID = 0; Probability = 100%;
+
+	[Default]
+	{
+
+		[Sound]
+		Filename = projectiles\Explosion_generic.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 20%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_EXPLOSION_HOTSPOT;
+		FallOff = ID_EXPLOSION_FALLOFF;
+		Priority = ID_EXPLOSION_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Fire_Projectile]		// Flaming sound through the air
+{
+	[Properties] ID = 0; Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\fire_projectile.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = 2;
+		FallOff = 8;
+		Priority = 8;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+// ---------------------------
+// Clips falling on the ground
+// ---------------------------
+
+[Clip_Ricochet] // Used by Beretta, Ingram, Desert Eagle, Mp5 and Sniper rifle
+{
+	[Properties] ID = ID_CLIPS;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\clips\clip_ricochet01.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 3;
+		FrequencyScaling = TRUE;
+/*
+		[Sound]
+		Filename = projectiles\clips\clip_ricochet02.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\clips\clip_ricochet03.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+*/
+	}
+}	
+
+[Clip_Freeze] // When the clip stops movement
+{
+	[Properties] ID = ID_CLIPS;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\clips\clip_freeze01.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+/*
+		[Sound]
+		Filename = projectiles\clips\clip_freeze02.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+*/
+	}
+}	
+
+[Clip_Jackhammer_Ricochet] // Jackhammer clip falls to the floor
+{
+	[Properties] ID = ID_CLIPS;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\clips\clip_jackhammer_ricochet01.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+/*
+		[Sound]
+		Filename = projectiles\clips\clip_jackhammer_ricochet02.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\clips\clip_jackhammer_ricochet03.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+*/
+	}
+}	
+
+
+[Clip_Jackhammer_Freeze] // Jackhammer clip stops moving
+{
+	[Properties] ID = ID_CLIPS;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\clips\clip_jackhammer_freeze01.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+/*
+		[Sound]
+		Filename = projectiles\clips\clip_jackhammer_freeze02.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\clips\clip_jackhammer_freeze03.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+*/
+	}
+}	
+
+// ------------------------------
+// Discard Weapon - Handguns falling on the ground
+// ------------------------------
+
+[Handgun_Ricochet] // Generic 1-handed gun discard sound (weapon collides against floor). Needs material variations
+{
+	[Properties] ID = ID_CLIPS;  Probability = 100%;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\discard_weapon\handgun_ricochet01.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 4;
+		FrequencyScaling = TRUE;
+/*
+		[Sound]
+		Filename = projectiles\discard_weapon\handgun_ricochet02.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\discard_weapon\handgun_ricochet03.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+*/
+	}
+}	
+
+[Handgun_Freeze] // Generic discard sound (weapon collides against floor). Needs material variations
+{
+	[Properties] ID = ID_CLIPS;  Probability = 100%;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\discard_weapon\handgun_freeze01.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 10%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+/*
+		[Sound]
+		Filename = projectiles\discard_weapon\handgun_freeze02.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 10%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+*/
+	}
+}	
+
+// ------------------------------
+// Rifles falling on the ground
+// ------------------------------
+
+[Rifle_Ricochet] // Generic 2-handed gun discard sound (hits floor). Needs material variations
+{
+	[Properties] ID = ID_CLIPS;  Probability = 100%;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\discard_weapon\rifle_ricochet01.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = projectiles\discard_weapon\rifle_ricochet02.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+	}
+}	
+
+[Rifle_Freeze] // Generic 2-handed gun discard sound (stops moving). Needs material variations.
+{
+	[Properties] ID = ID_CLIPS;  Probability = 100%;
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\discard_weapon\rifle_freeze01.wav;
+		Volume = 0.5;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_CLIPS_HOTSPOT;
+		FallOff = ID_CLIPS_FALLOFF;
+		Priority = ID_CLIPS_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	

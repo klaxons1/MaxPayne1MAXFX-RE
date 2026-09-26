@@ -1,0 +1,691 @@
+#include <..\soundid.h>
+
+// ------------------------------------------------
+
+[P2L4a_005_cam]	// Max: Upstairs, the trio... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\P2L4a_005_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_01]	// Mobster warns Pilate
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_02]	// Max says one down two to go
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_02.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_03]	// Mobster sneezing loudly
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_03.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_04]	// Mobster wans Joe Salem, Joe calls back
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_04.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_05]	// Joe Salem shouts he wants Max dead
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_05.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_06]	// Max says two down one to go
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_06.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_07]	// Mobster: Nothing stops him
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_07.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 8;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_08]	// Mobster: This will, take cover
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_08.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 10;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_09]	// Vince Mugnaio shouts to Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_09.wav;
+
+		Volume = 0.9;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 10;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_10]	// Max shouts Vince Mugnaio's name
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_10.wav;
+
+		Volume = 0.85;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_11]	// Punchinello screams in fear
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_11.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_12]	// Punchinello dies
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_12.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_13]	// Horne says Game over Max Payne
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_13.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_14]	// Mobster shouts Its Payne
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_14.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_15]	// Mobster argue who gets to waste Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_15.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_Max_01]	// Max: In death, the thug had been...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_Max_02]	// Max: My fortune had been told
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_Max_02.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_Max_03]	// Max: commments on running into the trio
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_Max_03.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_Max_04]	// Max: comments on dead Lisa
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_Max_04.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l4a_Max_05]	// Max: comments on Trio gone now
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l4a_Max_05.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// ------------------------------------------------
+
+[Large_Table_Tipped_Over]
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = manor\Large_Table_Tipped_Over.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 2%;
+		Hotspot = 4;
+		FallOff = 40;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[Telephone_antique_ring]
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = manor\Telephone_antique_ring.wav;
+		Volume = 1.0;
+		Pitch = 44100;
+
+		Random = 2%;
+		Hotspot = 4;
+		FallOff = 10;
+		Looping = YES;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+[piano_play_01]
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = manor\piano_play_01.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 4;
+		FallOff = 15;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[piano_play_02]
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = manor\piano_play_02.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 4;
+		FallOff = 15;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[piano_play_broken]
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = manor\piano_play_broken.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 20%;
+		Hotspot = 4;
+		FallOff = 15;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}

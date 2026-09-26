@@ -1,0 +1,212 @@
+// --------------------------------------------------------
+// Gognitti Vinnie, Special Badguy
+// --------------------------------------------------------
+
+#include <..\ai_ranges.h>
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponid.h>
+#include <..\weaponanimid.h>
+#include <..\object_lods.h>
+
+[AI]
+AimingSpeed 				= AI_MOBSTER_AIMING_SPEED ;
+AimingSpeedCone 			= AI_MOBSTER_AIMING_SPEEDCONE ;
+AimUpDownSpeed 				= 30.0;
+TurnLeftRightSpeed 			= AI_MOBSTER_TURNING_SPEED ;
+VisualPerceivingRadius 		= AI_MOBSTER_VISUAL_RADIUS ;
+GeneralPerceivingRadius 	= AI_MOBSTER_GENERAL_RADIUS ;
+ActivationReactionTime 		= AI_MOBSTER_REACTION_TIME ;
+ShootingCone 				= AI_MOBSTER_SHOOTING_CONE ;
+PerceivingGroupOneRadius 	= AI_MOBSTER_GROUP_ONE ;
+PerceivingGroupTwoRadius 	= AI_MOBSTER_GROUP_TWO ;
+PerceivingGroupThreeRadius 	= AI_MOBSTER_GROUP_THREE ;
+EnemyInterestTime 			= AI_MOBSTER_INTEREST_TIME ;
+ActivateOtherCharactersRadius = AI_MOBSTER_ACTIVATE_OTHER_CHARACTERS_RADIUS;
+
+[Properties]
+Skeleton = default_skeleton;
+CapsuleTop = 1.95;
+CapsuleBottom = 0.0;
+CapsuleRadius = ENEMY_COLLISION_RADIUS ;
+AirborneSpeed = 1.5;
+CanShootDodgeFrame = 13;
+CanAbortShootDodgeFrame = 85;
+RandomizeTextureSet = FALSE;
+MaximumHealth = HEALTH_CLASS_9;
+WoundedHealth = WOUNDEDHEALTH_CLASS_9;
+HealthBonusForKiller = HEALTHBONUS_MEDIUM;
+SlowMotionBonusForKiller = BONUS_SLOWMOTION; // percents of full slowmotion
+WoundedHealthUpperLimit = 15;
+AutoAimTarget = YES;
+ShootingFrequencyMultiplier = 0.5;
+ShadowsEnabled = true;
+CanPlayerSwitchToThisSkin = false; // true=player is able to change to this skin with PGUP/PGDN
+GiveTimedModeBonusForKiller = true; // timed mode bonus defined in levels.txt
+
+[Target]
+{
+	[General] name = "Head"; Multiplier = MULTIPLIER_HEAD ;
+	[Bone] name = "Head";
+	[Bone] name = "Neck";
+}
+
+[Target]
+{
+	[General] name = "Arms"; Multiplier = MULTIPLIER_ARMS ;
+	[Bone] name = "UpArm-R";
+	[Bone] name = "LoArm-R";
+	[Bone] name = "Hand-R";
+	[Bone] name = "UpArm-L";
+	[Bone] name = "LoArm-L";
+	[Bone] name = "Hand-L";
+}
+
+[Target]
+{
+	[General] name = "Legs"; Multiplier = MULTIPLIER_LEGS ;
+	[Bone] name = "UpLeg-R";
+	[Bone] name = "LoLeg-R";
+	[Bone] name = "Foot-R";
+	[Bone] name = "Toe-R";
+	[Bone] name = "UpLeg-L";
+	[Bone] name = "LoLeg-L";
+	[Bone] name = "Foot-L";
+	[Bone] name = "Toe-L";
+}
+
+[OnInit]
+{
+	[Message] String = "this->c_pickupweapon ( "deserteagle" );";
+	[Message] String = "this->C_SetInfiniteAmmo ( "deserteagle", 1 );";
+}
+
+[OnDeath]
+{
+	[Message] String = "this->A_StopAll3DSounds(head);";
+}
+
+[TextureAnimation]
+Texturename = "FaceTexture";
+GroupIndex = 0;
+
+[LOD] 	// LOD 0
+{
+	[Geometry] ExportData = gognitti_vinnie_l0.kfs; SkinData = gognitti_vinnie_l0.skd;
+	Distance = SKIN_LOD_FAR;
+
+	EnableBoundingSphere	= TRUE;
+	BoundingSphereRadius	= 1.90;
+	EnableBoundingBox		= FALSE;
+}
+
+[Modifiers]		// These override any default Skeleton settings
+{
+	[Animation]
+	Index = CHARANIM_STAND; Filename = anim\stand.kf2;
+	[Properties]{	[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); }
+
+	[Animation] Index = CHARANIM_W_CUSTOMIDLE1; Filename = anim\idle_hitting_vending_machine.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_CUSTOMIDLE2; Filename = anim\idle_on_train_roof_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 90; String = "this->c_setstatemachine( singledodgeright );";
+		[Message] Frame = 90; String = "this->c_setidle( 0, true );";
+	}
+
+	[Animation] Index = CHARANIM_W_CUSTOMIDLE2; Filename = anim\idle_on_train_roof.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+// ------
+
+	[Animation] Index = CHARANIM_RUN; Filename = anim\gognitti_run.kf2;
+	[Properties]{
+					[Movement] EndPosition = (0,0,3.8678); Rotation = (0,0,0);
+					[Message] Frame = 10; String = "this->P_Createprojectiletobone( dummy_footstep_right, 1, foot-r );";
+					[Message] Frame = 19; String = "this->P_Createprojectiletobone( dummy_footstep_blood, 1, foot-r );";
+					[Message] Frame = 30; String = "this->P_Createprojectiletobone( dummy_footstep_left, 1, foot-l );";
+					[Message] Frame = 19; String = "this->P_Createprojectiletobone( dummy_footstep_blood, 1, foot-l );";
+				}
+
+	[Animation] Index = CHARANIM_STRAFELEFT; Filename = anim\strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3 , 0, 0 ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_STRAFERIGHT; Filename = anim\straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3, 0, 0 ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_WALKBACKWARD; Filename = anim\walkbackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -3 ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_FORWARDLEFT; Filename = anim\forwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -2, 0, 2 ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_FORWARDRIGHT; Filename = anim\forwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 2, 0, 2 ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_BACKWARDLEFT; Filename = anim\backwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -2, 0, -2 ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_BACKWARDRIGHT; Filename = anim\backwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 2, 0, -2 ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_DODGEFORWARD; Filename = anim\jumpForward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 3.0 ); Rotation = ( 0, 0, 0 ); // MiddlePosition1 = ( 0, 0, 1.25 ); MiddlePosition2 = ( 0, 0, 2.0 );
+		[Message] Frame = 10; String = "this->C_Jump( " 6 "  );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+	}
+
+	[Animation]
+	Index = CHARANIM_2_STAND; Filename = anim\2_stand.kf2;
+	[Properties]{	[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); }
+
+/*
+	[Animation] Index = CHARANIM_SHOOTDESERTEAGLE; Filename = anim\gognitti_shoot.kf2;
+	[Properties]{ 	[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+					[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+					[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+				}
+	[Animation] Index = CHARANIM_SHOOTLOWDESERTEAGLE; Filename = anim\gognitti_shoot_down.kf2;
+	[Properties]{ [Movement] EndPosition = (0,0,0); Rotation = (0,0,0); }
+	[Animation] Index = CHARANIM_SHOOTHIGHDESERTEAGLE; Filename = anim\gognitti_shoot_up.kf2;
+	[Properties]{ [Movement] EndPosition = (0,0,0); Rotation = (0,0,0); }
+*/
+}
+
+[Item]
+Name = "shades_gognitti";
+Probability = 100%;
+Attachbone = head;
+Offset = ( 0.0, 0.0, 0.0 );
+Rotation = (-90,0,180);

@@ -1,0 +1,4275 @@
+#define	PS_TIMEOUT    			0.2
+#define	PS_EXPLOSIONTIMEOUT		2.0
+
+// use these to prevent some particle systems playing in some detail levels
+#define ID_DETAIL_LEVELS_ALL			0
+#define ID_DETAIL_LEVELS_MEDIUM_OR_HIGH	1
+#define ID_DETAIL_LEVELS_ONLY_HIGH		2
+
+// ---------------------------------------------------
+// Breakable objects
+// ---------------------------------------------------
+
+[blast_paper_confetti]			// Large blast of confetti flying in air
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\blast_paper_confetti.rps;
+	ItemsToCache = 1;
+}
+
+[break_ceiling_fan]			// Ceiling fan breaks and smokes
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_ceiling_fan_smoking.rps;
+	ItemsToCache = 1;
+}
+
+[break_coke_can]			// Coke can breaks
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\coke_can_break.rps;
+	ItemsToCache = 1;
+}
+
+[break_coke_can_foam]			// Coke can foams
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\coke_can_foam.rps;
+	ItemsToCache = 1;
+}
+
+[break_bottles]			// Bottles break
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_bottles.rps;
+	ItemsToCache = 1;
+}
+
+[break_glass_statue]			// Glass statue breaks
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_glass_statue.rps;
+	ItemsToCache = 1;
+}
+
+[break_statue]			// Statue breaks
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_statue.rps;
+	ItemsToCache = 1;
+}
+
+[break_paper]			// Paper, money breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_paper.rps;
+	ItemsToCache = 1;
+}
+
+[break_plant]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+
+	[Default]
+	Filename = breakable\break_plant.rps;
+	ItemsToCache = 1;
+}
+
+[break_valkyr_container]		// Green valkyr container breaks
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_valkyr_container.rps;
+	ItemsToCache = 1;
+}
+
+[break_valkyr_syringe]		// Small green valkyr syringe breaks
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_valkyr_syringe.rps;
+	ItemsToCache = 1;
+}
+
+[break_vase_dark]		// Dark colored vase breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_vase_small.rps;
+	ItemsToCache = 1;
+}
+
+[break_vase_light]		// Light colored vase breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_vase_large.rps;
+	ItemsToCache = 1;
+}
+
+[break_box_small]			// Small 0.25m box breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_box_small.rps;
+	ItemsToCache = 1;
+}
+
+[break_box_wood_1x1]		// Wooden 1x1m box breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_box_wood_1x1.rps;
+	ItemsToCache = 1;
+}
+
+[break_box_wood_50x50cm]		// Wooden 50x50cm box breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_box_wood_50x50cm.rps;
+	ItemsToCache = 1;
+}
+
+[break_gadget]		// Electric gadget breaks
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_gadget.rps;
+	ItemsToCache = 1;
+}
+
+[dollar_bills]		// A cloud of money flying in the air
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 5;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\dollar_bills.rps;
+	ItemsToCache = 1;
+}
+
+[chopper_smoke]			// Chopper smoking downwards
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\chopper_smoke.rps;
+	ItemsToCache = 1;
+}
+
+[electronic_device_break]	// Electronic device breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_device_electric.rps;
+	ItemsToCache = 4;
+}
+
+[glass_shatter]			// Glass shatters flying in the air
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\glass_shatter.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_window_50x50cm]		// Window breaks, 0.5m x 0.5m
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_window_50x50cm.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_window_100x50cm]		// Window breaks, 100cm x 50cm
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_window_1mx50cm.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_window_50x100cm]		// Window breaks, 50cm x 100cm
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_window_50cmx1m.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_window_1x1]		// Window breaks, 1m wide, 1m high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_window_1x1.rps;
+	ItemsToCache = 2;
+}
+
+[glass_shatter_window_1x2]		// Window breaks, 1m wide, 2m high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_window_1x2.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_window_2x2]		// Window breaks, 2m wide, 2m high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_window_2x2.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_window_2x1]		// Window breaks, 2m wide, 1m high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_window_2x1.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_safety_50x50cm]		// Hard glass window breaks, 50cm wide, 50cm high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_safety_window_50x50cm.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_safety_100x50cm]		// Hard glass window breaks, 100cm wide, 50cm high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_safety_window_1mx50cm.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_safety_50x100cm]		// Hard glass window breaks, 50cm wide, 1m high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_safety_window_50cmx1m.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_safety_window_1x1]		// Hard glass window breaks, 1m wide, 1m high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_safety_window_1x1.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_safety_window_1x2]		// Hard glass window breaks, 1m wide, 2m high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_safety_window_1x2.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_safety_window_2x1]		// Hard glass window breaks, 2m wide, 1m high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_safety_window_2x1.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_safety_window_2x2]		// Hard glass window breaks, 2m wide, 2m high
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_safety_window_2x2.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_300x150cm]		// Hard glass, 3m wide, 1.5m high, HIGH POLYCOUNT!
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_safety_window_300x150cm.rps;
+	ItemsToCache = 1;
+}
+
+
+[glass_shatter_bottle]			// Bottle breaking and pieces flying in the air
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = hotel\glass_shatter_bottle.rps;
+	ItemsToCache = 1;
+}
+
+[glass_shatter_drinking_glass]			// Drinking glass shattering
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\glass_shatter_drinking_glass.rps;
+	ItemsToCache = 1;
+}
+
+[squib_paper_confetti]			// White paper pieces flying in the air
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\squib_paper_confetti.rps;
+	ItemsToCache = 1;
+}
+
+[squib_paper_confetti_colorful]		// Colorful paper pieces flying in the air
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\squib_paper_confetti_colorful.rps;
+	ItemsToCache = 1;
+}
+
+// Duplicated bullethit effects
+[bullethit_metal]		// Metal sparks
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+
+	[Default] 
+	filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 1;
+}
+
+// Debris stuff
+[large_debris_hits_floor]			// Debris
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = projectiles\large_debris_hits_floor.rps;
+	ItemsToCache = 1;
+}
+
+[debris_crash_large]			// Debris
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\debris_crash_large.rps;
+	ItemsToCache = 10;
+}
+
+[debris_crash_medium]			// Debris
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\debris_crash_medium.rps;
+	ItemsToCache = 1;
+}
+
+[debris_crash_small]			// Debris
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\debris_crash_small.rps;
+	ItemsToCache = 1;
+}
+
+[debris_wood]			// Wood pieces flying in the air
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\debris_wood.rps;
+	ItemsToCache = 2;
+}
+
+// ---------------------------------------------------
+// Level particles: Maxs House
+// ---------------------------------------------------
+
+[shower]		// Looping, shower dripping down for 20 seconds
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = misc\maxhouse_shower.rps;
+	ItemsToCache = 1;
+}
+
+[shower_floor]		// Looping, shower water hitting the floor, lasts for 20 seconds
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = misc\maxhouse_shower_floor.rps;
+	ItemsToCache = 1;
+}
+
+[shower_stops]		// Shower stops
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = misc\maxhouse_shower_stops.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Subway
+// ---------------------------------------------------
+
+[electric_live_wire_light]		// Blue light flickers real quick
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\electric_live_wire_light.rps;
+	ItemsToCache = 1;
+}
+
+[steam_ceiling_loop]		// Looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 3.0;
+	InvisibleTimeout = 10;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = subway\steam_ceiling.rps;
+	ItemsToCache = 1;
+}
+
+[tunnel_dust_clouds_loop]		// Looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 3.0;
+	InvisibleTimeout = 10;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = subway\tunnel_dust_clouds.rps;
+	ItemsToCache = 1;
+}
+
+[break_subway_sign]		// A blue subway sign breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\break_subway_sign.rps;
+	ItemsToCache = 1;
+}
+
+[subway_train_braking]		// Brake effects for train
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\subway_train_braking.rps;
+	ItemsToCache = 2;
+}
+
+[tunnel_ceiling]		// Tunnel ceiling breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\tunnel_ceiling.rps;
+	ItemsToCache = 1;
+}
+
+[debris_falling]		// Small stuff dropping down
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\debris_falling.rps;
+	ItemsToCache = 1;
+}
+
+[water_hitting_floor]		// water drops bounce from floor
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\water_hitting_floor_medium.rps;
+	ItemsToCache = 1;
+}
+
+[water_hitting_floor_75cm_loop]		// water drops bounce from floor, 75cm diameter, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\water_hitting_floor_075m.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Tenements
+// ---------------------------------------------------
+
+[fire_hydrant_spray_loop]		// water spraying upwards
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = misc\fire_hydrant_spray.rps;
+	ItemsToCache = 1;
+}
+
+[fire_hydrant_sprinkle_loop]		// water spraying upwards
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = misc\fire_hydrant_sprinkle.rps;
+	ItemsToCache = 1;
+}
+
+[mercedes_accelerate_snow]		// Car accelerates on a snowy street
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = tenements\mercedes_accelerate_snow.rps;
+	ItemsToCache = 1;
+}
+
+
+[mercedes_hits_truck]		// Sparks when car hits another
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = tenements\mercedes_hits_truck.rps;
+	ItemsToCache = 1;
+}
+
+[mercedes_snow_skid_loop]		// Snow flying from car, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = tenements\mercedes_snow_skid.rps;
+	ItemsToCache = 1;
+}
+
+[truck_crash]		// Debris flying when a truck crashes
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = tenements\truck_crash.rps;
+	ItemsToCache = 1;
+}
+
+[truck_skid_loop]		// Truck skidding, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = tenements\truck_skid.rps;
+	ItemsToCache = 10;
+}
+
+[wall_debris_falling]		// Small stuff dropping down from ceiling, use multiple
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = tenements\wall_debris_falling.rps;
+	ItemsToCache = 1;
+}
+
+[wall_hits_floor]		// Large line of clouds and dust when the wall is down
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = tenements\wall_hits_floor.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Rooftops and Alleys
+// ---------------------------------------------------
+[fire_candle_church_4_loop]		// A fire for a church candle with 4 flames
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = church\fire_candle_church_4.rps;
+	ItemsToCache = 1;
+}
+
+[smoke_candle_church_4]		// Four church candles die out
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = church\smoke_candle_church_4_go_out.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Ragnarock
+// ---------------------------------------------------
+[fire_candle_flame_large]		// A huge candle roaring
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_candle_flame_large_1.rps;
+	ItemsToCache = 1;
+}
+
+[stage_pyrotechnic_blast]		// Huge spark burst
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = ragnarock\stage_pyrotechnic_blast.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Restaurant
+// ---------------------------------------------------
+[fire_corridor_ceiling]		// Fire on a ceiling, 4x4m
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+		
+	[Default] 
+	filename = fire\fire_corridor_ceiling.rps;
+	ItemsToCache = 1;
+}
+
+[fire_gas_bottle_loop]		// Gas bottle fire
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = restaurant\fire_gas_bottle.rps;
+	ItemsToCache = 1;
+}
+
+[fire_line_1x1]		// Fire line, 1x1
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_line_1x1.rps;
+	ItemsToCache = 1;
+}
+
+[fire_line_4x1]		// Fire line, 4x1
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_line_4x1.rps;
+	ItemsToCache = 14;
+}
+
+[fire_line_high_4x1]		// Fire line higher, 4x1
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_line_high_4x1.rps;
+	ItemsToCache = 11;
+}
+
+[fire_line_4x1_instant]		// Fire line, 4x1, instant startup
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_line_4x1.rps;
+	ItemsToCache = 1;
+}
+
+[fire_field_4x4]		// Fire plate 4x4m
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_field_4x4.rps;
+	ItemsToCache = 12;
+}
+
+[fire_field_4x4_instant]		// Fire plate 4x4m, is burning already when seen
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_field_4x4.rps;
+	ItemsToCache = 1;
+}
+
+[fire_field_8x8]		// Fire plate 8x8m
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_field_8x8.rps;
+	ItemsToCache = 8;
+}
+
+[fire_field_8x8_instant]		// Fire plate 8x8m, is burning already when seen
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_field_8x8.rps;
+	ItemsToCache = 1;
+}
+
+[fire_gasoline_trail]		// Fire effect for gasoline trails (needs to be moving)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = restaurant\fire_gasoline_trail.rps;
+	ItemsToCache = 1;
+}
+
+[fire_line_5m]				// Fire trail (lenght 5m)
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = restaurant\fire_line_5m.rps;
+	ItemsToCache = 1;
+}
+
+[smoke_air_vent]			// Smoke coming out from a ventilation shaft
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = restaurant\smoke_air_vent.rps;
+	ItemsToCache = 1;
+}
+
+[smoke_ceiling_lingering]	// 3m x 3m - Lingering smoke for rooms that are burning
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = restaurant\smoke_ceiling_lingering.rps;
+	ItemsToCache = 1;
+}
+
+[pipe_water_dripping_loop]	// Water dripping from a pipe
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = restaurant\pipe_water_dripping.rps;
+	ItemsToCache = 1;
+}
+
+[pipe_water_hits_floor_loop]	// Water hitting ground
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = restaurant\pipe_water_hits_floor.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Villa
+// ---------------------------------------------------
+[break_ornamental_plate]		// Ornamental plate breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = villa\break_ornamental_plate.rps;
+	ItemsToCache = 1;
+}
+
+[fire_candle_flame_1_loop]		// One candle flame
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_candle_flame_1.rps;
+	ItemsToCache = 1;
+}
+
+[smoke_candle_flame_1]		// One candle dies out
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = villa\smoke_candle_goes_out.rps;
+	ItemsToCache = 1;
+}
+
+[fire_candle_flame_4_loop]		// Four candle flame
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = villa\candleflame_4flames.rps;
+	ItemsToCache = 8;
+}
+
+[smoke_candle_flame_4]		// Four candles die out
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = villa\smoke_4candles_go_out.rps;
+	ItemsToCache = 1;
+}
+
+[steam_bathtub]		// Bathtub with hot water steaming
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = villa\steam_bathtub.rps;
+	ItemsToCache = 1;
+}
+
+[break_water_cooler]		// Water cooler breaks
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = villa\break_water_cooler.rps;
+	ItemsToCache = 1;
+}
+
+[water_cooler_bubbles]		// Bubbles from a water cooler
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = villa\water_cooler_bubbles.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Drug trip
+// ---------------------------------------------------
+[blast_paper_confetti_lit]			// paper confetti, with lighting on, high animation fps
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = breakable\blast_paper_confetti_lit.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Cold Steel
+// ---------------------------------------------------
+
+[steam_machine_door]		// Opening where the metal bars come from, steam, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\steam_machine_door.rps;
+	ItemsToCache = 16;
+}
+
+[steam_steel_plank]		// 1.5 x 6m metal bar steaming, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\steam_steel_plank.rps;
+	ItemsToCache = 1;
+}
+
+[steam_jet]		// Toxic steam
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\steam_jet.rps;
+	ItemsToCache = 1;
+}
+
+[steam_jet_flame]		// Toxic steam, flaming type
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\steam_jet_flame.rps;
+	ItemsToCache = 1;
+}
+
+[steam_jet_flame_large]		// Toxic steam, larger
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\steam_jet_flame_large.rps;
+	ItemsToCache = 1;
+}
+
+[flames_oven]		// Flames from an opening oven door
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\flames_oven.rps;
+	ItemsToCache = 1;
+}
+
+[flames_oven_loop]		// Looping flames from an opening oven door
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\flames_oven_loop.rps;
+	ItemsToCache = 1;
+}
+
+[scrap_metal_falling]		// Scrap metal falling
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\scrap_metal_falling.rps;
+	ItemsToCache = 1;
+}
+
+[scrap_metal_hitting_floor]		// Scrap metal hitting_floor
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\scrap_metal_hitting_floor.rps;
+	ItemsToCache = 1;
+}
+
+[molten_metal_pour]		// Molten metal poured down
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\molten_metal_pour.rps;
+	ItemsToCache = 1;
+}
+
+[molten_metal_hitting_floor]		// Molten metal hitting_floor
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = cold_steel\molten_metal_hitting_floor.rps;
+	ItemsToCache = 1;
+}
+
+[ceiling_debris_falling]		// 4x4 area of ceiling debris falling 
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = cold_steel\ceiling_debris_falling.rps;
+	ItemsToCache = 9;
+}
+
+// ---------------------------------------------------
+// Level particles: Garage
+// ---------------------------------------------------
+[van_smoke_loop]		// looping smoke trail from a van
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = garage\van_smoke.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Military Bunker
+// ---------------------------------------------------
+[steam_decontamination]		// steam at 4m height, crap on the floor level
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = bunker\steam_decontamination.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Asgard
+// ---------------------------------------------------
+
+[monolith_base_crumble]		// Small rock pieces and dust flying
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = asgard\monolith_base_crumble.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Level particles: Aesir
+// ---------------------------------------------------
+
+
+[explosion_enormous_fireball]	// Big bang
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 10;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = aesir\explosion_enormous_fireball.rps;
+	ItemsToCache = 1;
+}
+
+[break_cable_attachment]	// Dustcloud moving towards Y-axis
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = aesir\break_cable_attachment.rps;
+	ItemsToCache = 1;
+}
+
+[tower_base_breaking]	// 10 seconds, chopper area breaking
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 10 ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = aesir\tower_base_breaking.rps;
+	ItemsToCache = 4;
+}
+
+[helicopter_cannon_loop]	// Chopper firing muzzle
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = aesir\helicopter_cannon.rps;
+	ItemsToCache = 9;
+}
+
+[helicopter_fire_explosions_loop]	// Chopper fire explosions
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = aesir\helicopter_fire_explosions.rps;
+	ItemsToCache = 7;
+}
+
+// ---------------------------------------------------
+// Snowfall effects
+// ---------------------------------------------------
+[snowstorm_10m_loop] // Snowstorm 10 meter cube
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\snowstorm_10m.rps;
+	ItemsToCache = 1;
+}
+
+[slow_snowfall_10m_loop] // Snow falling 10 meter cube, slower movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\slow_snowfall_10m.rps;
+	ItemsToCache = 1;
+}
+
+[slow_snowfall_20m_loop] // Snow falling 20 meter cube, slower movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\slow_snowfall_20m.rps;
+	ItemsToCache = 1;
+}
+
+[medium_snowfall_7m_loop] // Snow falling 7 meter cube, medium movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\medium_snowfall_7m.rps;
+	ItemsToCache = 1;
+}
+
+[medium_snowfall_10m_loop] // Snow falling 10 meter cube, medium movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\medium_snowfall_10m.rps;
+	ItemsToCache = 1;
+}
+
+[medium_snowfall_15m_loop] // Snow falling 15 meter cube, medium movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\medium_snowfall_15m.rps;
+	ItemsToCache = 1;
+}
+
+[medium_snowfall_10x20m_loop] // Snow falling 10 wide, 20 long (in z) meter cube, medium movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\medium_snowfall_10x20m.rps;
+	ItemsToCache = 1;
+}
+
+[medium_snowfall_10x20m_high] // Snow falling 10 wide, 20 long (in z) meter cube, higher version, medium movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\medium_snowfall_10x20m_high.rps;
+	ItemsToCache = 1;
+}
+
+[medium_snowfall_20m_loop] // Snow falling 20 meter cube, medium movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\medium_snowfall_20m.rps;
+	ItemsToCache = 1;
+}
+
+[medium_snowfall_20x40m_loop] // Snow falling 20 wide, 40 long (in z) meter cube, medium movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\medium_snowfall_20x40m.rps;
+	ItemsToCache = 1;
+}
+
+[medium_snowfall_40m_loop] // Snow falling 20 meter cube, medium movement
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+
+	[Default] 
+	filename = snow\medium_snowfall_40m.rps;
+	ItemsToCache = 1;
+}
+
+[snowstorm_20m_loop] // Snowstorm 20 meter cube
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+ 
+	[Default] 
+	filename = snow\snowstorm_20m.rps;
+	ItemsToCache = 1;
+}
+
+[snowstorm_60m_loop] // Snowstorm 60 meter cube
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+ 
+	[Default] 
+	filename = snow\snowstorm_60m.rps;
+	ItemsToCache = 1;
+}
+
+[snowstorm_80m_loop] // Snowstorm 80 meter cube
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+ 
+	[Default] 
+	filename = snow\snowstorm_80m.rps;
+	ItemsToCache = 1;
+}
+
+[blizzard_10m_loop] 	// Blizzard snowstorm 10 meter cube
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+ 
+	[Default] 
+	filename = snow\blizzard_10m.rps;
+	ItemsToCache = 1;
+}
+
+[blizzard_20m_loop] 	// Blizzard snowstorm 20 meter cube
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+ 
+	[Default] 
+	filename = snow\blizzard_20m.rps;
+	ItemsToCache = 1;
+}
+
+[snow_twister_6m_loop] 	// A small local twister effect
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+ 
+	[Default] 
+	filename = snow\snow_twister_6m.rps;
+	ItemsToCache = 1;
+}
+
+[snow_whirl_loop] 	// Snow whirl
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 4.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+ 
+	[Default] 
+	filename = snow\snow_whirl.rps;
+	ItemsToCache = 1;
+}
+
+// old snow effects
+[outside_snow]			// OLD, should be removed
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = snow\blizzard_10m.rps;
+	ItemsToCache = 0;
+}
+
+[outside_fast_snow]			// OLD, should be removed
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = snow\blizzard_10m.rps;
+	ItemsToCache = 0;
+}
+
+[snow_blizzard_12x12m]			// OLD, should be removed
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = snow\snow_blizzard_12x12m.rps;
+	ItemsToCache = 0;
+}
+// ---------------------------------------------------
+// Gouraud light only particles
+// ---------------------------------------------------
+[light_policecar]		// Policecar lights flashing, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_policecar.rps;
+	ItemsToCache = 1;
+}
+
+[light_indicator]		// White light pulsing, 1m radius
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_indicator_active.rps;
+	ItemsToCache = 6;
+}
+
+[light_indicator_active]	// White light pulsing, 1m radius
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_indicator_active.rps;
+	ItemsToCache = 6;
+}
+
+[light_indicator_disabled]	// To replace the pulsing light after used
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_indicator_disabled.rps;
+	ItemsToCache = 6;
+}
+
+[light_fire_5m]		// Orange fire flames 5m, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_fire_5m.rps;
+	ItemsToCache = 1;
+}
+
+[light_fire_10m]		// Orange fire flames 10m, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_fire_10m.rps;
+	ItemsToCache = 1;
+}
+
+[light_fire_20m]		// Orange fire flames 20m, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_fire_20m.rps;
+	ItemsToCache = 1;
+}
+
+[light_candle_flame]		// Light candle flame flickers
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_candle_flame.rps;
+	ItemsToCache = 4;
+}
+
+[light_player]
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_player.rps;
+	ItemsToCache = 1;
+}
+
+[light_warm_white]		// Warm light, a bit yellowish, almost white, 3m radius
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\light_warm_white.rps;
+	ItemsToCache = 2;
+}
+
+[light_red_30m_1s]			// Black-to-Red-to-Black cycle, 30m radius, 1 seconds
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_red_30m_1s.rps;
+	ItemsToCache = 1;
+}
+
+[light_red_20m_1s]			// Black-to-Red-to-Black cycle, 20m radius, 1 seconds
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_red_20m_1s.rps;
+	ItemsToCache = 1;
+}
+
+[light_red_10m_1s]			// Black-to-Red-to-Black cycle, 10m radius, 1 seconds
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\light_red_10m_1s.rps;
+	ItemsToCache = 1;
+}
+
+[light_red_6m_1s]			// Black-to-Red-to-Black cycle, 6m radius, 1 seconds
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\light_red_6m_1s.rps;
+	ItemsToCache = 1;
+}
+
+[light_blue]		// light_blue, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_blue.rps;
+	ItemsToCache = 5;
+}
+
+[light_cyan]		// light_cyan, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_cyan.rps;
+	ItemsToCache = 1;
+}
+
+[light_green]		// light_green, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_green.rps;
+	ItemsToCache = 6;
+}
+
+[light_lavender]		// light_lavender, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_lavender.rps;
+	ItemsToCache = 1;
+}
+
+[light_magenta]		// light_magenta, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_magenta.rps;
+	ItemsToCache = 1;
+}
+
+[light_orange]		// light_orange, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_orange.rps;
+	ItemsToCache = 6;
+}
+
+[light_red]		// light_red, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_red.rps;
+	ItemsToCache = 6;
+}
+
+[light_stroboflash]		// light_stroboflash, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_stroboflash.rps;
+	ItemsToCache = 1;
+}
+
+[light_white]		// light_white, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_white.rps;
+	ItemsToCache = 1;
+}
+
+[light_white_10m]		// light_white, 10m radius, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_white_10m.rps;
+	ItemsToCache = 1;
+}
+
+[light_yellow]		// light_yellow, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_yellow.rps;
+	ItemsToCache = 1;
+}
+
+[light_neutral_large]		// 8m radius, neutral white, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = lights\light_large_neutral.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Generic particles
+// ---------------------------------------------------
+
+[cable_sparks]			// Yellow and electric sparks
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\cable_sparks.rps;
+	ItemsToCache = 1;
+}
+
+[electric_live_wire_loop]	// Continous sparks from cut powercables
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\electric_live_wire_loop.rps;
+	ItemsToCache = 1;
+}
+
+[electric_zap]			// Electric burst from a neon sign
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = hotel\electric_zap.rps;
+	ItemsToCache = 1;
+}
+
+[swarm_of_flies]			// Flies circling arond a dead body
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = hotel\swarm_of_flies.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+//  Special effects projectile particles
+// ---------------------------------------------------
+[glass_projectile_hit]			// debris_glass projectile hits ground
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = projectiles\glass_projectile_hit.rps;
+	ItemsToCache = 1;
+}
+
+[flying_sparks]			// Trail of sparks from debris_spark projectile
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = projectiles\sparks_projectile.rps;
+	ItemsToCache = 7;
+}
+
+[helicopter_dust]	// Dust from a chopper
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = projectiles\helicopter_dust_default.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Molotov Cocktail particles
+// ---------------------------------------------------
+[explosion_molotov]		// Molotov fire explosion
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 4;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\molotov_explosion.rps;
+	ItemsToCache = 3;
+
+	[Material]
+	Name = "character";
+	Filename = bullethit\bullethit-skybox.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "skybox";
+	Filename = bullethit\bullethit-skybox.rps;
+	ItemsToCache = 1;
+}
+
+[fire_projectile_hit]	// Non-looping small fire on floor
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 4;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_projectile_hit.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "skybox";
+	Filename = bullethit\bullethit-skybox.rps;
+	ItemsToCache = 1;
+}
+
+[explosion_molotov_fragment]	// Molotov fragment fire
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 4;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\molotov_fragment_explosion.rps;
+	ItemsToCache = 6;
+
+	[Material]
+	Name = "skybox";
+	Filename = bullethit\bullethit-skybox.rps;
+	ItemsToCache = 1;
+}
+
+[molotov_fragment]		// Molotov trail fire
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 4;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\molotov_fragment.rps;
+	ItemsToCache = 5;
+
+	[Material]
+	Name = "skybox";
+	Filename = bullethit\bullethit-skybox.rps;
+	ItemsToCache = 1;
+}
+
+[molotov_smoke]			// Molotov Cocktail Smoke
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 4;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\molotov_trail.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+// Explosion particles
+// ---------------------------------------------------
+
+[explosion_gas_bottle]		// Gas bottle explosion
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_gas_bottle.rps;
+	ItemsToCache = 1;
+}
+
+
+[explosion_gasoline]		// Gasoline explosion
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_gasoline_medium.rps;
+	ItemsToCache = 1;
+}
+
+[explosion_gasoline_huge]		// Huge gasoline explosion
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_gasoline_huge.rps;
+	ItemsToCache = 1;
+}
+
+[explosion_gasoline_huge_short]			// Huge gasoline explosion, no afterfire or smoke
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_gasoline_huge_short.rps;
+	ItemsToCache = 1;
+}
+
+
+[explosion_grenade]			// Grenade explosion
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_grenade.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "character";
+	Filename = explosion\explosion_grenade_character.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "skybox";
+	Filename = bullethit\bullethit-skybox.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "water";
+	Filename = explosion\explosion_water.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "water_bottom";
+	Filename = explosion\explosion_water.rps;
+	ItemsToCache = 2;
+}
+
+[explosion_tnt]			// Dynamite explosion
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_large.rps;
+	ItemsToCache = 3;
+
+	[Material]
+	Name = "water";
+	Filename = explosion\explosion_water.rps;
+	ItemsToCache = 5;
+}
+
+[explosion_small]			// Small explosion
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_small.rps;
+	ItemsToCache = 1;
+}
+
+[explosion_large]			// Large 5x5m explosion with long lifetime
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_large.rps;
+	ItemsToCache = 3;
+}
+
+[explosion_large_short]			// Large 5x5m explosion, short lifetime, no afterfire or smoke
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_large_short.rps;
+	ItemsToCache = 1;
+}
+
+[explosion_huge]			// Huge 6x6m explosion
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_EXPLOSIONTIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = explosion\explosion_huge.rps;
+	ItemsToCache = 1;
+}
+
+// ---------------------------------------------------
+
+[faucet_open]			// water faucet open for 2 seconds
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 1;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\faucet_open.rps;
+	ItemsToCache = 1;
+}
+
+[faucet_open_36cm]			// water faucet open for 2 seconds, 36cm height
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 1;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\faucet_open_36cm.rps;
+	ItemsToCache = 1;
+}
+
+[faucet_open_48cm]			// water faucet open for 2 seconds, 48cm height
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 1;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\faucet_open_48cm.rps;
+	ItemsToCache = 1;
+}
+
+[faucet_open_1m]			// water faucet open for 2 seconds, 48cm height
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 1;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\faucet_open_1m.rps;
+	ItemsToCache = 1;
+}
+
+[faucet_open_clear]			// water faucet open for 2 seconds, clear water
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 1;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\faucet_open_clear.rps;
+	ItemsToCache = 1;
+}
+
+[faucet_water_cooler]			// water cooler faucet used
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 1;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\faucet_water_cooler.rps;
+	ItemsToCache = 1;
+}
+
+[toilet_flush]			// toilet flushed
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 2;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = hotel\toilet_flush.rps;
+	ItemsToCache = 1;
+}
+
+[sprinkler_medium]			// water sprinkler looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 2;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = hotel\sprinkler_medium.rps;
+	ItemsToCache = 1;
+}
+
+[smoke_body]			// Thin smoke from a burnt body
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 3;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\smoke_body.rps;
+	ItemsToCache = 1;
+}
+
+[steam_wall_dark]		// Dark looping steam from wall
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\steam_wall_dark.rps;
+	ItemsToCache = 1;
+}
+
+
+[steam_wall_medium]		// Medium gray looping steam from wall
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\steam_wall_medium.rps;
+	ItemsToCache = 5;
+}
+
+[steam_sewerlid_black]		// Sewerlid black steam, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\steam_sewerlid_black.rps;
+	ItemsToCache = 1;
+}
+
+[steam_sewerlid_white]		// Sewerlid white steam, looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\steam_sewerlid_white.rps;
+	ItemsToCache = 1;
+}
+
+[steam_train]			// Steam from a train
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\steam_train.rps;
+	ItemsToCache = 3;
+}
+
+// Water effects
+
+[water_dripping_4m]		// Small water drip, long duration, 4m distance
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\water_dripping_4m.rps;
+	ItemsToCache = 2;
+}
+
+[water_dripping_big_4m]		// More frequent water drip, long duration, 4m distance
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\water_dripping_big_4m.rps;
+	ItemsToCache = 4;
+}
+// --------------------------------------------------------------
+// Character projectiles
+// --------------------------------------------------------------
+[footstep_generic]		// Generic footstep
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default]
+	Filename = footstep\footstep_default.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "snow";
+	Filename = footstep\footstep_snow.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "water_bottom";
+	Filename = footstep\footstep_water.rps;
+	ItemsToCache = 2;
+}
+
+[character_land]		// Landing
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default]
+	Filename = character\land_default.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "snow";
+	Filename = character\land_snow.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "water_bottom";
+	Filename = character\land_water.rps;
+	ItemsToCache = 1;
+}
+
+[character_roll]		// Landing
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default]
+	Filename = character\roll_default.rps;
+	ItemsToCache = 3;
+
+	[Material]
+	Name = "snow";
+	Filename = character\roll_snow.rps;
+	ItemsToCache = 3;
+
+	[Material]
+	Name = "water_bottom";
+	Filename = character\roll_water.rps;
+	ItemsToCache = 3;
+}
+
+[winter_breath_loop]	// Breathing steam, start from headbone
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 4.0;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default]
+	Filename = character\winter_breath.rps;
+	ItemsToCache = 1;
+}
+
+// --------------------------------------------------------------
+// Something dropped on ground
+// --------------------------------------------------------------
+
+[item_drop]		// Level item etc created
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default]
+	Filename = character\roll_default.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "snow";
+	Filename = character\roll_snow.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "water_bottom";
+	Filename = character\roll_water.rps;
+	ItemsToCache = 2;
+}
+
+// --------------------------------------------------------------
+// Bullethits
+// --------------------------------------------------------------
+[bullethit_generic]		// Generic bullethit effect
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default]
+	Filename = bullethit\bullethit-default.rps;
+	ItemsToCache = 20;
+
+	[Material]
+	Name = "cardboard";
+	Filename = bullethit\bullethit-cardboard.rps;
+	ItemsToCache = 6;
+
+	[Material]
+	Name = "carpet";
+	Filename = bullethit\bullethit-carpet.rps;
+	ItemsToCache = 6;
+
+	[Material]
+	Name = "character";
+	Filename = bullethit\bullethit-character.rps;
+	ItemsToCache = 16;
+
+	[Material]
+	Name = "couch";
+	Filename = bullethit\bullethit-couch.rps;
+	ItemsToCache = 4;
+
+	[Material]
+	Name = "drape";
+	Filename = bullethit\bullethit-carpet.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "electricpanel";
+	Filename = bullethit\bullethit-electricpanel.rps;
+	ItemsToCache = 12;
+
+	[Material]
+	Name = "flesh";
+	Filename = bullethit\bullethit-character.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "glass";
+	Filename = bullethit\bullethit-glass.rps;
+	ItemsToCache = 14;
+
+	[Material]
+	Name = "glass_bulletproof";
+	Filename = bullethit\bullethit-glass.rps;
+	ItemsToCache = 14;
+
+	[Material]
+	Name = "gravel";
+	Filename = bullethit\bullethit-gravel.rps;
+	ItemsToCache = 4;
+
+	[Material]
+	Name = "leaves";
+	Filename = bullethit\bullethit-plant.rps;
+	ItemsToCache = 12;
+
+	[Material]
+	Name = "lights";
+	Filename = bullethit\bullethit-electricpanel.rps;
+	ItemsToCache = 14;
+
+	[Material]
+	Name = "marble";
+	Filename = bullethit\bullethit-marble.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "metal";
+	Filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "metal_hollow";
+	Filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "metal_outside";
+	Filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 16;
+
+	[Material]
+	Name = "metal_solid";
+	Filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "nodecals";
+	Filename = bullethit\bullethit-carpet.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "paper";
+	Filename = bullethit\bullethit-paper.rps;
+	ItemsToCache = 6;
+
+	[Material]
+	Name = "pipes";
+	Filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 8;
+
+	[Material]
+	Name = "pipes_steam";
+	Filename = bullethit\bullethit-pipes_steam.rps;
+	ItemsToCache = 4;
+
+	[Material]
+	Name = "rock";
+	Filename = bullethit\bullethit-rock.rps;
+	ItemsToCache = 4;
+
+	[Material]
+	Name = "skybox";
+	Filename = bullethit\bullethit-skybox.rps;
+	ItemsToCache = 4;
+
+	[Material]
+	Name = "sortmaterial_medium";
+	Filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "sortmaterial_high";
+	Filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "snow";
+	Filename = bullethit\bullethit-snow.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "stucco";
+	Filename = bullethit\bullethit-stucco.rps;
+	ItemsToCache = 16;
+
+	[Material]
+	Name = "tile";
+	Filename = bullethit\bullethit-tile.rps;
+	ItemsToCache = 16;
+
+	[Material]
+	Name = "water";
+	Filename = bullethit\bullethit-water.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "watertank";
+	Filename = bullethit\bullethit-watertank.rps;
+	ItemsToCache = 6;
+
+	[Material]
+	Name = "winebarrel";
+	Filename = bullethit\bullethit-winebarrel.rps;
+	ItemsToCache = 6;
+
+	[Material]
+	Name = "wireframe";
+	Filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 10;
+
+	[Material]
+	Name = "wood";
+	Filename = bullethit\bullethit-wood.rps;
+	ItemsToCache = 18;
+
+	[Material]
+	Name = "woodframe";
+	Filename = bullethit\bullethit-wood.rps;
+	ItemsToCache = 18;
+}
+
+[bullethit_large]		// Large bullethit effect for large caliber weapons
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default]
+	Filename = bullethit\bullethit_big-default.rps;
+	ItemsToCache = 5;
+
+	[Material]
+	Name = "cardboard";
+	Filename = bullethit\bullethit-cardboard.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "carpet";
+	Filename = bullethit\bullethit-carpet.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "character";
+	Filename = bullethit\bullethit_big-character.rps;
+	ItemsToCache = 6;
+
+	[Material]
+	Name = "couch";
+	Filename = bullethit\bullethit-couch.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "drape";
+	Filename = bullethit\bullethit-couch.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "electricpanel";
+	Filename = bullethit\bullethit-electricpanel.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "flesh";
+	Filename = bullethit\bullethit-character.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "glass";
+	Filename = bullethit\bullethit-glass.rps;
+	ItemsToCache = 3;
+
+	[Material]
+	Name = "glass_bulletproof";
+	Filename = bullethit\bullethit-glass.rps;
+	ItemsToCache = 3;
+
+	[Material]
+	Name = "gravel";
+	Filename = bullethit\bullethit_big-gravel.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "leaves";
+	Filename = bullethit\bullethit-plant.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "lights";
+	Filename = bullethit\bullethit-electricpanel.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "marble";
+	Filename = bullethit\bullethit_big-marble.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "metal";
+	Filename = bullethit\bullethit_big-metal.rps;
+	ItemsToCache = 5;
+
+	[Material]
+	Name = "metal_hollow";
+	Filename = bullethit\bullethit_big-metal.rps;
+	ItemsToCache = 5;
+
+	[Material]
+	Name = "metal_outside";
+	Filename = bullethit\bullethit_big-metal.rps;
+	ItemsToCache = 4;
+
+	[Material]
+	Name = "metal_solid";
+	Filename = bullethit\bullethit_big-metal.rps;
+	ItemsToCache = 5;
+
+	[Material]
+	Name = "nodecals";
+	Filename = bullethit\bullethit-carpet.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "paper";
+	Filename = bullethit\bullethit-paper.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "pipes";
+	Filename = bullethit\bullethit_big-metal.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "pipes_steam";
+	Filename = bullethit\bullethit-pipes_steam.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "rock";
+	Filename = bullethit\bullethit-rock.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "skybox";
+	Filename = bullethit\bullethit-skybox.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "sortmaterial_medium";
+	Filename = bullethit\bullethit_big-metal.rps;
+	ItemsToCache = 5;
+
+	[Material]
+	Name = "sortmaterial_high";
+	Filename = bullethit\bullethit_big-metal.rps;
+	ItemsToCache = 5;
+
+	[Material]
+	Name = "snow";
+	Filename = bullethit\bullethit_big-snow.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "stucco";
+	Filename = bullethit\bullethit-stucco.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "tile";
+	Filename = bullethit\bullethit-tile.rps;
+	ItemsToCache = 3;
+
+	[Material]
+	Name = "water";
+	Filename = bullethit\bullethit_big-water.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "watertank";
+	Filename = bullethit\bullethit-watertank.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "winebarrel";
+	Filename = bullethit\bullethit-winebarrel.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "wireframe";
+	Filename = bullethit\bullethit-metal.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "wood";
+	Filename = bullethit\bullethit_big-wood.rps;
+	ItemsToCache = 3;
+
+	[Material]
+	Name = "woodframe";
+	Filename = bullethit\bullethit_big-wood.rps;
+	ItemsToCache = 3;
+}
+
+[bullethit_melee]		// Melee weapon hit
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default]
+	Filename = bullethit\melee_default.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "character";
+	Filename = bullethit\bullethit-character.rps;
+	ItemsToCache = 2;
+
+	[Material]
+	Name = "water";
+	Filename = bullethit\bullethit-water.rps;
+	ItemsToCache = 2;
+}
+
+[bullethit_chaingun]		// Large bullethit effect for large caliber weapons
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default]
+	Filename = bullethit\bullethit_chaingun-default.rps;
+	ItemsToCache = 18;
+
+	[Material]
+	Name = "character";
+	Filename = bullethit\bullethit-character.rps;
+	ItemsToCache = 6;
+
+	[Material]
+	Name = "glass";
+	Filename = bullethit\bullethit_chaingun-glass.rps;
+	ItemsToCache = 12;
+
+	[Material]
+	Name = "glass_bulletproof";
+	Filename = bullethit\bullethit_chaingun-glass.rps;
+	ItemsToCache = 12;
+
+	[Material]
+	Name = "metal";
+	Filename = bullethit\bullethit_chaingun-metal.rps;
+	ItemsToCache = 6;
+
+	[Material]
+	Name = "skybox";
+	Filename = bullethit\bullethit-skybox.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "water";
+	Filename = bullethit\bullethit_chaingun-water.rps;
+	ItemsToCache = 1;
+
+	[Material]
+	Name = "wood";
+	Filename = bullethit\bullethit_chaingun-wood.rps;
+	ItemsToCache = 7;
+}
+
+// -------------------------------------
+// Character death and blood projectiles
+// --------------------------------------
+
+[blood_medium]			// Medium blood splatter
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = blood\blood-default.rps;
+	ItemsToCache = 1;
+}
+
+[blood_projectile_trail]			// Blood projectile flies in the air
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = blood\blood_projectile_trail.rps;
+	ItemsToCache = 8;
+}
+
+[blood_projectile_hits]			// Blood projectile hits/splats on a surface
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = blood\blood_projectile_hits.rps;
+	ItemsToCache = 1;
+}
+
+[fire_death]			// Flames to be emitted from a dying character
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 4 ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = character\fire_death.rps;
+	ItemsToCache = 1;
+}
+
+[fire_death_smoking]		// Flames to be emitted from a dying character
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 30 ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+	
+	[Default] 
+	filename = character\fire_death_smoking.rps;
+	ItemsToCache = 1;
+}
+
+[electricity_death]			// Electric effect from a dying character
+{ 
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = true;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = character\electricity_death.rps;
+	ItemsToCache = 1;
+}
+
+
+// ------------------------------
+// Weapon muzzleflash effects
+// ------------------------------
+
+[muzzle_beretta]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\beretta.rps;
+	ItemsToCache = 4;
+}
+
+[muzzle_deserteagle]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\deserteagle.rps;
+	ItemsToCache = 1;
+}
+
+[muzzle_sawedshotgun]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\sawedshotgun.rps;
+	ItemsToCache = 1;
+}
+
+[muzzle_pumpshotgun]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\pumpshotgun.rps;
+	ItemsToCache = 1;
+}
+
+[muzzle_ingram]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\ingram.rps;
+	ItemsToCache = 1;
+}
+
+[muzzle_ingramdual]  // two muzzle flashes in a single effect for CPU speed reasons
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\ingram_dual_cloned.rps;
+	ItemsToCache = 1;
+}
+
+[muzzle_sniper]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\sniper.rps;
+	ItemsToCache = 1;
+}
+
+[muzzle_mp5]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\mp5.rps;
+	ItemsToCache = 1;
+}
+
+[muzzle_coltcommando]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\coltcommando.rps;
+	ItemsToCache = 1;
+}
+
+[muzzle_jackhammer]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\jackhammer.rps;
+	ItemsToCache = 1;
+}
+
+[muzzle_m79]
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = weapons\m79.rps;
+	ItemsToCache = 1;
+}
+
+[molotov_smoking]		// Molotov in hand
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\steam_sewerlid_black.rps;
+	ItemsToCache = 1;
+}
+// ------------------------------
+// Fire effects
+// ------------------------------
+
+[fire_huge]		// Huge fire 
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_huge.rps;
+	ItemsToCache = 1;
+}
+
+[fire_huge_field_6m]		// Huge fire field, 6m
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_huge_field_6m.rps;
+	ItemsToCache = 1;
+}
+
+[fire_extra_large]		// 3x3x5 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_extra_large.rps;
+	ItemsToCache = 6;
+}
+
+[fire_extra_large_instant]		// 3x3x5 (sphere, looping, instant)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 2.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_extra_large.rps;
+	ItemsToCache = 1;
+}
+
+[fire_extra_large_tall]		// 2x2x6 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_extra_large_tall.rps;
+	ItemsToCache = 1;
+}
+
+[fire_large]		// 2x2x4 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_large.rps;
+	ItemsToCache = 1;
+}
+
+[fire_large_tall]		// 1.5x1.5x6 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_large_tall.rps;
+	ItemsToCache = 1;
+}
+
+[fire_medium]		// 1x1x4 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_medium.rps;
+	ItemsToCache = 1;
+}
+
+[fire_medium_short]		// 1x1x4 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_medium_short.rps;
+	ItemsToCache = 1;
+}
+
+[fire_medium_tall]		// 1x1x6 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_medium_tall.rps;
+	ItemsToCache = 1;
+}
+
+[fire_medium_weak]		// 0.5x0.5x3 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_medium_weak.rps;
+	ItemsToCache = 1;
+}
+
+[fire_small]		// 0.25x0.25x1 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_small.rps;
+	ItemsToCache = 1;
+}
+
+[fire_small_weak_smoking]	// 0.25x0.25x1 (sphere init loop)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_small_weak_smoking.rps;
+	ItemsToCache = 1;
+}
+
+[fire_fireplace]		// 0.5x0.5x1 (fits Max's House's fireplace)
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\fire_fireplace.rps;
+	ItemsToCache = 1;
+}
+
+[smoke_ashtray]		// smoke_ashtray looping
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = fire\smoke_ashtray.rps;
+	ItemsToCache = 1;
+}
+
+[fire_extinguisher]		// Steam and foam from a fire extinguisher
+{
+	[Properties]
+	Sorting = false;
+	Looping = false;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = 5;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = hotel\fire_extinguisher.rps;
+	ItemsToCache = 1;
+}
+
+[flare_red]		// Burning flare effect, static, "infinite" duration
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 0.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = subway\flare_red.rps;
+	ItemsToCache = 1;
+}
+
+[nightmare_snow]		// Burning flare effect, static, "infinite" duration
+{
+	[Properties]
+	Sorting = false;
+	Looping = true;
+	InitialUpdateLength = 3.0;
+	InvisibleTimeout = PS_TIMEOUT ;
+	AdultContent = false;
+	AvailableInDetailLevels = ID_DETAIL_LEVELS_ALL;
+	
+	[Default] 
+	filename = snow\slow_snowfall_red_25m.rps;
+	ItemsToCache = 1;
+}
+// End of particles

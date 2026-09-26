@@ -1,0 +1,245 @@
+[OBJ_HOUSE_DANGER0]				String = "Моим любимым грозила опасность.";
+[OBJ_HOUSE_DANGER1]				String = "Я должен был спасти их.";
+
+[OBJ_SUBWAY_FIND_ALEX] 			String = "Мне нужно было найти Алекса.";
+[OBJ_SUBWAY_GET_OUT] 			String = "Я должен был выбраться со станции, ставшей смертельной ловушкой.";
+[OBJ_SUBWAY_RATS]     			String = "Я объявил крысам войну.";
+
+[OBJ_HOTEL_COVER_BLOWN0] 		String = "Моя легенда была разрушена.";
+[OBJ_HOTEL_COVER_BLOWN1] 		String = "Я должен был сбежать из отеля.";
+
+[OBJ_TENEMENTS_FIND_OFFICE0]	String = "Мне нужно было найти путь к";
+[OBJ_TENEMENTS_FIND_OFFICE1]	String = "офису Люпино на верхнем этаже.";
+[OBJ_TENEMENTS_GOGNITTI]		String = "Я должен был поймать Винни Гогнитти.";
+
+[OBJ_ROOFTOPS_GOGNITTI]			String = "Я должен был поймать Винни Гогнитти.";
+
+[OBJ_RAGNAROCK_LUPINO0]			String = "Мне нужно было встретиться с Джеком Люпино";
+[OBJ_RAGNAROCK_LUPINO1]			String = "и заставить его заплатить.";
+
+[OBJ_NIGHTMARE_LOVED_ONES]		String = "Я должен был спасти своих любимых.";
+
+[OBJ_HOTEL2_DEATH_ROW]			String = "Мне нужно было разорвать этот ряд бандитских смертей.";
+[OBJ_HOTEL2_FIND_NIAGARA]		String = "Я должен был найти Ниагару и преподать ему урок.";
+
+[OBJ_DOCKS_FIND_SHIP]			String = "Мне нужно было найти грузовое судно 'Шарон.'";
+[OBJ_DOCKS_WIN]					String = "Я должен был отбить корабль обратно Владимиру.";
+[OBJ_DOCKS_WEAPONS]				String = "Оружие в трюме было бы полезно.";
+[OBJ_DOCKS_MEETING]				String = "Мне нужно было встретить Владимира на мосту.";
+
+[OBJ_RESTAURANT_ESCAPE]			String = "Я должен был спастись от пламени.";
+[OBJ_RESTAURANT_WAYOUT]			String = "Мне нужно было найти выход.";
+
+[OBJ_MANOR_TRIO]				String = "Мне нужно было позаботиться о Трио, чтобы попасть к их хозяину.";
+[OBJ_MANOR_PUNCHINELLO0]		String = "Мне нужно было выяснить, на кого работает";
+[OBJ_MANOR_PUNCHINELLO1]		String = "Убийца Сьютс.";
+
+[OBJ_DRUGTRIP]					String = "Плоть павших ангелов!";
+
+[OBJ_COLDSTEEL_FIND]			String = "Я должен был найти логово танственной женщины.";
+[OBJ_COLDSTEEL_ELEVATOR]		String = "Мне нужно было попасть к лифту под номером 'D-6.'";
+
+[OBJ_BUNKER_MS_VALKYR0]			String = "Мне нужно было найти знак";
+[OBJ_BUNKER_MS_VALKYR1]			String = "Мс. Валькирии и ее планы.";
+[OBJ_BUNKER_GETOUT0]			String = "Мне нужно было выбраться из бункера,";
+[OBJ_BUNKER_GETOUT1]			String = "пока он не взорвался.";
+
+[OBJ_GARAGE_BB0]				String = "Мне нужно было заставить Б.Б.";
+[OBJ_GARAGE_BB1]				String = "заплатить за смерть Алекса.";
+[OBJ_GARAGE_PHONE]				String = "Мне нужно было ответить по телефону-автомату.";
+
+[OBJ_ASGARD_ASSASINS]			String = "Я должен был спаститсь от убийц Николь Хорн.";
+
+[OBJ_AESIR_FIND0]				String = "Мне нужно было найти свой путь к";
+[OBJ_AESIR_FIND1]				String = "пентхаусу Хорн.";
+
+[OBJ_PENTHOUSE_END]				String = "Мне нужно было поймать Николь Хорн и покончить с этим.";
+
+// needed for benchmark test levels only
+[RESURRECT]							String = "Воскресить";
+
+[HUDPRINT_PICKUP_BERETTA_AMMO]		String = "Патроны к Беретте";
+[HUDPRINT_PICKUP_DESERTEAGLE_AMMO]	String = "Патроны к Пустынному Орлу";
+[HUDPRINT_PICKUP_SHOTGUN_AMMO]		String = "Патроны к Дробовику";
+[HUDPRINT_PICKUP_JACKHAMMER_AMMO]	String = "Патроны к Джекхаммеру";
+[HUDPRINT_PICKUP_INGRAM_AMMO]		String = "Патроны к Ингрэму";
+[HUDPRINT_PICKUP_COLTCOMMANDO_AMMO]	String = "Патроны к Кольту Коммандо";
+[HUDPRINT_PICKUP_M79_AMMO]			String = "Патроны к M79";
+[HUDPRINT_PICKUP_SNIPER_AMMO]     	String = "Патроны к Снайперской Винтовке";
+
+[HUDPRINT_PICKUP_BERETTA]			String = "Беретта";
+[HUDPRINT_PICKUP_BERETTADUAL]		String = "Беретта";
+[HUDPRINT_PICKUP_DESERTEAGLE]		String = "Пустынный Орел";
+[HUDPRINT_PICKUP_SAWEDSHOTGUN]		String = "Обрез";
+[HUDPRINT_PICKUP_PUMPSHOTGUN]		String = "Помповый Дробовик";
+[HUDPRINT_PICKUP_JACKHAMMER]		String = "Джекхаммер";
+[HUDPRINT_PICKUP_INGRAM]			String = "Ингрэм";
+[HUDPRINT_PICKUP_INGRAMDUAL]		String = "Ингрэм";
+[HUDPRINT_PICKUP_COLTCOMMANDO]		String = "Кольт Коммандо";
+[HUDPRINT_PICKUP_M79]				String = "M79";
+[HUDPRINT_PICKUP_SNIPER]		    String = "Снайперская Винтовка";
+[HUDPRINT_PICKUP_PAINKILLERS]	   	String = "Болеутоляющие";
+[HUDPRINT_PICKUP_MOLOTOV]			String = "Коктейль Молотова";
+[HUDPRINT_PICKUP_GRENADE]			String = "Граната";
+[HUDPRINT_PICKUP_BASEBALLBAT]		String = "Бейсбольная Бита";
+
+[HUDPRINT_PICKUP_BERETTA_AMMO_FULL]			String = "Максимум патронов к Беретте";
+[HUDPRINT_PICKUP_DESERTEAGLE_AMMO_FULL]		String = "Максимум зардов к Пустынному Орлу";
+[HUDPRINT_PICKUP_SHOTGUN_AMMO_FULL]			String = "Максимум патронов к Дробовику";
+[HUDPRINT_PICKUP_JACKHAMMER_AMMO_FULL]		String = "Максимум патронов к Джекхаммеру";
+[HUDPRINT_PICKUP_INGRAM_AMMO_FULL]			String = "Максимум патронов к Ингрэму";
+[HUDPRINT_PICKUP_COLTCOMMANDO_AMMO_FULL]	String = "Максимум патронов к Кольту Коммандо";
+[HUDPRINT_PICKUP_M79_AMMO_FULL]				String = "Максимум патронов к M79";
+[HUDPRINT_PICKUP_SNIPER_AMMO_FULL]			String = "Максимум патронов к Снайперской Винтовке";
+[HUDPRINT_PICKUP_PAINKILLERS_FULL]			String = "Слишком много Болеутолителей";
+[HUDPRINT_PICKUP_MOLOTOV_AMMO_FULL]			String = "Слишком много Коктейлей Молотова";
+[HUDPRINT_PICKUP_GRENADE_AMMO_FULL]			String = "Слишком много Гранат";
+[HUDPRINT_PICKUP_BASEBALLBAT_AMMO_FULL]		String = "Уже несет Бейсбольную Биту";
+
+
+// these variables are referred from globalconfig.txt
+// Attention! there is another pause text in stringdefines.h for gn-mode (it can't be a hud print)
+[NoPauseCameraPathText]				String = "Пауза"; 
+[QuickSaveGameDescriptionPrefix]	String = "Быстрая: ";
+[AutoSaveGameDescriptionPrefix]		String = "Авто: ";
+[QuickLoadQueryText]				String = "Еще раз нажмите F9 для Быстрой Загрузки, Esc для Отмены";
+
+[STRING_CARRYING]					String = "";		// Made empty very last minute, also moving lower inventory prints one line higher in the hud.txt
+[STRING_BAR_KEY]					String = "Ключ к Бару";
+[STRING_CELLAR_KEY]					String = "Ключ к Подвалу";
+[STRING_STAIRCASE_KEY]				String = "Ключ к Лестнице";
+
+[HUDPRINT_PRESS_USE_TO_LOAD]		String = "Нажмите клавишу (#USE#), чтобы загрузить последнюю сохраненную игру.";
+[TIP_PAUSECAMERA]					String = "Подсказка: Нажмите #PAUSE#, чтобы отключить режим паузы.";
+[TIP_SNIPER]					    String = "Подсказка: Нажмите и удерживайте клавишу (#USE#), чтобы смотреть в оптический прицел снайперской винтовки.";
+[TIP_PAINKILLER]					String = "Подсказка: Нажмите #PAINKILLER#, чтобы использовать болеутоляющие для облегчения боли.";
+[TIP_EXAMINE]						String = "Подсказка: Нажмите клавишу (#USE#), чтобы использовать или исследовать интересующую вещь.";
+[TIP_SHOOTDODGE]					String = "Подсказка: Нажмите клавишу Комбо Темп Пуль (#BULLETTIME#) и уворачивайтесь от пуль.";
+[TIP_BULLETTIME]					String = "Подсказка: Нажмите клавишу Комбо Темп Пуль (#BULLETTIME#) не двигаясь, чтобы перейти в Темп Пуль.";
+[TIP_DODGE]							String = "Подсказка: Нажмите #JUMP# и клавишу направления, чтобы выполнить обманный кувырок.";
+[TIP_OBJECTIVES]					String = "Подсказка: Нажмите F2, чтобы просмотреть цели задания.";
+[TIP_VIEWNOTES]						String = "Подсказка: Нажмите F1, чтобы просмотреть роман в картинках позже.";
+
+[STRING_INTRO_PRESENT_DAY]			String = "Город Нью-Йорк. Наше время. Час Назад.";
+[STRING_MAXHOUSE_YEARS_AGO]			String = "Нью-Джерси. Три Года Назад.";
+[STRING_SUBWAY_PRESENT_DAY]			String = "Город Нью-Йорк. Наше время. Две Ночи Назад.";
+
+[STRING_BUNKER_SCIENTIST_DEAD]		String = "Упс...";
+[STRING_BUNKER_INV_PINCODE]			String = "Пин-код '665'";
+
+[STRING_PENTHOUSE_45_SEC]			String = "Старт через 45 секунд";
+[STRING_PENTHOUSE_40_SEC]			String = "Старт через 40 секунд";
+[STRING_PENTHOUSE_35_SEC]			String = "Старт через 35 секунд";
+[STRING_PENTHOUSE_30_SEC]			String = "Старт через 30 секунд";
+[STRING_PENTHOUSE_25_SEC]			String = "Старт через 25 секунд";
+[STRING_PENTHOUSE_20_SEC]			String = "Старт через 20 секунд";
+[STRING_PENTHOUSE_15_SEC]			String = "Старт через 15 секунд";
+[STRING_PENTHOUSE_10_SEC]			String = "Старт через 10 секунд";
+[STRING_PENTHOUSE_5_SEC]			String = "Старт через 5 секунд";
+[STRING_PENTHOUSE_4_SEC]			String = "Старт через 4 секунды";
+[STRING_PENTHOUSE_3_SEC]			String = "Старт через 3 секунды";
+[STRING_PENTHOUSE_2_SEC]			String = "Старт через 2 секунды";
+[STRING_PENTHOUSE_1_SEC]			String = "Старт через 1 секунду";
+
+// Old, should be removed
+[STRING_INTRO_TIP_LOOK]				String = "Подсказка: Макс смотрит на интересные вещи";
+[STRING_INTRO_TIP_PRESSUSE]			String = "Подсказка: Нажмите Использование (#USE#), чтобы подобрать или исследовать объекты";
+[STRING_INTRO_TIP_F1]				String = "Подсказка: Нажмите F1, чтобы просмотреть роман в картинках позже";
+[STRING_SUBWAY_TIP_QUICKSAVE] 		String = "Подсказка: Нажмите F5 для быстрой записи";
+[STRING_SUBWAY_TIP_SHOOTDODGE]		String = "Подсказка: Двигайтесь и нажмите #BULLETTIME#, чтобы уворачиваться от пуль";
+[STRING_SUBWAY_SHOOTDODGE]			String = "Подсказка: Стойте и прижмите #BULLETTIME#, чтобы переключить Темп Пуль на вкл/выкл";
+[STRING_SUBWAY_TIP_USE]				String = "Подсказка: Нажмите Использование (#USE#), чтобы подобрать объекты";
+[STRING_SUBWAY_TIP_LOOK]			String = "Подсказка: Макс смотрит на интересные вещи";
+[STRING_SUBWAY_TIP_DODGE]			String = "Подсказка: Прыгайте неправо или налево, чтобы выполнить обманный кувырок";
+[STRING_SUBWAY_TIP_PAINKILLERS]		String = "Подсказка: Используйте болеутоляющие (#PAINKILLER#), чтобы остаться в живых";
+[STRING_SUBWAY_INV_SECURITYCODE]	String = "Код охраны"; 
+[STRING_SUBWAY_INV_DETONATORS]		String = "Детонаторы";
+// end old tips
+
+[TIP_01]							String = "Добро пожаловать в краткое обучение игры Макс Пейн.";
+[TIP_02]							String = "Звонит телефон-автомат. Подойдите к нему.";
+[TIP_03]							String = "Макс посмотрит на интересные вещи...";
+[TIP_04]							String = "Теперь повернитесь к телефону-автомату и нажмите клавишу #USE#.";
+[TIP_06]							String = "Теперь, когда вы знаете, как использовать вещи, идите и используйте дверь в фургон.";
+[TIP_07]							String = "Попытайтесь сначала ответить по телефону-автомату.";
+[TIP_08]							String = "Вы можете стрелять, нажав #SHOOT#. Попрактикуйтесь на коробках.";
+[TIP_09]							String = "Вы можете менять свое оружие колесом мышки или нажатием 1-6...";
+[TIP_12]							String = "Теперь отстрелите висячий замок на металлической двери.";
+[TIP_13]							String = "Иногда внутри бьющихся контейнеров можно найти полезные вещи.";
+[TIP_15]							String = "Макс может уворачиваться от пуль, ДВИГАЯСЬ и нажав клавишу Комбо Темп Пуль #BULLETTIME#...";
+[TIP_17]							String = "Немного потренируйтесь в уклонении от пуль.";
+[TIP_20]							String = "Макс также может войти в Темп Пуль...";
+[TIP_21]							String = "Нажмите клавишу Комбо Темп Пуль #BULLETTIME#, стоя на месте...";
+[TIP_22]							String = "Вернитесь в нормальный темп, еще раз нажав #BULLETTIME# не двигаясь...";
+[TIP_23]							String = "Режим Темпа Пуль показывается песочными часами.";
+[TIP_26]							String = "Макс прыгает, когда нажата #JUMP#...";
+[TIP_27]							String = "Прыжок в сторону или назад заставит его исполнить обманный кувырок...";
+[TIP_28]							String = "Перепрыгните стену, чтобы продолжить.";
+[TIP_30]							String = "Быстрая запись игры выполняется клавишей F5. Быстрая загрузка - клавишей F9.";
+[TIP_32]							String = "Далее вы должны перейти в Темп Пуль и уклоняться от пуль в реальном бою...";
+[TIP_33]							String = "Нажмите кнопку вызова врагов около телефона, чтобы начать бой.";
+[TIP_37]							String = "Теперь ищите вход в подземку и в нем медицинский кабинет.";
+[TIP_40]							String = "Нажмите #PAINKILLER#, чтобы проглотить пару болеутоляющих, если вы были ранены.";
+[TIP_42]							String = "Теперь попробуйте обыскать ближайший фургон сзади.";
+[TIP_43]							String = "Попытайтесь сначала найти вход в подземку.";
+[TIP_44]							String = "Вы нашли Снайперскую Винтовку...";
+[TIP_45]							String = "Еще трое плохих парней подходят со стороны аллеи...";
+[TIP_46]							String = "Нажмите #USE#, чтобы приблизить изображение, когда выбрана Снайперская Винтовка...";
+[TIP_48]							String = "Приседание #CROUCH# в режиме оптического прицела сделает вашу стрельбу более точной.";
+[TIP_49]							String = "Тренировка завершена...";
+[TIP_50]							String = "Если вы хотите еще потренироваться в стрельбе, то вражеский управляющий снова работает...";
+[TIP_52]							String = "И вы все еще можете исследовать окрестности...";
+[TIP_53]							String = "Когда закончите, нажмите Esc, чтобы вернуться в главное меню.";
+[TIP_54]							String = "Поздравляем! Вы нашли потайную комнату.";
+[TIP_55]							String = "Выберите Снайперскую Винтовку колесиком мыши или нажатием 6.";
+[TIP_57]							String = "Вы сначала должны нажать кнопку вызова врагов.";
+
+// Anything marked with [DELETE] is redundant and isn't used anymore
+
+[TIP_05]							String = "[DELETE] При необходимости вы можете использовать телефон еще раз, чтобы прослушать подсказку...";
+[TIP_10]							String = "[DELETE] Когда вы просмотрели оружие, вы должны нажать #SHOOT#, чтобы выбрать его...";
+[TIP_11]							String = "[DELETE] Теперь попробуйте пострелять в коробки поблизости.";
+[TIP_14]							String = "[DELETE] Макс может выполнять особые боевые движения...";
+[TIP_16]							String = "[DELETE] Теперь нажмите #SHOOT#, чтобы выстрелить из оружия в воздухе...";
+[TIP_18]							String = "[DELETE] Заметьте, что если Темп Пуль полностью использован, Макс вместо него будет выполнять обманные кувырки.";
+[TIP_19]							String = "[DELETE] Когда вы привыкните к уклонению от пуль, переходите к следующему телефону-автомату.";
+[TIP_24]							String = "[DELETE] Переключайтесь нажатием #BULLETTIME#. Попробуйте подвигаться в Темпе Пуль.";
+[TIP_25]							String = "[DELETE] Когда вы освоитесь с активацией Темпа Пуль, переходите к следующему телефону-автомату.";
+[TIP_29]							String = "[DELETE] Это подходящее время, чтобы сохранить ваши успехи...";
+[TIP_31]							String = "[DELETE] Ответьте по телефону-автомату на другой стороне улицы.";
+[TIP_34]							String = "[DELETE] Появятся враги и нападут на вас. Вы можете перезаряжать свое оружие нажатием #RELOAD#...";
+[TIP_35]							String = "[DELETE] Вам советуют мудро использовать уклонение от пуль и Темп Пуль во время боя.";
+[TIP_36]							String = "[DELETE] Отлично. Теперь вам стоит подобрать оружие, оброненное врагами.";
+[TIP_38]							String = "[DELETE] Используйте медицинский кабинет (нажатием #USE#), чтобы подобрать болеутоляющее.";
+[TIP_39]							String = "[DELETE] Болеутоляющее уменьшает боль, которую испытывает Макс...";
+[TIP_41]							String = "[DELETE] Заметьте, что им требуется немного времени, чтобы подействовать.";
+[TIP_47]							String = "[DELETE] Вы также можете попробовать использовать Темп Пуль в режиме оптического прицела...";
+[TIP_51]							String = "[DELETE] Ее нажатие заставит врагов появляться в случайных местах...";
+[TIP_56]							String = "[DELETE] Вы можете видеть количество Боли, показываемой красным в нижнем левом углу экрана.";
+
+
+
+[STRING_NORMAL_COMPLETED1]			String = "Поздравляем! Вы закончили игру Макс Пейн.";
+[STRING_NORMAL_COMPLETED2]			String = "Режимы игры Минута Нью-Йорка и Сваренный Вкрутую";
+[STRING_NORMAL_COMPLETED3]			String = "открылись для дальнейшей игры.";
+
+[STRING_NIGHTMARE_COMPLETED1]		String = "Поздравляем!";
+[STRING_NIGHTMARE_COMPLETED2]		String = "Вы завершили режим Сваренный Вкрутую. Теперь приготовьтесь";
+[STRING_NIGHTMARE_COMPLETED3]		String = "к последнему вызову режима игры Мертвые на Подходе.";
+
+[STRING_HELL_COMPLETED1]			String = "Поздравляем!";
+[STRING_HELL_COMPLETED2]			String = "Вы завершили Мертвых на Подходе -";
+[STRING_HELL_COMPLETED3]			String = "самый сложный режим игры.";
+
+[STRING_TIMEDMODE_COMPLETED1]		String = "Поздравляем! Режим Минута Нью-Йорка Завершен -";
+[STRING_TIMEDMODE_COMPLETED2]		String = "Вы выиграли гонку на время.";
+[STRING_TIMEDMODE_COMPLETED3]		String = "Ваше Полное время было #TOTALTIME#";
+[STRING_TIMEDMODE_COMPLETED4]		String = "Время нормы лечений: 0:46:29"; // same time format as #TOTALTIME#
+
+[STRING_ENDCOMBAT_01]				String = "Последний вызов.";
+[STRING_ENDCOMBAT_02]				String = "ВПЕРЕД!";
+[STRING_ENDCOMBAT_03]				String = "Отлично!";
+
+[STRING_NYM_MAP]					String = "Ваше текущее время: #TOTALTIME#";
+[STRING_NYM_PART1_PAR]				String = "Норма лечений к этой точке: 0:16:19";
+[STRING_NYM_PART2_PAR]				String = "Норма лечений к этой точке: 0:27:41";

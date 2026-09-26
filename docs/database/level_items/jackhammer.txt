@@ -1,0 +1,39 @@
+#include <..\level_items.h>
+#include <..\object_lods.h>
+#include <..\weaponid.h>
+
+[LOD]
+{
+    [Geometry]
+	ExportData = ..\..\weapons\jackhammer\jackhammer_LevelItem.kf2;
+    Distance = PROJECTILE_LOD_DRAW_ALWAYS;
+}
+
+[Properties]
+TriggerRadius = RADIUS_JACKHAMMER;
+CantPickupMessagesTimeout = CANTPICKUP_TIMEOUT;
+MatchingWeaponID = WEAPONID_JACKHAMMER;
+PickupIfNewWeapon = true;
+PickupIfAmmoNotFull = true;
+
+[OnFirstPickup]
+{
+	[Message] string = "activator->C_PickupWeapon( "jackhammer" );";
+	[Message] string = "activator->C_PickupAmmo( "jackhammer"," PICKUPAMMO_JACKHAMMER ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_rifle );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_JACKHAMMER\" );";
+}
+
+[OnPickUp]
+{
+	[Message] string = "activator->C_PickupWeapon( "jackhammer" );";
+	[Message] string = "activator->C_PickupAmmo( "jackhammer"," PICKUPAMMO_JACKHAMMER ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_rifle );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_JACKHAMMER\" );";
+}
+
+[OnCantPickup]
+{
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_ammo_full );";
+	[Message] string = "maxpayne_hudmode->mphm_print( HUDPRINT_PICKUP_JACKHAMMER_AMMO_FULL );";
+}

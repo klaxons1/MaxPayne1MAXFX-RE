@@ -1,0 +1,1927 @@
+#include <..\soundid.h>
+
+#define CHARACTERVOLUME_DEFAULT			1.0
+
+#define CHARACTERGROANVOLUME_DEFAULT	0.5
+#define CHARACTERGROANRANDOM_DEFAULT	20
+
+#define CHARACTERFOOT_STEPVOLUME_DEFAULT	0.3
+#define CHARACTERFOOT_STEPRANDOM_DEFAULT	4
+#define CHARACTERFOOT_STEPPRIORITY		1
+
+#define CHARACTERHOTSPOT_DEFAULT		2.0
+#define CHARACTERFALLOFF_DEFAULT		8.0
+
+#define	SOUNDID_RAT_VOLUME			 0.5
+#define	SOUNDID_RAT_HOTSPOT			 0.5
+#define	SOUNDID_RAT_FALLOFF			 8.0
+#define	SOUNDID_RAT_BIG_VOLUME		 1.0
+#define	SOUNDID_RAT_BIG_FALLOFF		 2.0
+#define	SOUNDID_RAT_BIG_HOTSPOT		10.0
+
+#define	SOUNDID_PLAYERTALK_ID			2
+#define	SOUNDID_PLAYERTALK_VOLUME		0.75
+#define	SOUNDID_PLAYERTALK_HOTSPOT		2
+#define	SOUNDID_PLAYERTALK_FALLOFF		10
+#define	SOUNDID_PLAYERTALK_PRIORITY		40
+
+[door_locked]  		// Max comments on the door being locked
+{
+	[Properties] ID = SOUNDID_PLAYERTALK_ID; 
+	[Default]
+	{
+		[Sound]
+        Filename = characters\max\max_door_locked_01.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = characters\max\max_door_locked_02.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = characters\max\max_door_locked_03.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = characters\max\max_door_locked_04.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = characters\max\max_door_locked_05.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[get_painkillers]  		// Max comments on the painkillers
+{
+	[Properties] ID = SOUNDID_PLAYERTALK_ID; 
+	[Default]
+	{
+		[Sound]
+        Filename = characters\max\max_get_painkillers_01.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = characters\max\max_get_painkillers_02.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		// Not in use as Max sounds too painfull already
+		// [Sound]
+		// Filename = characters\max\max_get_painkillers_03.wav;
+		// Volume = SOUNDID_PLAYERTALK_VOLUME;
+		// Pitch = 22050;
+		// Random = 0;
+		// 3DSound = NO;
+		// Looping = NO;
+		// Streamed = YES;
+		// Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		// ItemsToCache = 1;
+		// FrequencyScaling = FALSE;
+	}
+}
+
+[innocent_killed]  		// Max comments on innocent people killed
+{
+	[Properties] ID = SOUNDID_PLAYERTALK_ID; 
+	[Default]
+	{
+		// Not in use since it points to player actions always
+		// [Sound]
+        // Filename = characters\max\max_innocent_killed_01.wav;
+        // Volume = SOUNDID_PLAYERTALK_VOLUME;
+        // Pitch = 22050;
+        // Random = 0;
+        // 3DSound = NO;
+        // Looping = NO;
+        // Streamed = YES;
+        // Priority = SOUNDID_PLAYERTALK_PRIORITY;
+        // ItemsToCache = 1;
+        // FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = characters\max\max_innocent_killed_02.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = characters\max\max_innocent_killed_03.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[key_found]  		// Max found a key
+{
+	[Properties] ID = SOUNDID_PLAYERTALK_ID; 
+	[Default]
+	{
+		[Sound]
+        Filename = characters\max\max_key_found_01.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = characters\max\max_key_found_02.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[key_on_desk]  		// Max sees a key on a desk
+{
+	[Properties] ID = SOUNDID_PLAYERTALK_ID; 
+	[Default]
+	{
+		[Sound]
+        Filename = characters\max\max_key_found_desk.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[key_on_drawer]  		// Max sees a key on top of a drawer
+{
+	[Properties] ID = SOUNDID_PLAYERTALK_ID; 
+	[Default]
+	{
+		[Sound]
+        Filename = characters\max\max_key_found_drawer.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[key_on_shelf]  		// Max sees a key on a shelf
+{
+	[Properties] ID = SOUNDID_PLAYERTALK_ID; 
+	[Default]
+	{
+		[Sound]
+        Filename = characters\max\max_key_found_shelf.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[key_on_table]  		// Max sees a key on a table
+{
+	[Properties] ID = SOUNDID_PLAYERTALK_ID; 
+	[Default]
+	{
+		[Sound]
+        Filename = characters\max\max_key_found_table.wav;
+		Volume = SOUNDID_PLAYERTALK_VOLUME;
+		Pitch = 22050;
+		Random = 0;
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUNDID_PLAYERTALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// Rat sounds
+[Rat_Run]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\rat\rat_run_01.wav;
+		Volume = SOUNDID_RAT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = SOUNDID_RAT_HOTSPOT;
+		FallOff = SOUNDID_RAT_FALLOFF;
+		Priority = 5;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\rat\rat_run_02.wav;
+		Volume = SOUNDID_RAT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = SOUNDID_RAT_HOTSPOT;
+		FallOff = SOUNDID_RAT_FALLOFF;
+		Priority = 5;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\rat\rat_run_03.wav;
+		Volume = SOUNDID_RAT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = SOUNDID_RAT_HOTSPOT;
+		FallOff = SOUNDID_RAT_FALLOFF;
+		Priority = 5;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Rat_Walk]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\rat\rat_walk.wav;
+		Volume = SOUNDID_RAT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = SOUNDID_RAT_HOTSPOT;
+		FallOff = SOUNDID_RAT_FALLOFF;
+		Priority = 5;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Rat_Idle]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\rat\rat_idle_01.wav;
+		Volume = SOUNDID_RAT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = yes;
+        3DSound = yes;
+		Hotspot = SOUNDID_RAT_HOTSPOT;
+		FallOff = SOUNDID_RAT_FALLOFF;
+		Priority = 5;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\rat\rat_idle_03.wav;
+		Volume = SOUNDID_RAT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = yes;
+        3DSound = yes;
+		Hotspot = SOUNDID_RAT_HOTSPOT;
+		FallOff = SOUNDID_RAT_FALLOFF;
+		Priority = 5;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\rat\rat_idle_03.wav;
+		Volume = SOUNDID_RAT_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = yes;
+        3DSound = yes;
+		Hotspot = SOUNDID_RAT_HOTSPOT;
+		FallOff = SOUNDID_RAT_FALLOFF;
+		Priority = 5;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Rat_Death]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\rat\rat_death_01.wav;
+		Volume = SOUNDID_RAT_BIG_VOLUME;
+		Pitch = 22050;
+		Random = 15%;
+        Looping = no;
+		Streamed = yes;
+        3DSound = yes;
+		Hotspot = SOUNDID_RAT_BIG_HOTSPOT;
+		FallOff = SOUNDID_RAT_FALLOFF;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\rat\rat_death_02.wav;
+		Volume = SOUNDID_RAT_BIG_VOLUME;
+		Pitch = 22050;
+		Random = 15%;
+        Looping = no;
+		Streamed = yes;
+        3DSound = yes;
+		Hotspot = SOUNDID_RAT_BIG_HOTSPOT;
+		FallOff = SOUNDID_RAT_BIG_FALLOFF;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+// ========================================================================
+
+[use_painkillers]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = characters\use_painkillers.wav;
+		Volume = 0.4;
+		Pitch = 22050;
+		Random = 2%;
+        Looping = no;
+        Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 4;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[Shootdodge]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = characters\slow_motion\slow_motion_01.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 2%;
+        Looping = no;
+        Streamed = no;
+        3DSound = no;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[Slow_Motion]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = characters\slow_motion\slomo_start.wav;
+		Volume = 0.35;
+		Pitch = 22050;
+		Random = 1%;
+        Looping = no;
+        Streamed = no;
+        3DSound = no;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Slow_Motion_End]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = characters\slow_motion\slomo_end.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 1%;
+        Looping = no;
+        Streamed = no;
+        3DSound = no;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Player_Death_Music]
+{
+	[properties] id = 1; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = characters\max\max_death_music.wav;
+		Volume = 0.5;
+		Pitch = 44100;
+		Random = 0%;
+        Looping = no;
+        Streamed = yes;
+        3DSound = no;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[Death_Starting_Falling]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = characters\max\max_falling_to_death.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+        Streamed = no;
+        3DSound = yes;
+		Hotspot = 2;
+		FallOff = 50;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[Death_Falling]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = characters\death\death_falling.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+        Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[Death_Medium]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = characters\death\bodyfall_15.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+        Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = characters\death\bodyfall_09.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[Run_LeftFoot]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\Footsteps\Default_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Default_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Carpet;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Cardboard;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wood_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wood_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Couch;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Gravel;
+
+		[Sound]
+        Filename = Characters\Footsteps\Gravel_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Gravel_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Metal;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Metal_Hollow;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Hollow_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Metal_Outside;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Metal_Solid;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Paper;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+
+	[Material]
+	{
+		[General]
+		Name = Pipes;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Pipes_Steam;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Snow;
+
+		[Sound]
+        Filename = Characters\Footsteps\Snow_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Snow_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Water_Bottom;
+
+		[Sound]
+        Filename = Characters\Footsteps\Water_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Water_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Wood;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wood_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wood_Left_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Wireframe;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wireframe_Left_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Run_RightFoot]
+{
+	[properties] id = SOUNDID_DEFAULT; probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\Footsteps\Default_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Default_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Carpet;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Cardboard;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wood_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wood_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Couch;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Gravel;
+
+		[Sound]
+        Filename = Characters\Footsteps\Gravel_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Gravel_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Metal;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Metal_Hollow;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_Hollow_Right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Metal_Outside;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Metal_Solid;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Paper;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Carpet_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+
+	[Material]
+	{
+		[General]
+		Name = Pipes;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Pipes_Steam;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Metal_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Snow;
+
+		[Sound]
+        Filename = Characters\Footsteps\Snow_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Snow_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Water_Bottom;
+
+		[Sound]
+        Filename = Characters\Footsteps\Water_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Water_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Wood;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wood_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wood_right_02.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Wireframe;
+
+		[Sound]
+        Filename = Characters\Footsteps\Wireframe_right_01.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 22050;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 5;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[Turn_Medium]
+{
+	[properties]
+	id = SOUNDID_DEFAULT;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\Scuff_Med.wav;
+		Volume = CHARACTERFOOT_STEPVOLUME_DEFAULT;
+		Pitch = 16000;
+		Random = CHARACTERFOOT_STEPRANDOM_DEFAULT %; // of the pitch
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Jump_Medium]
+{
+	[properties]
+	id = SOUNDID_DEFAULT;
+	Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\Jump01.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 2;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = Characters\Jump02.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 2;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Dodge_Medium]
+{
+	[properties]
+	id = SOUNDID_DEFAULT;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\dodge.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 2;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Dodgebackward_Medium]
+{
+	[properties]
+	id = SOUNDID_DEFAULT;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\dodgebackward.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 2;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[ShootDodge_Medium]
+{
+	[properties]
+	id = SOUNDID_DEFAULT;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\shootdodge.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 2;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Land_Medium]
+{
+	[properties]
+	id = SOUNDID_DEFAULT;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\Jump\Land_hard.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 4%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = CHARACTERHOTSPOT_DEFAULT;
+		FallOff = CHARACTERFALLOFF_DEFAULT;
+		Priority = CHARACTERFOOT_STEPPRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[land_lowheight]
+{
+	[properties]
+	id = SOUNDID_DEFAULT;
+
+	[Default]
+	{
+		[Sound]
+        Filename = Characters\jump_land_default.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 3;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Carpet;
+
+		[Sound]
+        Filename = Characters\jump_land_carpet.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 3;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Snow;
+
+		[Sound]
+        Filename = Characters\jump_land_snow.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 3;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Water_Bottom;
+
+		[Sound]
+        Filename = Characters\jump_land_water.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 3;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+	[Material]
+	{
+		[General]
+		Name = Wood;
+
+		[Sound]
+        Filename = Characters\jump_land_wood.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+        Looping = no;
+		Streamed = no;
+        3DSound = yes;
+		Hotspot = 3;
+		FallOff = 4;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	

@@ -1,0 +1,3540 @@
+#include <..\soundid.h>
+
+// -------------------------------------------------------------------
+
+[Empty]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= placeholder.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// -------------------------------------------------------------------
+// Sound script for Story
+// -------------------------------------------------------------------
+[P1L0a_001]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L0a_001.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L0a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L0a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L0a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L0a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L0a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L0a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L0a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L0a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L0a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L0a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L0a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L0a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L0a_009]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L0a_009.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L0a_010]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L0a_010.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Subway
+
+[P1L1a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L1a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L1a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L1a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L1a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L1a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L1b_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L1b_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L1b_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L1b_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L1b_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L1b_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L1b_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L1b_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Hotel part1
+
+[P1L2a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_008b]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_008b.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_009]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_009.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_010]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_010.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2a_011]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2a_011.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Hotel part b
+
+[P1L2b_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2b_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2b_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2b_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2b_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2b_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2b_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2b_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2b_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2b_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2b_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2b_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2b_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2b_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L2b_009]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L2b_009.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Apartments A
+
+[P1L3a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+
+// Apartments B
+
+[P1L3b_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3b_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3b_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3b_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3b_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3b_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3b_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3b_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3b_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3b_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L3b_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L3b_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Rooftops
+
+[P1L4a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L4a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L4a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L4a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L4a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L4a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L4a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L4a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L4a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L4a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L4a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L4a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L4a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L4a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Ragnarock
+
+[P1L5a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_009]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_009.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_010]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_010.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_011]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_011.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P1L5a_012]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part1\P1L5a_012.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Part 2
+
+[P2L0a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L0a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L0a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L0a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L0a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L0a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L0a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L0a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L0a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L0a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L0a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L0a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L0a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L0a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L0a_009]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L0a_009.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Hotel part2
+
+[P2L1a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_009]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_009.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_010]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_010.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_011]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_011.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_012]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_012.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L1a_013]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L1a_013.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Docs
+
+[P2L2a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L2a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L2a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L2a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L2a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L2a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L2a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L2a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L2a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L2a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L2a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L2a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L2a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L2a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L2a_009]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L2a_009.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L2a_010]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L2a_010.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Restaurant
+
+[P2L3a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L3a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L3a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L3a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L3a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L3a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L3a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L3a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Manor
+
+[P2L4a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L4a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L4a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L4a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L4a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L4a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L4a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// P2L4a_009 IS NOT USED
+
+[P2L4a_010]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_010.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L4a_011]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_011.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P2L4a_012]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part2\P2L4a_012.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// P2L4a_013 IS NOT USED
+
+// Part 3
+
+[P3L0a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L0a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L0a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L0a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L0a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L0a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Drug trip
+
+[P3L1a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L1a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L1a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L1a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L1a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L1a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L1a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L1a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L1a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L1a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L1a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L1a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L1a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L1a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Cold Steel
+
+[P3L2a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L2a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L2a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L2a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L2a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L2a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L2a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L2a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L2a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L2a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L2a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L2a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L2a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L2a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L2a_009]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L2a_009.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Bunker
+
+[P3L3a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L3a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L3a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L3a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L3a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L3a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L3a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L3a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L3a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L3a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L3a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L3a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Garage
+
+[P3L4a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L4a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L4a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L4a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L4a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L4a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L4a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L4a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L4a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L4a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L4a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L4a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L4a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L4a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+
+// Asgard
+
+[P3L5a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L5a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L5a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L5a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L5a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L5a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L5a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L5a_009]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5a_009.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L5a_010]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5a_010.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Asgard B
+
+[P3L5b_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5b_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L5b_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L5b_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Aesir
+
+[P3L6a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L6a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L6a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L6a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L6a_004]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L6a_004.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L6a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L6a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L6a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L6a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L6a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L6a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L6a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L6a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L6a_010]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L6a_010.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+// Penthouse
+
+[P3L7a_002]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L7a_002.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L7a_003]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L7a_003.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L7a_005]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L7a_005.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L7a_006]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L7a_006.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L7a_007]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L7a_007.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}
+
+[P3L7a_008]
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+
+	[Default]
+	{
+		[Sound]
+		Filename			= story\part3\P3L7a_008.wav;
+		Volume 				= ID_GN_SPEECH_VOLUME;
+		Pitch 				= 44100;
+		Random 				= 0%;
+		3Dsound 			= NO;
+		Looping 			= NO;
+		Streamed			= YES;
+		Priority			= 100;
+		ItemsToCache 		= 0;
+		FrequencyScaling	= FALSE;
+	}
+}

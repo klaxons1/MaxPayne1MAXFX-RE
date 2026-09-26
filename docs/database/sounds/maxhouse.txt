@@ -1,0 +1,515 @@
+#include <..\soundid.h>
+// -------------------------------------------------------------------
+// Intro flyby and Max House sounds
+// -------------------------------------------------------------------
+
+[intro]	// Full length intro
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\misc\intro.wav;
+
+		Volume = 1.0;
+		Pitch = 44100;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_cam]	// Camera run start
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_cam.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_01]	// Max: What the hell
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_01.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_02]	// Long, Michelle screams and fighting
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_02.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_03]	// Max shouts Michelle
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_03.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_04]	// Michelle screams in terror, gunshots
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_04.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_05]	// Max shouts Michelle
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_05.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_06]	// Junkie: It's coming
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_06.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_07]	// Max holds gunpoint, freeze, nypd, drop it
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_07.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_08]	// Junkie: You're gonna die
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_08.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_09]	// Max sobs Oh no please
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_09.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_10]	// Junkie: I'm gonna hurt you (muffled)
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_10.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_10b]	// Junkie: The flesh of fallen angels (muffled)
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_10b.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_11]	// Junkie: I'm gonna hurt you (loud)
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_11.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L0a_12]	// Max sobs oh no Michelle
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L0a_12.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// -------------------------------------------------------------------
+
+
+
+[michelle_screaming] 				// Muffled scream
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = maxhouse\michelle_screaming.wav;
+		Volume = 0.7;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 100;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[baby_crying] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = maxhouse\baby_crying.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 100;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[music_box] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = maxhouse\music_box.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 10;
+		Priority = 1000;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[crash_muffled] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = maxhouse\crash_muffled.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 100;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[smash_muffled] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = maxhouse\smash_muffled.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 100;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}

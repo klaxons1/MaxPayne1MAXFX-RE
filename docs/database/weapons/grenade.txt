@@ -1,0 +1,85 @@
+#include <..\object_lods.h>
+#include <..\shooting.h>
+#include <..\weaponanimid.h>
+#include <..\weaponid.h>
+
+// Grenade 
+
+[LOD]
+{
+	[Geometry]
+	ExportData = grenade_Lod0.kf2;
+	Distance = WEAPON_LOD_FAR ;
+}
+
+[Animationset]
+{
+	[Animation] Index = WEAPONANIM_DEFAULT; Filename = grenade_InHand.kf2;
+	[Animation] Index = WEAPONANIM_SHOOT; Filename = grenade_InHand.kf2;
+	[Properties]
+	{
+		[Message] Frame = 0; String = "this->A_Play3DSound ( weapons, shoot_throwable , \"\");";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( grenade, 1 );";
+	}
+
+	[Animation] Index = WEAPONANIM_RELOAD; Filename = grenade_InHand.kf2;
+	[Animation] Index = WEAPONANIM_SHOOTEMPTY; Filename = grenade_InHand.kf2;
+
+	[Animation]	
+	Index = WEAPONANIM_DROPONDEATH; Filename = grenade_InHand.kf2;
+	[Properties]
+	{
+		[Message] Frame = 0; String = "this->WS_Hide( " TRUE " );";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( enemy_grenade, 1 );";
+	}
+}
+
+[Attributes]
+
+TwoHandedBones 		= YES;
+TwoHandedAnimation 	= NO;
+UseMultipleGunBones = NO;
+ShootDodgeAllowed	= NO;
+AutoAimingAllowed 	= NO;
+SidewaysAimingMultiplier = 1.0;
+
+SlotIndex 	= SLOTID_GRENADE;
+InventoryID = INVENTORYID_GRENADE;
+WeaponID 	= WEAPONID_GRENADE;
+
+Clipsize 	= GRENADE_CLIPSIZE;
+Pocketsize	= GRENADE_POCKETSIZE;
+
+MaximumShootingFrequency = GRENADE_MAXSHOOTINGFREQUENCY;
+DefaultShootingFrequency = GRENADE_SHOOTINGFREQUENCY;
+// [0..1] affects only player character
+// when multiplier is close to 0, shooting will slow down when time slows down
+// when multiplier is close to 1, shooting will happen with constant speed when time slows down 
+ShootingFrequencyMultiplier		= 0.0;
+
+ReloadAmount = -1;
+ProjectileOffset = ( 0, 0, 0 );
+UseModeSwitchAnimation = NO;
+
+FOVMultiplier = 1.0;
+// shakes are only applied when sniper zoom is on
+ShakeLength = 0.0;
+ShakeStrengthX = 0.0;
+ShakeStrengthY = 0.0;
+CrouchingShakeLength = 0.0;
+CrouchingShakeStrengthX = 0.0;
+CrouchingShakeStrengthY = 0.0;
+UsesLowerActivationGroup = TRUE;
+
+[CrosshairAttributes]
+CastLength				= CROSSHAIR_CASTLENGTH ;
+SphereRadius 			= CROSSHAIR_SPHERERADIUS ;
+SmallProjectile 		= TRUE ;
+ScreenSizeFrontLimit	= CROSSHAIR_SIZEFRONTLIMIT ;
+ScreenSizeBackLimit		= CROSSHAIR_SIZEBACKLIMIT ;
+
+[Crosshair] 
+{ 
+	[Geometry] 
+	ExportData = ..\crosshairs\dot.kf2;
+}

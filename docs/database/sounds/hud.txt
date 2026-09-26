@@ -1,0 +1,64 @@
+#include <..\soundid.h>
+
+[PrintTip]
+{
+	[properties]
+	id = SOUNDID_DEFAULT;
+
+	[Default]
+	{
+		[Sound]
+        Filename = menu\tip_beep.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = no;
+        Looping = no;
+		Streamed = no;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[WeaponSelectionChanges]
+{
+	[properties]
+	id = SOUNDID_MENUMOVE;
+
+	[Default]
+	{
+		[Sound]
+        Filename = menu\move.wav;
+		Volume = 0.5;
+		Pitch = 44100;
+		Random = 1%; // of the pitch
+        3DSound = no;
+        Looping = no;
+		Streamed = no;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[WeaponSelectionConfirmed]
+{
+	[properties]
+	id = SOUNDID_MENUSELECT;
+
+	[Default]
+	{
+		[Sound]
+        Filename = menu\select.wav;
+		Volume = 0.5;
+		Pitch = 44100;
+		Random = 1%; // of the pitch
+        3DSound = no;
+        Looping = no;
+		Streamed = no;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	

@@ -1,0 +1,870 @@
+#include <..\soundid.h>
+
+// -------------------------------------------------------------------
+
+
+[falling_death]  			// the dude falls
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\junkie\junkie_death_01.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 10;
+		FallOff = 70;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+	}
+}
+
+[P1L5a_003_cam]	// Max: As subtle with... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_003_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_006_cam]		// Camera run in the occult room
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_006_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_01]	// Mobsters talking scared
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_02]	// Lupino's (long) shout of fallen angels
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_02.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 20;
+		FallOff = 100;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_03]	// Lupino howls like a wolf
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_03.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 20;
+		FallOff = 100;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_04]	// Lupino whispers of evil things to come
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_04.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 20;
+		FallOff = 100;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_05]	// Lupino shouts more
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_05.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 20;
+		FallOff = 100;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_06]	// Lupino snarls and howls madly at Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_06.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 20;
+		FallOff = 100;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_07]	// Lupino screams in pain
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_07.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 10;
+		FallOff = 60;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_Max_01]	// Max: comments on a paperback book in Ticket Booth
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_Max_01b]	// Max: comments on a Karaoke
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_Max_01b.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_Max_02]	// Max: comments on the occult books
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_Max_02.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_Max_03]	// Max: comments on letter pieces on floor
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_Max_03.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_Max_04]	// Max: comments on Lupino's occult notes
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_Max_04.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L5a_Max_05]	// Max: comments on Lupino's open notebook
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L5a_Max_05.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// -------------------------------------------------------------------
+
+[break_stage_lamp]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\break_stage_lamp.wav;
+		Volume = 1.0;
+		Pitch = 44100;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[footsteps_creaky_above]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\footsteps_creaky_above.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[guitar_noise]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\guitar_noise.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 1;
+		FallOff = 5;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[guitar_walk_over]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\guitar_walk_over.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 1;
+		FallOff = 5;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[lamp_rail_creak]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\lamp_rail_creak01.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = ragnarock\lamp_rail_creak02.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[lamp_rail_creaking_slowly]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\lamp_rail_creaking_slowly.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[pigeon_coo]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\pigeon_coo_01.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = ragnarock\pigeon_coo_02.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[pigeon_cooing]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\pigeon_cooing.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 20;
+		Looping = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[ragnarock_close]
+{
+	[Properties] ID = 0;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\ragnarock_close.wav;
+		Volume = 1.0;
+		Pitch = 44100;
+		Random = 0%;
+		3DSound = YES;
+		Hotspot = 3;
+		FallOff = 100;
+		Looping = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}	
+
+[ragnarock_far]
+{
+	[Properties] ID = 0;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\ragnarock_far.wav;
+		Volume = 1.0;
+		Pitch = 44100;
+		Random = 0%;
+		3DSound = YES;
+		Hotspot = 20;
+		FallOff = 100;
+		Looping = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}	
+
+[secret_door_slam]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\secret_door_slam.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 10;
+		FallOff = 20;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[secret_door_slide]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\secret_door_slide.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 10;
+		FallOff = 20;
+		Looping = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[stage_set_slam]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\stage_set_slam.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 10;
+		FallOff = 40;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[stage_set_slide]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\stage_set_slide.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 40;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[trap_door_open]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\trap_door_open.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[trap_door_slam_open]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\trap_door_slam_open.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[fireworks]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\fireworks_pop.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 30;
+		FallOff = 100;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 3;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+
+[church_bell]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\church_bell.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 30;
+		FallOff = 100;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[drum_solo]
+{
+	[Properties] ID = ID_LOOPING;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ragnarock\drum_solo.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Hotspot = 30;
+		FallOff = 100;
+		Looping = NO;
+		Streamed = NO;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+

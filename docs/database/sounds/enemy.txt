@@ -1,0 +1,3001 @@
+#include <..\soundid.h>
+
+[junkie_alert]  		// Aggressive, you're gonna die etc
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_01.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_02.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_03.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_04.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_05.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_06.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_07.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_08.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_09.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_10.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_11.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		// Missing?
+		// [Sound]
+        // Filename = enemy\junkie\junkie_alert_12.wav;
+		// Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		// Pitch = 22050;
+		// Random = 1%;
+        // 3DSound = YES;
+        // Looping = NO;
+		// Streamed = YES;
+		// Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		// FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		// Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		// ItemsToCache = 1;
+		// FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_13.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_alert_14.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[junkie_noise]  			// Aggressive misc screams shouting noise
+{
+	[Properties] ID = ID_DEFAULT; Probability = 40%;
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\junkie\junkie_noise_01.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_noise_02.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_noise_03.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_noise_04.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_noise_05.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_noise_06.wav;
+		Volume = SOUNDID_JUNKIE_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_SHOUT_FALLOFF;
+		Priority = SOUNDID_JUNKIE_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[junkie_talk]  			// Junkie talking to himself
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_01.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_02.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_03.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_04.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_05.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_06.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_07.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_08.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_09.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_10.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_11.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_12.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_13.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_idle_14.wav;
+		Volume = SOUNDID_JUNKIE_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_JUNKIE_TALK_HOTSPOT;
+		FallOff = SOUNDID_JUNKIE_TALK_FALLOFF;
+		Priority = SOUNDID_JUNKIE_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[junkie_gethit]  			// Junkie gets damage
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\junkie\junkie_gethit_01.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_gethit_02.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_gethit_03.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[junkie_death]  			// Junkie dies
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\junkie\junkie_death_01.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_death_02.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// Killer suits
+[killersuit_alert]  			// Killer suit alerted
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_01.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_02.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_03.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_10.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_12.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_19.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_21.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_25.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_27.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_alert_31.wav;
+		Volume = SOUNDID_KILLERSUIT_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_KILLERSUIT_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_KILLERSUIT_SHOUT_FALLOFF;
+		Priority = SOUNDID_KILLERSUIT_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[killersuit_gethit]  			// Killersuit gets damage
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\killersuit\killersuit_gethit_01.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_gethit_02.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_gethit_03.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_gethit_04.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_gethit_05.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_gethit_06.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_gethit_07.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_gethit_08.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[killersuit_death]  			// Killersuit dies
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\killersuit\killersuit_death_01.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_death_02.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_death_03.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_death_04.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_death_05.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\killersuit\killersuit_death_06.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// Mobster speeches
+[whistle]     // Mobster whistling
+{
+	[Properties] ID = ID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+		Filename = enemy\mobster\mobster_noise_03.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[whistle_quiet]     // Mobster whistling
+{
+	[Properties] ID = ID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+		Filename = enemy\mobster\mobster_noise_03.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Looping = NO;
+		Streamed = YES;
+		Hotspot = 2;
+		FallOff = 10;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mobster_alert]  			// Mobster alerted
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	AdultContent = TRUE;
+	
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_01a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_02a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_03a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_04a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_05a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_06a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_07a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_01b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_02b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_03b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_04b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_05b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_06b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_07b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mobster_group_alert]  			// Mobster group alerted
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_01a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_02a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_03a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_04a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_05a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_06a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_01b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_02b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_03b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_04b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_05b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_06b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mobster_alert_known]  			// Mobster alerted, knows Max by name
+{
+	[Properties] ID = ID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_known_01a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_known_02a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_known_01b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_known_02b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+[mobster_group_alert_known]  			// Mobster group alerted, knows Max by name
+{
+	[Properties] ID = ID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_known_01a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_known_02a.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_known_01b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_alert_group_known_02b.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mobster_noise]  			// Mobsters making noise
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_noise_01.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_noise_02.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_noise_03.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_noise_04.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_noise_05.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mobster_group_noise]  			// Mobsters making noise
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_group_noise_01.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_group_noise_02.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_group_noise_03.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_group_noise_04.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_group_noise_05.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_group_noise_06.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_group_noise_07.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_group_noise_08.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_group_noise_09.wav;
+		Volume = SOUNDID_MOBSTER_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_TALK_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_TALK_FALLOFF;
+		Priority = SOUNDID_MOBSTER_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mobster_gethit]  			// Mobster gets damage
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_01.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_02.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_03.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_04.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_05.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_06.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_07.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_08.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_09.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_10.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_gethit_11.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mobster_death]  			// Mobster dies
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_death_01.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_death_02.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_death_03.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_death_04.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_death_05.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_death_06.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_death_07.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\mobster\mobster_death_08.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mobster_fire_death]  			// Mobster dies a fire death, Hotel II needs this at least
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_fire_death_01.wav;
+		Volume = SOUNDID_MOBSTER_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[generic_fire_death]  			// Mobster dies a fire death
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\mobster\mobster_fire_death_01.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_fire_death_01.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\junkie\junkie_fire_death.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// Begin merc sounds
+[merc_alert]  			// Mercenary alerted
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\merc\merc_alert_01.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_alert_02.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_alert_03.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_alert_04.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_alert_05.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_alert_06.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_alert_07.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_alert_08.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_alert_09.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_alert_10.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[merc_group_alert]  			// Mercenary group alerted
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\merc\merc_group_alert_01.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_group_alert_02.wav;
+		Volume = SOUNDID_MERC_SHOUT_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MERC_SHOUT_FALLOFF;
+		Priority = SOUNDID_MERC_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[merc_noise]  			// Mercenary making noise (radio etc)
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\merc\merc_noise_01.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_noise_02.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_noise_03.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_noise_04.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_report_01.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_report_02.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_report_03.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[merc_report]  			// Mercenary asking for a status update
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\merc\merc_report_01.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_report_02.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_report_03.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_noise_01.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_noise_02.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_noise_03.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_noise_04.wav;
+		Volume = SOUNDID_MERC_TALK_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MERC_TALK_HOTSPOT;
+		FallOff = SOUNDID_MERC_TALK_FALLOFF;
+		Priority = SOUNDID_MERC_TALK_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[merc_gethit]  			// Mercenary gets damage
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\merc\merc_gethit_01.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_gethit_02.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_gethit_03.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		// [Sound]
+		// Filename = enemy\merc\merc_gethit_04.wav;
+		// Volume = SOUNDID_GETHIT_VOLUME;
+		// Pitch = 22050;
+		// Random = 4%;
+		// 3DSound = YES;
+		// Looping = NO;
+		// Streamed = NO;
+		// Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		// FallOff = SOUNDID_GETHIT_FALLOFF;
+		// Priority = SOUNDID_GETHIT_PRIORITY;
+		// ItemsToCache = 1;
+		// FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_gethit_05.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_gethit_06.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_gethit_07.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_gethit_08.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_gethit_09.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_gethit_10.wav;
+		Volume = SOUNDID_GETHIT_VOLUME;
+		Pitch = 22050;
+		Random = 4%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[merc_death]  			// Mercenary dies
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\merc\merc_death_01.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_death_02.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_death_03.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_death_04.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_death_05.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\merc\merc_death_06.wav;
+		Volume = SOUNDID_DEATH_VOLUME;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// Female sounds
+[female_gethit]  			// Female gets damage
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\female\female_gethit_01.wav;
+		Volume = 0.7;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\female\female_gethit_02.wav;
+		Volume = 0.7;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_GETHIT_HOTSPOT;
+		FallOff = SOUNDID_GETHIT_FALLOFF;
+		Priority = SOUNDID_GETHIT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[female_death]  	// Female dies
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\female\female_death_01.wav;
+		Volume = 0.85;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[female_fire_death]  		// Female dies a fire death
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\female\female_fire_death.wav;
+		Volume = 0.85;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = SOUNDID_DEATH_HOTSPOT;
+		FallOff = SOUNDID_DEATH_FALLOFF;
+		Priority = SOUNDID_DEATH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+// Police sounds
+[police_alert]  			// Police alerted
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\police\police_alert_01.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_alert_02.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_alert_03.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_alert_04.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_alert_05.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_alert_06.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_alert_07.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_alert_08.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_alert_09.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[police_noise]  			// Police shouts etc
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = enemy\police\police_noise_01.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_noise_02.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_noise_03.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_noise_04.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_noise_05.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_noise_06.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+        Filename = enemy\police\police_noise_07.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = SOUNDID_MOBSTER_SHOUT_HOTSPOT;
+		FallOff = SOUNDID_MOBSTER_SHOUT_FALLOFF;
+		Priority = SOUNDID_MOBSTER_SHOUT_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}

@@ -1,0 +1,477 @@
+#include <..\soundid.h>
+
+// ------------------------------------------------
+[P3L2a_005_cam]	// Distorted: In the belly of the plant... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_005_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_009_cam]	// Max: Processing diagrams... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_009_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_01]	// Mercs have obstacles in place
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_02]	// Merc acknowledges obstacle in place
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_02.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_03]	// Merc says booby trap in place
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_03.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_04]	// Merc says oven controls destroyed
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_04.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_05]	// Mercs talking
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_05.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_06]	// Mercs talking continued
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_06.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_07]	// Merc: Kill the bastard
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_07.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_Max_01]	// Max: comments on the folder in office
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_Max_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L2a_Max_02]	// Max: comments on control room monitors showing the way
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L2a_Max_02.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// ------------------------------------------------
+
+[Oven_doors_slam]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "cold_steel\Oven_doors_slam.wav";
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 1%;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Oven_doors_squeak]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "cold_steel\Oven_doors_squeak.wav";
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 1%;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Oven_fire_burst]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "cold_steel\Oven_fire_burst.wav";
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 1%;
+		Hotspot = 5;
+		FallOff = 10;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Oven_room_rumble_loop]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "cold_steel\Oven_room_rumble.wav";
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 1%;
+		Hotspot = 1;
+		FallOff = 20;
+		Looping = YES;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[steelmill_01]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "cold_steel\ambience_steelmill_01.wav";
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 1%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = YES;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[steelmill_02]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "cold_steel\ambience_steelmill_02.wav";
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 1%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = YES;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[steelmill_04]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "cold_steel\ambience_steelmill_04.wav";
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 1%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = YES;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}

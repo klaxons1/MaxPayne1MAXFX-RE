@@ -1,0 +1,1973 @@
+[bullethit_noeffects]  // Decals with no particle effects (to save CPU on high rate of fire weapons)
+{ 
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Cardboard] 
+		Filename = "bitmaps\Hole_cardboard.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Cardboard_Alpha.jpg"; 
+		MinimumRadius = 0.04; 
+		MaximumRadius = 0.09; 
+		RotationRandom = 140.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Carpet]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.020;
+		MaximumRadius = 0.030;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Couch]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.020;
+		MaximumRadius = 0.030;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Default] 
+		Filename = "bitmaps\Hole_Default.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Default_alpha.jpg"; 
+		MinimumRadius = 0.052; 
+		MaximumRadius = 0.055; 
+		RotationRandom = 30.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Drape]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.020;
+		MaximumRadius = 0.030;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[ElectricPanel]
+		Filename = "bitmaps\Hole_ElectricPanel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_ElectricPanel_alpha.jpg"; 
+		MinimumRadius = 0.080; 
+		MaximumRadius = 0.090; 
+		RotationRandom = 40;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass] 
+		Filename = "bitmaps\Hole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Glass_Alpha.jpg"; 
+		MinimumRadius = 0.25; 
+		MaximumRadius = 0.30; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Glass_Bulletproof] 
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg";
+		MinimumRadius = 0.07;
+		MaximumRadius = 0.11;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Gravel] 
+		Filename = "bitmaps\Hole_Gravel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Gravel_Alpha.jpg"; 
+		MinimumRadius = 0.08; 
+		MaximumRadius = 0.12; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Lights] 
+		Filename = "bitmaps\Hole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Glass_Alpha.jpg"; 
+		MinimumRadius = 0.10; 
+		MaximumRadius = 0.20; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Marble]
+		Filename = "bitmaps\Hole_Rock.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Rock_alpha.jpg"; 
+		MinimumRadius = 0.14; 
+		MaximumRadius = 0.16; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+		
+		[Metal]
+		Filename = "bitmaps\Hole_Metal.jpg";
+		AlphaFilename = "bitmaps\Hole_Metal_alpha.jpg";
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Hollow]
+		Filename = "bitmaps\Hole_Metal_hollow.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_hollow_alpha.jpg"; 
+		MinimumRadius = 0.080; 
+		MaximumRadius = 0.085; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Outside]
+		Filename = "bitmaps\Hole_Metal.jpg";
+		AlphaFilename = "bitmaps\Hole_Metal_alpha.jpg";
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Solid]
+		Filename = "bitmaps\Hole_Metal_Solid.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_Solid_alpha.jpg"; 
+		MinimumRadius = 0.030; 
+		MaximumRadius = 0.035; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Paper]
+		Filename = "bitmaps\Hole_Paper.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Paper_alpha.jpg"; 
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes]
+		Filename = "bitmaps\Hole_Pipes.jpg";
+		AlphaFilename = "bitmaps\Hole_Pipes_alpha.jpg";
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes_Steam]
+		Filename = "bitmaps\Hole_Pipes.jpg";
+		AlphaFilename = "bitmaps\Hole_Pipes_alpha.jpg";
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 30;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Rock]
+		Filename = "bitmaps\Hole_rock.jpg"; 
+		AlphaFilename = "bitmaps\Hole_rock_alpha.jpg"; 
+		MinimumRadius = 0.095; 
+		MaximumRadius = 0.125;
+		RotationRandom = 45;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Snow]
+		Filename = "bitmaps\Hole_Snow.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Snow_alpha.jpg"; 
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Tile]
+		Filename = "bitmaps\Hole_Tile.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Tile_alpha.jpg"; 
+		MinimumRadius = 0.14; 
+		MaximumRadius = 0.16; 
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Winebarrel] 
+		Filename = "bitmaps\Hole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Wood_Alpha.jpg"; 
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.060; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Wood] 
+		Filename = "bitmaps\Hole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Wood_Alpha.jpg"; 
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.060; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[bullethit_generic] // bullet holes and hit effects for generic bullet weapons
+{ 
+	[Message]
+	String ="this->A_PlayFloating3DSound( projectiles, bullethit_generic, \"\");"; 
+
+	[Message]
+	String ="this->PS_StartEffect( bullethit_generic, \"\");"; 
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+	
+	[Materials]
+	{
+
+		[Cardboard] 
+		Filename = "bitmaps\Hole_cardboard.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Cardboard_Alpha.jpg"; 
+		MinimumRadius = 0.04; 
+		MaximumRadius = 0.09; 
+		RotationRandom = 140.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Carpet]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.020;
+		MaximumRadius = 0.030;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Couch]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.020;
+		MaximumRadius = 0.030;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Default] 
+		Filename = "bitmaps\Hole_Default.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Default_alpha.jpg"; 
+		MinimumRadius = 0.052; 
+		MaximumRadius = 0.055; 
+		RotationRandom = 30.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Drape]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.020;
+		MaximumRadius = 0.030;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[ElectricPanel]
+		Filename = "bitmaps\Hole_ElectricPanel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_ElectricPanel_alpha.jpg"; 
+		MinimumRadius = 0.080; 
+		MaximumRadius = 0.090; 
+		RotationRandom = 40;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass] 
+		Filename = "bitmaps\Hole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Glass_Alpha.jpg"; 
+		MinimumRadius = 0.25; 
+		MaximumRadius = 0.30; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Glass_Bulletproof] 
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg";
+		MinimumRadius = 0.09;
+		MaximumRadius = 0.13;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Gravel] 
+		Filename = "bitmaps\Hole_Gravel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Gravel_Alpha.jpg"; 
+		MinimumRadius = 0.10; 
+		MaximumRadius = 0.16; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Lights] 
+		Filename = "bitmaps\Hole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Glass_Alpha.jpg"; 
+		MinimumRadius = 0.10; 
+		MaximumRadius = 0.20; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Marble]
+		Filename = "bitmaps\Hole_Rock.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Rock_alpha.jpg"; 
+		MinimumRadius = 0.14; 
+		MaximumRadius = 0.16; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+		
+		[Metal]
+		Filename = "bitmaps\Hole_Metal.jpg";
+		AlphaFilename = "bitmaps\Hole_Metal_alpha.jpg";
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Hollow]
+		Filename = "bitmaps\Hole_Metal_hollow.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_hollow_alpha.jpg"; 
+		MinimumRadius = 0.080; 
+		MaximumRadius = 0.085; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Outside]
+		Filename = "bitmaps\Hole_Metal.jpg";
+		AlphaFilename = "bitmaps\Hole_Metal_alpha.jpg";
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Solid]
+		Filename = "bitmaps\Hole_Metal_Solid.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_Solid_alpha.jpg"; 
+		MinimumRadius = 0.030; 
+		MaximumRadius = 0.035; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Paper]
+		Filename = "bitmaps\Hole_Paper.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Paper_alpha.jpg"; 
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes]
+		Filename = "bitmaps\Hole_Pipes.jpg";
+		AlphaFilename = "bitmaps\Hole_Pipes_alpha.jpg";
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes_Steam]
+		Filename = "bitmaps\Hole_Pipes.jpg";
+		AlphaFilename = "bitmaps\Hole_Pipes_alpha.jpg";
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Rock]
+		Filename = "bitmaps\Hole_Rock.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Rock_alpha.jpg"; 
+		MinimumRadius = 0.095; 
+		MaximumRadius = 0.125;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Snow]
+		Filename = "bitmaps\Hole_Snow.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Snow_alpha.jpg"; 
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Tile]
+		Filename = "bitmaps\Hole_Tile.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Tile_alpha.jpg"; 
+		MinimumRadius = 0.14; 
+		MaximumRadius = 0.16; 
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Winebarrel] 
+		Filename = "bitmaps\Hole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Wood_Alpha.jpg"; 
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.060; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Wood] 
+		Filename = "bitmaps\Hole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Wood_Alpha.jpg"; 
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.060; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[bullethit_large] // Bullet holes and hit effects for large caliber weapons
+{ 
+	[Message]
+	String ="this->A_PlayFloating3DSound( projectiles, bullethit_generic, \"\");"; 
+
+	[Message]
+	String ="this->PS_StartEffect( bullethit_large, \"\");"; 
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Cardboard] 
+		Filename = "bitmaps\Hole_cardboard.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Cardboard_Alpha.jpg"; 
+		MinimumRadius = 0.09; 
+		MaximumRadius = 0.17; 
+		RotationRandom = 140.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Carpet]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.040;
+		MaximumRadius = 0.060;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Couch]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.040;
+		MaximumRadius = 0.060;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Default] 
+		Filename = "bitmaps\Hole_Default.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Default_alpha.jpg"; 
+		MinimumRadius = 0.082; 
+		MaximumRadius = 0.088; 
+		RotationRandom = 0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Drape]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.040;
+		MaximumRadius = 0.060;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[ElectricPanel]
+		Filename = "bitmaps\Hole_ElectricPanel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_ElectricPanel_alpha.jpg"; 
+		MinimumRadius = 0.150; 
+		MaximumRadius = 0.170; 
+		RotationRandom = 40;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass] 
+		Filename = "bitmaps\Hole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Glass_Alpha.jpg"; 
+		MinimumRadius = 0.25; 
+		MaximumRadius = 0.30; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Glass_bulletproof] 
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg";
+		MinimumRadius = 0.12;
+		MaximumRadius = 0.16;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Gravel] 
+		Filename = "bitmaps\Hole_Gravel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Gravel_Alpha.jpg"; 
+		MinimumRadius = 0.16; 
+		MaximumRadius = 0.24; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Lights] 
+		Filename = "bitmaps\Hole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Glass_Alpha.jpg"; 
+		MinimumRadius = 0.15; 
+		MaximumRadius = 0.25; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Marble]
+		Filename = "bitmaps\Hole_Rock.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Rock_alpha.jpg"; 
+		MinimumRadius = 0.17;
+		MaximumRadius = 0.19;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE; 		
+		AdultContent = FALSE;
+
+		[Metal]
+		Filename = "bitmaps\Hole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_alpha.jpg"; 
+		MinimumRadius = 0.060; 
+		MaximumRadius = 0.070; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Hollow]
+		Filename = "bitmaps\Hole_Metal_hollow.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_hollow_alpha.jpg"; 
+		MinimumRadius = 0.09; 
+		MaximumRadius = 0.10; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Outside]
+		Filename = "bitmaps\Hole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_alpha.jpg"; 
+		MinimumRadius = 0.060; 
+		MaximumRadius = 0.070; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Solid]
+		Filename = "bitmaps\Hole_Metal_Solid.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_Solid_alpha.jpg"; 
+		MinimumRadius = 0.050; 
+		MaximumRadius = 0.055; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Paper]
+		Filename = "bitmaps\Hole_Paper.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Paper_alpha.jpg"; 
+		MinimumRadius = 0.060; 
+		MaximumRadius = 0.075; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes]
+		Filename = "bitmaps\Hole_Pipes.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Pipes_alpha.jpg"; 
+		MinimumRadius = 0.060; 
+		MaximumRadius = 0.070; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes_Steam]
+		Filename = "bitmaps\Hole_Pipes.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Pipes_alpha.jpg"; 
+		MinimumRadius = 0.060; 
+		MaximumRadius = 0.070; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Rock]
+		Filename = "bitmaps\Hole_Rock.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Rock_alpha.jpg"; 
+		MinimumRadius = 0.125;
+		MaximumRadius = 0.175;
+		RotationRandom = 30;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Snow]
+		Filename = "bitmaps\Hole_Snow.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Snow_alpha.jpg"; 
+		MinimumRadius = 0.100; 
+		MaximumRadius = 0.125; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Tile]
+		Filename = "bitmaps\Hole_Tile.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Tile_alpha.jpg"; 
+		MinimumRadius = 0.17;
+		MaximumRadius = 0.19;
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Winebarrel] 
+		Filename = "bitmaps\Hole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Wood_Alpha.jpg"; 
+		MinimumRadius = 0.070; 
+		MaximumRadius = 0.090; 
+		RotationRandom = 120;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+				
+		[Wood] 
+		Filename = "bitmaps\Hole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Wood_Alpha.jpg"; 
+		MinimumRadius = 0.070; 
+		MaximumRadius = 0.090; 
+		RotationRandom = 120;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[bullethit_shotgun] // Single pellet hit - small hole, no effect
+{ 
+	// particle and sound effects only for these materials
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Snow";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Cardboard] 
+		Filename = "bitmaps\Hole_cardboard.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Cardboard_Alpha.jpg"; 
+		MinimumRadius = 0.03; 
+		MaximumRadius = 0.05; 
+		RotationRandom = 140.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Carpet]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.05;
+		MaximumRadius = 0.06;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Couch]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.05;
+		MaximumRadius = 0.06;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Default] 
+		Filename = "bitmaps\Hole_Default.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Default_alpha.jpg"; 
+		MinimumRadius = 0.03; 
+		MaximumRadius = 0.04; 
+		RotationRandom = 30.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Drape]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg"; 
+		MinimumRadius = 0.05;
+		MaximumRadius = 0.06;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[ElectricPanel]
+		Filename = "bitmaps\Hole_ElectricPanel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_ElectricPanel_alpha.jpg"; 
+		MinimumRadius = 0.060; 
+		MaximumRadius = 0.075; 
+		RotationRandom = 40;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass] 
+		Filename = "bitmaps\Hole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Glass_Alpha.jpg"; 
+		MinimumRadius = 0.125; 
+		MaximumRadius = 0.150; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Glass_bulletproof] 
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg";
+		MinimumRadius = 0.07;
+		MaximumRadius = 0.11;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+		
+		[Gravel] 
+		Filename = "bitmaps\Hole_Gravel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Gravel_Alpha.jpg"; 
+		MinimumRadius = 0.10; 
+		MaximumRadius = 0.16; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal]
+		Filename = "bitmaps\Hole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_alpha.jpg"; 
+		MinimumRadius = 0.02; 
+		MaximumRadius = 0.03; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Hollow]
+		Filename = "bitmaps\Hole_Metal_hollow.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_hollow_alpha.jpg"; 
+		MinimumRadius = 0.035; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Outside]
+		Filename = "bitmaps\Hole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_alpha.jpg"; 
+		MinimumRadius = 0.02; 
+		MaximumRadius = 0.03; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Solid]
+		Filename = "bitmaps\Hole_Metal_Solid.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Metal_Solid_alpha.jpg"; 
+		MinimumRadius = 0.02; 
+		MaximumRadius = 0.03; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Paper]
+		Filename = "bitmaps\Hole_Paper.jpg";
+		AlphaFilename = "bitmaps\Hole_Paper_alpha.jpg";
+		MinimumRadius = 0.030; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes]
+		Filename = "bitmaps\Hole_Pipes.jpg";
+		AlphaFilename = "bitmaps\Hole_Pipes_alpha.jpg";
+		MinimumRadius = 0.030; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes_Steam]
+		Filename = "bitmaps\Hole_Pipes.jpg";
+		AlphaFilename = "bitmaps\Hole_Pipes_alpha.jpg";
+		MinimumRadius = 0.030; 
+		MaximumRadius = 0.045; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Tile]
+		Filename = "bitmaps\Hole_Tile.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Tile_alpha.jpg"; 
+		MinimumRadius = 0.040;
+		MaximumRadius = 0.055;
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Winebarrel] 
+		Filename = "bitmaps\Hole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Wood_Alpha.jpg"; 
+		MinimumRadius = 0.040; 
+		MaximumRadius = 0.060; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Wood] 
+		Filename = "bitmaps\Hole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Wood_Alpha.jpg"; 
+		MinimumRadius = 0.050; 
+		MaximumRadius = 0.070; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[bullethit_shotgun_group] // Grouped bulletholes for pellet groups, large bullethit effects
+{ 
+	[Message]
+	String ="this->A_PlayFloating3DSound( projectiles, bullethit_generic, \"\");"; 
+
+	[Message]
+	String ="this->PS_StartEffect( bullethit_generic, \"\");";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Cardboard] 
+		Filename = "bitmaps\GroupHole_cardboard.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Cardboard_Alpha.jpg"; 
+		MinimumRadius = 0.13; 
+		MaximumRadius = 0.20; 
+		RotationRandom = 130.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Default]
+		Filename = "bitmaps\GroupHole_Default.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Default_alpha.jpg";
+		MinimumRadius = 0.100;
+		MaximumRadius = 0.125;
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Electricpanel]
+		Filename = "bitmaps\GroupHole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_alpha.jpg";
+		MinimumRadius = 0.100;
+		MaximumRadius = 0.125;
+		RotationRandom = 40;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass]
+		Filename = "bitmaps\GroupHole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Glass_alpha.jpg";
+		MinimumRadius = 0.25;
+		MaximumRadius = 0.35;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Glass_Bulletproof]
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg";
+		MinimumRadius = 0.32;
+		MaximumRadius = 0.56;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Gravel] 
+		Filename = "bitmaps\Hole_Gravel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Gravel_Alpha.jpg"; 
+		MinimumRadius = 0.18; 
+		MaximumRadius = 0.22; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Marble]
+		Filename = "bitmaps\Hole_Rock.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Rock_alpha.jpg";
+		MinimumRadius = 0.165;
+		MaximumRadius = 0.195;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal]
+		Filename = "bitmaps\GroupHole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_alpha.jpg";
+		MinimumRadius = 0.065;
+		MaximumRadius = 0.095;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Hollow]
+		Filename = "bitmaps\GroupHole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_alpha.jpg";
+		MinimumRadius = 0.085;
+		MaximumRadius = 0.095;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Outside]
+		Filename = "bitmaps\GroupHole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_alpha.jpg";
+		MinimumRadius = 0.065;
+		MaximumRadius = 0.095;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Solid]
+		Filename = "bitmaps\GroupHole_Metal_Solid.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_Solid_alpha.jpg";
+		MinimumRadius = 0.08;
+		MaximumRadius = 0.15;
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Paper]
+		Filename = "bitmaps\Hole_Paper.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Paper_alpha.jpg"; 
+		MinimumRadius = 0.140; 
+		MaximumRadius = 0.245; 
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes]
+		Filename = "bitmaps\Grouphole_Metal_Solid.jpg"; 
+		AlphaFilename = "bitmaps\Grouphole_Metal_Solid_alpha.jpg"; 
+		MinimumRadius = 0.08;
+		MaximumRadius = 0.15;
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes_Steam]
+		Filename = "bitmaps\Grouphole_Metal_Solid.jpg"; 
+		AlphaFilename = "bitmaps\Grouphole_Metal_Solid_alpha.jpg"; 
+		MinimumRadius = 0.08;
+		MaximumRadius = 0.15;
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Rock]
+		Filename = "bitmaps\Hole_Rock.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Rock_alpha.jpg";
+		MinimumRadius = 0.165;
+		MaximumRadius = 0.195;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Snow]
+		Filename = "bitmaps\Hole_Snow.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Snow_alpha.jpg"; 
+		MinimumRadius = 0.150; 
+		MaximumRadius = 0.225; 
+		RotationRandom = 180;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Tile]
+		Filename = "bitmaps\Hole_Tile.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Tile_alpha.jpg"; 
+		MinimumRadius = 0.130;
+		MaximumRadius = 0.18;
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Winebarrel]
+		Filename = "bitmaps\GroupHole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Wood_alpha.jpg";
+		MinimumRadius = 0.125;
+		MaximumRadius = 0.150;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Wood]
+		Filename = "bitmaps\GroupHole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Wood_alpha.jpg";
+		MinimumRadius = 0.125;
+		MaximumRadius = 0.150;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[bullethit_leadpipe] // melee weapon hits
+{ 
+	[Message]
+	String ="this->A_PlayFloating3DSound( projectiles, bullethit_leadpipe, \"\");";
+
+	[Message]
+	String ="this->PS_StartEffect( bullethit_melee, \"\");";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Default]
+		Filename = "bitmaps\melee_default.jpg"; 
+		AlphaFilename = "bitmaps\melee_default_alpha.jpg";
+		MinimumRadius = 0.07;
+		MaximumRadius = 0.11;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass] 
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg"; 
+		MinimumRadius = 0.125; 
+		MaximumRadius = 0.150; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Glass_bulletproof] 
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg"; 
+		MinimumRadius = 0.125; 
+		MaximumRadius = 0.150; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+	}
+}
+
+[bullethit_baseballbat]
+{ 
+	[Message]
+	String ="this->A_PlayFloating3DSound( projectiles, bullethit_baseballbat, \"\");";
+
+	[Message]
+	String ="this->PS_StartEffect( bullethit_melee, \"\");";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Default]
+		Filename = "bitmaps\melee_default.jpg"; 
+		AlphaFilename = "bitmaps\melee_default_alpha.jpg";
+		MinimumRadius = 0.12;
+		MaximumRadius = 0.16;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass] 
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg"; 
+		MinimumRadius = 0.150; 
+		MaximumRadius = 0.200; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Glass_bulletproof] 
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg"; 
+		MinimumRadius = 0.150; 
+		MaximumRadius = 0.200; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+	}
+}
+
+[bullethit_chaingun] // Custom large bullethit effects for helicopter chaingun
+{ 
+	[Message]
+	String ="this->A_PlayFloating3DSound( projectiles, bullethit_generic, \"\");"; 
+
+	[Message]
+	String ="this->PS_StartEffect( bullethit_chaingun, \"\");";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Cardboard] 
+		Filename = "bitmaps\GroupHole_cardboard.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Cardboard_Alpha.jpg"; 
+		MinimumRadius = 0.23; 
+		MaximumRadius = 0.30; 
+		RotationRandom = 140.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Carpet]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg";
+		MinimumRadius = 0.17;
+		MaximumRadius = 0.25;
+		RotationRandom = 120;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Couch]
+		Filename = "bitmaps\Hole_Carpet.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Carpet_alpha.jpg";
+		MinimumRadius = 0.20;
+		MaximumRadius = 0.27;
+		RotationRandom = 120;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Default]
+		Filename = "bitmaps\GroupHole_Default.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Default_alpha.jpg";
+		MinimumRadius = 0.200;
+		MaximumRadius = 0.325;
+		RotationRandom = 120;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass]
+		Filename = "bitmaps\GroupHole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Glass_alpha.jpg";
+		MinimumRadius = 0.45;
+		MaximumRadius = 0.55;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Glass_Bulletproof]
+		Filename = "bitmaps\melee_glass.jpg"; 
+		AlphaFilename = "bitmaps\melee_glass_alpha.jpg";
+		MinimumRadius = 0.42;
+		MaximumRadius = 0.56;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Gravel]
+		Filename = "bitmaps\Hole_Gravel.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Gravel_alpha.jpg";
+		MinimumRadius = 0.3;
+		MaximumRadius = 0.4;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Lights]
+		Filename = "bitmaps\GroupHole_Glass.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Glass_alpha.jpg";
+		MinimumRadius = 0.45;
+		MaximumRadius = 0.55;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+
+		[Marble]
+		Filename = "bitmaps\Hole_Rock.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Rock_alpha.jpg";
+		MinimumRadius = 0.15;
+		MaximumRadius = 0.35;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal]
+		Filename = "bitmaps\GroupHole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_alpha.jpg";
+		MinimumRadius = 0.2;
+		MaximumRadius = 0.35;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Hollow]
+		Filename = "bitmaps\GroupHole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_alpha.jpg";
+		MinimumRadius = 0.285;
+		MaximumRadius = 0.395;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Outside]
+		Filename = "bitmaps\GroupHole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_alpha.jpg";
+		MinimumRadius = 0.265;
+		MaximumRadius = 0.395;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Metal_Solid]
+		Filename = "bitmaps\GroupHole_Metal_Solid.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_Solid_alpha.jpg";
+		MinimumRadius = 0.375;
+		MaximumRadius = 0.405;
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Paper]
+		Filename = "bitmaps\Hole_Paper.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Paper_alpha.jpg"; 
+		MinimumRadius = 0.340; 
+		MaximumRadius = 0.445; 
+		RotationRandom = 180;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes]
+		Filename = "bitmaps\GroupHole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_alpha.jpg";
+		MinimumRadius = 0.2;
+		MaximumRadius = 0.35;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Pipes_Steam]
+		Filename = "bitmaps\GroupHole_Metal.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Metal_alpha.jpg";
+		MinimumRadius = 0.2;
+		MaximumRadius = 0.35;
+		RotationRandom = 20;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Snow]
+		Filename = "bitmaps\Hole_Snow.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Snow_alpha.jpg"; 
+		MinimumRadius = 0.400; 
+		MaximumRadius = 0.525; 
+		RotationRandom = 180;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Tile]
+		Filename = "bitmaps\Hole_Tile.jpg"; 
+		AlphaFilename = "bitmaps\Hole_Tile_alpha.jpg"; 
+		MinimumRadius = 0.200;
+		MaximumRadius = 0.325;
+		RotationRandom = 90;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Winebarrel]
+		Filename = "bitmaps\GroupHole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Wood_alpha.jpg";
+		MinimumRadius = 0.28;
+		MaximumRadius = 0.38;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Wood]
+		Filename = "bitmaps\GroupHole_Wood.jpg"; 
+		AlphaFilename = "bitmaps\GroupHole_Wood_alpha.jpg";
+		MinimumRadius = 0.28;
+		MaximumRadius = 0.38;
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+
+
+// ----------------------------------
+// Explosions
+// ----------------------------------
+[decal_explosion] 
+{ 
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Water_bottom";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+	
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\crater_grenade.jpg"; 
+		AlphaFilename = "bitmaps\crater_grenade_alpha.jpg"; 
+		MinimumRadius = 1.3; 
+		MaximumRadius = 1.7; 
+		RotationRandom = 10.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass] 
+		Filename = "bitmaps\crater_grenade.jpg"; 
+		AlphaFilename = "bitmaps\crater_grenade_alpha.jpg"; 
+		MinimumRadius = 1.3; 
+		MaximumRadius = 1.7; 
+		RotationRandom = 10.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+	}
+}
+
+[grenade_m79]
+{ 
+	[Message] String ="this->PS_StartEffect ( explosion_grenade, \"\" );";
+	[Message] String ="this->A_PlayFloating3DSound( projectiles, bullethit_40mm, \"\");";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Water_bottom";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\crater_grenade.jpg"; 
+		AlphaFilename = "bitmaps\crater_grenade_alpha.jpg"; 
+		MinimumRadius = 1.3; 
+		MaximumRadius = 1.7; 
+		RotationRandom = 10.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass] 
+		Filename = "bitmaps\crater_grenade.jpg"; 
+		AlphaFilename = "bitmaps\crater_grenade_alpha.jpg"; 
+		MinimumRadius = 1.3; 
+		MaximumRadius = 1.7; 
+		RotationRandom = 10.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+	}
+}
+
+[grenade] 
+{ 
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Water_bottom";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\crater_grenade.jpg"; 
+		AlphaFilename = "bitmaps\crater_grenade_alpha.jpg"; 
+		MinimumRadius = 1.3; 
+		MaximumRadius = 1.7; 
+		RotationRandom = 180.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+
+		[Glass] 
+		Filename = "bitmaps\crater_grenade.jpg"; 
+		AlphaFilename = "bitmaps\crater_grenade_alpha.jpg"; 
+		MinimumRadius = 1.3; 
+		MaximumRadius = 1.7; 
+		RotationRandom = 180.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = FALSE;
+	}
+}
+
+[molotov] 
+{ 
+	[Message] String ="this->PS_StartEffect ( explosion_molotov, \"\" );";
+	[Message] String ="this->A_PlayFloating3DSound( projectiles, explosion_molotov, \"\");";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";	
+
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\crater_molotov.jpg"; 
+		AlphaFilename = "bitmaps\crater_molotov_alpha.jpg"; 
+		MinimumRadius = 0.9; 
+		MaximumRadius = 1.3; 
+		RotationRandom = 10.0;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[molotov_fragment] 
+{ 
+	[Message] String ="this->PS_StartEffect ( explosion_molotov_fragment, \"\" );";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\crater_molotov.jpg"; 
+		AlphaFilename = "bitmaps\crater_molotov_alpha.jpg"; 
+		MinimumRadius = 0.3; 
+		MaximumRadius = 0.6; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[level_molotov_fragment] 
+{ 
+	[Message] String ="this->PS_StartEffect ( fire_projectile_hit, \"\" );";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+	
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\crater_molotov.jpg"; 
+		AlphaFilename = "bitmaps\crater_molotov_alpha.jpg"; 
+		MinimumRadius = 0.5; 
+		MaximumRadius = 0.9; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+// ------------------------------------
+// Debris decals
+// ------------------------------------
+
+[blood_small]
+{ 
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\blood.jpg"; 
+		AlphaFilename = "bitmaps\blood_alpha.jpg"; 
+		MinimumRadius = 0.25; 
+		MaximumRadius = 0.3; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = TRUE;
+
+		[Glass] 
+		Filename = "bitmaps\blood.jpg"; 
+		AlphaFilename = "bitmaps\blood_alpha.jpg"; 
+		MinimumRadius = 0.35; 
+		MaximumRadius = 0.40; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = TRUE;
+	}
+}
+
+[blood] 
+{ 
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\blood.jpg"; 
+		AlphaFilename = "bitmaps\blood_alpha.jpg"; 
+		MinimumRadius = 0.35; 
+		MaximumRadius = 0.40; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = TRUE;
+
+		[Glass] 
+		Filename = "bitmaps\blood.jpg"; 
+		AlphaFilename = "bitmaps\blood_alpha.jpg"; 
+		MinimumRadius = 0.45; 
+		MaximumRadius = 0.50; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = TRUE;
+	}
+}
+
+[blood_large] 
+{ 
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\blood.jpg"; 
+		AlphaFilename = "bitmaps\blood_alpha.jpg"; 
+		MinimumRadius = 0.5; 
+		MaximumRadius = 0.7; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = TRUE;
+
+		[Glass] 
+		Filename = "bitmaps\blood.jpg"; 
+		AlphaFilename = "bitmaps\blood_alpha.jpg"; 
+		MinimumRadius = 0.7; 
+		MaximumRadius = 0.9; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = TRUE;
+		AdultContent = TRUE;
+	}
+}
+
+[glass] 
+{ 
+	[Message] String ="this->PS_StartEffect ( glass_projectile_hit, \"\" );";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+	[NoDecalMaterial] Name = "Woodframe";
+
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\glass_shards.jpg"; 
+		AlphaFilename = "bitmaps\glass_shards_alpha.pcx"; 
+		MinimumRadius = 0.5; 
+		MaximumRadius = 1.0; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[foam] 
+{ 
+//	[Message] String ="this->PS_StartEffect ( glass_projectile_hit, \"\" );";
+
+	[NoDecalMaterial] Name = "Character";
+	[NoDecalMaterial] Name = "Leaves";
+	[NoDecalMaterial] Name = "Nodecals";
+	[NoDecalMaterial] Name = "Skybox";
+	[NoDecalMaterial] Name = "Water";
+	[NoDecalMaterial] Name = "Wireframe";
+
+	[Materials]
+	{
+		[Default] 
+		Filename = "bitmaps\foam.jpg"; 
+		AlphaFilename = "bitmaps\foam_alpha.pcx"; 
+		MinimumRadius = 0.5; 
+		MaximumRadius = 0.8; 
+		RotationRandom = 360;
+		BitmapFlipRandom = TRUE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+// ----------------------------------------------------------
+// Footsteps
+// ----------------------------------------------------------
+
+[footstep_blood]
+{ 
+	[Message]
+	String ="this->A_PlayFloating3DSound( characters, run_leftfoot, \"\");"; 
+
+//	[Message]
+//	String ="this->PS_StartEffect( footstep_generic , \"\" );";
+
+	[NoDecalMaterial] Name = "Default";
+
+	[Materials]
+	{
+		[Snow] 
+		Filename = "bitmaps\blood.jpg"; 
+		AlphaFilename = "bitmaps\blood_alpha.jpg"; 
+		MinimumRadius = 0.10; 
+		MaximumRadius = 0.15; 
+		RotationRandom = 360;
+		BitmapFlipRandom = FALSE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[footstep_left] 
+{ 
+	[Message]
+	String ="this->A_PlayFloating3DSound( characters, run_leftfoot, \"\");"; 
+
+	[Message]
+	String ="this->PS_StartEffect( footstep_generic , \"\" );";
+
+	[NoDecalMaterial] Name = "Default";
+
+	[Materials]
+	{
+		[Snow] 
+		Filename = "bitmaps\footprint_left_snow.jpg"; 
+		AlphaFilename = "bitmaps\footprint_left_snow_alpha.jpg"; 
+		MinimumRadius = 0.15; 
+		MaximumRadius = 0.15; 
+		RotationRandom = 0.0;
+		BitmapFlipRandom = FALSE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[footstep_right] 
+{ 
+	[Message]
+	String ="this->A_PlayFloating3DSound( characters, run_rightfoot, \"\");"; 
+
+	[Message]
+	String ="this->PS_StartEffect( footstep_generic , \"\" );";
+
+	[NoDecalMaterial] Name = "Default";
+
+	[Materials]
+	{
+		[Snow] 
+		Filename = "bitmaps\footprint_right_snow.jpg"; 
+		AlphaFilename = "bitmaps\footprint_right_snow_alpha.jpg"; 
+		MinimumRadius = 0.15; 
+		MaximumRadius = 0.15; 
+		RotationRandom = 0.0;
+		BitmapFlipRandom = FALSE; 
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[footstep_land]
+{ 
+	[Message]
+	String ="this->ps_starteffect( character_roll, \"\" );";
+
+	[Message]
+	String ="this->a_playfloating3dsound( characters, land_lowheight, \"\" );";
+
+	[NoDecalMaterial] Name = "Default";
+	[Materials]
+	{
+		[Snow] 
+		Filename = "bitmaps\roll_snow.jpg"; 
+		AlphaFilename = "bitmaps\roll_snow_alpha.jpg"; 
+		MinimumRadius = 0.55; 
+		MaximumRadius = 0.75; 
+		RotationRandom = 200.0;
+		BitmapFlipRandom = TRUE;
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[character_land] 
+{ 
+	[Message]
+	String ="this->ps_starteffect( character_land, \"\" );";
+
+	[NoDecalMaterial] Name = "Default";
+
+	[Materials]
+	{
+		[Snow] 
+		Filename = "bitmaps\roll_snow.jpg"; 
+		AlphaFilename = "bitmaps\roll_snow_alpha.jpg"; 
+		MinimumRadius = 0.55; 
+		MaximumRadius = 0.75; 
+		RotationRandom = 240.0;
+		BitmapFlipRandom = TRUE;
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[character_roll]
+{ 
+	[Message]
+	String ="this->ps_starteffect( character_roll, \"\" );";
+
+	[NoDecalMaterial] Name = "Default";
+	[Materials]
+	{
+		[Snow] 
+		Filename = "bitmaps\roll_snow.jpg"; 
+		AlphaFilename = "bitmaps\roll_snow_alpha.jpg"; 
+		MinimumRadius = 0.55; 
+		MaximumRadius = 0.75; 
+		RotationRandom = 120.0;
+		BitmapFlipRandom = TRUE;
+		DualSided = FALSE;
+		AdultContent = FALSE;
+	}
+}
+
+[item_drop]
+{ 
+	[Message]
+	String ="this->ps_starteffect( item_drop, \"\" );";
+
+	[NoDecalMaterial] Name = "Default";
+}

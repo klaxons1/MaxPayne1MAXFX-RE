@@ -1,0 +1,434 @@
+#include <..\soundid.h>
+// -------------------------------------------------------------------
+
+[P3L1a_003_cam]	// Distorted: The flesh of fallen angels (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L1a_003_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L1a_01]	// Michelle looking for Max
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L1a_01.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L1a_02]	// Michelle looking for Max, crying
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L1a_02.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L1a_03]	// Michelle sobbing
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L1a_03.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L1a_04]	// Michelle screams
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L1a_04.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L1a_05-06]	// BB holds Alex at gunpoint
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L1a_05-06.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L1a_07]	// Max shouts when killing the murderer
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L1a_07.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 5;
+		FallOff = 30;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L1a_Max_01]	// Max: comments on letter on desk
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L1a_Max_01.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// P3L1a_Max_02 has been removed
+
+[P3L1a_Max_03]	// Max: comments the weird paper on table
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L1a_Max_03.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// P3L1a_Max_04 has been removed
+
+// -------------------------------------------------------------------
+
+[baby_crying] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT;  AdultContent = TRUE;
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\baby_crying.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 10;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = false;
+	}
+}
+
+[michelle_crying] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT;  AdultContent = TRUE;
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\michelle_crying.wav;
+		Volume = 0.9;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = false;
+	}
+}
+
+[smash] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = dynamic\elevator\elevator_doors_close.wav;
+		Volume = 0.8;
+		Pitch = 44100;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[BB_Hit01] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\bb_hit01.wav;
+		Volume = 0.6;
+		Pitch = 11050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[BB_Hit02] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\bb_hit02.wav;
+		Volume = 0.6;
+		Pitch = 11050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[BB_Hit03] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\bb_hit03.wav;
+		Volume = 0.6;
+		Pitch = 11050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+[Cube_stop]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = cold_steel\Oven_doors_slam.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[drugtrip_beat]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = drugtrip\drugtrip_beat.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = NO;
+        Looping = NO;
+		Streamed = NO;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[Horror_scream] 
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = drugtrip\horror_scream.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 30;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}

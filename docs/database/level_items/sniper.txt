@@ -1,0 +1,39 @@
+#include <..\level_items.h>
+#include <..\object_lods.h>
+#include <..\weaponid.h>
+
+[LOD]
+{
+    [Geometry]
+	ExportData = ..\..\weapons\sniper\sniper_LevelItem.kf2;
+    Distance = PROJECTILE_LOD_DRAW_ALWAYS;
+}
+
+[Properties]
+TriggerRadius = RADIUS_SNIPER;
+CantPickupMessagesTimeout = CANTPICKUP_TIMEOUT;
+MatchingWeaponID = WEAPONID_SNIPER;
+PickupIfNewWeapon = true;
+PickupIfAmmoNotFull = true;
+
+[OnFirstPickup]
+{
+	[Message] string = "activator->C_PickupWeapon( sniper );";
+	[Message] string = "activator->C_PickupAmmo( sniper," PICKUPAMMO_SNIPER ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_rifle );";
+	[Message] string = "maxpayne_hudmode->mphm_print( HUDPRINT_PICKUP_SNIPER );";
+}
+
+[OnPickUp]
+{
+	[Message] string = "activator->C_PickupWeapon( sniper );";
+	[Message] string = "activator->C_PickupAmmo( sniper," PICKUPAMMO_SNIPER ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_rifle );";
+	[Message] string = "maxpayne_hudmode->mphm_print( HUDPRINT_PICKUP_SNIPER );";
+}
+
+[OnCantPickup]
+{
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_ammo_full );";
+	[Message] string = "maxpayne_hudmode->mphm_print( HUDPRINT_PICKUP_SNIPER_AMMO_FULL );";
+}

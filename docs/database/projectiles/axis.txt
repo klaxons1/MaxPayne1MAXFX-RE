@@ -1,0 +1,48 @@
+#include <..\projectiles.h>
+#include <..\projectileanimid.h>
+#include <..\object_lods.h>
+
+
+// -------------------------------------------------------------------
+// Axis debug projectile X = Red, Y = Green, Z = Blue
+// -------------------------------------------------------------------
+
+[LOD] { [Geometry] exportdata = axis.kf2; Distance = PROJECTILE_LOD_DRAW_ALWAYS ; }
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = axis.kf2;
+	[Animation] Index = PROJECTILEANIM_RICOCHET; Filename = axis.kf2;
+	[Animation] Index = PROJECTILEANIM_FROZEN; Filename = axis.kf2;
+}
+
+[Attributes]
+
+Direction 	= (0,0,1);				
+Accuracy 	= 30;
+Speed 		= 5;				 
+SpeedRandom = 0%;
+Damage 		= 30;			 
+
+RicochetMaximumAngle 	= PROJECTILE_RICOCHET_MAXIMUMANGLE;	   	
+RicochetSpeedMultiplier = 0.8;// PROJECTILE_RICOCHET_SPEEDMULTIPLIER;	
+RicochetMinimumSpeed 	= 2.0;//PROJECTILE_RICOCHET_MINIMUMSPEED;		
+RicochetUntilOnGround	= false; // true for projectiles that create level items
+VisibilityMaximumSpeed  = 30; // m/s
+
+SmallProjectile	 		= FALSE;
+Debris 					= TRUE;	
+RandomizeDirection 		= FALSE;	
+RandomizeRotation		= FALSE;
+
+CollisionExplosion		= FALSE;	// play explosion animation when collides first time
+DelayedExplosion 		= FALSE;	// play explosion animation after ExplosionDelay
+ExplosionDelay			= 0.0; 		// matters only if DelayedExplosion == TRUE
+GravityMultiplier		= 1.0;		// keep 1.0 for normal gravity
+UseLookAt				= FALSE;	// TRUE: align to fly direction, FALSE: for discarded weapons
+DamagesCharacter		= TRUE;		// TRUE: projectile makes damage to character, otherwise FALSE
+ItemsToCache			= 0;
+MeshesToCache			= 0;
+DeathCause				= PROJECTILEDEATH_RANDOM;
+AdultContent			= FALSE;
+BloodProjectile			= FALSE;	// uses same detail level settings as debris but is not debris

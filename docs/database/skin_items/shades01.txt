@@ -1,0 +1,20 @@
+[LOD]
+{
+	[Geometry]
+	ExportData = shades01_lod0.kfs;
+	Distance = 10;
+}
+
+[Animationset]
+{
+	[Animation]
+	Index = 0;
+	Filename = shades01_default.kfs;
+
+	[Properties]
+	{
+		[Message]
+		Frame = 0;
+		String = "this->A_Play3DSound ( weapons, reload_beretta, \"\" );";
+	}
+}
