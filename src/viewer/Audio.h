@@ -10,9 +10,6 @@
 #include <string>
 #include <vector>
 
-typedef struct ALCdevice_struct ALCdevice;
-typedef struct ALCcontext_struct ALCcontext;
-
 namespace maxfx {
 
 class ViewerAudio {
@@ -61,8 +58,8 @@ private:
     void applyMute();
     void refreshStatus();
 
-    ALCdevice* device_;
-    ALCcontext* context_;
+    void* device_;
+    void* context_;
     bool muted_;
     bool envPaused_;
     int musicCount_;

@@ -48,6 +48,9 @@ void wavToS16(const WavFile& wav, bool forceMono, std::vector<short>* pcm, int* 
     }
 }
 
+ALCdevice* asDevice(void* p) { return static_cast<ALCdevice*>(p); }
+ALCcontext* asContext(void* p) { return static_cast<ALCcontext*>(p); }
+
 bool wavIsSilence(const WavFile& wav) {
     if (wav.empty()) {
         return true;
@@ -93,14 +96,14 @@ bool ViewerAudio::init() {
         status_ = "openal off (no device)";
         return false;
     }
-    context_ = alcCreateContext(device_, 0);
-    if (context_ == 0 || alcMakeContextCurrent(context_) == ALC_FALSE) {
+    context_ = alcCreateContext(asDevice(device_), 0);
+    if (context_ == 0 || alcMakeContextCurrent(asContext(context_)) == ALC_FALSE) {
         status_ = "openal off (no context)";
         if (context_) {
-            alcDestroyContext(context_);
+            alcDestroyContext(asContext(context_));
             context_ = 0;
         }
-        alcCloseDevice(device_);
+        alcCloseDevice(asDevice(device_));
         device_ = 0;
         return false;
     }
@@ -112,7 +115,7 @@ bool ViewerAudio::init() {
 
 void ViewerAudio::shutdown() {
     if (context_) {
-        alcMakeContextCurrent(context_);
+        alcMakeContextCurrent(asContext(context_));
         stopSource(&musicSource_);
         stopSource(&storySource_);
         clearEnv();
@@ -123,11 +126,11 @@ void ViewerAudio::shutdown() {
         }
         buffers_.clear();
         alcMakeContextCurrent(0);
-        alcDestroyContext(context_);
+        alcDestroyContext(asContext(context_));
         context_ = 0;
     }
     if (device_) {
-        alcCloseDevice(device_);
+        alcCloseDevice(asDevice(device_));
         device_ = 0;
     }
     musicName_.clear();
