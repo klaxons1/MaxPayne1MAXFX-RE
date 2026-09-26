@@ -626,6 +626,46 @@ static void testKf2AnimationAndSkinAi() {
         posed.clear();
         maxfx::kf2BuildSkinnedDrawMeshes(mesh, &skin, &poseFile, &walkFile, 0.2f, posed);
         check(!posed.empty(), "skinned walk meshes");
+        float wminY = 1.0e30f, wmaxY = -1.0e30f, wminX = 1.0e30f, wmaxX = -1.0e30f;
+        for (std::size_t m = 0; m < posed.size(); ++m) {
+            for (std::size_t p = 0; p < posed[m].parts.size(); ++p) {
+                const std::vector<maxfx::Kf2DrawVertex>& vs = posed[m].parts[p].vertices;
+                for (std::size_t i = 0; i < vs.size(); ++i) {
+                    wminY = std::min(wminY, vs[i].position.y);
+                    wmaxY = std::max(wmaxY, vs[i].position.y);
+                    wminX = std::min(wminX, vs[i].position.x);
+                    wmaxX = std::max(wmaxX, vs[i].position.x);
+                }
+            }
+        }
+        check(wmaxY - wminY > 1.2f, "skinned walk is upright (Y extent)");
+        check(wmaxX - wminX < 1.6f, "skinned walk is not rubber-hose wide");
+
+        const std::string stand = "docs/database/skeletons/default_skeleton/anim/Mobster_Stand.kf2";
+        if (maxfx::isFile(stand)) {
+            const maxfx::Kf2File standFile = maxfx::Kf2Reader::loadFromFile(stand);
+            posed.clear();
+            maxfx::kf2BuildSkinnedDrawMeshes(mesh, &skin, &poseFile, &standFile, 1.0f, posed);
+            float sminY = 1.0e30f, smaxY = -1.0e30f, sminX = 1.0e30f, smaxX = -1.0e30f;
+            float sminZ = 1.0e30f, smaxZ = -1.0e30f;
+            for (std::size_t m = 0; m < posed.size(); ++m) {
+                for (std::size_t p = 0; p < posed[m].parts.size(); ++p) {
+                    const std::vector<maxfx::Kf2DrawVertex>& vs = posed[m].parts[p].vertices;
+                    for (std::size_t i = 0; i < vs.size(); ++i) {
+                        sminY = std::min(sminY, vs[i].position.y);
+                        smaxY = std::max(smaxY, vs[i].position.y);
+                        sminX = std::min(sminX, vs[i].position.x);
+                        smaxX = std::max(smaxX, vs[i].position.x);
+                        sminZ = std::min(sminZ, vs[i].position.z);
+                        smaxZ = std::max(smaxZ, vs[i].position.z);
+                    }
+                }
+            }
+            check(smaxY - sminY > 1.2f, "skinned stand is upright");
+            check(smaxX - sminX < 1.2f, "skinned stand arms down, not T-pose");
+            const float cx = 0.5f * (sminX + smaxX);
+            check(std::fabs(cx) < 0.25f, "in-place root lock keeps stand on X origin");
+        }
     }
 }
 

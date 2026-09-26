@@ -102,6 +102,25 @@ const char* kFontFS =
 
 Vec3 mirrorX(const Vec3& v) { return Vec3(-v.x, v.y, v.z); }
 
+std::map<std::string, std::string> gKf2TexCache;
+
+bool sameDrawLayout(const std::vector<Kf2DrawMesh>& a, const std::vector<Kf2DrawMesh>& b) {
+    if (a.size() != b.size()) {
+        return false;
+    }
+    for (std::size_t i = 0; i < a.size(); ++i) {
+        if (a[i].parts.size() != b[i].parts.size()) {
+            return false;
+        }
+        for (std::size_t p = 0; p < a[i].parts.size(); ++p) {
+            if (a[i].parts[p].vertices.size() != b[i].parts[p].vertices.size()) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void splitDirs(const std::string& s, std::vector<std::string>* out) {
     std::string cur;
     for (std::size_t i = 0; i <= s.size(); ++i) {
@@ -118,6 +137,19 @@ void splitDirs(const std::string& s, std::vector<std::string>* out) {
 
 std::string locateKf2Texture(const std::string& texName, const std::string& modelDir,
                              const std::string& textureDirs, const Database* database) {
+    std::string cacheKey = texName;
+    cacheKey += '\n';
+    cacheKey += modelDir;
+    cacheKey += '\n';
+    cacheKey += textureDirs;
+    if (database != 0) {
+        cacheKey += '\n';
+        cacheKey += database->root;
+    }
+    std::map<std::string, std::string>::iterator cached = gKf2TexCache.find(cacheKey);
+    if (cached != gKf2TexCache.end()) {
+        return cached->second;
+    }
     const std::string file = fileName(nativeSeparators(texName));
     std::vector<std::string> dirs;
     splitDirs(textureDirs, &dirs);
@@ -138,9 +170,11 @@ std::string locateKf2Texture(const std::string& texName, const std::string& mode
     for (std::size_t i = 0; i < cands.size(); ++i) {
         const std::string hit = existingPathIgnoreCase(cands[i]);
         if (!hit.empty()) {
+            gKf2TexCache[cacheKey] = hit;
             return hit;
         }
     }
+    gKf2TexCache[cacheKey] = std::string();
     return std::string();
 }
 
@@ -347,6 +381,8 @@ void Renderer::clearLevelGpu() {
     animKeys_.clear();
     textureByPath_.clear();
     restKf2Draws_.clear();
+    posedKf2Draws_.clear();
+    gKf2TexCache.clear();
     lights_.clear();
     database_ = 0;
     recordingAnimated_ = false;
@@ -1048,8 +1084,12 @@ void Renderer::destroyAnimatedGpu() {
 
 void Renderer::beginAnimated() {
     recordingAnimated_ = true;
-    animCpu_.clear();
-    animKeys_.clear();
+    // Keep GpuMesh capacity — clearing the vectors dropped ~6 MB of vertex
+    // storage every frame and reallocated it on the next append.
+    for (std::size_t i = 0; i < animCpu_.size(); ++i) {
+        animCpu_[i].vertices.clear();
+        animCpu_[i].indices.clear();
+    }
 }
 
 int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, const Kf2File* bindAnim,
@@ -1060,7 +1100,10 @@ int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, 
     if (rest.empty()) {
         kf2BuildDrawMeshes(mesh, rest);
     }
-    std::vector<Kf2DrawMesh> draws = rest;
+    std::vector<Kf2DrawMesh>& draws = posedKf2Draws_[mesh.sourcePath];
+    if (!sameDrawLayout(draws, rest)) {
+        draws = rest;
+    }
     kf2SkinDrawMeshes(mesh, skin, bindAnim, playAnim, timeSeconds, draws);
     if (draws.empty()) {
         return appendKf2File(mesh, entity, roomId, lights_, database_);
@@ -1080,18 +1123,11 @@ int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, 
 
 void Renderer::uploadAnimated() {
     recordingAnimated_ = false;
-    std::vector<std::size_t> live;
-    live.reserve(animCpu_.size());
-    for (std::size_t i = 0; i < animCpu_.size(); ++i) {
-        if (!animCpu_[i].indices.empty()) {
-            live.push_back(i);
-        }
-    }
-    if (animBatches_.size() != live.size()) {
+    if (animBatches_.size() != animCpu_.size()) {
         destroyAnimatedGpu();
-        animBatches_.resize(live.size());
+        animBatches_.resize(animCpu_.size());
         const GLsizei stride = 13 * sizeof(float);
-        for (std::size_t k = 0; k < live.size(); ++k) {
+        for (std::size_t k = 0; k < animCpu_.size(); ++k) {
             DrawBatch& batch = animBatches_[k];
             batch.vao = 0;
             batch.vbo = 0;
@@ -1119,10 +1155,9 @@ void Renderer::uploadAnimated() {
             glBindVertexArray(0);
         }
     }
-    for (std::size_t k = 0; k < live.size(); ++k) {
-        const std::size_t i = live[k];
+    for (std::size_t i = 0; i < animCpu_.size(); ++i) {
         GpuMesh& mesh = animCpu_[i];
-        DrawBatch& batch = animBatches_[k];
+        DrawBatch& batch = animBatches_[i];
         batch.diffuse = animKeys_[i].diffuse;
         batch.lightmap = animKeys_[i].lightmap;
         batch.roomId = animKeys_[i].roomId;
@@ -1136,6 +1171,10 @@ void Renderer::uploadAnimated() {
         batch.detailOffset = 0;
         batch.alphaRef = animKeys_[i].alphaRef;
         batch.indexCount = static_cast<int>(mesh.indices.size());
+        if (mesh.vertices.empty() || mesh.indices.empty()) {
+            batch.indexCount = 0;
+            continue;
+        }
         glBindVertexArray(batch.vao);
         glBindBuffer(GL_ARRAY_BUFFER, batch.vbo);
         glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(mesh.vertices.size() * sizeof(float)),
@@ -1393,6 +1432,9 @@ void Renderer::drawBatches(bool alphaPass, const Vec3& cameraPos) {
     const std::vector<DrawBatch>& list = pass == 0 ? batches_ : animBatches_;
     for (std::size_t i = 0; i < list.size(); ++i) {
         const DrawBatch& b = list[i];
+        if (b.indexCount <= 0) {
+            continue;
+        }
         if (static_cast<int>(b.followCamera) != skyPass) {
             continue;
         }

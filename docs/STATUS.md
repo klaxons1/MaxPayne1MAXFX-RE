@@ -1,7 +1,7 @@
 # MAX-FX reverse engineering — current status
 
-Last updated 2026-09-26 (in-place walk / cheaper skin). Comments and this file
-are in English; the code is C++11. The target is the **PC** Max Payne 1
+Last updated 2026-09-26 (skin lerp + whole-skeleton root lock + hitch cuts).
+Comments and this file are in English; the code is C++11. The target is the **PC** Max Payne 1
 MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
 names and version numbers only — its loaders were stripped and can disagree
 with the PC layout.
@@ -104,6 +104,14 @@ when the mesh name is not a skeleton bone. Skipping that left every NPC
 lying on the floor and stretched. Output is model space so the renderer
 applies only the entity transform.
 
+Play clips store `interpolationMethod = 0`; the engine still lerps in
+`LinearlyOptimizedContainer<M_Matrix4x3>::getItem`. Treating 0 as a step
+hold froze sparse Stand channels (shoulders: 2 keys / 250 frames). Root XZ
+is locked in-place by sliding **every** bone — patching only Pelvis after
+the parent walk tore the waist. Skeleton worlds are built from parent
+indices (no per-compare string alloc). Multi-mesh SKDs skin listed objects
+with a concatenated vertex base.
+
 Self-test: `beretta_levelitem.kf2`, `Alex_Balder_L0.kfs` + `.SKD`,
 `Widepose.kf2` / `Walk.kf2`.
 
@@ -167,7 +175,11 @@ KF2 textures use the grey placeholder and search the material list's
 The stripped sample database has weapon KF2s and one character KFS
 (`balder_alex`); missing skins show the red placeholder. Characters with a
 KFS/SKD are skinned every frame from cached `CHARANIM_POSE` + STAND / WALK
-clips (not the bind T-pose). Animated VBOs are streamed, not recreated.
+clips (not the bind T-pose). Rest topology is cached per KFS; posed verts
+are written in place. KF2 texture paths and `existingPathIgnoreCase` are
+cached (the per-frame directory list was the hitch on Windows). Animated
+CPU buffers keep capacity; GPU VBOs stay `GL_STREAM_DRAW`. Camera has no
+collision (fly through geometry).
 
 PCM WAV loader (`src/maxfx/sound`) plus an SDL3 mixer (`src/viewer/Audio.cpp`)
 loops the level theme when the official banks are next to the exe. The

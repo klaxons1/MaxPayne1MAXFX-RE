@@ -395,13 +395,16 @@ Kf2File* Database::model(const std::string& resolvedPath) {
 }
 
 Kf2File* Database::loadModel(const std::string& resolvedPath) {
-    if (resolvedPath.empty() || !isFile(resolvedPath)) {
+    if (resolvedPath.empty()) {
         return 0;
     }
     const std::string key = lowerCopy(resolvedPath);
     std::map<std::string, Kf2File>::iterator it = models.find(key);
     if (it != models.end()) {
         return &it->second;
+    }
+    if (!isFile(resolvedPath)) {
+        return 0;
     }
     try {
         Kf2File file = Kf2Reader::loadFromFile(resolvedPath);

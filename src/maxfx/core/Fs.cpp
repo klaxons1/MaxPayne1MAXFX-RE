@@ -4,6 +4,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstring>
+#include <map>
 #include <stdexcept>
 
 #ifdef _WIN32
@@ -21,6 +22,8 @@ namespace maxfx {
 namespace {
 
 bool isSep(char c) { return c == '/' || c == '\\'; }
+
+std::map<std::string, std::string> gExistingPathCache;
 
 }  // namespace
 
@@ -336,58 +339,55 @@ std::string existingPathIgnoreCase(const std::string& path) {
     if (path.empty()) {
         return std::string();
     }
+    std::map<std::string, std::string>::iterator cached = gExistingPathCache.find(path);
+    if (cached != gExistingPathCache.end()) {
+        return cached->second;
+    }
+    std::string hit;
     if (isFile(path)) {
-        return path;
-    }
-    const std::string dir = parentDir(path);
-    const std::string want = lowerCopy(fileName(path));
-    if (dir.empty() || want.empty() || !isDirectory(dir)) {
-        return std::string();
-    }
-    const std::vector<std::string> files = listFilesWithExtension(dir, "");
-    // listFilesWithExtension with empty extension still filters; fall back to
-    // listing every file by matching the leaf against a recursive listing of dir.
-    // The helper requires a real extension, so we probe common texture suffixes
-    // only when the caller already passed a full path — list the directory via
-    // the platform APIs used by listSubdirectories' sibling.
+        hit = path;
+    } else {
+        const std::string dir = parentDir(path);
+        const std::string want = lowerCopy(fileName(path));
+        if (!dir.empty() && !want.empty() && isDirectory(dir)) {
 #ifdef _WIN32
-    WIN32_FIND_DATAA fd;
-    const std::string pattern = joinPath(dir, "*");
-    HANDLE h = FindFirstFileA(pattern.c_str(), &fd);
-    if (h == INVALID_HANDLE_VALUE) {
-        return std::string();
-    }
-    do {
-        if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-            continue;
-        }
-        if (lowerCopy(fd.cFileName) == want) {
-            FindClose(h);
-            return joinPath(dir, fd.cFileName);
-        }
-    } while (FindNextFileA(h, &fd));
-    FindClose(h);
-#else
-    DIR* d = opendir(dir.c_str());
-    if (d == 0) {
-        return std::string();
-    }
-    while (dirent* ent = readdir(d)) {
-        if (ent->d_name[0] == '.' && (ent->d_name[1] == 0 || ent->d_name[1] == '.')) {
-            continue;
-        }
-        if (lowerCopy(ent->d_name) == want) {
-            const std::string hit = joinPath(dir, ent->d_name);
-            if (isFile(hit)) {
-                closedir(d);
-                return hit;
+            WIN32_FIND_DATAA fd;
+            const std::string pattern = joinPath(dir, "*");
+            HANDLE h = FindFirstFileA(pattern.c_str(), &fd);
+            if (h != INVALID_HANDLE_VALUE) {
+                do {
+                    if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+                        continue;
+                    }
+                    if (lowerCopy(fd.cFileName) == want) {
+                        hit = joinPath(dir, fd.cFileName);
+                        break;
+                    }
+                } while (FindNextFileA(h, &fd));
+                FindClose(h);
             }
+#else
+            DIR* d = opendir(dir.c_str());
+            if (d != 0) {
+                while (dirent* ent = readdir(d)) {
+                    if (ent->d_name[0] == '.' && (ent->d_name[1] == 0 || ent->d_name[1] == '.')) {
+                        continue;
+                    }
+                    if (lowerCopy(ent->d_name) == want) {
+                        const std::string cand = joinPath(dir, ent->d_name);
+                        if (isFile(cand)) {
+                            hit = cand;
+                            break;
+                        }
+                    }
+                }
+                closedir(d);
+            }
+#endif
         }
     }
-    closedir(d);
-#endif
-    (void)files;
-    return std::string();
+    gExistingPathCache[path] = hit;
+    return hit;
 }
 
 }  // namespace maxfx

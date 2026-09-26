@@ -937,9 +937,12 @@ Mat4x3 sampleChannel(const Kf2NodeAnimation& a, float timeSeconds) {
         if (frame > f1) {
             continue;
         }
-        if (f1 <= f0 + 1.0e-4f || a.interpolationMethod == 0) {
+        if (f1 <= f0 + 1.0e-4f) {
             return a.keys[i].objectToParent;
         }
+        // PC clips store interpolationMethod 0; the engine still lerps in
+        // LinearlyOptimizedContainer<M_Matrix4x3>::getItem. Stepping sparse
+        // Stand keys (2 samples over 250 frames) froze shoulders / neck.
         const float u = (frame - f0) / (f1 - f0);
         return lerpMat(a.keys[i].objectToParent, a.keys[i + 1].objectToParent, u);
     }
@@ -958,10 +961,29 @@ void kf2SampleAnimation(const Kf2File& file, float timeSeconds, std::vector<std:
     }
 }
 
+bool namesEqual(const std::string& a, const std::string& b) {
+    if (a.size() != b.size()) {
+        return false;
+    }
+    for (std::size_t i = 0; i < a.size(); ++i) {
+        unsigned char ca = static_cast<unsigned char>(a[i]);
+        unsigned char cb = static_cast<unsigned char>(b[i]);
+        if (ca >= 'A' && ca <= 'Z') {
+            ca = static_cast<unsigned char>(ca + 32);
+        }
+        if (cb >= 'A' && cb <= 'Z') {
+            cb = static_cast<unsigned char>(cb + 32);
+        }
+        if (ca != cb) {
+            return false;
+        }
+    }
+    return true;
+}
+
 int findNameIndex(const std::vector<std::string>& names, const std::string& key) {
-    const std::string k = lowerAscii(key);
     for (std::size_t i = 0; i < names.size(); ++i) {
-        if (lowerAscii(names[i]) == k) {
+        if (namesEqual(names[i], key)) {
             return static_cast<int>(i);
         }
     }
@@ -970,24 +992,33 @@ int findNameIndex(const std::vector<std::string>& names, const std::string& key)
 
 void worldsFromLocals(const std::vector<std::string>& names, const std::vector<Mat4x3>& locals,
                       const std::vector<std::string>& parents, std::vector<Mat4x3>* worlds) {
+    const std::size_t n = names.size();
     worlds->assign(locals.begin(), locals.end());
-    for (std::size_t i = 0; i < names.size(); ++i) {
-        Mat4x3 world = locals[i];
-        std::string walk = names[i];
-        int guard = 0;
-        while (guard++ < 64) {
-            const int idx = findNameIndex(names, walk);
-            if (idx < 0 || parents[static_cast<std::size_t>(idx)].empty()) {
-                break;
-            }
-            walk = parents[static_cast<std::size_t>(idx)];
-            const int p = findNameIndex(names, walk);
-            if (p < 0) {
-                break;
-            }
-            world = combine(locals[static_cast<std::size_t>(p)], world);
+    std::vector<int> parentIdx(n, -1);
+    for (std::size_t i = 0; i < n; ++i) {
+        if (!parents[i].empty()) {
+            parentIdx[i] = findNameIndex(names, parents[i]);
         }
-        (*worlds)[i] = world;
+    }
+    std::vector<char> done(n, 0);
+    std::size_t remaining = n;
+    int guard = 0;
+    while (remaining > 0 && guard++ < 64) {
+        for (std::size_t i = 0; i < n; ++i) {
+            if (done[i]) {
+                continue;
+            }
+            const int p = parentIdx[i];
+            if (p < 0 || p == static_cast<int>(i)) {
+                (*worlds)[i] = locals[i];
+                done[i] = 1;
+                --remaining;
+            } else if (done[static_cast<std::size_t>(p)]) {
+                (*worlds)[i] = combine((*worlds)[static_cast<std::size_t>(p)], locals[i]);
+                done[i] = 1;
+                --remaining;
+            }
+        }
     }
 }
 
@@ -1020,7 +1051,7 @@ void kf2BuildSkeletonWorlds(const Kf2File& anim, float timeSeconds, const Kf2Fil
             locals.push_back(playLocals[i]);
             std::string parent;
             for (std::size_t a = 0; a < anim.animations.size(); ++a) {
-                if (lowerAscii(anim.animations[a].targetName) == lowerAscii(playNames[i])) {
+                if (namesEqual(anim.animations[a].targetName, playNames[i])) {
                     parent = anim.animations[a].parentName;
                     break;
                 }
@@ -1081,6 +1112,9 @@ Mat4x3 meshObjectWorld(const Kf2Mesh& mesh, const std::vector<std::string>& anim
 void lockRootXZ(const Kf2File& play, const std::vector<std::string>& bindNames,
                 const std::vector<Mat4x3>& bindWorlds, std::vector<std::string>& playNames,
                 std::vector<Mat4x3>& playWorlds) {
+    float dx = 0.0f;
+    float dz = 0.0f;
+    bool found = false;
     for (std::size_t a = 0; a < play.animations.size(); ++a) {
         if (!play.animations[a].parentName.empty()) {
             continue;
@@ -1090,10 +1124,21 @@ void lockRootXZ(const Kf2File& play, const std::vector<std::string>& bindNames,
         if (pi < 0 || bi < 0) {
             continue;
         }
-        playWorlds[static_cast<std::size_t>(pi)].rows[3].x =
-            bindWorlds[static_cast<std::size_t>(bi)].rows[3].x;
-        playWorlds[static_cast<std::size_t>(pi)].rows[3].z =
-            bindWorlds[static_cast<std::size_t>(bi)].rows[3].z;
+        const Vec3 playT = playWorlds[static_cast<std::size_t>(pi)].translation();
+        const Vec3 bindT = bindWorlds[static_cast<std::size_t>(bi)].translation();
+        dx = bindT.x - playT.x;
+        dz = bindT.z - playT.z;
+        found = true;
+        break;
+    }
+    if (!found || (dx == 0.0f && dz == 0.0f)) {
+        return;
+    }
+    // Slide every bone, not only Pelvis — patching the root world after the
+    // parent walk left children 6 cm off and tore the waist.
+    for (std::size_t i = 0; i < playWorlds.size(); ++i) {
+        playWorlds[i].rows[3].x += dx;
+        playWorlds[i].rows[3].z += dz;
     }
 }
 
@@ -1119,10 +1164,11 @@ void buildBonePalette(const Kf2Skin& skin, const std::vector<std::string>& bindN
     }
 }
 
-void poseVertexArrays(const Kf2Mesh& mesh, const Kf2Skin* skin, const Mat4x3& meshBind,
-                      const Mat4x3& meshPlay, const std::vector<Mat4x3>& playPal,
-                      const std::vector<Mat4x3>& invBindPal, const std::vector<char>& boneOk,
-                      std::vector<Vec3>* outPos, std::vector<Vec3>* outNrm) {
+void poseVertexArrays(const Kf2Mesh& mesh, const Kf2Skin* skin, std::size_t skinBase,
+                      const Mat4x3& meshBind, const Mat4x3& meshPlay,
+                      const std::vector<Mat4x3>& playPal, const std::vector<Mat4x3>& invBindPal,
+                      const std::vector<char>& boneOk, std::vector<Vec3>* outPos,
+                      std::vector<Vec3>* outNrm) {
     const std::vector<Vec3>& verts = mesh.geometry.vertices;
     const std::vector<Vec3>& nrms = mesh.geometry.normals;
     outPos->resize(verts.size());
@@ -1132,8 +1178,9 @@ void poseVertexArrays(const Kf2Mesh& mesh, const Kf2Skin* skin, const Mat4x3& me
         const Vec3 nLocal = i < nrms.size() ? nrms[i] : Vec3(0.0f, 1.0f, 0.0f);
         Vec3 posed = transformPoint(meshPlay, vLocal);
         Vec3 posedN = transformVector(meshPlay, nLocal);
-        if (skin != 0 && i < skin->vertices.size() && !skin->vertices[i].bones.empty()) {
-            const Kf2SkinVertex& sv = skin->vertices[i];
+        const std::size_t si = skinBase + i;
+        if (skin != 0 && si < skin->vertices.size() && !skin->vertices[si].bones.empty()) {
+            const Kf2SkinVertex& sv = skin->vertices[si];
             const Vec3 vBind = transformPoint(meshBind, vLocal);
             const Vec3 nBind = transformVector(meshBind, nLocal);
             Vec3 acc(0.0f, 0.0f, 0.0f);
@@ -1204,6 +1251,7 @@ void kf2SkinDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile, const K
     buildBonePalette(*skin, bindNames, bindWorlds, playNames, playWorlds, &playPal, &invBindPal,
                      &boneOk);
 
+    std::size_t skinAcc = 0;
     for (std::size_t i = 0; i < meshFile.meshes.size(); ++i) {
         const Kf2Mesh* src = &meshFile.meshes[i];
         const Kf2Mesh* resolved = src;
@@ -1220,18 +1268,32 @@ void kf2SkinDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile, const K
         if (!resolved->hasGeometry) {
             continue;
         }
+        const std::string meshName = resolved->hasNode ? resolved->node.name : std::string();
+        bool listed = skin->skinObjectNames.empty();
+        for (std::size_t s = 0; !listed && s < skin->skinObjectNames.size(); ++s) {
+            if (namesEqual(skin->skinObjectNames[s], meshName)) {
+                listed = true;
+            }
+        }
+        std::size_t skinBase = 0;
+        if (listed) {
+            if (skin->vertices.size() != resolved->geometry.vertices.size() &&
+                skin->vertices.size() >= skinAcc + resolved->geometry.vertices.size()) {
+                skinBase = skinAcc;
+            }
+            skinAcc += resolved->geometry.vertices.size();
+        }
         const Mat4x3 meshBind =
             meshObjectWorld(*resolved, bindNames, bindWorlds, nodeNames, nodeWorlds);
         const Mat4x3 meshPlay =
             meshObjectWorld(*resolved, playNames, playWorlds, nodeNames, nodeWorlds);
         std::vector<Vec3> posedPos;
         std::vector<Vec3> posedNrm;
-        poseVertexArrays(*resolved, skin, meshBind, meshPlay, playPal, invBindPal, boneOk, &posedPos,
-                         &posedNrm);
-        const std::string meshName = resolved->hasNode ? resolved->node.name : std::string();
+        poseVertexArrays(*resolved, listed ? skin : 0, skinBase, meshBind, meshPlay, playPal,
+                         invBindPal, boneOk, &posedPos, &posedNrm);
         for (std::size_t d = 0; d < draws.size(); ++d) {
             if (!meshName.empty() && !draws[d].nodeName.empty() &&
-                lowerAscii(draws[d].nodeName) != lowerAscii(meshName)) {
+                !namesEqual(draws[d].nodeName, meshName)) {
                 continue;
             }
             for (std::size_t p = 0; p < draws[d].parts.size(); ++p) {
