@@ -1,6 +1,6 @@
 # MAX-FX reverse engineering — current status
 
-Last updated 2026-09-26 (character clips / room-mesh collision). Comments and this file
+Last updated 2026-09-26 (upright skinning / camera-follow world sphere). Comments and this file
 are in English; the code is C++11. The target is the **PC** Max Payne 1
 MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
 names and version numbers only — its loaders were stripped and can disagree
@@ -98,9 +98,11 @@ version > 0: visibility keys; > 1: loop-to-frame; > 2: lerp method; > 3: maintai
 `kf2BuildDrawMeshes` produces triangle lists in node-local space, including
 v2 primitive-local index rebasing. Bind-pose world matrices follow the node
 parent chain. `kf2BuildSkinnedDrawMeshes` does linear-blend skinning
-(KFS mesh + SKD weights + CHARANIM_POSE bind + current clip) and writes
-vertices in model space so the renderer applies only the entity transform
-(avoids the double-transform that made some characters look inverted).
+(KFS mesh + SKD weights + CHARANIM_POSE bind + current clip). Mesh vertices
+are object-local; the KFS node (90° 3ds Max Z-up → Y-up) is the mesh bind
+when the mesh name is not a skeleton bone. Skipping that left every NPC
+lying on the floor and stretched. Output is model space so the renderer
+applies only the entity transform.
 
 Self-test: `beretta_levelitem.kf2`, `Alex_Balder_L0.kfs` + `.SKD`,
 `Widepose.kf2` / `Walk.kf2`.
@@ -150,7 +152,9 @@ Every parsed LDB entity is placed in the room:
 
 - Items / characters: KF2/KFS when ExportData exists on disk, otherwise a
   solid coloured box (yellow pickups, red capsules). Line helpers remain.
-- World sphere: `bg_<WorldSphere>.kf2` drawn two-sided at the origin.
+- World sphere: `worldspheres.txt` `[name] { ExportData = bg_*.kf2; }`, drawn
+  two-sided around the camera (depth write off) so it works on maps far from
+  the origin.
 - Point / static lights and FSMs: small solid cubes plus helper overlays.
 
 KF2 batches are vertex-lit, two-sided, and never hidden as service geometry.

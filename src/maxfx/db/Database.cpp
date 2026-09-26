@@ -509,6 +509,16 @@ Database DatabaseReader::load(const std::string& root) {
                 item.sourcePath = files[i];
                 collectGeometry(script.root(), root, dir, item.name, &item.lods);
                 db.items.push_back(item);
+            } else if (isUnder(files[i], "worldspheres")) {
+                const ScriptBlock& rootBlock = script.root();
+                for (std::size_t c = 0; c < rootBlock.children.size(); ++c) {
+                    const ScriptBlock& ch = rootBlock.children[c];
+                    std::vector<GeometryRef> refs;
+                    collectGeometry(ch, root, dir, ch.name, &refs);
+                    if (!refs.empty() && !refs[0].resolvedExport.empty()) {
+                        db.worldSphereFiles[ch.name] = refs[0].resolvedExport;
+                    }
+                }
             } else if (isUnder(files[i], "decals")) {
                 collectDecals(script.root(), &db.decals);
             } else if (isUnder(files[i], "/sounds/") || isUnder(files[i], "\\sounds\\") ||
@@ -569,8 +579,12 @@ void DatabaseReader::loadWorldSphere(Database& db, const std::string& name) {
     if (name.empty() || db.root.empty()) {
         return;
     }
-    const std::string stem = fileStem(nativeFromScriptPath(name));
+    const std::string stem = lowerCopy(fileStem(nativeFromScriptPath(name)));
     std::vector<std::string> cands;
+    std::map<std::string, std::string>::const_iterator it = db.worldSphereFiles.find(stem);
+    if (it != db.worldSphereFiles.end()) {
+        cands.push_back(it->second);
+    }
     const std::string folder = joinPath(db.root, "worldspheres");
     cands.push_back(joinPath(folder, std::string("bg_") + stem + ".kf2"));
     cands.push_back(joinPath(folder, stem + ".kf2"));

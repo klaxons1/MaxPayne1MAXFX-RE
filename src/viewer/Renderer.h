@@ -33,6 +33,7 @@ struct DrawBatch {
     bool service;       // materials.txt DrawPolygons = FALSE
     bool writesZ;
     bool vertexLit;     // KF2 entities (no lightmap)
+    bool followCamera;  // world sphere, translated in the VS
     int detailOffset;   // materials.txt DetailOffset, plus alpha decals
     int alphaRef;       // 0..255, materials.txt AlphaReference
 };
@@ -118,6 +119,7 @@ private:
         bool service;
         bool writesZ;
         bool vertexLit;
+        bool followCamera;
         int detailOffset;
         int alphaRef;
 
@@ -125,7 +127,8 @@ private:
             return diffuse == o.diffuse && lightmap == o.lightmap && roomId == o.roomId &&
                    alphaTest == o.alphaTest && blend == o.blend && dynamic == o.dynamic &&
                    service == o.service && writesZ == o.writesZ && vertexLit == o.vertexLit &&
-                   detailOffset == o.detailOffset && alphaRef == o.alphaRef;
+                   followCamera == o.followCamera && detailOffset == o.detailOffset &&
+                   alphaRef == o.alphaRef;
         }
     };
 
@@ -161,7 +164,7 @@ private:
     void uploadBatches();
     void buildHelpers(const Level& level);
     void buildFont();
-    void drawBatches(bool alphaPass);
+    void drawBatches(bool alphaPass, const Vec3& cameraPos);
     void flushHud();
 
     GLuint meshProgram_;
@@ -206,6 +209,7 @@ private:
     std::vector<WorldLight> lights_;
     std::map<std::string, GLuint> textureByPath_;
     bool recordingAnimated_;
+    bool recordingSky_;
     std::vector<GpuMesh> animCpu_;
     std::vector<BatchKey> animKeys_;
     std::vector<DrawBatch> animBatches_;

@@ -21,11 +21,12 @@ const char* kMeshVS =
     "layout(location=3) in vec2 aLM;\n"
     "layout(location=4) in vec3 aColor;\n"
     "uniform mat4 uViewProj;\n"
+    "uniform vec3 uOrigin;\n"
     "out vec2 vUV;\n"
     "out vec2 vLM;\n"
     "out vec3 vColor;\n"
     "void main(){\n"
-    "  gl_Position = uViewProj * vec4(aPos,1.0);\n"
+    "  gl_Position = uViewProj * vec4(aPos + uOrigin,1.0);\n"
     "  vUV = aUV;\n"
     "  vLM = aLM;\n"
     "  vColor = aColor;\n"
@@ -294,7 +295,8 @@ Renderer::Renderer()
       entityTriangleCount_(0),
       entityPlaceholderCount_(0),
       database_(0),
-      recordingAnimated_(false) {}
+      recordingAnimated_(false),
+      recordingSky_(false) {}
 
 Renderer::~Renderer() {
     // GPU objects are released by shutdown() while the GL context is still alive.
@@ -347,6 +349,7 @@ void Renderer::clearLevelGpu() {
     lights_.clear();
     database_ = 0;
     recordingAnimated_ = false;
+    recordingSky_ = false;
     triangleCount_ = 0;
     entityMeshCount_ = 0;
     entityTriangleCount_ = 0;
@@ -666,7 +669,9 @@ bool Renderer::loadLevel(const Level& level, const Database* database, char* err
         const Kf2File* sphere = database->model(database->worldSpherePath);
         if (sphere != 0) {
             Mat4x3 identity;
+            recordingSky_ = true;
             appendKf2File(*sphere, identity, -1, lights, database);
+            recordingSky_ = false;
         }
     }
     for (std::size_t i = 0; i < level.pointLights.size(); ++i) {
@@ -854,6 +859,7 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
         key.service = service;
         key.writesZ = writesZ;
         key.vertexLit = false;
+        key.followCamera = false;
         key.detailOffset = detailOffset;
         key.alphaRef = alphaRef;
         GpuMesh& gpu = batchFor(key);
@@ -942,8 +948,9 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
         key.blend = hasOpacity;
         key.dynamic = recordingAnimated_;
         key.service = false;
-        key.writesZ = true;
+        key.writesZ = !recordingSky_;
         key.vertexLit = true;
+        key.followCamera = recordingSky_;
         key.detailOffset = 0;
         key.alphaRef = 15;
         GpuMesh& gpu = batchFor(key);
@@ -951,10 +958,15 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
         for (std::size_t v = 0; v < part.vertices.size(); ++v) {
             const Vec3 pos = mirrorX(transformPoint(world, part.vertices[v].position));
             const Vec3 nrm = mirrorX(transformVector(world, part.vertices[v].normal));
-            Vec3 col = shadeVertex(pos, nrm, lights);
-            col.x = clamp(col.x * part.diffuseColor.x, 0.05f, 1.0f);
-            col.y = clamp(col.y * part.diffuseColor.y, 0.05f, 1.0f);
-            col.z = clamp(col.z * part.diffuseColor.z, 0.05f, 1.0f);
+            Vec3 col;
+            if (recordingSky_) {
+                col = Vec3(1.0f, 1.0f, 1.0f);
+            } else {
+                col = shadeVertex(pos, nrm, lights);
+                col.x = clamp(col.x * part.diffuseColor.x, 0.05f, 1.0f);
+                col.y = clamp(col.y * part.diffuseColor.y, 0.05f, 1.0f);
+                col.z = clamp(col.z * part.diffuseColor.z, 0.05f, 1.0f);
+            }
             gpu.vertices.push_back(pos.x);
             gpu.vertices.push_back(pos.y);
             gpu.vertices.push_back(pos.z);
@@ -1144,6 +1156,7 @@ void Renderer::uploadAnimated() {
         batch.service = false;
         batch.writesZ = true;
         batch.vertexLit = true;
+        batch.followCamera = false;
         batch.detailOffset = 0;
         batch.alphaRef = animKeys_[i].alphaRef;
         batch.indexCount = static_cast<int>(mesh.indices.size());
@@ -1182,6 +1195,7 @@ void Renderer::appendOrientedBox(const Mat4x3& entity, int roomId, float hx, flo
     key.service = false;
     key.writesZ = true;
     key.vertexLit = true;
+    key.followCamera = false;
     key.detailOffset = 0;
     key.alphaRef = 15;
     GpuMesh& gpu = batchFor(key);
@@ -1242,6 +1256,7 @@ void Renderer::uploadBatches() {
         batch.service = cpuKeys_[i].service;
         batch.writesZ = cpuKeys_[i].writesZ;
         batch.vertexLit = cpuKeys_[i].vertexLit;
+        batch.followCamera = cpuKeys_[i].followCamera;
         batch.detailOffset = cpuKeys_[i].detailOffset;
         batch.alphaRef = cpuKeys_[i].alphaRef;
         batch.indexCount = static_cast<int>(mesh.indices.size());
@@ -1396,11 +1411,15 @@ void Renderer::cycleRoom(int delta, int roomCount) {
     }
 }
 
-void Renderer::drawBatches(bool alphaPass) {
+void Renderer::drawBatches(bool alphaPass, const Vec3& cameraPos) {
+    for (int skyPass = 1; skyPass >= 0; --skyPass) {
     for (int pass = 0; pass < 2; ++pass) {
     const std::vector<DrawBatch>& list = pass == 0 ? batches_ : animBatches_;
     for (std::size_t i = 0; i < list.size(); ++i) {
         const DrawBatch& b = list[i];
+        if (static_cast<int>(b.followCamera) != skyPass) {
+            continue;
+        }
         const bool transparent = b.alphaTest || b.blend;
         if (transparent != alphaPass) {
             continue;
@@ -1443,8 +1462,15 @@ void Renderer::drawBatches(bool alphaPass) {
         } else {
             glEnable(GL_CULL_FACE);
         }
+        if (b.followCamera) {
+            glUniform3f(glGetUniformLocation(meshProgram_, "uOrigin"), cameraPos.x, cameraPos.y,
+                        cameraPos.z);
+        } else {
+            glUniform3f(glGetUniformLocation(meshProgram_, "uOrigin"), 0.0f, 0.0f, 0.0f);
+        }
         glBindVertexArray(b.vao);
         glDrawElements(GL_TRIANGLES, b.indexCount, GL_UNSIGNED_INT, 0);
+    }
     }
     }
     glDepthMask(GL_TRUE);
@@ -1453,7 +1479,6 @@ void Renderer::drawBatches(bool alphaPass) {
 }
 
 void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
-    (void)cameraPos;
     const float aspect = static_cast<float>(width_) / static_cast<float>(height_);
     const Mat4 proj = perspectiveRH(toRadians(70.0f), aspect, 0.05f, 400.0f);
     const Mat4 vp = multiply(proj, view);
@@ -1476,8 +1501,9 @@ void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
     if (recordingAnimated_) {
         uploadAnimated();
     }
-    drawBatches(false);
-    drawBatches(true);
+    glUniform3f(glGetUniformLocation(meshProgram_, "uOrigin"), 0.0f, 0.0f, 0.0f);
+    drawBatches(false, cameraPos);
+    drawBatches(true, cameraPos);
     glEnable(GL_CULL_FACE);
     glDepthMask(GL_TRUE);
     glDisable(GL_POLYGON_OFFSET_FILL);

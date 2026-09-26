@@ -111,6 +111,8 @@ struct Database {
 
     std::string worldSphereName;
     std::string worldSpherePath;
+    // worldspheres.txt: [intro] { [Geometry] ExportData = bg_intro.kf2; }
+    std::map<std::string, std::string> worldSphereFiles;
 
     int parsedScripts;
     int failedScripts;

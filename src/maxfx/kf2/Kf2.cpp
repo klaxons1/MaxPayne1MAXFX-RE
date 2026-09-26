@@ -1059,19 +1059,33 @@ Mat4x3 lookupWorld(const std::vector<std::string>& names, const std::vector<Mat4
     return Mat4x3();
 }
 
+Mat4x3 meshObjectWorld(const Kf2Mesh& mesh, const std::vector<std::string>& animNames,
+                       const std::vector<Mat4x3>& animWorlds, const std::vector<std::string>& nodeNames,
+                       const std::vector<Mat4x3>& nodeWorlds) {
+    if (!mesh.hasNode) {
+        return Mat4x3();
+    }
+    bool found = false;
+    Mat4x3 m = lookupWorld(animNames, animWorlds, mesh.node.name, &found);
+    if (found) {
+        return m;
+    }
+    m = lookupWorld(nodeNames, nodeWorlds, mesh.node.name, &found);
+    if (found) {
+        return m;
+    }
+    return mesh.node.objectToParent;
+}
+
 void poseGeometry(Kf2Mesh& mesh, const Kf2Skin* skin, const std::vector<std::string>& bindNames,
                   const std::vector<Mat4x3>& bindWorlds, const std::vector<std::string>& playNames,
-                  const std::vector<Mat4x3>& playWorlds) {
+                  const std::vector<Mat4x3>& playWorlds, const std::vector<std::string>& nodeNames,
+                  const std::vector<Mat4x3>& nodeWorlds) {
     if (!mesh.hasGeometry) {
         return;
     }
-    bool dummy = false;
-    const Mat4x3 meshBind = mesh.hasNode
-                                ? lookupWorld(bindNames, bindWorlds, mesh.node.name, &dummy)
-                                : Mat4x3();
-    const Mat4x3 meshPlay = mesh.hasNode
-                                ? lookupWorld(playNames, playWorlds, mesh.node.name, &dummy)
-                                : Mat4x3();
+    const Mat4x3 meshBind = meshObjectWorld(mesh, bindNames, bindWorlds, nodeNames, nodeWorlds);
+    const Mat4x3 meshPlay = meshObjectWorld(mesh, playNames, playWorlds, nodeNames, nodeWorlds);
     std::vector<Vec3>& verts = mesh.geometry.vertices;
     std::vector<Vec3>& nrms = mesh.geometry.normals;
     for (std::size_t i = 0; i < verts.size(); ++i) {
@@ -1147,9 +1161,17 @@ void kf2BuildSkinnedDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile,
         kf2BuildDrawMeshes(meshFile, out);
         return;
     }
+    // Mesh vertices are object-local. KFS node worlds carry the 3ds Max
+    // Z-up → Y-up rotation; animation channels are named bones (Pelvis, …)
+    // and do not include the mesh object, so falling back to identity left
+    // every NPC lying on the floor.
+    std::vector<std::string> nodeNames;
+    std::vector<Mat4x3> nodeWorlds;
+    kf2NodeWorldTransforms(meshFile, &nodeNames, &nodeWorlds);
     Kf2File posed = meshFile;
     for (std::size_t i = 0; i < posed.meshes.size(); ++i) {
-        poseGeometry(posed.meshes[i], skin, bindNames, bindWorlds, playNames, playWorlds);
+        poseGeometry(posed.meshes[i], skin, bindNames, bindWorlds, playNames, playWorlds, nodeNames,
+                     nodeWorlds);
     }
     kf2BuildDrawMeshes(posed, out);
     for (std::size_t i = 0; i < out.size(); ++i) {

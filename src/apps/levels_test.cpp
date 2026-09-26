@@ -13,6 +13,7 @@
 #include "maxfx/script/Script.h"
 #include "maxfx/sound/Sound.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -478,6 +479,11 @@ static void testDatabase() {
     check(!db.sounds.empty(), "sound scripts parsed");
     maxfx::DatabaseReader::loadWorldSphere(db, "intro");
     check(!db.worldSpherePath.empty() && maxfx::isFile(db.worldSpherePath), "worldsphere intro kf2");
+    check(db.worldSphereFiles.find("intro") != db.worldSphereFiles.end() ||
+              db.worldSphereFiles.find("bronx") != db.worldSphereFiles.end(),
+          "worldspheres.txt catalogued");
+    maxfx::DatabaseReader::loadWorldSphere(db, "bronx");
+    check(!db.worldSpherePath.empty() && maxfx::isFile(db.worldSpherePath), "worldsphere bronx kf2");
 }
 
 static void testCollisionAndMath() {
@@ -602,9 +608,24 @@ static void testKf2AnimationAndSkinAi() {
         const maxfx::Kf2File skin = maxfx::Kf2Reader::loadFromFile(skd);
         check(!skin.skins.empty(), "alex skd has skin chunk");
         std::vector<maxfx::Kf2DrawMesh> posed;
-        maxfx::kf2BuildSkinnedDrawMeshes(mesh, &skin, &poseFile, &walkFile, 0.2f, posed);
+        maxfx::kf2BuildSkinnedDrawMeshes(mesh, &skin, &poseFile, &poseFile, 0.0f, posed);
         check(!posed.empty(), "skinned draw meshes");
         check(posed[0].modelSpace, "skinned mesh is model-space");
+        float minY = 1.0e30f, maxY = -1.0e30f;
+        for (std::size_t m = 0; m < posed.size(); ++m) {
+            for (std::size_t p = 0; p < posed[m].parts.size(); ++p) {
+                const std::vector<maxfx::Kf2DrawVertex>& vs = posed[m].parts[p].vertices;
+                for (std::size_t i = 0; i < vs.size(); ++i) {
+                    minY = std::min(minY, vs[i].position.y);
+                    maxY = std::max(maxY, vs[i].position.y);
+                }
+            }
+        }
+        check(maxY - minY > 1.2f, "skinned pose is upright (Y extent)");
+        check(maxY > 1.0f, "skinned pose head above 1m");
+        posed.clear();
+        maxfx::kf2BuildSkinnedDrawMeshes(mesh, &skin, &poseFile, &walkFile, 0.2f, posed);
+        check(!posed.empty(), "skinned walk meshes");
     }
 }
 
