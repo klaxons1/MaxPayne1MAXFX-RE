@@ -28,11 +28,13 @@ struct DrawBatch {
     int indexCount;
     int roomId;
     bool alphaTest;
+    bool blend;         // materials.txt BlendedAlphaTest
     bool dynamic;
     bool service;       // materials.txt DrawPolygons = FALSE
     bool writesZ;
     bool vertexLit;     // KF2 entities (no lightmap)
     int detailOffset;   // materials.txt DetailOffset, plus alpha decals
+    int alphaRef;       // 0..255, materials.txt AlphaReference
 };
 
 struct LineVertex {
@@ -111,17 +113,19 @@ private:
         GLuint lightmap;
         int roomId;
         bool alphaTest;
+        bool blend;
         bool dynamic;
         bool service;
         bool writesZ;
         bool vertexLit;
         int detailOffset;
+        int alphaRef;
 
         bool operator==(const BatchKey& o) const {
             return diffuse == o.diffuse && lightmap == o.lightmap && roomId == o.roomId &&
-                   alphaTest == o.alphaTest && dynamic == o.dynamic && service == o.service &&
-                   writesZ == o.writesZ && vertexLit == o.vertexLit &&
-                   detailOffset == o.detailOffset;
+                   alphaTest == o.alphaTest && blend == o.blend && dynamic == o.dynamic &&
+                   service == o.service && writesZ == o.writesZ && vertexLit == o.vertexLit &&
+                   detailOffset == o.detailOffset && alphaRef == o.alphaRef;
         }
     };
 
@@ -153,6 +157,7 @@ private:
     void uploadAnimated();
     Vec3 shadeVertex(const Vec3& worldPos, const Vec3& worldNrm, const std::vector<WorldLight>& lights) const;
     GLuint textureFromFile(const std::string& path);
+    GLuint textureFromColorAlpha(const std::string& colorPath, const std::string& alphaPath);
     void uploadBatches();
     void buildHelpers(const Level& level);
     void buildFont();

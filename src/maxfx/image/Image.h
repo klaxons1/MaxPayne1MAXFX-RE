@@ -33,8 +33,10 @@ bool decodeImageMemory(const unsigned char* data, std::size_t size, const std::s
 // composited into the colour image's alpha channel.
 bool loadImageFile(const std::string& path, Image& out, std::string* errorMessage = 0);
 
-// Copy luminance (max RGB, or the alpha channel if already set) from `alpha`
-// into `color`'s alpha. Sizes must match. Returns false on mismatch.
+// Copy opacity from `alpha` into `color`'s alpha. JPEG / paletted PCX masks
+// live in RGB (luminance); 32-bit sources use the alpha channel. If the
+// maps differ in size they are bilinear-resampled — official levels pair
+// 32x32 glass with a 64x64 alpha, and 32x32 water with an 8x8 50% tile.
 bool applyAlphaMap(Image& color, const Image& alpha);
 
 }  // namespace maxfx

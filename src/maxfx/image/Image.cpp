@@ -217,26 +217,105 @@ std::string companionAlphaPath(const std::string& path) {
 
 }  // namespace
 
+unsigned char texelOpacity(const Image& img, int x, int y) {
+    if (x < 0) {
+        x = 0;
+    }
+    if (y < 0) {
+        y = 0;
+    }
+    if (x >= img.width) {
+        x = img.width - 1;
+    }
+    if (y >= img.height) {
+        y = img.height - 1;
+    }
+    const std::size_t i = static_cast<std::size_t>((y * img.width + x) * 4);
+    const unsigned char r = img.pixels[i + 0];
+    const unsigned char g = img.pixels[i + 1];
+    const unsigned char b = img.pixels[i + 2];
+    const unsigned char a = img.pixels[i + 3];
+    unsigned char lum = r;
+    if (g > lum) {
+        lum = g;
+    }
+    if (b > lum) {
+        lum = b;
+    }
+    // JPEG / 24-bit TGA masks are greyscale in RGB with A=255. Paletted
+    // greyscale PCX already copied luminance into A. Real 32-bit alpha
+    // uses A directly when it is not a fully-opaque colour image.
+    return (a != 255) ? a : lum;
+}
+
+unsigned char sampleOpacityBilinear(const Image& img, float u, float v) {
+    if (img.width <= 0 || img.height <= 0) {
+        return 255;
+    }
+    if (u < 0.0f) {
+        u = 0.0f;
+    }
+    if (v < 0.0f) {
+        v = 0.0f;
+    }
+    if (u > 1.0f) {
+        u = 1.0f;
+    }
+    if (v > 1.0f) {
+        v = 1.0f;
+    }
+    const float x = u * static_cast<float>(img.width) - 0.5f;
+    const float y = v * static_cast<float>(img.height) - 0.5f;
+    int x0 = static_cast<int>(x);
+    int y0 = static_cast<int>(y);
+    if (x < 0.0f) {
+        x0 = -1;
+    }
+    if (y < 0.0f) {
+        y0 = -1;
+    }
+    const int x1 = x0 + 1;
+    const int y1 = y0 + 1;
+    const float fx = x - static_cast<float>(x0);
+    const float fy = y - static_cast<float>(y0);
+    const float a00 = static_cast<float>(texelOpacity(img, x0, y0));
+    const float a10 = static_cast<float>(texelOpacity(img, x1, y0));
+    const float a01 = static_cast<float>(texelOpacity(img, x0, y1));
+    const float a11 = static_cast<float>(texelOpacity(img, x1, y1));
+    const float a0 = a00 + (a10 - a00) * fx;
+    const float a1 = a01 + (a11 - a01) * fx;
+    const float a = a0 + (a1 - a0) * fy;
+    if (a <= 0.0f) {
+        return 0;
+    }
+    if (a >= 255.0f) {
+        return 255;
+    }
+    return static_cast<unsigned char>(a + 0.5f);
+}
+
 bool applyAlphaMap(Image& color, const Image& alpha) {
-    if (color.empty() || alpha.empty() || color.width != alpha.width || color.height != alpha.height) {
+    if (color.empty() || alpha.empty()) {
         return false;
     }
     const int n = color.width * color.height;
-    for (int i = 0; i < n; ++i) {
-        const unsigned char r = alpha.pixels[static_cast<std::size_t>(i * 4 + 0)];
-        const unsigned char g = alpha.pixels[static_cast<std::size_t>(i * 4 + 1)];
-        const unsigned char b = alpha.pixels[static_cast<std::size_t>(i * 4 + 2)];
-        const unsigned char a = alpha.pixels[static_cast<std::size_t>(i * 4 + 3)];
-        unsigned char lum = r;
-        if (g > lum) {
-            lum = g;
+    if (color.width == alpha.width && color.height == alpha.height) {
+        for (int i = 0; i < n; ++i) {
+            const int x = i % color.width;
+            const int y = i / color.width;
+            color.pixels[static_cast<std::size_t>(i * 4 + 3)] = texelOpacity(alpha, x, y);
         }
-        if (b > lum) {
-            lum = b;
+        return true;
+    }
+    // Official LDB materials sample colour and alpha as two textures, so
+    // different resolutions are legal (glass 32 vs 64, water 32 vs 8).
+    for (int y = 0; y < color.height; ++y) {
+        for (int x = 0; x < color.width; ++x) {
+            const float u = (static_cast<float>(x) + 0.5f) / static_cast<float>(color.width);
+            const float v = (static_cast<float>(y) + 0.5f) / static_cast<float>(color.height);
+            color.pixels[static_cast<std::size_t>((y * color.width + x) * 4 + 3)] =
+                sampleOpacityBilinear(alpha, u, v);
         }
-        // Greyscale PCX already wrote luminance into alpha; prefer that when it
-        // is not a fully-opaque colour image.
-        color.pixels[static_cast<std::size_t>(i * 4 + 3)] = (a != 255) ? a : lum;
     }
     return true;
 }

@@ -765,6 +765,26 @@ GLuint Renderer::textureFromFile(const std::string& path) {
     return tex;
 }
 
+GLuint Renderer::textureFromColorAlpha(const std::string& colorPath, const std::string& alphaPath) {
+    const std::string key = lowerCopy(colorPath) + "|" + lowerCopy(alphaPath);
+    std::map<std::string, GLuint>::const_iterator it = textureByPath_.find(key);
+    if (it != textureByPath_.end()) {
+        return it->second;
+    }
+    Image color;
+    Image alpha;
+    if (!loadImageFile(colorPath, color, 0) || color.empty()) {
+        textureByPath_[key] = greyTex_;
+        return greyTex_;
+    }
+    if (loadImageFile(alphaPath, alpha, 0) && !alpha.empty()) {
+        applyAlphaMap(color, alpha);
+    }
+    const GLuint tex = uploadTexture(&color.pixels[0], color.width, color.height, true, false);
+    textureByPath_[key] = tex;
+    return tex;
+}
+
 void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<Vec3>& normals,
                          const std::vector<TextureVertex>& texVerts, const std::vector<Polygon>& polygons,
                          const Mat4x3& transform, int roomId, bool dynamic, const Level& level,
@@ -789,22 +809,31 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
         GLuint diff = whiteTex_;
         GLuint lm = greyTex_;
         bool alpha = false;
+        bool blend = false;
         bool service = false;
         bool writesZ = true;
         int detailOffset = 0;
+        int alphaRef = 15;
         const Material* mat = 0;
         if (poly.materialId >= 0 && static_cast<std::size_t>(poly.materialId) < materialTextures.size()) {
             diff = materialTextures[static_cast<std::size_t>(poly.materialId)];
             mat = level.findMaterialByIndex(poly.materialId);
             if (mat) {
                 alpha = mat->alphaTest;
+                const bool hasAlphaMap = mat->alphaTexture >= 0;
                 if (database) {
                     const MaterialCategory* cat = database->findMaterial(mat->category);
                     if (cat) {
                         service = !cat->drawPolygons;
                         writesZ = cat->writesZBuffer;
                         detailOffset = cat->detailOffset;
+                        alphaRef = cat->alphaReference;
+                        if (cat->blendedAlphaTest && (alpha || hasAlphaMap)) {
+                            blend = true;
+                        }
                     }
+                } else if (hasAlphaMap) {
+                    blend = true;
                 }
             }
         }
@@ -820,11 +849,13 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
         key.lightmap = lm;
         key.roomId = roomId;
         key.alphaTest = alpha;
+        key.blend = blend;
         key.dynamic = dynamic;
         key.service = service;
         key.writesZ = writesZ;
         key.vertexLit = false;
         key.detailOffset = detailOffset;
+        key.alphaRef = alphaRef;
         GpuMesh& gpu = batchFor(key);
         const unsigned int base = static_cast<unsigned int>(gpu.vertices.size() / 13);
 
@@ -889,10 +920,17 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
             continue;
         }
         GLuint diff = greyTex_;
+        bool hasOpacity = !part.opacityFiles.empty();
         if (!part.textureFiles.empty()) {
             const std::string hit =
                 locateKf2Texture(part.textureFiles[0], modelDir, mesh.textureDirs, database);
-            if (!hit.empty()) {
+            std::string opHit;
+            if (hasOpacity) {
+                opHit = locateKf2Texture(part.opacityFiles[0], modelDir, mesh.textureDirs, database);
+            }
+            if (!hit.empty() && !opHit.empty()) {
+                diff = textureFromColorAlpha(hit, opHit);
+            } else if (!hit.empty()) {
                 diff = textureFromFile(hit);
             }
         }
@@ -900,12 +938,14 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
         key.diffuse = diff;
         key.lightmap = whiteTex_;
         key.roomId = roomId;
-        key.alphaTest = part.textureFiles.size() > 1;
+        key.alphaTest = hasOpacity || part.textureFiles.size() > 1;
+        key.blend = hasOpacity;
         key.dynamic = recordingAnimated_;
         key.service = false;
         key.writesZ = true;
         key.vertexLit = true;
         key.detailOffset = 0;
+        key.alphaRef = 15;
         GpuMesh& gpu = batchFor(key);
         const unsigned int base = static_cast<unsigned int>(gpu.vertices.size() / 13);
         for (std::size_t v = 0; v < part.vertices.size(); ++v) {
@@ -1029,11 +1069,13 @@ void Renderer::uploadAnimated() {
         batch.lightmap = animKeys_[i].lightmap;
         batch.roomId = animKeys_[i].roomId;
         batch.alphaTest = animKeys_[i].alphaTest;
+        batch.blend = animKeys_[i].blend;
         batch.dynamic = true;
         batch.service = false;
         batch.writesZ = true;
         batch.vertexLit = true;
         batch.detailOffset = 0;
+        batch.alphaRef = animKeys_[i].alphaRef;
         batch.indexCount = static_cast<int>(mesh.indices.size());
         glGenVertexArrays(1, &batch.vao);
         glGenBuffers(1, &batch.vbo);
@@ -1080,11 +1122,13 @@ void Renderer::appendOrientedBox(const Mat4x3& entity, int roomId, float hx, flo
     key.lightmap = whiteTex_;
     key.roomId = roomId;
     key.alphaTest = false;
+    key.blend = false;
     key.dynamic = false;
     key.service = false;
     key.writesZ = true;
     key.vertexLit = true;
     key.detailOffset = 0;
+    key.alphaRef = 15;
     GpuMesh& gpu = batchFor(key);
     for (int f = 0; f < 6; ++f) {
         const Vec3 a = w[faces[f][0]];
@@ -1138,11 +1182,13 @@ void Renderer::uploadBatches() {
         batch.lightmap = cpuKeys_[i].lightmap;
         batch.roomId = cpuKeys_[i].roomId;
         batch.alphaTest = cpuKeys_[i].alphaTest;
+        batch.blend = cpuKeys_[i].blend;
         batch.dynamic = cpuKeys_[i].dynamic;
         batch.service = cpuKeys_[i].service;
         batch.writesZ = cpuKeys_[i].writesZ;
         batch.vertexLit = cpuKeys_[i].vertexLit;
         batch.detailOffset = cpuKeys_[i].detailOffset;
+        batch.alphaRef = cpuKeys_[i].alphaRef;
         batch.indexCount = static_cast<int>(mesh.indices.size());
         glGenVertexArrays(1, &batch.vao);
         glGenBuffers(1, &batch.vbo);
@@ -1174,8 +1220,10 @@ void Renderer::uploadBatches() {
         for (std::size_t j = i + 1; j < batches_.size(); ++j) {
             const DrawBatch& a = batches_[i];
             const DrawBatch& b = batches_[j];
-            const int ka = (a.service ? 8 : 0) + (a.alphaTest ? 4 : 0) + (a.detailOffset > 0 ? 2 : 0);
-            const int kb = (b.service ? 8 : 0) + (b.alphaTest ? 4 : 0) + (b.detailOffset > 0 ? 2 : 0);
+            const int ka = (a.service ? 8 : 0) + ((a.alphaTest || a.blend) ? 4 : 0) +
+                           (a.detailOffset > 0 ? 2 : 0);
+            const int kb = (b.service ? 8 : 0) + ((b.alphaTest || b.blend) ? 4 : 0) +
+                           (b.detailOffset > 0 ? 2 : 0);
             if (kb < ka) {
                 DrawBatch tmp = batches_[i];
                 batches_[i] = batches_[j];
@@ -1298,7 +1346,8 @@ void Renderer::drawBatches(bool alphaPass) {
     const std::vector<DrawBatch>& list = pass == 0 ? batches_ : animBatches_;
     for (std::size_t i = 0; i < list.size(); ++i) {
         const DrawBatch& b = list[i];
-        if (b.alphaTest != alphaPass) {
+        const bool transparent = b.alphaTest || b.blend;
+        if (transparent != alphaPass) {
             continue;
         }
         if (b.dynamic && !showDynamic_) {
@@ -1316,8 +1365,17 @@ void Renderer::drawBatches(bool alphaPass) {
         glBindTexture(GL_TEXTURE_2D, b.lightmap);
         glUniform1i(glGetUniformLocation(meshProgram_, "uAlphaTest"), b.alphaTest ? 1 : 0);
         glUniform1i(glGetUniformLocation(meshProgram_, "uVertexLit"), b.vertexLit ? 1 : 0);
-        glUniform1f(glGetUniformLocation(meshProgram_, "uAlphaRef"), 15.0f / 255.0f);
-        if (b.alphaTest || b.detailOffset > 0) {
+        {
+            const float ref = static_cast<float>(b.alphaRef > 0 ? b.alphaRef : 15) / 255.0f;
+            glUniform1f(glGetUniformLocation(meshProgram_, "uAlphaRef"), ref);
+        }
+        if (b.blend) {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        } else {
+            glDisable(GL_BLEND);
+        }
+        if (b.alphaTest || b.blend || b.detailOffset > 0) {
             glEnable(GL_POLYGON_OFFSET_FILL);
             const float units = -1.0f * static_cast<float>(1 + b.detailOffset);
             glPolygonOffset(units, units);
@@ -1325,7 +1383,7 @@ void Renderer::drawBatches(bool alphaPass) {
             glDisable(GL_POLYGON_OFFSET_FILL);
         }
         glDepthMask(b.writesZ ? GL_TRUE : GL_FALSE);
-        if (b.alphaTest || b.vertexLit) {
+        if (b.alphaTest || b.blend || b.vertexLit) {
             glDisable(GL_CULL_FACE);
         } else {
             glEnable(GL_CULL_FACE);
@@ -1336,6 +1394,7 @@ void Renderer::drawBatches(bool alphaPass) {
     }
     glDepthMask(GL_TRUE);
     glDisable(GL_POLYGON_OFFSET_FILL);
+    glDisable(GL_BLEND);
 }
 
 void Renderer::render(const Mat4& view, const Vec3& cameraPos) {

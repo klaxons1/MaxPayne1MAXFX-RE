@@ -370,6 +370,48 @@ static void testPcxAlpha() {
     }
     check(anyTrans, "alpha pcx has transparent texels");
     check(anyOpaque, "alpha pcx has opaque texels");
+
+    // Official glass/water pair colour and alpha at different resolutions.
+    maxfx::Image color;
+    color.width = 4;
+    color.height = 4;
+    color.channels = 4;
+    color.pixels.assign(4 * 4 * 4, 200);
+    for (int i = 0; i < 16; ++i) {
+        color.pixels[static_cast<std::size_t>(i * 4 + 3)] = 255;
+    }
+    maxfx::Image mask;
+    mask.width = 1;
+    mask.height = 1;
+    mask.channels = 4;
+    mask.pixels.resize(4);
+    mask.pixels[0] = 64;
+    mask.pixels[1] = 64;
+    mask.pixels[2] = 64;
+    mask.pixels[3] = 255;
+    check(maxfx::applyAlphaMap(color, mask), "resample 1x1 alpha onto 4x4");
+    check(color.pixels[3] == 64, "stretched alpha 50%");
+    check(color.pixels[15] == 64, "stretched alpha corner");
+
+    // 8x8 colour vs 2x2 50% tile, same pairing as water / alpha_50.pcx.
+    maxfx::Image water;
+    water.width = 8;
+    water.height = 8;
+    water.channels = 4;
+    water.pixels.assign(8 * 8 * 4, 180);
+    for (int i = 0; i < 64; ++i) {
+        water.pixels[static_cast<std::size_t>(i * 4 + 3)] = 255;
+    }
+    maxfx::Image a50;
+    a50.width = 2;
+    a50.height = 2;
+    a50.channels = 4;
+    a50.pixels.assign(2 * 2 * 4, 128);
+    for (int i = 0; i < 4; ++i) {
+        a50.pixels[static_cast<std::size_t>(i * 4 + 3)] = 128;
+    }
+    check(maxfx::applyAlphaMap(water, a50), "water 8x8 vs 2x2 50% tile");
+    check(water.pixels[3] == 128, "water opacity 128");
 }
 
 static void testKf2Beretta() {

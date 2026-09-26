@@ -138,6 +138,14 @@ meshes) when present, otherwise Lambert from point lights + static lights.
 Decal z-fighting: materials with `DetailOffset > 0` or alpha test are drawn
 later with `glPolygonOffset`. `WritesZBuffer = FALSE` disables depth writes.
 
+Alpha maps are a **separate texture** in the LDB (often a different resolution
+than the colour map: smoked glass 32×32 vs 64×64, water vs 8×8 `alpha_50.pcx`).
+`applyAlphaMap` bilinear-resamples instead of dropping the mask. JPEG / 24-bit
+masks live in RGB luminance; paletted greyscale PCX already copies grey into A.
+`materials.txt` `BlendedAlphaTest` + `AlphaReference` are honoured (graffiti /
+blood / halos blend; leaves stay a hard 127 cutout). KF2 opacity maps
+(Alex Balder glasses) are composited onto the diffuse.
+
 Every parsed LDB entity is placed in the room:
 
 - Items / characters: KF2/KFS when ExportData exists on disk, otherwise a
@@ -195,16 +203,22 @@ capsule vs those triangles. The viewer:
 
 ## What is still missing (engine-port debt, not viewer hacks)
 
-- Projectile traces, hitscan damage, and CHARANIM_SHOOT* overlay
+- Player controller (walk / shootdodge / bullet-time) — viewer is still a flycam
+- Weapons, hitscan, projectiles, ammo, CHARANIM_SHOOT* overlay
 - Dodge / cover / wounded locomotion (clips are parsed, not selected)
 - Binary `.ai` path graph next to each `.ldb` (tagged, not R_Script)
 - Full FSM / `[Message]` execution (`C_DisplayCrosshair`, `A_Play3DSound`, …)
+- Triggers (radius / look-at / collide) and level-exit streaming
+- Runtime bullet-hole / blood decals from `decals/decals.txt`
+- Dynamic mesh animation (doors, trains)
+- Particles (sparks, shells, smoke)
+- HUD (health, ammo, graphic novel), menus, save/load
 - 3D positional cues attached to FSM A_PlaySound (scripts are parsed; the
   viewer only loops the level theme / first available WAV)
 - SCX / DDS texture decode
-- Graphic-novel page KF2s (environment chunk is skipped; pages are not
-  placed in the level viewer)
-- Particles
+- Graphic-novel page KF2s (environment chunk is skipped)
+- KF2 cameras / point-light animation chunks
+- Additive light halos (currently alpha-blend)
 - MAX-ED editor-only maps that the PC file still stores but the game ignores
 
 ## Tests

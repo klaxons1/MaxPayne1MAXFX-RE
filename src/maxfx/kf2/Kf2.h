@@ -273,6 +273,7 @@ struct Kf2DrawPart {
     bool invisible;
     Vec4 diffuseColor;
     std::vector<std::string> textureFiles;  // relative names from the KF2 material
+    std::vector<std::string> opacityFiles;  // separate opacity map when present
     std::vector<Kf2DrawVertex> vertices;    // triangle list
 };
 

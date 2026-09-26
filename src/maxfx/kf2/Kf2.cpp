@@ -723,6 +723,9 @@ void appendTriangles(const Kf2Mesh& mesh, const Kf2File& file, Kf2DrawMesh& out)
                 np.invisible = mat->invisibleGeometry;
                 np.diffuseColor = mat->diffuse;
                 np.textureFiles = mat->diffuseTexture.files;
+                if (mat->hasOpacityTexture) {
+                    np.opacityFiles = mat->opacityTexture.files;
+                }
             }
             out.parts.push_back(np);
             part = &out.parts.back();
