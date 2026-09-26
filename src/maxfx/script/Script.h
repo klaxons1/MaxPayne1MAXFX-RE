@@ -55,7 +55,9 @@ struct ScriptBlock {
 class Script {
 public:
     // Load `path`, recursively expanding #include relative to that file.
-    static Script loadFile(const std::string& path);
+    // `requiredIncludes` = false skips missing #include (official levels.txt
+    // pulls in globaldefines.h which may not be extracted from the RAS).
+    static Script loadFile(const std::string& path, bool requiredIncludes = true);
 
     // Parse `text` as if it came from `sourceName`. #include is resolved
     // relative to `includeBaseDir` (empty = the process working directory).

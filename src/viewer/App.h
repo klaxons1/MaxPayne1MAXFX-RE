@@ -2,6 +2,7 @@
 #define MAXFX_VIEWER_APP_H
 
 #include "maxfx/ldb/Ldb.h"
+#include "maxfx/levels/Levels.h"
 #include "viewer/Camera.h"
 #include "viewer/Renderer.h"
 
@@ -17,9 +18,9 @@ public:
     ViewerApp();
     ~ViewerApp();
 
-    // `pathOrNull` may be a .ldb file, a directory of .ldb files, or null.
-    // With no argument the viewer looks for data/database/levels next to the
-    // executable (drop ldb-viewer.exe beside the game's data/ folder).
+    // `pathOrNull` may be a .ldb file, a directory, or null.
+    // With no argument the viewer reads data/database/levels/levels.txt next
+    // to the executable (the official playlist: Directory/Level under part1/).
     int run(const char* pathOrNull);
 
 private:
@@ -48,8 +49,10 @@ private:
     std::string fileName_;
     std::string levelsDir_;
     std::vector<std::string> levelPaths_;
+    std::vector<LevelInfo> levelInfos_;
     int levelIndex_;
     std::string statusMessage_;
+    std::string startPlace_;
 };
 
 }  // namespace maxfx

@@ -76,13 +76,15 @@ ldb-viewer.exe
 data\
   database\
     levels\
-      Part1_Level1.ldb
-      Part1_Level2.ldb
-      ...
+      levels.txt
+      part1\
+        Part0_Level1.ldb
+        ...
 ```
 
-Double-click the exe (no arguments). It scans `data\database\levels\*.ldb`
-and **Left / Right** arrows switch maps. You can still pass a file or folder:
+Double-click the exe (no arguments). It reads `data\database\levels\levels.txt`
+(the official playlist: `Directory` + `Level`) and **Left / Right** arrows
+switch maps. You can still pass a file or folder:
 
 ```
 ldb-viewer.exe D:\games\MaxPayne\data\database\levels\Part2_Level1.ldb
@@ -99,7 +101,7 @@ Needs a GPU with OpenGL 3.3 (any driver from the last decade).
 | Q / E or Ctrl / Space | Down / up |
 | Shift | Sprint |
 | Mouse | Look (click to recapture) |
-| Left / Right | Previous / next `.ldb` in `data\database\levels` |
+| Left / Right | Previous / next map from `levels.txt` |
 | F1 | Toggle help |
 | F2 | Wireframe |
 | F3 | Shading: lit → diffuse → lightmap → flat |
@@ -126,9 +128,8 @@ docs/              Android decompile, sample LDB, sample levels.txt
 ```
 
 `levels.txt` field tables and the script grammar are documented in
-`docs/LEVELS.md`. Drop the real game file at
-`data/database/levels/levels.txt` (next to the `.ldb` files) and run
-`levels-dump` with no arguments.
+`docs/LEVELS.md`. The viewer and `levels-dump` both look for
+`data/database/levels/levels.txt` next to the exe.
 
 ## PC vs Android
 

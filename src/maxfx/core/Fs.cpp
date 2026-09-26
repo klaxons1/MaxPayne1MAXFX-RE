@@ -32,6 +32,23 @@ std::string lowerCopy(const std::string& s) {
     return out;
 }
 
+std::string nativeSeparators(const std::string& path) {
+    std::string out = path;
+#ifdef _WIN32
+    const char want = '\\';
+    const char drop = '/';
+#else
+    const char want = '/';
+    const char drop = '\\';
+#endif
+    for (std::size_t i = 0; i < out.size(); ++i) {
+        if (out[i] == drop) {
+            out[i] = want;
+        }
+    }
+    return out;
+}
+
 std::string joinPath(const std::string& a, const std::string& b) {
     if (a.empty()) {
         return b;
@@ -134,6 +151,32 @@ std::vector<std::string> listFilesWithExtension(const std::string& dir, const ch
     return out;
 }
 
+std::vector<std::string> listSubdirectories(const std::string& dir) {
+    std::vector<std::string> out;
+    if (dir.empty()) {
+        return out;
+    }
+    const std::string query = joinPath(dir, "*");
+    WIN32_FIND_DATAA fd;
+    const HANDLE h = FindFirstFileA(query.c_str(), &fd);
+    if (h == INVALID_HANDLE_VALUE) {
+        return out;
+    }
+    do {
+        if (fd.cFileName[0] == '.' &&
+            (fd.cFileName[1] == 0 || (fd.cFileName[1] == '.' && fd.cFileName[2] == 0))) {
+            continue;
+        }
+        if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0) {
+            continue;
+        }
+        out.push_back(joinPath(dir, fd.cFileName));
+    } while (FindNextFileA(h, &fd));
+    FindClose(h);
+    std::sort(out.begin(), out.end());
+    return out;
+}
+
 #else
 
 bool pathExists(const std::string& path) {
@@ -192,7 +235,44 @@ std::vector<std::string> listFilesWithExtension(const std::string& dir, const ch
     return out;
 }
 
+std::vector<std::string> listSubdirectories(const std::string& dir) {
+    std::vector<std::string> out;
+    if (dir.empty()) {
+        return out;
+    }
+    DIR* d = opendir(dir.c_str());
+    if (d == 0) {
+        return out;
+    }
+    while (const struct dirent* ent = readdir(d)) {
+        if (ent->d_name[0] == '.' &&
+            (ent->d_name[1] == 0 || (ent->d_name[1] == '.' && ent->d_name[2] == 0))) {
+            continue;
+        }
+        const std::string full = joinPath(dir, ent->d_name);
+        if (isDirectory(full)) {
+            out.push_back(full);
+        }
+    }
+    closedir(d);
+    std::sort(out.begin(), out.end());
+    return out;
+}
+
 #endif
+
+std::vector<std::string> listFilesWithExtensionRecursive(const std::string& dir,
+                                                         const char* extension) {
+    std::vector<std::string> out = listFilesWithExtension(dir, extension);
+    const std::vector<std::string> subs = listSubdirectories(dir);
+    for (std::size_t i = 0; i < subs.size(); ++i) {
+        const std::vector<std::string> nested =
+            listFilesWithExtensionRecursive(subs[i], extension);
+        out.insert(out.end(), nested.begin(), nested.end());
+    }
+    std::sort(out.begin(), out.end());
+    return out;
+}
 
 std::string readFileText(const std::string& path) {
     std::FILE* f = std::fopen(path.c_str(), "rb");

@@ -23,6 +23,16 @@ std::string executableDir();
 // Non-recursive listing. `extension` is like ".ldb" (case-insensitive).
 std::vector<std::string> listFilesWithExtension(const std::string& dir, const char* extension);
 
+// Recurse into subfolders (part1/, part2/, ...). Used because official
+// Max Payne LDBs live under data/database/levels/<directory>/.
+std::vector<std::string> listFilesWithExtensionRecursive(const std::string& dir,
+                                                         const char* extension);
+
+std::vector<std::string> listSubdirectories(const std::string& dir);
+
+// Rewrite / and \ to the platform separator.
+std::string nativeSeparators(const std::string& path);
+
 // Read a whole file as binary-safe bytes, then treat as a Latin-1/ASCII text
 // string (MAX-FX scripts are not UTF-8). Throws std::runtime_error on failure.
 std::string readFileText(const std::string& path);

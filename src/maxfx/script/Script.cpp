@@ -76,6 +76,16 @@ struct Bracket {
 struct Loader {
     std::map<std::string, std::string> defines;
     std::set<std::string> includeStack;
+    bool requiredIncludes;
+
+    Loader() : requiredIncludes(true) {
+        // Official levels.txt #includes globaldefines.h; if that RAS file is
+        // missing we still accept TRUE/FALSE/GRAVITY_VALUE used in every map.
+        defines["true"] = "1";
+        defines["false"] = "0";
+        defines["gravity_value"] = "-981";
+        defines["timebonus"] = "5";
+    }
 
     std::string loadFile(const std::string& path) {
         const std::string full = path;
@@ -99,6 +109,10 @@ struct Loader {
         unsigned line = 1;
         const std::size_t n = text.size();
         std::size_t i = 0;
+        if (n >= 3 && (unsigned char)text[0] == 0xEF && (unsigned char)text[1] == 0xBB &&
+            (unsigned char)text[2] == 0xBF) {
+            i = 3;
+        }
 
         while (i < n) {
             const char c = text[i];
@@ -404,6 +418,9 @@ struct Loader {
             }
         }
         const std::string resolved = resolveInclude(path, baseDir, file, line);
+        if (resolved.empty()) {
+            return i;
+        }
         const std::string nested = loadFile(resolved);
         out += nested;
         if (!out.empty() && out[out.size() - 1] != '\n') {
@@ -422,17 +439,27 @@ struct Loader {
                               false
 #endif
                                   )) {
-            candidates.push_back(path);
+            candidates.push_back(nativeSeparators(path));
         } else {
             if (!baseDir.empty()) {
-                candidates.push_back(joinPath(baseDir, path));
+                candidates.push_back(nativeSeparators(joinPath(baseDir, path)));
             }
-            candidates.push_back(path);
+            candidates.push_back(nativeSeparators(path));
+            // Walk parents so <globalh.h> still resolves from data/.
+            std::string walk = baseDir;
+            const std::string leaf = fileName(path);
+            for (int up = 0; up < 6 && !walk.empty(); ++up) {
+                candidates.push_back(joinPath(walk, leaf));
+                walk = parentDir(walk);
+            }
         }
         for (std::size_t c = 0; c < candidates.size(); ++c) {
             if (isFile(candidates[c])) {
                 return candidates[c];
             }
+        }
+        if (!requiredIncludes) {
+            return std::string();
         }
         throw ScriptError(formatLine(file, line,
                                      "Can't open include file \"" + path + "\"!"),
@@ -784,8 +811,9 @@ Script Script::fromExpanded(const std::string& expanded, const std::string& sour
     return script;
 }
 
-Script Script::loadFile(const std::string& path) {
+Script Script::loadFile(const std::string& path, bool requiredIncludes) {
     Loader loader;
+    loader.requiredIncludes = requiredIncludes;
     return fromExpanded(loader.loadFile(path), path);
 }
 

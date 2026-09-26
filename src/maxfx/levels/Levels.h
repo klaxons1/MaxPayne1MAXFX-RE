@@ -86,6 +86,8 @@ struct LevelInfo {
     // dataDir/Directory/Level  (forward slashes), matching
     // X_SharedDBLevel::construct: dataDir + "/" + filename after assigning Directory.
     std::string relativeLdbPath() const;
+    // levelsRoot is the folder that contains levels.txt (data/database/levels).
+    std::string absoluteLdbPath(const std::string& levelsRoot) const;
 };
 
 struct LevelDatabase {

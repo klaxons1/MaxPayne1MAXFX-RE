@@ -2,6 +2,8 @@
 
 #include "maxfx/core/Fs.h"
 #include "maxfx/ldb/LdbReader.h"
+#include "maxfx/levels/Levels.h"
+#include "maxfx/script/Script.h"
 #include "viewer/GL.h"
 
 #include <SDL3/SDL.h>
@@ -100,8 +102,10 @@ bool ViewerApp::createWindow(char* error, std::size_t errorSize) {
 
 void ViewerApp::collectLevels(const char* pathOrNull) {
     levelPaths_.clear();
+    levelInfos_.clear();
     levelsDir_.clear();
     levelIndex_ = -1;
+    startPlace_.clear();
 
     std::string explicitFile;
     std::vector<std::string> searchDirs;
@@ -113,9 +117,21 @@ void ViewerApp::collectLevels(const char* pathOrNull) {
             searchDirs.push_back(joinPath(given, "database"));
             searchDirs.push_back(joinPath(joinPath(given, "database"), "levels"));
             searchDirs.push_back(joinPath(given, "levels"));
+            searchDirs.push_back(joinPath(joinPath(joinPath(given, "data"), "database"), "levels"));
         } else if (isFile(given)) {
-            explicitFile = given;
-            searchDirs.push_back(parentDir(given));
+            const std::string lower = lowerCopy(given);
+            if (lower.size() >= 10 &&
+                lower.compare(lower.size() - 10, 10, "levels.txt") == 0) {
+                searchDirs.push_back(parentDir(given));
+            } else {
+                explicitFile = given;
+                searchDirs.push_back(parentDir(given));
+                // data/database/levels/part1/foo.ldb → levels folder is two up.
+                const std::string up = parentDir(parentDir(given));
+                if (!up.empty()) {
+                    searchDirs.push_back(up);
+                }
+            }
         }
     }
 
@@ -127,16 +143,65 @@ void ViewerApp::collectLevels(const char* pathOrNull) {
     if (!exeDir.empty()) {
         appendUniqueDir(&searchDirs,
                         joinPath(joinPath(joinPath(parentDir(exeDir), "data"), "database"), "levels"));
+        appendUniqueDir(&searchDirs, exeDir);
     }
 
-    for (std::size_t i = 0; i < searchDirs.size(); ++i) {
-        const std::vector<std::string> found = listFilesWithExtension(searchDirs[i], ".ldb");
-        if (found.empty()) {
-            continue;
+    std::string levelsTxt = LevelsReader::locateLevelsTxt(pathOrNull ? pathOrNull : "");
+    if (levelsTxt.empty()) {
+        for (std::size_t i = 0; i < searchDirs.size(); ++i) {
+            const std::string cand = joinPath(searchDirs[i], "levels.txt");
+            if (isFile(cand)) {
+                levelsTxt = cand;
+                break;
+            }
         }
-        levelsDir_ = searchDirs[i];
-        levelPaths_ = found;
-        break;
+    }
+
+    if (!levelsTxt.empty()) {
+        try {
+            const LevelDatabase db = LevelsReader::loadFile(levelsTxt);
+            levelsDir_ = db.dataDirectory;
+            int prefer = -1;
+            for (std::size_t i = 0; i < db.levels.size(); ++i) {
+                const std::string ldb = db.levels[i].absoluteLdbPath(db.dataDirectory);
+                if (!isFile(ldb)) {
+                    std::fprintf(stderr, "levels.txt: missing %s\n", ldb.c_str());
+                    continue;
+                }
+                if (db.levels[i].startupLevel && prefer < 0) {
+                    prefer = static_cast<int>(levelPaths_.size());
+                }
+                levelPaths_.push_back(ldb);
+                levelInfos_.push_back(db.levels[i]);
+            }
+            if (prefer >= 0) {
+                levelIndex_ = prefer;
+            } else if (!levelPaths_.empty()) {
+                levelIndex_ = 0;
+            }
+            std::fprintf(stderr, "levels.txt: %s  (%zu maps)\n", levelsTxt.c_str(),
+                         levelPaths_.size());
+        } catch (const std::exception& ex) {
+            std::fprintf(stderr, "levels.txt parse failed (%s): %s\n", levelsTxt.c_str(),
+                         ex.what());
+            levelPaths_.clear();
+            levelInfos_.clear();
+        }
+    }
+
+    if (levelPaths_.empty()) {
+        for (std::size_t i = 0; i < searchDirs.size(); ++i) {
+            std::vector<std::string> found = listFilesWithExtensionRecursive(searchDirs[i], ".ldb");
+            if (found.empty()) {
+                found = listFilesWithExtension(searchDirs[i], ".ldb");
+            }
+            if (found.empty()) {
+                continue;
+            }
+            levelsDir_ = searchDirs[i];
+            levelPaths_ = found;
+            break;
+        }
     }
 
     if (!explicitFile.empty()) {
@@ -145,13 +210,19 @@ void ViewerApp::collectLevels(const char* pathOrNull) {
             levelIndex_ = existing;
         } else {
             levelPaths_.insert(levelPaths_.begin(), explicitFile);
+            if (!levelInfos_.empty()) {
+                levelInfos_.insert(levelInfos_.begin(), LevelInfo());
+            }
             levelIndex_ = 0;
             if (levelsDir_.empty()) {
                 levelsDir_ = parentDir(explicitFile);
             }
         }
-    } else if (!levelPaths_.empty()) {
+    } else if (levelIndex_ < 0 && !levelPaths_.empty()) {
         int prefer = findPathIndex(levelPaths_, "Part1_Level1.ldb");
+        if (prefer < 0) {
+            prefer = findPathIndex(levelPaths_, "Part0_Level1.ldb");
+        }
         levelIndex_ = prefer >= 0 ? prefer : 0;
     }
 }
@@ -172,6 +243,14 @@ bool ViewerApp::loadLevelIndex(int index, bool showLoading) {
     }
     const std::string& path = levelPaths_[static_cast<std::size_t>(index)];
     fileName_ = fileName(path);
+    startPlace_.clear();
+    if (index >= 0 && static_cast<std::size_t>(index) < levelInfos_.size()) {
+        startPlace_ = levelInfos_[static_cast<std::size_t>(index)].playerStartingPlace;
+        if (!levelInfos_[static_cast<std::size_t>(index)].levelName.empty()) {
+            fileName_ = levelInfos_[static_cast<std::size_t>(index)].levelName + "  (" +
+                        fileName_ + ")";
+        }
+    }
     if (showLoading && window_) {
         char msg[512];
         std::snprintf(msg, sizeof(msg), "Loading %s  (%d / %zu) ...", fileName_.c_str(), index + 1,
@@ -236,11 +315,30 @@ void ViewerApp::placeAtSpawn(int index) {
     }
     if (index < 0) {
         index = 0;
+        const std::string want = lowerCopy(startPlace_);
         for (std::size_t i = 0; i < spawns.size(); ++i) {
-            if (spawns[i].name.find("startroom") != std::string::npos &&
-                spawns[i].name.find("Jumppoint") != std::string::npos) {
+            const std::string name = lowerCopy(spawns[i].name);
+            if (!want.empty() && name == want) {
                 index = static_cast<int>(i);
                 break;
+            }
+        }
+        if (index == 0 && !want.empty()) {
+            for (std::size_t i = 0; i < spawns.size(); ++i) {
+                const std::string name = lowerCopy(spawns[i].name);
+                if (name.find(want) != std::string::npos || want.find(name) != std::string::npos) {
+                    index = static_cast<int>(i);
+                    break;
+                }
+            }
+        }
+        if (index == 0) {
+            for (std::size_t i = 0; i < spawns.size(); ++i) {
+                if (spawns[i].name.find("startroom") != std::string::npos &&
+                    spawns[i].name.find("Jumppoint") != std::string::npos) {
+                    index = static_cast<int>(i);
+                    break;
+                }
             }
         }
     }
@@ -413,9 +511,9 @@ int ViewerApp::run(const char* pathOrNull) {
     if (levelPaths_.empty()) {
         std::fprintf(stderr,
                      "no .ldb files found.\n"
-                     "Put ldb-viewer next to the game data folder:\n"
-                     "  ldb-viewer.exe\n"
-                     "  data\\database\\levels\\*.ldb\n"
+                     "Put ldb-viewer.exe next to the game folder so it can read\n"
+                     "  data\\database\\levels\\levels.txt\n"
+                     "(LDBs live in data\\database\\levels\\part1\\ etc.)\n"
                      "or pass a path: ldb-viewer path\\to\\level.ldb\n");
         return 1;
     }

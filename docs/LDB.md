@@ -65,7 +65,9 @@ Room static meshes on PC v32 have identity `R` and a translation that is the
 room origin. Dynamic-mesh `object_to_room` is combined with that origin.
 
 Y is up. The viewer mirrors X (Direct3D left-handed → OpenGL right-handed)
-and reverses triangle winding.
+and reverses triangle winding. Diffuse and lightmap UVs are used as stored
+(Direct3D v=0 is the top row; stb_image uploads that row first, which
+`glTexImage2D` samples at v=0, so `1-v` would flip every texture).
 
 ## Building polygons
 

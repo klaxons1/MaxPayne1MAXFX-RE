@@ -427,29 +427,50 @@ bool Renderer::loadLevel(const Level& level, char* error, std::size_t errorSize)
         }
     }
 
-    std::vector<GLuint> lmGpu(level.lightmaps.size(), greyTex_);
+    int maxLmId = static_cast<int>(level.lightmaps.size()) - 1;
+    for (std::size_t i = 0; i < level.lightmaps.size(); ++i) {
+        if (level.lightmaps[i].id > maxLmId) {
+            maxLmId = level.lightmaps[i].id;
+        }
+    }
+    std::vector<GLuint> lmGpu(static_cast<std::size_t>(maxLmId < 0 ? 0 : maxLmId + 1), greyTex_);
     for (std::size_t i = 0; i < level.lightmaps.size(); ++i) {
         Image img;
         if (decodeEmbeddedImage(level.lightmaps[i].fileType,
                                 level.lightmaps[i].data.empty() ? 0 : &level.lightmaps[i].data[0],
                                 level.lightmaps[i].data.size(), img, 0) &&
             !img.empty()) {
-            const std::size_t id = static_cast<std::size_t>(level.lightmaps[i].id);
             GLuint t = uploadTexture(&img.pixels[0], img.width, img.height, false, true);
-            if (id < lmGpu.size()) {
-                lmGpu[id] = t;
+            // Polygons store either the lightmap's own id or the array index.
+            if (i < lmGpu.size()) {
+                lmGpu[i] = t;
+            }
+            if (level.lightmaps[i].id >= 0 &&
+                static_cast<std::size_t>(level.lightmaps[i].id) < lmGpu.size()) {
+                lmGpu[static_cast<std::size_t>(level.lightmaps[i].id)] = t;
             }
         }
     }
 
-    std::vector<GLuint> matTex(level.materials.size(), whiteTex_);
+    int maxMatId = static_cast<int>(level.materials.size()) - 1;
+    for (std::size_t i = 0; i < level.materials.size(); ++i) {
+        if (level.materials[i].id > maxMatId) {
+            maxMatId = level.materials[i].id;
+        }
+    }
+    std::vector<GLuint> matTex(static_cast<std::size_t>(maxMatId < 0 ? 0 : maxMatId + 1), whiteTex_);
     for (std::size_t i = 0; i < level.materials.size(); ++i) {
         const int diff = level.materials[i].diffuseTexture;
-        if (diff >= 0 && static_cast<std::size_t>(diff) < texGpu.size()) {
-            const std::size_t id = static_cast<std::size_t>(level.materials[i].id);
-            if (id < matTex.size()) {
-                matTex[id] = texGpu[static_cast<std::size_t>(diff)];
-            }
+        if (diff < 0 || static_cast<std::size_t>(diff) >= texGpu.size()) {
+            continue;
+        }
+        const GLuint tex = texGpu[static_cast<std::size_t>(diff)];
+        if (i < matTex.size()) {
+            matTex[i] = tex;
+        }
+        if (level.materials[i].id >= 0 &&
+            static_cast<std::size_t>(level.materials[i].id) < matTex.size()) {
+            matTex[static_cast<std::size_t>(level.materials[i].id)] = tex;
         }
     }
 
@@ -561,10 +582,13 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
             gpu.vertices.push_back(nrm.x);
             gpu.vertices.push_back(nrm.y);
             gpu.vertices.push_back(nrm.z);
+            // Direct3D UV (0,0) = top-left. stb_image also stores the top row
+            // first; glTexImage2D treats that first row as v=0, so D3D UVs
+            // already sample the right texel. (1-v was flipping every map.)
             gpu.vertices.push_back(tv.uv.x);
-            gpu.vertices.push_back(1.0f - tv.uv.y);
+            gpu.vertices.push_back(tv.uv.y);
             gpu.vertices.push_back(tv.lightmapUv.x);
-            gpu.vertices.push_back(1.0f - tv.lightmapUv.y);
+            gpu.vertices.push_back(tv.lightmapUv.y);
         }
 
         const unsigned int emitted = static_cast<unsigned int>(gpu.vertices.size() / 10) - base;

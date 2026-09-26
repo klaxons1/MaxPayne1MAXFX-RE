@@ -225,9 +225,20 @@ std::string candidateLevelsTxt(const std::string& root) {
     if (root.empty()) {
         return std::string();
     }
-    // Accept a file, a folder that contains levels.txt, or a game data/ root.
+    // Accept levels.txt itself, a folder that contains it, or a game data/ root.
     if (isFile(root)) {
-        return root;
+        if (lowerCopy(fileName(root)) == "levels.txt") {
+            return root;
+        }
+        std::string dir = parentDir(root);
+        for (int up = 0; up < 4 && !dir.empty(); ++up) {
+            const std::string cand = joinPath(dir, "levels.txt");
+            if (isFile(cand)) {
+                return cand;
+            }
+            dir = parentDir(dir);
+        }
+        return std::string();
     }
     const std::string direct = joinPath(root, "levels.txt");
     if (isFile(direct)) {
@@ -300,6 +311,24 @@ std::string LevelInfo::relativeLdbPath() const {
     return dir + "/" + filename;
 }
 
+std::string LevelInfo::absoluteLdbPath(const std::string& levelsRoot) const {
+    std::string dir = directory;
+    for (std::size_t i = 0; i < dir.size(); ++i) {
+        if (dir[i] == '\\' || dir[i] == '/') {
+#ifdef _WIN32
+            dir[i] = '\\';
+#else
+            dir[i] = '/';
+#endif
+        }
+    }
+    std::string root = levelsRoot.empty() ? std::string() : nativeSeparators(levelsRoot);
+    if (dir.empty() || dir == "." || dir == "./" || dir == ".\\") {
+        return nativeSeparators(joinPath(root, filename));
+    }
+    return nativeSeparators(joinPath(joinPath(root, dir), filename));
+}
+
 const LevelInfo* LevelDatabase::findById(const std::string& id) const {
     const std::string key = lowerCopy(id);
     for (std::size_t i = 0; i < levels.size(); ++i) {
@@ -329,7 +358,8 @@ LevelDatabase LevelsReader::parseScript(Script& script, const std::string& dataD
 }
 
 LevelDatabase LevelsReader::loadFile(const std::string& path) {
-    Script script = Script::loadFile(path);
+    // Official levels.txt #includes globaldefines.h from the RAS; skip if absent.
+    Script script = Script::loadFile(path, false);
     return parseScript(script, parentDir(path));
 }
 
