@@ -33,6 +33,37 @@ std::uint8_t TaggedReader::readRawU8() {
     return data_[pos_++];
 }
 
+std::uint16_t TaggedReader::readRawU16() {
+    need(2);
+    const std::uint16_t v = static_cast<std::uint16_t>(data_[pos_] | (data_[pos_ + 1] << 8));
+    pos_ += 2;
+    return v;
+}
+
+std::uint32_t TaggedReader::readRawU32() {
+    need(4);
+    const std::uint32_t v = static_cast<std::uint32_t>(data_[pos_]) |
+                           (static_cast<std::uint32_t>(data_[pos_ + 1]) << 8) |
+                           (static_cast<std::uint32_t>(data_[pos_ + 2]) << 16) |
+                           (static_cast<std::uint32_t>(data_[pos_ + 3]) << 24);
+    pos_ += 4;
+    return v;
+}
+
+float TaggedReader::readRawF32() { return readF32(); }
+
+void TaggedReader::skip(std::size_t bytes) {
+    need(bytes);
+    pos_ += bytes;
+}
+
+void TaggedReader::seek(std::size_t position) {
+    if (position > size_) {
+        throw ReadError(makeError("seek past end of stream", position), position);
+    }
+    pos_ = position;
+}
+
 void TaggedReader::readRaw(void* dst, std::size_t bytes) {
     need(bytes);
     std::memcpy(dst, data_ + pos_, bytes);

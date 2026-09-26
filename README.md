@@ -1,8 +1,9 @@
 # MAX-FX reverse engineering — LDB level viewer
 
-C++11 toolkit for Max Payne 1: a complete tagged-binary `*.ldb` parser, an
-SDL3 / OpenGL 3.3 fly-through viewer, and an `R_Script` parser for
-`data/database/levels/levels.txt` (`X_SharedDBLevel`).
+C++11 toolkit for Max Payne 1: tagged-binary parsers for `*.ldb` levels and
+`*.kf2` / `*.kfs` / `*.skd` models, an `R_Script` loader for every
+`data/database/*.txt` (materials, skins, items, decals, `levels.txt`), and an
+SDL3 / OpenGL 3.3 fly-through viewer.
 
 The long-term goal is a source port of the MAX-FX engine. This tree is the
 first brick — load every block of a PC LDB (version 32) and look at the level.
@@ -104,15 +105,24 @@ Needs a GPU with OpenGL 3.3 (any driver from the last decade).
 | Left / Right | Previous / next map from `levels.txt` |
 | F1 | Toggle help |
 | F2 | Wireframe |
-| F3 | Shading: lit → diffuse → lightmap → flat |
+| F3 | Shading: lit → diffuse → lightmap → vertex |
 | F4 | Helper gizmos (waypoints, triggers, characters, items, lights, exits) |
 | F5 | Toggle dynamic meshes |
+| F6 | Service / no-draw materials (`DrawPolygons = FALSE` in `materials.txt`) |
 | `[` `]` | Isolate one room / show all |
 | PgUp / PgDn | Jump between jumppoints |
 | R | Reset to `::startroom` jumppoint |
 | Esc | Release mouse, Esc again quits |
 
-Lit shading is `diffuse * lightmap * 2`, the classic MAX-FX look.
+Lit shading is `diffuse * lightmap * 2`, the classic MAX-FX look. Vertex
+shading uses LDB radiosity samples when present, otherwise point / static
+lights. Coplanar decals (`DetailOffset` / alpha-tested materials) are drawn
+with polygon offset. Paletted greyscale PCX (`*_alpha.pcx`) is stored in the
+alpha channel; LDB materials with a separate alpha texture are composited.
+
+Characters and level items are placed from the LDB using `skins/*.txt` /
+`level_items/*.txt` `ExportData` KF2/KFS meshes when those files are next to
+the game data.
 
 ## Layout
 
@@ -121,10 +131,12 @@ src/maxfx/core     tagged stream + math + filesystem helpers
 src/maxfx/script   R_Script / R_ScriptLoader (.txt databases)
 src/maxfx/levels   levels.txt → X_SharedDBLevel
 src/maxfx/ldb      LDB structures + reader
-src/maxfx/image    JPG/TGA (stb) + PCX decoder
+src/maxfx/kf2      KF2 / KFS / SKD model reader
+src/maxfx/db       materials.txt, skins, level_items, decals, script catalog
+src/maxfx/image    JPG/TGA (stb) + PCX (including greyscale alpha)
 src/viewer         SDL3 OpenGL viewer
 src/apps           ldb-dump, ldb-viewer, levels-dump, levels-test
-docs/              Android decompile, sample LDB, sample levels.txt
+docs/              Android decompile, sample LDB, sample levels.txt, STATUS.md
 ```
 
 `levels.txt` field tables and the script grammar are documented in

@@ -2,6 +2,7 @@
 #define MAXFX_VIEWER_RENDERER_H
 
 #include "maxfx/core/Math.h"
+#include "maxfx/db/Database.h"
 #include "maxfx/ldb/Ldb.h"
 #include "viewer/GL.h"
 
@@ -14,7 +15,7 @@ enum ShadingMode {
     kShadeLit = 0,       // diffuse * lightmap * 2
     kShadeDiffuse = 1,   // albedo only
     kShadeLightmap = 2,  // lightmap only
-    kShadeVertex = 3     // flat grey
+    kShadeVertex = 3     // radiosity / point-light vertex colour
 };
 
 struct DrawBatch {
@@ -27,6 +28,10 @@ struct DrawBatch {
     int roomId;
     bool alphaTest;
     bool dynamic;
+    bool service;       // materials.txt DrawPolygons = FALSE
+    bool writesZ;
+    bool vertexLit;     // KF2 entities (no lightmap)
+    int detailOffset;   // materials.txt DetailOffset, plus alpha decals
 };
 
 struct LineVertex {
@@ -47,7 +52,7 @@ public:
     ~Renderer();
 
     bool init(char* error, std::size_t errorSize);
-    bool loadLevel(const Level& level, char* error, std::size_t errorSize);
+    bool loadLevel(const Level& level, const Database* database, char* error, std::size_t errorSize);
     void clearLevel();
     void shutdown();
 
@@ -67,8 +72,14 @@ public:
     void setShowHelpers(bool on) { showHelpers_ = on; }
     bool showHelpers() const { return showHelpers_; }
 
+    void setShowService(bool on) { showService_ = on; }
+    bool showService() const { return showService_; }
+
     void setShowHud(bool on) { showHud_ = on; }
     bool showHud() const { return showHud_; }
+
+    unsigned int entityMeshCount() const { return entityMeshCount_; }
+    unsigned int entityTriangleCount() const { return entityTriangleCount_; }
 
     // -1 = all rooms
     void setIsolatedRoom(int roomId) { isolatedRoom_ = roomId; }
@@ -84,7 +95,7 @@ public:
 
 private:
     struct GpuMesh {
-        std::vector<float> vertices;  // pos3 nrm3 uv2 lm2
+        std::vector<float> vertices;  // pos3 nrm3 uv2 lm2 color3
         std::vector<unsigned int> indices;
     };
 
@@ -94,11 +105,24 @@ private:
         int roomId;
         bool alphaTest;
         bool dynamic;
+        bool service;
+        bool writesZ;
+        bool vertexLit;
+        int detailOffset;
 
         bool operator==(const BatchKey& o) const {
             return diffuse == o.diffuse && lightmap == o.lightmap && roomId == o.roomId &&
-                   alphaTest == o.alphaTest && dynamic == o.dynamic;
+                   alphaTest == o.alphaTest && dynamic == o.dynamic && service == o.service &&
+                   writesZ == o.writesZ && vertexLit == o.vertexLit &&
+                   detailOffset == o.detailOffset;
         }
+    };
+
+    struct WorldLight {
+        Vec3 position;
+        Vec3 color;
+        float intensity;
+        float falloff;
     };
 
     GLuint uploadTexture(const unsigned char* rgba, int w, int h, bool mipmaps, bool clamp);
@@ -106,8 +130,16 @@ private:
     void appendMesh(const std::vector<Vec3>& vertices, const std::vector<Vec3>& normals,
                     const std::vector<TextureVertex>& texVerts, const std::vector<Polygon>& polygons,
                     const Mat4x3& transform, int roomId, bool dynamic, const Level& level,
-                    const std::vector<GLuint>& materialTextures,
-                    const std::vector<GLuint>& lightmapTextures);
+                    const Database* database, const std::vector<GLuint>& materialTextures,
+                    const std::vector<GLuint>& lightmapTextures,
+                    const std::vector<RadiositySample>& radiosity,
+                    const std::vector<WorldLight>& lights);
+    void appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int roomId,
+                       const std::vector<WorldLight>& lights, const Database* database,
+                       const std::string& modelDir);
+    GpuMesh& batchFor(const BatchKey& key);
+    Vec3 shadeVertex(const Vec3& worldPos, const Vec3& worldNrm, const std::vector<WorldLight>& lights) const;
+    GLuint textureFromFile(const std::string& path);
     void uploadBatches();
     void buildHelpers(const Level& level);
     void buildFont();
@@ -141,11 +173,14 @@ private:
     bool wireframe_;
     bool showDynamic_;
     bool showHelpers_;
+    bool showService_;
     bool showHud_;
     int isolatedRoom_;
     int width_;
     int height_;
     unsigned int triangleCount_;
+    unsigned int entityMeshCount_;
+    unsigned int entityTriangleCount_;
     std::vector<SpawnPoint> spawns_;
 };
 

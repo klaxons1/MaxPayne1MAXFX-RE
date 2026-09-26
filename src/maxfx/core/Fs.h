@@ -37,6 +37,16 @@ std::string nativeSeparators(const std::string& path);
 // string (MAX-FX scripts are not UTF-8). Throws std::runtime_error on failure.
 std::string readFileText(const std::string& path);
 
+// Raw bytes. Throws std::runtime_error on failure.
+std::vector<unsigned char> readFileBytes(const std::string& path);
+
+std::string fileStem(const std::string& path);
+std::string fileExtension(const std::string& path);  // includes the dot, lower-cased
+
+// If `path` exists, return it. Otherwise look for a same-name file in the
+// parent directory ignoring ASCII case (RAS archives mix Beretta.jpg / beretta.jpg).
+std::string existingPathIgnoreCase(const std::string& path);
+
 }  // namespace maxfx
 
 #endif  // MAXFX_CORE_FS_H

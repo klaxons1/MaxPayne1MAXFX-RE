@@ -9,7 +9,7 @@ namespace maxfx {
 struct Image {
     int width;
     int height;
-    int channels;  // 3 = RGB, 4 = RGBA
+    int channels;  // always 4 (RGBA) after a successful decode
     std::vector<unsigned char> pixels;  // top-left origin, tightly packed
 
     Image() : width(0), height(0), channels(0) {}
@@ -21,6 +21,21 @@ struct Image {
 // SCX (Remedy proprietary) is not supported and returns false.
 bool decodeEmbeddedImage(int fileType, const unsigned char* data, std::size_t size, Image& out,
                          std::string* errorMessage = 0);
+
+// Decode from a memory blob. Format is sniffed from `fileTypeHint` (".pcx",
+// "pcx", "jpg", ...) or from the payload magic if the hint is empty.
+bool decodeImageMemory(const unsigned char* data, std::size_t size, const std::string& fileTypeHint,
+                       Image& out, std::string* errorMessage = 0);
+
+// Load a file from disk. Paletted greyscale PCX stores the grey value in
+// alpha so MAX-FX `*_alpha.pcx` maps display correctly. If a companion
+// `stem_alpha.pcx` / `.jpg` / `.tga` sits next to a colour file, it is
+// composited into the colour image's alpha channel.
+bool loadImageFile(const std::string& path, Image& out, std::string* errorMessage = 0);
+
+// Copy luminance (max RGB, or the alpha channel if already set) from `alpha`
+// into `color`'s alpha. Sizes must match. Returns false on mismatch.
+bool applyAlphaMap(Image& color, const Image& alpha);
 
 }  // namespace maxfx
 

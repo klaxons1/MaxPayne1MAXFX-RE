@@ -72,8 +72,13 @@ public:
 
     std::uint8_t peekTag() const;
     std::uint8_t readRawU8();
+    std::uint16_t readRawU16();
+    std::uint32_t readRawU32();
+    float readRawF32();
     void readRaw(void* dst, std::size_t bytes);
     std::vector<std::uint8_t> readBytes(std::size_t bytes);
+    void skip(std::size_t bytes);
+    void seek(std::size_t position);
 
     void expectTag(std::uint8_t tag);
     // Remedy serialises both std::vector (0x1C) and std::map (0x1F) as

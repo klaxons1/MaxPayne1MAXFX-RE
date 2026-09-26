@@ -42,6 +42,7 @@ typedef void GLvoid;
 #define GL_FRONT_AND_BACK 0x0408
 #define GL_LINE 0x1B01
 #define GL_FILL 0x1B02
+#define GL_POLYGON_OFFSET_FILL 0x8037
 #define GL_TEXTURE_2D 0x0DE1
 #define GL_TEXTURE0 0x84C0
 #define GL_TEXTURE1 0x84C1
@@ -109,6 +110,7 @@ extern void(APIENTRY* glBlendFunc)(GLenum, GLenum);
 extern void(APIENTRY* glCullFace)(GLenum);
 extern void(APIENTRY* glFrontFace)(GLenum);
 extern void(APIENTRY* glPolygonMode)(GLenum, GLenum);
+extern void(APIENTRY* glPolygonOffset)(GLfloat, GLfloat);
 extern void(APIENTRY* glLineWidth)(GLfloat);
 extern void(APIENTRY* glPixelStorei)(GLenum, GLint);
 extern const GLubyte*(APIENTRY* glGetString)(GLenum);

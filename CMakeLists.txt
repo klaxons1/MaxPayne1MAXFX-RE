@@ -22,6 +22,8 @@ add_library(maxfx_ldb STATIC
     src/maxfx/levels/Levels.cpp
     src/maxfx/ldb/LdbReader.cpp
     src/maxfx/image/Image.cpp
+    src/maxfx/kf2/Kf2.cpp
+    src/maxfx/db/Database.cpp
 )
 target_include_directories(maxfx_ldb PUBLIC src third_party)
 

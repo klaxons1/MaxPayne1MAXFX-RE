@@ -1,10 +1,14 @@
 #include "viewer/Renderer.h"
 
+#include "maxfx/core/Fs.h"
 #include "maxfx/image/Image.h"
+#include "maxfx/kf2/Kf2.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <map>
 
 namespace maxfx {
 namespace {
@@ -15,35 +19,42 @@ const char* kMeshVS =
     "layout(location=1) in vec3 aNrm;\n"
     "layout(location=2) in vec2 aUV;\n"
     "layout(location=3) in vec2 aLM;\n"
+    "layout(location=4) in vec3 aColor;\n"
     "uniform mat4 uViewProj;\n"
     "out vec2 vUV;\n"
     "out vec2 vLM;\n"
+    "out vec3 vColor;\n"
     "void main(){\n"
     "  gl_Position = uViewProj * vec4(aPos,1.0);\n"
     "  vUV = aUV;\n"
     "  vLM = aLM;\n"
+    "  vColor = aColor;\n"
     "}\n";
 
 const char* kMeshFS =
     "#version 330 core\n"
     "in vec2 vUV;\n"
     "in vec2 vLM;\n"
+    "in vec3 vColor;\n"
     "uniform sampler2D uDiffuse;\n"
     "uniform sampler2D uLightmap;\n"
     "uniform int uMode;\n"
     "uniform int uAlphaTest;\n"
+    "uniform int uVertexLit;\n"
     "uniform float uLmScale;\n"
+    "uniform float uAlphaRef;\n"
     "out vec4 frag;\n"
     "void main(){\n"
     "  vec4 diff = texture(uDiffuse, vUV);\n"
-    "  if (uAlphaTest != 0 && diff.a < 0.45) discard;\n"
+    "  if (uAlphaTest != 0 && diff.a < uAlphaRef) discard;\n"
     "  vec3 lm = texture(uLightmap, vLM).rgb * uLmScale;\n"
     "  vec3 color;\n"
     "  if (uMode == 1) color = diff.rgb;\n"
     "  else if (uMode == 2) color = texture(uLightmap, vLM).rgb;\n"
-    "  else if (uMode == 3) color = vec3(0.62);\n"
+    "  else if (uMode == 3) color = diff.rgb * vColor;\n"
+    "  else if (uVertexLit != 0) color = diff.rgb * vColor * uLmScale;\n"
     "  else color = diff.rgb * lm;\n"
-    "  frag = vec4(color, 1.0);\n"
+    "  frag = vec4(color, diff.a);\n"
     "}\n";
 
 const char* kLineVS =
@@ -231,11 +242,14 @@ Renderer::Renderer()
       wireframe_(false),
       showDynamic_(true),
       showHelpers_(true),
+      showService_(false),
       showHud_(true),
       isolatedRoom_(-1),
       width_(1),
       height_(1),
-      triangleCount_(0) {}
+      triangleCount_(0),
+      entityMeshCount_(0),
+      entityTriangleCount_(0) {}
 
 Renderer::~Renderer() {
     // GPU objects are released by shutdown() while the GL context is still alive.
@@ -282,6 +296,8 @@ void Renderer::clearLevelGpu() {
     cpuBatches_.clear();
     cpuKeys_.clear();
     triangleCount_ = 0;
+    entityMeshCount_ = 0;
+    entityTriangleCount_ = 0;
     spawns_.clear();
     isolatedRoom_ = -1;
     lineCount_ = 0;
@@ -411,19 +427,43 @@ void Renderer::buildFont() {
     glBindVertexArray(0);
 }
 
-bool Renderer::loadLevel(const Level& level, char* error, std::size_t errorSize) {
+bool Renderer::loadLevel(const Level& level, const Database* database, char* error,
+                         std::size_t errorSize) {
     (void)error;
     (void)errorSize;
     clearLevelGpu();
 
-    std::vector<GLuint> texGpu(level.textures.size(), whiteTex_);
+    std::vector<Image> decodedTex(level.textures.size());
+    std::vector<char> decodedOk(level.textures.size(), 0);
     for (std::size_t i = 0; i < level.textures.size(); ++i) {
-        Image img;
         if (decodeEmbeddedImage(level.textures[i].fileType,
                                 level.textures[i].data.empty() ? 0 : &level.textures[i].data[0],
-                                level.textures[i].data.size(), img, 0) &&
-            !img.empty()) {
-            texGpu[i] = uploadTexture(&img.pixels[0], img.width, img.height, true, false);
+                                level.textures[i].data.size(), decodedTex[i], 0) &&
+            !decodedTex[i].empty()) {
+            decodedOk[i] = 1;
+        }
+    }
+
+    std::vector<GLuint> texGpu(level.textures.size(), whiteTex_);
+    std::vector<char> uploaded(level.textures.size(), 0);
+    for (std::size_t i = 0; i < level.materials.size(); ++i) {
+        const Material& mat = level.materials[i];
+        const int diff = mat.diffuseTexture;
+        if (diff < 0 || static_cast<std::size_t>(diff) >= decodedTex.size() || !decodedOk[static_cast<std::size_t>(diff)]) {
+            continue;
+        }
+        Image img = decodedTex[static_cast<std::size_t>(diff)];
+        if (mat.alphaTexture >= 0 && static_cast<std::size_t>(mat.alphaTexture) < decodedTex.size() &&
+            decodedOk[static_cast<std::size_t>(mat.alphaTexture)]) {
+            applyAlphaMap(img, decodedTex[static_cast<std::size_t>(mat.alphaTexture)]);
+        }
+        texGpu[static_cast<std::size_t>(diff)] = uploadTexture(&img.pixels[0], img.width, img.height, true, false);
+        uploaded[static_cast<std::size_t>(diff)] = 1;
+    }
+    for (std::size_t i = 0; i < decodedTex.size(); ++i) {
+        if (!uploaded[i] && decodedOk[i]) {
+            texGpu[i] = uploadTexture(&decodedTex[i].pixels[0], decodedTex[i].width, decodedTex[i].height, true,
+                                      false);
         }
     }
 
@@ -440,14 +480,13 @@ bool Renderer::loadLevel(const Level& level, char* error, std::size_t errorSize)
                                 level.lightmaps[i].data.empty() ? 0 : &level.lightmaps[i].data[0],
                                 level.lightmaps[i].data.size(), img, 0) &&
             !img.empty()) {
-            GLuint t = uploadTexture(&img.pixels[0], img.width, img.height, false, true);
-            // Polygons store either the lightmap's own id or the array index.
+            GLuint tex = uploadTexture(&img.pixels[0], img.width, img.height, false, true);
             if (i < lmGpu.size()) {
-                lmGpu[i] = t;
+                lmGpu[i] = tex;
             }
             if (level.lightmaps[i].id >= 0 &&
                 static_cast<std::size_t>(level.lightmaps[i].id) < lmGpu.size()) {
-                lmGpu[static_cast<std::size_t>(level.lightmaps[i].id)] = t;
+                lmGpu[static_cast<std::size_t>(level.lightmaps[i].id)] = tex;
             }
         }
     }
@@ -474,6 +513,29 @@ bool Renderer::loadLevel(const Level& level, char* error, std::size_t errorSize)
         }
     }
 
+    std::vector<WorldLight> lights;
+    lights.reserve(level.pointLights.size() + level.staticLights.size());
+    for (std::size_t i = 0; i < level.pointLights.size(); ++i) {
+        const PointLight& pl = level.pointLights[i];
+        WorldLight w;
+        const Mat4x3 roomX = roomTransform(level, pl.properties.roomId);
+        w.position = worldPoint(roomX, pl.properties.objectToRoom);
+        w.color = Vec3(pl.r, pl.g, pl.b);
+        w.intensity = pl.intensity > 0.0f ? pl.intensity : 1.0f;
+        w.falloff = pl.falloff;
+        lights.push_back(w);
+    }
+    for (std::size_t i = 0; i < level.staticLights.size(); ++i) {
+        const StaticLight& sl = level.staticLights[i];
+        WorldLight w;
+        const Mat4x3 roomX = roomTransform(level, sl.properties.roomId);
+        w.position = worldPoint(roomX, sl.properties.objectToRoom);
+        w.color = Vec3(sl.r, sl.g, sl.b);
+        w.intensity = (sl.intensity > 0.0f ? sl.intensity : 1.0f) * (sl.colorMultiplier > 0.0f ? sl.colorMultiplier : 1.0f);
+        w.falloff = sl.falloffRange;
+        lights.push_back(w);
+    }
+
     for (std::size_t i = 0; i < level.staticMeshes.size(); ++i) {
         const StaticMesh& mesh = level.staticMeshes[i];
         int roomId = -1;
@@ -485,7 +547,7 @@ bool Renderer::loadLevel(const Level& level, char* error, std::size_t errorSize)
             }
         }
         appendMesh(mesh.vertices, mesh.normals, level.staticTextureVertices, mesh.polygons,
-                   mesh.transform, roomId, false, level, matTex, lmGpu);
+                   mesh.transform, roomId, false, level, database, matTex, lmGpu, mesh.radiosity, lights);
     }
 
     for (std::size_t i = 0; i < level.dynamicMeshes.size(); ++i) {
@@ -493,7 +555,70 @@ bool Renderer::loadLevel(const Level& level, char* error, std::size_t errorSize)
         const Mat4x3 roomX = roomTransform(level, mesh.properties.roomId);
         const Mat4x3 world = combine(roomX, mesh.properties.objectToRoom);
         appendMesh(mesh.vertices, mesh.normals, level.dynamicTextureVertices, mesh.polygons, world,
-                   mesh.properties.roomId, true, level, matTex, lmGpu);
+                   mesh.properties.roomId, true, level, database, matTex, lmGpu, mesh.radiosity, lights);
+    }
+
+    if (database) {
+        std::vector<std::string> nodeNames;
+        std::vector<Mat4x3> nodeWorlds;
+        for (std::size_t i = 0; i < level.items.size(); ++i) {
+            const LevelItem& it = level.items[i];
+            const ItemDef* def = database->findItem(it.itemName);
+            if (def == 0 || def->lods.empty()) {
+                continue;
+            }
+            const Kf2File* kf = database->model(def->lods[0].resolvedExport);
+            if (kf == 0) {
+                continue;
+            }
+            std::vector<Kf2DrawMesh> draws;
+            kf2BuildDrawMeshes(*kf, draws);
+            kf2NodeWorldTransforms(*kf, &nodeNames, &nodeWorlds);
+            const Mat4x3 roomX = roomTransform(level, it.properties.roomId);
+            const Mat4x3 entity = combine(roomX, it.properties.objectToRoom);
+            const std::string modelDir = parentDir(kf->sourcePath);
+            for (std::size_t m = 0; m < draws.size(); ++m) {
+                Mat4x3 local;
+                for (std::size_t n = 0; n < nodeNames.size(); ++n) {
+                    if (nodeNames[n] == draws[m].nodeName) {
+                        local = nodeWorlds[n];
+                        break;
+                    }
+                }
+                appendKf2Mesh(draws[m], combine(entity, local), it.properties.roomId, lights, database,
+                              modelDir);
+                ++entityMeshCount_;
+            }
+        }
+        for (std::size_t i = 0; i < level.characters.size(); ++i) {
+            const Character& ch = level.characters[i];
+            const SkinDef* def = database->findSkin(ch.characterName);
+            if (def == 0 || def->lods.empty()) {
+                continue;
+            }
+            const Kf2File* kf = database->model(def->lods[0].resolvedExport);
+            if (kf == 0) {
+                continue;
+            }
+            std::vector<Kf2DrawMesh> draws;
+            kf2BuildDrawMeshes(*kf, draws);
+            kf2NodeWorldTransforms(*kf, &nodeNames, &nodeWorlds);
+            const Mat4x3 roomX = roomTransform(level, ch.properties.roomId);
+            const Mat4x3 entity = combine(roomX, ch.properties.objectToRoom);
+            const std::string modelDir = parentDir(kf->sourcePath);
+            for (std::size_t m = 0; m < draws.size(); ++m) {
+                Mat4x3 local;
+                for (std::size_t n = 0; n < nodeNames.size(); ++n) {
+                    if (nodeNames[n] == draws[m].nodeName) {
+                        local = nodeWorlds[n];
+                        break;
+                    }
+                }
+                appendKf2Mesh(draws[m], combine(entity, local), ch.properties.roomId, lights, database,
+                              modelDir);
+                ++entityMeshCount_;
+            }
+        }
     }
 
     uploadBatches();
@@ -516,11 +641,67 @@ bool Renderer::loadLevel(const Level& level, char* error, std::size_t errorSize)
     return true;
 }
 
+Renderer::GpuMesh& Renderer::batchFor(const BatchKey& key) {
+    for (std::size_t b = 0; b < cpuKeys_.size(); ++b) {
+        if (cpuKeys_[b] == key) {
+            return cpuBatches_[b];
+        }
+    }
+    cpuKeys_.push_back(key);
+    cpuBatches_.push_back(GpuMesh());
+    return cpuBatches_.back();
+}
+
+Vec3 Renderer::shadeVertex(const Vec3& worldPos, const Vec3& worldNrm,
+                           const std::vector<WorldLight>& lights) const {
+    Vec3 lit(0.18f, 0.18f, 0.20f);
+    const Vec3 n = normalize(worldNrm);
+    for (std::size_t i = 0; i < lights.size(); ++i) {
+        const WorldLight& L = lights[i];
+        Vec3 toL = L.position - worldPos;
+        const float dist = length(toL);
+        if (dist < 1.0e-4f) {
+            continue;
+        }
+        toL = toL * (1.0f / dist);
+        const float fall = L.falloff > 0.05f ? L.falloff : 4.0f;
+        const float att = L.intensity / (1.0f + (dist / fall) * (dist / fall));
+        const float ndotl = clamp(dot(n, toL), 0.0f, 1.0f);
+        const float w = att * (0.35f + 0.65f * ndotl);
+        lit.x += L.color.x * w;
+        lit.y += L.color.y * w;
+        lit.z += L.color.z * w;
+    }
+    lit.x = clamp(lit.x, 0.05f, 4.0f);
+    lit.y = clamp(lit.y, 0.05f, 4.0f);
+    lit.z = clamp(lit.z, 0.05f, 4.0f);
+    return lit;
+}
+
+GLuint Renderer::textureFromFile(const std::string& path) {
+    Image img;
+    if (!loadImageFile(path, img, 0) || img.empty()) {
+        return whiteTex_;
+    }
+    return uploadTexture(&img.pixels[0], img.width, img.height, true, false);
+}
+
 void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<Vec3>& normals,
                          const std::vector<TextureVertex>& texVerts, const std::vector<Polygon>& polygons,
                          const Mat4x3& transform, int roomId, bool dynamic, const Level& level,
-                         const std::vector<GLuint>& materialTextures,
-                         const std::vector<GLuint>& lightmapTextures) {
+                         const Database* database, const std::vector<GLuint>& materialTextures,
+                         const std::vector<GLuint>& lightmapTextures,
+                         const std::vector<RadiositySample>& radiosity,
+                         const std::vector<WorldLight>& lights) {
+    std::map<int, Vec3> radio;
+    float radioMax = 0.0f;
+    for (std::size_t i = 0; i < radiosity.size(); ++i) {
+        radio[radiosity[i].key] = radiosity[i].value;
+        radioMax = std::max(radioMax, std::max(radiosity[i].value.x,
+                                               std::max(radiosity[i].value.y, radiosity[i].value.z)));
+    }
+    const float radioScale = radioMax > 2.0f ? (1.0f / 255.0f) : 1.0f;
+
     for (std::size_t p = 0; p < polygons.size(); ++p) {
         const Polygon& poly = polygons[p];
         if (poly.vertexCount < 3) {
@@ -529,38 +710,44 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
         GLuint diff = whiteTex_;
         GLuint lm = greyTex_;
         bool alpha = false;
+        bool service = false;
+        bool writesZ = true;
+        int detailOffset = 0;
+        const Material* mat = 0;
         if (poly.materialId >= 0 && static_cast<std::size_t>(poly.materialId) < materialTextures.size()) {
             diff = materialTextures[static_cast<std::size_t>(poly.materialId)];
-            const Material* mat = level.findMaterialByIndex(poly.materialId);
+            mat = level.findMaterialByIndex(poly.materialId);
             if (mat) {
                 alpha = mat->alphaTest;
+                if (database) {
+                    const MaterialCategory* cat = database->findMaterial(mat->category);
+                    if (cat) {
+                        service = !cat->drawPolygons;
+                        writesZ = cat->writesZBuffer;
+                        detailOffset = cat->detailOffset;
+                    }
+                }
             }
+        }
+        if (alpha && detailOffset < 1) {
+            detailOffset = 1;
         }
         if (poly.lightmapId >= 0 && static_cast<std::size_t>(poly.lightmapId) < lightmapTextures.size()) {
             lm = lightmapTextures[static_cast<std::size_t>(poly.lightmapId)];
         }
 
-        int batchIndex = -1;
-        for (std::size_t b = 0; b < cpuKeys_.size(); ++b) {
-            if (cpuKeys_[b].diffuse == diff && cpuKeys_[b].lightmap == lm && cpuKeys_[b].roomId == roomId &&
-                cpuKeys_[b].alphaTest == alpha && cpuKeys_[b].dynamic == dynamic) {
-                batchIndex = static_cast<int>(b);
-                break;
-            }
-        }
-        if (batchIndex < 0) {
-            BatchKey key;
-            key.diffuse = diff;
-            key.lightmap = lm;
-            key.roomId = roomId;
-            key.alphaTest = alpha;
-            key.dynamic = dynamic;
-            cpuKeys_.push_back(key);
-            cpuBatches_.push_back(GpuMesh());
-            batchIndex = static_cast<int>(cpuKeys_.size() - 1);
-        }
-        GpuMesh& gpu = cpuBatches_[static_cast<std::size_t>(batchIndex)];
-        const unsigned int base = static_cast<unsigned int>(gpu.vertices.size() / 10);
+        BatchKey key;
+        key.diffuse = diff;
+        key.lightmap = lm;
+        key.roomId = roomId;
+        key.alphaTest = alpha;
+        key.dynamic = dynamic;
+        key.service = service;
+        key.writesZ = writesZ;
+        key.vertexLit = false;
+        key.detailOffset = detailOffset;
+        GpuMesh& gpu = batchFor(key);
+        const unsigned int base = static_cast<unsigned int>(gpu.vertices.size() / 13);
 
         for (int i = 0; i < poly.vertexCount; ++i) {
             const int tvi = poly.textureVertexStart + i;
@@ -576,31 +763,104 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
             if (static_cast<std::size_t>(tv.vertexIndex) < normals.size()) {
                 nrm = mirrorX(transformVector(transform, normals[static_cast<std::size_t>(tv.vertexIndex)]));
             }
+            Vec3 col(0.7f, 0.7f, 0.7f);
+            std::map<int, Vec3>::const_iterator it = radio.find(tv.vertexIndex);
+            if (it == radio.end()) {
+                it = radio.find(tvi);
+            }
+            if (it != radio.end()) {
+                col = it->second * radioScale;
+            } else {
+                col = shadeVertex(pos, nrm, lights);
+            }
             gpu.vertices.push_back(pos.x);
             gpu.vertices.push_back(pos.y);
             gpu.vertices.push_back(pos.z);
             gpu.vertices.push_back(nrm.x);
             gpu.vertices.push_back(nrm.y);
             gpu.vertices.push_back(nrm.z);
-            // Direct3D UV (0,0) = top-left. stb_image also stores the top row
-            // first; glTexImage2D treats that first row as v=0, so D3D UVs
-            // already sample the right texel. (1-v was flipping every map.)
             gpu.vertices.push_back(tv.uv.x);
             gpu.vertices.push_back(tv.uv.y);
             gpu.vertices.push_back(tv.lightmapUv.x);
             gpu.vertices.push_back(tv.lightmapUv.y);
+            gpu.vertices.push_back(col.x);
+            gpu.vertices.push_back(col.y);
+            gpu.vertices.push_back(col.z);
         }
 
-        const unsigned int emitted = static_cast<unsigned int>(gpu.vertices.size() / 10) - base;
+        const unsigned int emitted = static_cast<unsigned int>(gpu.vertices.size() / 13) - base;
         if (emitted < 3) {
             continue;
         }
         for (unsigned int i = 1; i + 1 < emitted; ++i) {
-            // Reverse winding together with the X-mirror so faces stay front-facing.
             gpu.indices.push_back(base + 0);
             gpu.indices.push_back(base + i + 1);
             gpu.indices.push_back(base + i);
             ++triangleCount_;
+        }
+    }
+}
+
+void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int roomId,
+                            const std::vector<WorldLight>& lights, const Database* database,
+                            const std::string& modelDir) {
+    (void)database;
+    for (std::size_t p = 0; p < mesh.parts.size(); ++p) {
+        const Kf2DrawPart& part = mesh.parts[p];
+        if (part.vertices.size() < 3) {
+            continue;
+        }
+        GLuint diff = whiteTex_;
+        if (!part.textureFiles.empty()) {
+            const std::string texName = nativeSeparators(part.textureFiles[0]);
+            std::string hit = existingPathIgnoreCase(joinPath(joinPath(modelDir, "textures"), fileName(texName)));
+            if (hit.empty()) {
+                hit = existingPathIgnoreCase(joinPath(modelDir, texName));
+            }
+            if (hit.empty()) {
+                hit = existingPathIgnoreCase(joinPath(joinPath(parentDir(modelDir), "textures"), fileName(texName)));
+            }
+            if (!hit.empty()) {
+                diff = textureFromFile(hit);
+            }
+        }
+        BatchKey key;
+        key.diffuse = diff;
+        key.lightmap = whiteTex_;
+        key.roomId = roomId;
+        key.alphaTest = false;
+        key.dynamic = false;
+        key.service = part.invisible;
+        key.writesZ = true;
+        key.vertexLit = true;
+        key.detailOffset = 0;
+        GpuMesh& gpu = batchFor(key);
+        const unsigned int base = static_cast<unsigned int>(gpu.vertices.size() / 13);
+        for (std::size_t v = 0; v < part.vertices.size(); ++v) {
+            const Vec3 pos = mirrorX(transformPoint(world, part.vertices[v].position));
+            const Vec3 nrm = mirrorX(transformVector(world, part.vertices[v].normal));
+            const Vec3 col = shadeVertex(pos, nrm, lights);
+            gpu.vertices.push_back(pos.x);
+            gpu.vertices.push_back(pos.y);
+            gpu.vertices.push_back(pos.z);
+            gpu.vertices.push_back(nrm.x);
+            gpu.vertices.push_back(nrm.y);
+            gpu.vertices.push_back(nrm.z);
+            gpu.vertices.push_back(part.vertices[v].uv.x);
+            gpu.vertices.push_back(part.vertices[v].uv.y);
+            gpu.vertices.push_back(0.0f);
+            gpu.vertices.push_back(0.0f);
+            gpu.vertices.push_back(col.x);
+            gpu.vertices.push_back(col.y);
+            gpu.vertices.push_back(col.z);
+        }
+        const unsigned int emitted = static_cast<unsigned int>(gpu.vertices.size() / 13) - base;
+        for (unsigned int i = 0; i + 2 < emitted; i += 3) {
+            gpu.indices.push_back(base + i + 0);
+            gpu.indices.push_back(base + i + 2);
+            gpu.indices.push_back(base + i + 1);
+            ++triangleCount_;
+            ++entityTriangleCount_;
         }
     }
 }
@@ -624,6 +884,10 @@ void Renderer::uploadBatches() {
         batch.roomId = cpuKeys_[i].roomId;
         batch.alphaTest = cpuKeys_[i].alphaTest;
         batch.dynamic = cpuKeys_[i].dynamic;
+        batch.service = cpuKeys_[i].service;
+        batch.writesZ = cpuKeys_[i].writesZ;
+        batch.vertexLit = cpuKeys_[i].vertexLit;
+        batch.detailOffset = cpuKeys_[i].detailOffset;
         batch.indexCount = static_cast<int>(mesh.indices.size());
         glGenVertexArrays(1, &batch.vao);
         glGenBuffers(1, &batch.vbo);
@@ -636,7 +900,7 @@ void Renderer::uploadBatches() {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                      static_cast<GLsizeiptr>(mesh.indices.size() * sizeof(unsigned int)), &mesh.indices[0],
                      GL_STATIC_DRAW);
-        const GLsizei stride = 10 * sizeof(float);
+        const GLsizei stride = 13 * sizeof(float);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
         glEnableVertexAttribArray(1);
@@ -645,8 +909,24 @@ void Renderer::uploadBatches() {
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(6 * sizeof(float)));
         glEnableVertexAttribArray(3);
         glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(8 * sizeof(float)));
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(10 * sizeof(float)));
         glBindVertexArray(0);
         batches_.push_back(batch);
+    }
+    // Opaque, then DetailOffset overlays, then alpha-tested decals, then service.
+    for (std::size_t i = 0; i < batches_.size(); ++i) {
+        for (std::size_t j = i + 1; j < batches_.size(); ++j) {
+            const DrawBatch& a = batches_[i];
+            const DrawBatch& b = batches_[j];
+            const int ka = (a.service ? 8 : 0) + (a.alphaTest ? 4 : 0) + (a.detailOffset > 0 ? 2 : 0);
+            const int kb = (b.service ? 8 : 0) + (b.alphaTest ? 4 : 0) + (b.detailOffset > 0 ? 2 : 0);
+            if (kb < ka) {
+                DrawBatch tmp = batches_[i];
+                batches_[i] = batches_[j];
+                batches_[j] = tmp;
+            }
+        }
     }
     cpuBatches_.clear();
     cpuKeys_.clear();
@@ -762,6 +1042,9 @@ void Renderer::drawBatches(bool alphaPass) {
         if (b.dynamic && !showDynamic_) {
             continue;
         }
+        if (b.service && !showService_) {
+            continue;
+        }
         if (isolatedRoom_ >= 0 && b.roomId != isolatedRoom_) {
             continue;
         }
@@ -770,6 +1053,16 @@ void Renderer::drawBatches(bool alphaPass) {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, b.lightmap);
         glUniform1i(glGetUniformLocation(meshProgram_, "uAlphaTest"), b.alphaTest ? 1 : 0);
+        glUniform1i(glGetUniformLocation(meshProgram_, "uVertexLit"), b.vertexLit ? 1 : 0);
+        glUniform1f(glGetUniformLocation(meshProgram_, "uAlphaRef"), 15.0f / 255.0f);
+        if (b.alphaTest || b.detailOffset > 0) {
+            glEnable(GL_POLYGON_OFFSET_FILL);
+            const float units = -1.0f * static_cast<float>(1 + b.detailOffset);
+            glPolygonOffset(units, units);
+        } else {
+            glDisable(GL_POLYGON_OFFSET_FILL);
+        }
+        glDepthMask(b.writesZ ? GL_TRUE : GL_FALSE);
         if (b.alphaTest) {
             glDisable(GL_CULL_FACE);
         } else {
@@ -778,6 +1071,8 @@ void Renderer::drawBatches(bool alphaPass) {
         glBindVertexArray(b.vao);
         glDrawElements(GL_TRIANGLES, b.indexCount, GL_UNSIGNED_INT, 0);
     }
+    glDepthMask(GL_TRUE);
+    glDisable(GL_POLYGON_OFFSET_FILL);
 }
 
 void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
@@ -799,6 +1094,8 @@ void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
     glUniform1i(glGetUniformLocation(meshProgram_, "uLightmap"), 1);
     glUniform1i(glGetUniformLocation(meshProgram_, "uMode"), static_cast<int>(shading_));
     glUniform1f(glGetUniformLocation(meshProgram_, "uLmScale"), 2.0f);
+    glUniform1i(glGetUniformLocation(meshProgram_, "uVertexLit"), 0);
+    glUniform1f(glGetUniformLocation(meshProgram_, "uAlphaRef"), 0.45f);
     drawBatches(false);
     drawBatches(true);
     glEnable(GL_CULL_FACE);

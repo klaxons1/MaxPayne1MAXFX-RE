@@ -14,6 +14,7 @@ void(APIENTRY* glBlendFunc)(GLenum, GLenum) = 0;
 void(APIENTRY* glCullFace)(GLenum) = 0;
 void(APIENTRY* glFrontFace)(GLenum) = 0;
 void(APIENTRY* glPolygonMode)(GLenum, GLenum) = 0;
+void(APIENTRY* glPolygonOffset)(GLfloat, GLfloat) = 0;
 void(APIENTRY* glLineWidth)(GLfloat) = 0;
 void(APIENTRY* glPixelStorei)(GLenum, GLint) = 0;
 const GLubyte*(APIENTRY* glGetString)(GLenum) = 0;
@@ -79,6 +80,7 @@ bool loadGL(void* (*getProc)(const char*)) {
     LOAD(glCullFace);
     LOAD(glFrontFace);
     LOAD(glPolygonMode);
+    LOAD(glPolygonOffset);
     LOAD(glLineWidth);
     LOAD(glPixelStorei);
     LOAD(glGetString);

@@ -2,6 +2,9 @@
 // Built as `levels-test` from the Makefile.
 
 #include "maxfx/core/Fs.h"
+#include "maxfx/db/Database.h"
+#include "maxfx/image/Image.h"
+#include "maxfx/kf2/Kf2.h"
 #include "maxfx/levels/Levels.h"
 #include "maxfx/script/Script.h"
 
@@ -286,10 +289,102 @@ static void testInclude(const std::string& tmpDir) {
     }
 }
 
+static void testUnbracedBlocks() {
+    const char* text =
+        "[Cardboard]\n"
+        "DrawPolygons = TRUE;\n"
+        "DetailOffset = 1;\n"
+        "[Geometry] ExportData = foo.kf2; SkinData = foo.skd;\n";
+    const Script s = Script::parseText(text, "unbraced.txt");
+    check(s.root().children.size() == 2, "two unbraced top blocks");
+    checkEq(s.root().children[0].name, "cardboard", "cardboard tag");
+    checkEq(s.root().children[0].assignments[0].lvalue, "drawpolygons", "drawpolygons lvalue");
+    checkEq(s.root().children[1].name, "geometry", "geometry tag");
+    check(s.root().children[1].assignments.size() == 2, "geometry two assignments");
+}
+
+static void testPcxAlpha() {
+    maxfx::Image img;
+    std::string err;
+    if (!maxfx::isFile("docs/baseballbat_alpha.pcx")) {
+        std::fprintf(stderr, "skip PCX alpha (docs/baseballbat_alpha.pcx missing)\\n");
+        return;
+    }
+    check(maxfx::loadImageFile("docs/baseballbat_alpha.pcx", img, &err), "load baseballbat_alpha.pcx");
+    check(img.width == 128 && img.height == 32, "alpha pcx size");
+    check(!img.empty() && img.channels == 4, "alpha pcx rgba");
+    bool anyTrans = false;
+    bool anyOpaque = false;
+    for (int i = 0; i < img.width * img.height; ++i) {
+        const unsigned char a = img.pixels[static_cast<std::size_t>(i * 4 + 3)];
+        if (a < 250) {
+            anyTrans = true;
+        }
+        if (a > 5) {
+            anyOpaque = true;
+        }
+    }
+    check(anyTrans, "alpha pcx has transparent texels");
+    check(anyOpaque, "alpha pcx has opaque texels");
+}
+
+static void testKf2Beretta() {
+    const char* path = "docs/database/weapons/beretta/beretta_levelitem.kf2";
+    if (!maxfx::isFile(path)) {
+        std::fprintf(stderr, "skip KF2 (beretta_levelitem.kf2 missing)\\n");
+        return;
+    }
+    const maxfx::Kf2File kf = maxfx::Kf2Reader::loadFromFile(path);
+    check(!kf.materialLists.empty(), "beretta material list");
+    check(!kf.meshes.empty(), "beretta mesh");
+    if (!kf.meshes.empty()) {
+        check(kf.meshes[0].hasGeometry, "beretta geometry");
+        check(kf.meshes[0].geometry.vertices.size() == 339, "beretta 339 verts");
+        check(kf.meshes[0].polygons.indices.size() == 1008, "beretta 1008 indices");
+    }
+    std::vector<maxfx::Kf2DrawMesh> draws;
+    maxfx::kf2BuildDrawMeshes(kf, draws);
+    check(!draws.empty(), "beretta draw mesh");
+    unsigned tris = 0;
+    for (std::size_t i = 0; i < draws.size(); ++i) {
+        for (std::size_t p = 0; p < draws[i].parts.size(); ++p) {
+            tris += static_cast<unsigned>(draws[i].parts[p].vertices.size() / 3);
+        }
+    }
+    check(tris == 336, "beretta 336 triangles");
+
+    const char* kfs = "docs/database/skins/balder_alex/Alex_Balder_L0.kfs";
+    if (maxfx::isFile(kfs)) {
+        const maxfx::Kf2File skin = maxfx::Kf2Reader::loadFromFile(kfs);
+        check(!skin.meshes.empty(), "alex kfs has meshes");
+        check(!skin.materialLists.empty(), "alex kfs material list");
+    }
+}
+
+static void testDatabase() {
+    const std::string root = maxfx::DatabaseReader::locateRoot("docs");
+    if (root.empty()) {
+        std::fprintf(stderr, "skip database (docs/database missing)\\n");
+        return;
+    }
+    const maxfx::Database db = maxfx::DatabaseReader::load(root);
+    check(db.parsedScripts > 10, "parsed many scripts");
+    check(!db.materials.empty(), "materials.txt categories");
+    const maxfx::MaterialCategory* graffiti = db.findMaterial("Graffiti");
+    check(graffiti != 0 && graffiti->detailOffset == 1, "Graffiti DetailOffset");
+    const maxfx::MaterialCategory* ai = db.findMaterial("AI_Node_Collision_NoDraw");
+    check(ai != 0 && ai->drawPolygons == false, "AI node is service geometry");
+    check(!db.items.empty() || !db.skins.empty(), "skins or level_items parsed");
+}
+
 int main() {
     testLevelsSnippet();
     testErrors();
     testInclude("/tmp");
+    testUnbracedBlocks();
+    testPcxAlpha();
+    testKf2Beretta();
+    testDatabase();
 
     // Official sample shipped in docs/.
     const std::string sample = maxfx::LevelsReader::locateLevelsTxt("docs");

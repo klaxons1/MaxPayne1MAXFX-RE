@@ -1,6 +1,7 @@
 #include "viewer/App.h"
 
 #include "maxfx/core/Fs.h"
+#include "maxfx/db/Database.h"
 #include "maxfx/ldb/LdbReader.h"
 #include "maxfx/levels/Levels.h"
 #include "maxfx/script/Script.h"
@@ -267,8 +268,20 @@ bool ViewerApp::loadLevelIndex(int index, bool showLoading) {
         return false;
     }
 
+    if (!database_.root.empty()) {
+        std::vector<std::string> skins;
+        std::vector<std::string> items;
+        for (std::size_t i = 0; i < loaded.characters.size(); ++i) {
+            skins.push_back(loaded.characters[i].characterName);
+        }
+        for (std::size_t i = 0; i < loaded.items.size(); ++i) {
+            items.push_back(loaded.items[i].itemName);
+        }
+        DatabaseReader::loadModels(database_, skins, items);
+    }
+
     char error[1024];
-    if (!renderer_.loadLevel(loaded, error, sizeof(error))) {
+    if (!renderer_.loadLevel(loaded, database_.root.empty() ? 0 : &database_, error, sizeof(error))) {
         statusMessage_ = std::string("gpu upload failed: ") + error;
         std::fprintf(stderr, "%s\n", statusMessage_.c_str());
         return false;
@@ -392,6 +405,9 @@ void ViewerApp::handleKeyDown(int scancode, int key) {
         case SDLK_F5:
             renderer_.setShowDynamic(!renderer_.showDynamic());
             break;
+        case SDLK_F6:
+            renderer_.setShowService(!renderer_.showService());
+            break;
         case SDLK_H:
             renderer_.setShowHud(!renderer_.showHud());
             break;
@@ -457,7 +473,7 @@ void ViewerApp::drawHud(float dt) {
             shade = "lightmap";
             break;
         case kShadeVertex:
-            shade = "flat";
+            shade = "vertex";
             break;
         default:
             break;
@@ -487,8 +503,11 @@ void ViewerApp::drawHud(float dt) {
     if (spawnIndex_ >= 0 && static_cast<std::size_t>(spawnIndex_) < renderer_.spawns().size()) {
         spawnName = renderer_.spawns()[static_cast<std::size_t>(spawnIndex_)].name.c_str();
     }
-    std::snprintf(line, sizeof(line), "fps %.0f  shade %s  room %s  spawn %s",
-                  dt > 1.0e-4f ? 1.0f / dt : 0.0f, shade, roomName, spawnName);
+    std::snprintf(line, sizeof(line),
+                  "fps %.0f  shade %s  room %s  spawn %s  service %s  items/chars %u tris %u",
+                  dt > 1.0e-4f ? 1.0f / dt : 0.0f, shade, roomName, spawnName,
+                  renderer_.showService() ? "on" : "off", renderer_.entityMeshCount(),
+                  renderer_.entityTriangleCount());
     renderer_.drawHudText(12, 44, line, 0.70f, 0.75f, 0.80f);
 
     if (!statusMessage_.empty()) {
@@ -499,7 +518,7 @@ void ViewerApp::drawHud(float dt) {
         const char* help =
             "WASD fly   Q/E up/down   Shift sprint   mouse look\n"
             "Left/Right levels   [ ] isolate room   PgUp/PgDn jumppoints\n"
-            "F1 help  F2 wire  F3 shading  F4 helpers  F5 dynamic   Esc grab/quit";
+            "F1 help  F2 wire  F3 shading  F4 helpers  F5 dynamic  F6 service   Esc grab/quit";
         renderer_.drawHudText(12, height_ - 52, help, 0.72f, 0.72f, 0.68f);
     }
     renderer_.presentHud();
@@ -516,6 +535,15 @@ int ViewerApp::run(const char* pathOrNull) {
                      "(LDBs live in data\\database\\levels\\part1\\ etc.)\n"
                      "or pass a path: ldb-viewer path\\to\\level.ldb\n");
         return 1;
+    }
+
+    const std::string dbRoot = DatabaseReader::locateRoot(pathOrNull ? pathOrNull : "");
+    if (!dbRoot.empty()) {
+        try {
+            database_ = DatabaseReader::load(dbRoot);
+        } catch (const std::exception& ex) {
+            std::fprintf(stderr, "database: %s\n", ex.what());
+        }
     }
 
     if (!createWindow(error, sizeof(error))) {

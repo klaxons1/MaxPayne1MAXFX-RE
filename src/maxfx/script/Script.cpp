@@ -747,12 +747,28 @@ struct Parser {
         child.name = parseTagName();
         child.line = startLine;
         skipWs();
-        if (i >= text.size() || text[i] != '{') {
+        if (i < text.size() && text[i] == '{') {
+            ++i;
+            parseContent(child);
+            parent.children.push_back(child);
+            return;
+        }
+        // Unbraced block: `[Geometry] ExportData = foo.kfs; SkinData = foo.skd;`
+        // and materials.txt categories (`[Cardboard]` then `DrawPolygons = TRUE;`).
+        // Content is assignments only; the next `[` or `}` belongs to the parent.
+        bool any = false;
+        while (!eof()) {
+            const char c = peek();
+            if (c == '}' || c == '[') {
+                break;
+            }
+            parseAssignment(child);
+            any = true;
+        }
+        if (!any) {
             throw ScriptError(formatLine(file, startLine, "Tag without content"), file,
                               startLine);
         }
-        ++i;
-        parseContent(child);
         parent.children.push_back(child);
     }
 

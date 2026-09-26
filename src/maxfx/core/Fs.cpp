@@ -306,4 +306,88 @@ std::string readFileText(const std::string& path) {
     return out;
 }
 
+std::vector<unsigned char> readFileBytes(const std::string& path) {
+    const std::string text = readFileText(path);
+    if (text.empty()) {
+        return std::vector<unsigned char>();
+    }
+    return std::vector<unsigned char>(text.begin(), text.end());
+}
+
+std::string fileStem(const std::string& path) {
+    std::string name = fileName(path);
+    const std::size_t dot = name.find_last_of('.');
+    if (dot == std::string::npos || dot == 0) {
+        return name;
+    }
+    return name.substr(0, dot);
+}
+
+std::string fileExtension(const std::string& path) {
+    const std::string name = fileName(path);
+    const std::size_t dot = name.find_last_of('.');
+    if (dot == std::string::npos || dot == 0) {
+        return std::string();
+    }
+    return lowerCopy(name.substr(dot));
+}
+
+std::string existingPathIgnoreCase(const std::string& path) {
+    if (path.empty()) {
+        return std::string();
+    }
+    if (isFile(path)) {
+        return path;
+    }
+    const std::string dir = parentDir(path);
+    const std::string want = lowerCopy(fileName(path));
+    if (dir.empty() || want.empty() || !isDirectory(dir)) {
+        return std::string();
+    }
+    const std::vector<std::string> files = listFilesWithExtension(dir, "");
+    // listFilesWithExtension with empty extension still filters; fall back to
+    // listing every file by matching the leaf against a recursive listing of dir.
+    // The helper requires a real extension, so we probe common texture suffixes
+    // only when the caller already passed a full path — list the directory via
+    // the platform APIs used by listSubdirectories' sibling.
+#ifdef _WIN32
+    WIN32_FIND_DATAA fd;
+    const std::string pattern = joinPath(dir, "*");
+    HANDLE h = FindFirstFileA(pattern.c_str(), &fd);
+    if (h == INVALID_HANDLE_VALUE) {
+        return std::string();
+    }
+    do {
+        if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+            continue;
+        }
+        if (lowerCopy(fd.cFileName) == want) {
+            FindClose(h);
+            return joinPath(dir, fd.cFileName);
+        }
+    } while (FindNextFileA(h, &fd));
+    FindClose(h);
+#else
+    DIR* d = opendir(dir.c_str());
+    if (d == 0) {
+        return std::string();
+    }
+    while (dirent* ent = readdir(d)) {
+        if (ent->d_name[0] == '.' && (ent->d_name[1] == 0 || ent->d_name[1] == '.')) {
+            continue;
+        }
+        if (lowerCopy(ent->d_name) == want) {
+            const std::string hit = joinPath(dir, ent->d_name);
+            if (isFile(hit)) {
+                closedir(d);
+                return hit;
+            }
+        }
+    }
+    closedir(d);
+#endif
+    (void)files;
+    return std::string();
+}
+
 }  // namespace maxfx

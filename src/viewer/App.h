@@ -1,6 +1,7 @@
 #ifndef MAXFX_VIEWER_APP_H
 #define MAXFX_VIEWER_APP_H
 
+#include "maxfx/db/Database.h"
 #include "maxfx/ldb/Ldb.h"
 #include "maxfx/levels/Levels.h"
 #include "viewer/Camera.h"
@@ -38,6 +39,7 @@ private:
     SDL_Window* window_;
     void* glContext_;
     Level level_;
+    Database database_;
     Renderer renderer_;
     Camera camera_;
     bool running_;
