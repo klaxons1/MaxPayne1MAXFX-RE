@@ -503,15 +503,19 @@ void ViewerApp::drawHud(float dt) {
     if (spawnIndex_ >= 0 && static_cast<std::size_t>(spawnIndex_) < renderer_.spawns().size()) {
         spawnName = renderer_.spawns()[static_cast<std::size_t>(spawnIndex_)].name.c_str();
     }
-    std::snprintf(line, sizeof(line),
-                  "fps %.0f  shade %s  room %s  spawn %s  service %s  items/chars %u tris %u",
-                  dt > 1.0e-4f ? 1.0f / dt : 0.0f, shade, roomName, spawnName,
-                  renderer_.showService() ? "on" : "off", renderer_.entityMeshCount(),
-                  renderer_.entityTriangleCount());
+    std::snprintf(line, sizeof(line), "fps %.0f  shade %s  room %s  spawn %s",
+                  dt > 1.0e-4f ? 1.0f / dt : 0.0f, shade, roomName, spawnName);
     renderer_.drawHudText(12, 44, line, 0.70f, 0.75f, 0.80f);
 
+    if (renderer_.entityMeshCount() > 0 || renderer_.showService()) {
+        std::snprintf(line, sizeof(line), "service %s  kf2 meshes %u  kf2 tris %u",
+                      renderer_.showService() ? "on" : "off", renderer_.entityMeshCount(),
+                      renderer_.entityTriangleCount());
+        renderer_.drawHudText(12, 60, line, 0.65f, 0.70f, 0.75f);
+    }
+
     if (!statusMessage_.empty()) {
-        renderer_.drawHudText(12, 60, statusMessage_.c_str(), 1.0f, 0.35f, 0.35f);
+        renderer_.drawHudText(12, 76, statusMessage_.c_str(), 1.0f, 0.35f, 0.35f);
     }
 
     if (showHelp_) {

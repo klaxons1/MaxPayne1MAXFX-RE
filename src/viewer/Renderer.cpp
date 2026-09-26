@@ -415,7 +415,10 @@ void Renderer::buildFont() {
     glGenBuffers(1, &hudVbo_);
     glBindVertexArray(hudVao_);
     glBindBuffer(GL_ARRAY_BUFFER, hudVbo_);
-    glBufferData(GL_ARRAY_BUFFER, 64 * 1024, 0, GL_DYNAMIC_DRAW);
+    // Sized on first flushHud(); the old 64 KiB cap overflowed once the
+    // status line grew, and glBufferSubData past the end filled the screen
+    // with garbage glyphs.
+    glBufferData(GL_ARRAY_BUFFER, 4, 0, GL_DYNAMIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), 0);
     glEnableVertexAttribArray(1);
@@ -1099,13 +1102,17 @@ void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
     drawBatches(false);
     drawBatches(true);
     glEnable(GL_CULL_FACE);
+    glDepthMask(GL_TRUE);
+    glDisable(GL_POLYGON_OFFSET_FILL);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glBindVertexArray(0);
 
     if (showHelpers_ && lineCount_ > 0) {
         glUseProgram(lineProgram_);
         glUniformMatrix4fv(glGetUniformLocation(lineProgram_, "uViewProj"), 1, GL_FALSE, vp.m);
         glBindVertexArray(lineVao_);
         glDrawArrays(GL_LINES, 0, lineCount_);
+        glBindVertexArray(0);
     }
 }
 
@@ -1159,6 +1166,9 @@ void Renderer::flushHud() {
     }
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
+    glDisable(GL_POLYGON_OFFSET_FILL);
+    glDepthMask(GL_TRUE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glUseProgram(fontProgram_);
@@ -1167,9 +1177,11 @@ void Renderer::flushHud() {
     glUniform1i(glGetUniformLocation(fontProgram_, "uFont"), 0);
     glBindVertexArray(hudVao_);
     glBindBuffer(GL_ARRAY_BUFFER, hudVbo_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0,
-                    static_cast<GLsizeiptr>(hudVerts_.size() * sizeof(float)), &hudVerts_[0]);
+    glBufferData(GL_ARRAY_BUFFER,
+                 static_cast<GLsizeiptr>(hudVerts_.size() * sizeof(float)), &hudVerts_[0],
+                 GL_DYNAMIC_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(hudVerts_.size() / 7));
+    glBindVertexArray(0);
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
     hudVerts_.clear();
