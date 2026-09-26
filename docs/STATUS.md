@@ -46,8 +46,12 @@ DrawPolygons = TRUE;
 [Geometry] ExportData = foo.kf2; SkinData = foo.skd;
 ```
 
-`materials.txt`, `skins/*.txt`, `level_items/*.txt` and `decals/decals.txt`
-depend on this.
+Quoted rvalues keep interior quotes until the `";` terminator, which is how
+official `[Message] string = "foo->Bar( "name" );";` files are written.
+Lvalues may start with a digit (`3DSound`).
+
+`materials.txt`, `skins/*.txt`, `level_items/*.txt`, `sounds/*.txt`,
+`music/music.txt` and `decals/decals.txt` depend on this.
 
 ### Shared database (`src/maxfx/db`)
 
@@ -62,9 +66,15 @@ Parsed subsets:
 | `skins/*.txt` | `[LOD][Geometry] ExportData` / `SkinData` |
 | `level_items/*.txt` | pickup / prop KF2 paths |
 | `decals/decals.txt` | `Filename` / `AlphaFilename` per material |
+| `sounds/*.txt` | cue name, WAV path, 3D/loop/volume |
+| `music/music.txt` | looping soundtrack WAVs |
+| `levels.txt` `WorldSphere` | `worldspheres/bg_<name>.kf2` |
 
-KF2/KFS/SKD files referenced by skins and items that actually appear in the
-loaded LDB are parsed on demand and cached.
+ExportData is resolved against the script directory, `scriptDir/<stem>/`,
+and the database root with `../` stripped (flattened extracts put
+`beretta.txt` next to `weapons/beretta/*.kf2`). KF2/KFS/SKD files referenced
+by skins and items that actually appear in the loaded LDB are parsed on
+demand and cached.
 
 ### KF2 / KFS / SKD (`src/maxfx/kf2`)
 
@@ -86,7 +96,7 @@ Self-test: `beretta_levelitem.kf2` (339 verts, 336 triangles) and
 - 8-bit paletted PCX, 8-bit 3/4-plane PCX
 - Greyscale paletted PCX (MAX-FX `*_alpha.pcx`) writes the grey value into
   **alpha**, so opacity maps display. Confirmed on `docs/baseballbat_alpha.pcx`
-  (128×32, identity grey palette)
+  (128x32, identity grey palette)
 - Companion `stem_alpha.pcx` / `.jpg` next to a colour file is composited
 - LDB materials with a separate alpha texture are composited at upload
 
@@ -102,8 +112,9 @@ playlist is missing.
 
 | Key | Action |
 | --- | --- |
-| F3 | lit (lightmap×2) → diffuse → lightmap → **vertex** |
+| F3 | lit (lightmapx2) -> diffuse -> lightmap -> **vertex** |
 | F6 | show service / no-draw materials |
+| F7 | mute music |
 | Left/Right | next map in `levels.txt` |
 
 Vertex colour is LDB radiosity (`std::map<int, vec3>` on static/dynamic
@@ -112,15 +123,28 @@ meshes) when present, otherwise Lambert from point lights + static lights.
 Decal z-fighting: materials with `DetailOffset > 0` or alpha test are drawn
 later with `glPolygonOffset`. `WritesZBuffer = FALSE` disables depth writes.
 
-Characters and items: LDB transform × KF2 node bind pose, textured from
-`ExportData` directories (`textures;..\sharedtextures`). The stripped sample
-database has weapon KF2s and one character KFS (`balder_alex`); most skin
-folders have scripts only, so those actors stay as helper diamonds.
+Every parsed LDB entity is placed in the room:
+
+- Items / characters: KF2/KFS when ExportData exists on disk, otherwise a
+  solid coloured box (yellow pickups, red capsules). Line helpers remain.
+- World sphere: `bg_<WorldSphere>.kf2` drawn two-sided at the origin.
+- Point / static lights and FSMs: small solid cubes plus helper overlays.
+
+KF2 batches are vertex-lit, two-sided, and never hidden as service geometry.
+The stripped sample database has weapon KF2s and one character KFS
+(`balder_alex`); missing skins show the red placeholder.
+
+PCM WAV loader (`src/maxfx/sound`) plus an SDL3 mixer (`src/viewer/Audio.cpp`)
+loops the level theme when the official banks are next to the exe. The
+stripped tree only ships silent `placeholder.wav`; the HUD then reads
+`wavs not extracted`. F7 mutes.
 
 ## What is still missing (engine-port debt, not viewer hacks)
 
 - Skeletal animation playback (KF2 keyframe chunks + SKD weights + default
   skeleton). Rest pose is drawn.
+- 3D positional cues attached to FSM A_PlaySound (scripts are parsed; the
+  viewer only loops the level theme / first available WAV)
 - SCX / DDS texture decode
 - Graphic-novel page KF2s (environment chunk is skipped; pages are not
   placed in the level viewer)
@@ -131,8 +155,9 @@ folders have scripts only, so those actors stay as helper diamonds.
 ## Tests
 
 ```
-make test    # levels-test: R_Script, levels.txt, unbraced blocks,
-             # PCX alpha, KF2 beretta + alex KFS, materials.txt
+make test    # levels-test: R_Script (nested quotes, 3DSound), levels.txt,
+             # unbraced blocks, PCX alpha, KF2 beretta + alex KFS,
+             # materials / items / skins / sounds / music, placeholder.wav
 ```
 
 No SDL required. The viewer is `cmake -S . -B build && cmake --build build`
@@ -147,8 +172,9 @@ src/maxfx/levels   levels.txt
 src/maxfx/ldb      Level database
 src/maxfx/kf2      KF2 / KFS / SKD
 src/maxfx/db       shared text database
+src/maxfx/sound    WAV
 src/maxfx/image    texture decode
-src/viewer         SDL3 OpenGL viewer
+src/viewer         SDL3 OpenGL viewer + mixer
 docs/STATUS.md     this file
 ```
 

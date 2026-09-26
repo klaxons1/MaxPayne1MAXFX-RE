@@ -80,6 +80,7 @@ public:
 
     unsigned int entityMeshCount() const { return entityMeshCount_; }
     unsigned int entityTriangleCount() const { return entityTriangleCount_; }
+    unsigned int entityPlaceholderCount() const { return entityPlaceholderCount_; }
 
     // -1 = all rooms
     void setIsolatedRoom(int roomId) { isolatedRoom_ = roomId; }
@@ -134,9 +135,13 @@ private:
                     const std::vector<GLuint>& lightmapTextures,
                     const std::vector<RadiositySample>& radiosity,
                     const std::vector<WorldLight>& lights);
+    int appendKf2File(const Kf2File& kf, const Mat4x3& entity, int roomId,
+                      const std::vector<WorldLight>& lights, const Database* database);
     void appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int roomId,
                        const std::vector<WorldLight>& lights, const Database* database,
                        const std::string& modelDir);
+    void appendOrientedBox(const Mat4x3& entity, int roomId, float hx, float hy, float hz,
+                           const Vec3& color);
     GpuMesh& batchFor(const BatchKey& key);
     Vec3 shadeVertex(const Vec3& worldPos, const Vec3& worldNrm, const std::vector<WorldLight>& lights) const;
     GLuint textureFromFile(const std::string& path);
@@ -181,6 +186,7 @@ private:
     unsigned int triangleCount_;
     unsigned int entityMeshCount_;
     unsigned int entityTriangleCount_;
+    unsigned int entityPlaceholderCount_;
     std::vector<SpawnPoint> spawns_;
 };
 

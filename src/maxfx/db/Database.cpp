@@ -80,23 +80,152 @@ std::string resolveRelative(const std::string& baseDir, const std::string& rel) 
     return hit.empty() ? joined : hit;
 }
 
-void collectGeometry(const ScriptBlock& block, const std::string& scriptDir, std::vector<GeometryRef>* out) {
+std::string stripDotDotPrefix(const std::string& rel) {
+    std::string rest = nativeFromScriptPath(rel);
+    for (;;) {
+        if (rest.size() >= 3 && rest[0] == '.' && rest[1] == '.' && (rest[2] == '/' || rest[2] == '\\')) {
+            rest = rest.substr(3);
+            continue;
+        }
+        if (rest.size() >= 2 && rest[0] == '.' && (rest[1] == '/' || rest[1] == '\\')) {
+            rest = rest.substr(2);
+            continue;
+        }
+        break;
+    }
+    return rest;
+}
+
+std::string firstExisting(const std::vector<std::string>& candidates) {
+    for (std::size_t i = 0; i < candidates.size(); ++i) {
+        if (candidates[i].empty()) {
+            continue;
+        }
+        const std::string hit = existingPathIgnoreCase(candidates[i]);
+        if (!hit.empty() && isFile(hit)) {
+            return hit;
+        }
+    }
+    return std::string();
+}
+
+// Scripts live next to their mesh folders in the full RAS, but the extracted
+// tree often flattens `level_items/beretta.txt` while the KF2 stays under
+// `level_items/ammo_beretta/` or `weapons/beretta/`. Try every layout.
+std::string resolveModelPath(const std::string& dbRoot, const std::string& scriptDir,
+                             const std::string& stem, const std::string& rel) {
+    if (rel.empty()) {
+        return std::string();
+    }
+    const std::string native = nativeFromScriptPath(rel);
+    const std::string base = fileName(native);
+    const std::string stripped = stripDotDotPrefix(native);
+    std::vector<std::string> cands;
+    cands.push_back(resolveRelative(scriptDir, native));
+    cands.push_back(joinPath(scriptDir, native));
+    if (!stem.empty()) {
+        cands.push_back(joinPath(joinPath(scriptDir, stem), base));
+    }
+    if (!dbRoot.empty()) {
+        cands.push_back(joinPath(dbRoot, stripped));
+        cands.push_back(joinPath(dbRoot, base));
+        if (!stem.empty()) {
+            cands.push_back(joinPath(joinPath(dbRoot, stem), base));
+            cands.push_back(joinPath(joinPath(joinPath(dbRoot, "level_items"), stem), base));
+            cands.push_back(joinPath(joinPath(joinPath(dbRoot, "weapons"), stem), base));
+            cands.push_back(joinPath(joinPath(joinPath(dbRoot, "skins"), stem), base));
+        }
+        cands.push_back(joinPath(joinPath(dbRoot, "weapons"), stripped));
+        cands.push_back(joinPath(joinPath(dbRoot, "level_items"), stripped));
+        cands.push_back(joinPath(joinPath(dbRoot, "skins"), stripped));
+    }
+    const std::string hit = firstExisting(cands);
+    if (!hit.empty()) {
+        return hit;
+    }
+    return resolveRelative(scriptDir, native);
+}
+
+void collectGeometry(const ScriptBlock& block, const std::string& dbRoot, const std::string& scriptDir,
+                     const std::string& stem, std::vector<GeometryRef>* out) {
     if (block.name == "geometry") {
         GeometryRef g;
         g.exportData = assignmentOf(block, "exportdata");
         g.skinData = assignmentOf(block, "skindata");
         if (!g.exportData.empty()) {
-            g.resolvedExport = resolveRelative(scriptDir, g.exportData);
+            g.resolvedExport = resolveModelPath(dbRoot, scriptDir, stem, g.exportData);
         }
         if (!g.skinData.empty()) {
-            g.resolvedSkin = resolveRelative(scriptDir, g.skinData);
+            g.resolvedSkin = resolveModelPath(dbRoot, scriptDir, stem, g.skinData);
         }
         if (!g.exportData.empty() || !g.skinData.empty()) {
             out->push_back(g);
         }
     }
     for (std::size_t i = 0; i < block.children.size(); ++i) {
-        collectGeometry(block.children[i], scriptDir, out);
+        collectGeometry(block.children[i], dbRoot, scriptDir, stem, out);
+    }
+}
+
+void fillSoundFields(const ScriptBlock& block, SoundDef* def) {
+    const std::string fn = assignmentOf(block, "filename");
+    if (!fn.empty()) {
+        def->filename = nativeFromScriptPath(parseScriptString(fn));
+    }
+    const std::string vol = assignmentOf(block, "volume");
+    if (!vol.empty()) {
+        def->volume = parseFloatDefault(block, "volume", def->volume);
+    }
+    const std::string pitch = assignmentOf(block, "pitch");
+    if (!pitch.empty()) {
+        def->pitch = parseIntDefault(block, "pitch", def->pitch);
+    }
+    if (!assignmentOf(block, "looping").empty()) {
+        def->looping = parseBoolDefault(block, "looping", def->looping);
+    }
+    if (!assignmentOf(block, "3dsound").empty()) {
+        def->is3d = parseBoolDefault(block, "3dsound", def->is3d);
+    }
+    if (!assignmentOf(block, "streamed").empty()) {
+        def->streamed = parseBoolDefault(block, "streamed", def->streamed);
+    }
+    if (!assignmentOf(block, "hotspot").empty()) {
+        def->hotspot = parseFloatDefault(block, "hotspot", def->hotspot);
+    }
+    if (!assignmentOf(block, "falloff").empty()) {
+        def->falloff = parseFloatDefault(block, "falloff", def->falloff);
+    }
+    for (std::size_t i = 0; i < block.children.size(); ++i) {
+        fillSoundFields(block.children[i], def);
+    }
+}
+
+std::string resolveSoundPath(const std::string& dbRoot, const std::string& subdir,
+                             const std::string& filename) {
+    if (filename.empty()) {
+        return std::string();
+    }
+    std::vector<std::string> cands;
+    cands.push_back(joinPath(joinPath(dbRoot, subdir), filename));
+    cands.push_back(joinPath(dbRoot, filename));
+    cands.push_back(joinPath(joinPath(dbRoot, "sounds"), filename));
+    cands.push_back(joinPath(joinPath(dbRoot, "music"), filename));
+    return firstExisting(cands);
+}
+
+void collectTopSounds(const Script& script, const std::string& dbRoot, const std::string& category,
+                      const char* subdir, std::vector<SoundDef>* out) {
+    for (std::size_t b = 0; b < script.root().children.size(); ++b) {
+        const ScriptBlock& block = script.root().children[b];
+        SoundDef def;
+        def.name = block.name;
+        def.category = category;
+        fillSoundFields(block, &def);
+        if (def.filename.empty()) {
+            continue;
+        }
+        def.resolvedPath = resolveSoundPath(dbRoot, subdir, def.filename);
+        out->push_back(def);
     }
 }
 
@@ -214,6 +343,45 @@ const ItemDef* Database::findItem(const std::string& name) const {
     return 0;
 }
 
+const SoundDef* Database::findSound(const std::string& name) const {
+    const std::string key = lowerCopy(name);
+    for (std::size_t i = 0; i < sounds.size(); ++i) {
+        if (sounds[i].name == key) {
+            return &sounds[i];
+        }
+    }
+    for (std::size_t i = 0; i < music.size(); ++i) {
+        if (music[i].name == key) {
+            return &music[i];
+        }
+    }
+    return 0;
+}
+
+const SoundDef* Database::findSound(const std::string& category, const std::string& name) const {
+    const std::string cat = lowerCopy(category);
+    const std::string key = lowerCopy(name);
+    for (std::size_t i = 0; i < sounds.size(); ++i) {
+        if (sounds[i].name == key && sounds[i].category == cat) {
+            return &sounds[i];
+        }
+    }
+    if (cat == "music") {
+        return findMusic(name);
+    }
+    return findSound(name);
+}
+
+const SoundDef* Database::findMusic(const std::string& name) const {
+    const std::string key = lowerCopy(name);
+    for (std::size_t i = 0; i < music.size(); ++i) {
+        if (music[i].name == key) {
+            return &music[i];
+        }
+    }
+    return 0;
+}
+
 const Kf2File* Database::model(const std::string& resolvedPath) const {
     const std::string key = lowerCopy(resolvedPath);
     std::map<std::string, Kf2File>::const_iterator it = models.find(key);
@@ -312,20 +480,22 @@ Database DatabaseReader::load(const std::string& root) {
                         }
                     }
                 }
-                collectGeometry(script.root(), dir, &skin.lods);
-                if (!skin.lods.empty()) {
-                    db.skins.push_back(skin);
-                }
+                collectGeometry(script.root(), root, dir, skin.name, &skin.lods);
+                db.skins.push_back(skin);
             } else if (isUnder(files[i], "level_items")) {
                 ItemDef item;
                 item.name = stemName(files[i]);
                 item.sourcePath = files[i];
-                collectGeometry(script.root(), dir, &item.lods);
-                if (!item.lods.empty()) {
-                    db.items.push_back(item);
-                }
+                collectGeometry(script.root(), root, dir, item.name, &item.lods);
+                db.items.push_back(item);
             } else if (isUnder(files[i], "decals")) {
                 collectDecals(script.root(), &db.decals);
+            } else if (isUnder(files[i], "/sounds/") || isUnder(files[i], "\\sounds\\") ||
+                       isUnder(files[i], "/sounds\\") || isUnder(files[i], "\\sounds/")) {
+                collectTopSounds(script, root, stemName(files[i]), "sounds", &db.sounds);
+            } else if (isUnder(files[i], "/music/") || isUnder(files[i], "\\music\\") ||
+                       isUnder(files[i], "/music\\") || isUnder(files[i], "\\music/")) {
+                collectTopSounds(script, root, stemName(files[i]), "music", &db.music);
             }
         } catch (const std::exception& ex) {
             entry.error = ex.what();
@@ -352,6 +522,27 @@ void DatabaseReader::loadModels(Database& db, const std::vector<std::string>& sk
             continue;
         }
         cacheModel(db, item->lods[0].resolvedExport);
+    }
+}
+
+void DatabaseReader::loadWorldSphere(Database& db, const std::string& name) {
+    db.worldSphereName = name;
+    db.worldSpherePath.clear();
+    if (name.empty() || db.root.empty()) {
+        return;
+    }
+    const std::string stem = fileStem(nativeFromScriptPath(name));
+    std::vector<std::string> cands;
+    const std::string folder = joinPath(db.root, "worldspheres");
+    cands.push_back(joinPath(folder, std::string("bg_") + stem + ".kf2"));
+    cands.push_back(joinPath(folder, stem + ".kf2"));
+    cands.push_back(joinPath(folder, nativeFromScriptPath(name)));
+    const std::string hit = firstExisting(cands);
+    if (hit.empty()) {
+        return;
+    }
+    if (cacheModel(db, hit) != 0) {
+        db.worldSpherePath = hit;
     }
 }
 

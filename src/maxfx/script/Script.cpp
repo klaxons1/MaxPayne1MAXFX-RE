@@ -596,8 +596,9 @@ struct Parser {
 
     std::string parseIdent(const char* what) {
         skipWs();
-        if (i >= text.size() ||
-            (std::isalpha(static_cast<unsigned char>(text[i])) == 0 && text[i] != '_')) {
+        // Official lvalues include `3DSound` (digit first). Allow the same
+        // ident charset as the continuation: letter, digit, '_' or '.'.
+        if (i >= text.size() || !isIdentChar(static_cast<unsigned char>(text[i]))) {
             throw ScriptError(formatLine(file, line, std::string("No ") + what), file, line);
         }
         const std::size_t start = i;
@@ -614,31 +615,46 @@ struct Parser {
             throw ScriptError(formatLine(file, line, "No rvalue"), file, line);
         }
         if (text[i] == '"') {
+            // Official scripts put quotes inside the message string:
+            //   String = "activator->C_PickupWeapon( "beretta" );";
+            // The terminator is the quote immediately before the semicolon,
+            // not the first closing quote.
             const unsigned startLine = line;
             ++i;
             std::string s;
-            while (i < text.size() && text[i] != '"') {
+            while (i < text.size()) {
                 if (isEndOfLine(text[i])) {
                     throw ScriptError(
                         formatLine(file, startLine,
                                    "String marking \"...\" starting doesn't end!"),
                         file, startLine);
                 }
+                // Only `\"` is an escape. `wavs\max_theme.wav` is a Windows path.
+                if (text[i] == '\\' && i + 1 < text.size() && text[i + 1] == '"') {
+                    s.push_back('"');
+                    i += 2;
+                    continue;
+                }
+                if (text[i] == '"') {
+                    std::size_t j = i + 1;
+                    while (j < text.size() && isWhiteSpace(static_cast<unsigned char>(text[j])) &&
+                           !isEndOfLine(text[j])) {
+                        ++j;
+                    }
+                    if (j < text.size() && text[j] == ';') {
+                        i = j + 1;
+                        return s;
+                    }
+                    s.push_back('"');
+                    ++i;
+                    continue;
+                }
                 s.push_back(text[i]);
                 ++i;
             }
-            if (i >= text.size() || text[i] != '"') {
-                throw ScriptError(
-                    formatLine(file, startLine, "String marking \"...\" starting doesn't end!"),
-                    file, startLine);
-            }
-            ++i;
-            skipWs();
-            if (i >= text.size() || text[i] != ';') {
-                throw ScriptError(formatLine(file, line, "No semicolon"), file, line);
-            }
-            ++i;
-            return s;
+            throw ScriptError(
+                formatLine(file, startLine, "String marking \"...\" starting doesn't end!"),
+                file, startLine);
         }
 
         std::string s;
@@ -698,6 +714,11 @@ struct Parser {
             }
             if (text[i] == '[') {
                 parseBlock(block);
+                continue;
+            }
+            if (text[i] == ';') {
+                // Official files sometimes write `Filename = foo.kf2;;`
+                ++i;
                 continue;
             }
             if (text[i] == '{') {
@@ -761,6 +782,10 @@ struct Parser {
             const char c = peek();
             if (c == '}' || c == '[') {
                 break;
+            }
+            if (c == ';') {
+                ++i;
+                continue;
             }
             parseAssignment(child);
             any = true;

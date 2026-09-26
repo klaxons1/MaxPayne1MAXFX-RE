@@ -65,6 +65,30 @@ struct DecalMaterialDef {
     DecalMaterialDef() : minRadius(0.0f), maxRadius(0.0f) {}
 };
 
+// One [name] entry from sounds/*.txt or music/music.txt.
+struct SoundDef {
+    std::string name;      // block tag, lower-cased
+    std::string category;  // file stem (ambient, weapons, music, ...)
+    std::string filename;  // script Filename, native separators
+    std::string resolvedPath;
+    float volume;
+    int pitch;
+    bool looping;
+    bool is3d;
+    bool streamed;
+    float hotspot;
+    float falloff;
+
+    SoundDef()
+        : volume(1.0f),
+          pitch(22050),
+          looping(false),
+          is3d(false),
+          streamed(false),
+          hotspot(1.0f),
+          falloff(10.0f) {}
+};
+
 struct ScriptCatalogEntry {
     std::string path;
     std::string relative;
@@ -79,7 +103,12 @@ struct Database {
     std::vector<SkinDef> skins;
     std::vector<ItemDef> items;
     std::vector<DecalMaterialDef> decals;
+    std::vector<SoundDef> sounds;
+    std::vector<SoundDef> music;
     std::vector<ScriptCatalogEntry> scripts;
+
+    std::string worldSphereName;
+    std::string worldSpherePath;
 
     int parsedScripts;
     int failedScripts;
@@ -90,6 +119,9 @@ struct Database {
     const MaterialCategory* findMaterial(const std::string& category) const;
     const SkinDef* findSkin(const std::string& name) const;
     const ItemDef* findItem(const std::string& name) const;
+    const SoundDef* findSound(const std::string& name) const;
+    const SoundDef* findSound(const std::string& category, const std::string& name) const;
+    const SoundDef* findMusic(const std::string& name) const;
 
     // Cached KF2/KFS/SKD. Missing files return null.
     const Kf2File* model(const std::string& resolvedPath) const;
@@ -113,6 +145,9 @@ public:
     // and items that actually appear in `skinNames` / `itemNames`.
     static void loadModels(Database& db, const std::vector<std::string>& skinNames,
                            const std::vector<std::string>& itemNames);
+
+    // `WorldSphere = "intro"` in levels.txt → worldspheres/bg_intro.kf2.
+    static void loadWorldSphere(Database& db, const std::string& name);
 };
 
 }  // namespace maxfx

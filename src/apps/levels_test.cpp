@@ -7,6 +7,7 @@
 #include "maxfx/kf2/Kf2.h"
 #include "maxfx/levels/Levels.h"
 #include "maxfx/script/Script.h"
+#include "maxfx/sound/Sound.h"
 
 #include <cmath>
 #include <cstdio>
@@ -303,6 +304,46 @@ static void testUnbracedBlocks() {
     check(s.root().children[1].assignments.size() == 2, "geometry two assignments");
 }
 
+static void testNestedQuotesAnd3DSound() {
+    const char* text =
+        "[OnPickup]\n"
+        "{\n"
+        "  [Message] string = \"activator->C_PickupWeapon( \"beretta\" );\";\n"
+        "}\n"
+        "[Shoot]\n"
+        "{\n"
+        "  [Sound]\n"
+        "  Filename = weapons\\\\shoot_empty.wav;\n"
+        "  3DSound = YES;\n"
+        "  Looping = NO;\n"
+        "}\n";
+    const Script s = Script::parseText(text, "soundlike.txt");
+    check(s.root().children.size() == 2, "pickup + shoot blocks");
+    check(s.root().children[0].children.size() == 1, "message child");
+    if (!s.root().children[0].children.empty()) {
+        check(s.root().children[0].children[0].assignments.size() >= 1, "message string");
+        if (!s.root().children[0].children[0].assignments.empty()) {
+            const std::string& v = s.root().children[0].children[0].assignments[0].rvalue;
+            check(v.find("beretta") != std::string::npos, "nested quote keeps beretta");
+        }
+    }
+    check(s.root().children[1].children.size() == 1, "sound child");
+    if (!s.root().children[1].children.empty()) {
+        bool has3d = false;
+        for (std::size_t i = 0; i < s.root().children[1].children[0].assignments.size(); ++i) {
+            if (s.root().children[1].children[0].assignments[i].lvalue == "3dsound") {
+                has3d = true;
+            }
+        }
+        check(has3d, "3DSound lvalue");
+    }
+
+    const char* extraSemi =
+        "[LOD]\n{\n  [Geometry] ExportData = foo.kf2;;\n  Distance = 1;\n}\n";
+    const Script semi = Script::parseText(extraSemi, "semi.txt");
+    check(semi.root().children.size() == 1, "double semicolon still parses");
+}
+
 static void testPcxAlpha() {
     maxfx::Image img;
     std::string err;
@@ -367,7 +408,7 @@ static void testDatabase() {
         std::fprintf(stderr, "skip database (docs/database missing)\\n");
         return;
     }
-    const maxfx::Database db = maxfx::DatabaseReader::load(root);
+    maxfx::Database db = maxfx::DatabaseReader::load(root);
     check(db.parsedScripts > 10, "parsed many scripts");
     check(!db.materials.empty(), "materials.txt categories");
     const maxfx::MaterialCategory* graffiti = db.findMaterial("Graffiti");
@@ -375,6 +416,34 @@ static void testDatabase() {
     const maxfx::MaterialCategory* ai = db.findMaterial("AI_Node_Collision_NoDraw");
     check(ai != 0 && ai->drawPolygons == false, "AI node is service geometry");
     check(!db.items.empty() || !db.skins.empty(), "skins or level_items parsed");
+    check(db.findItem("beretta") != 0, "beretta item def");
+    if (db.findItem("beretta") != 0 && !db.findItem("beretta")->lods.empty()) {
+        check(maxfx::isFile(db.findItem("beretta")->lods[0].resolvedExport), "beretta kf2 resolved");
+    }
+    check(db.findSkin("C1_All_Mickey") != 0, "C1_All_Mickey skin def");
+    check(!db.music.empty(), "music.txt entries");
+    check(db.findMusic("max_payne") != 0, "max_payne music cue");
+    if (db.findMusic("max_payne") != 0) {
+        check(db.findMusic("max_payne")->filename.find("max_theme") != std::string::npos,
+              "max_payne wavs/max_theme.wav path");
+        check(db.findMusic("max_payne")->filename.find("wavs") != std::string::npos,
+              "max_payne keeps wavs\\\\ prefix");
+    }
+    check(!db.sounds.empty(), "sound scripts parsed");
+    maxfx::DatabaseReader::loadWorldSphere(db, "intro");
+    check(!db.worldSpherePath.empty() && maxfx::isFile(db.worldSpherePath), "worldsphere intro kf2");
+}
+
+static void testWavPlaceholder() {
+    if (!maxfx::isFile("docs/database/sounds/placeholder.wav")) {
+        std::fprintf(stderr, "skip wav (placeholder.wav missing)\\n");
+        return;
+    }
+    maxfx::WavFile wav;
+    std::string err;
+    check(maxfx::loadWavFile("docs/database/sounds/placeholder.wav", wav, &err), "load placeholder.wav");
+    check(wav.channels == 2 && wav.bitsPerSample == 8, "placeholder wav format");
+    check(wav.sampleRate == 44100, "placeholder wav rate");
 }
 
 int main() {
@@ -382,9 +451,11 @@ int main() {
     testErrors();
     testInclude("/tmp");
     testUnbracedBlocks();
+    testNestedQuotesAnd3DSound();
     testPcxAlpha();
     testKf2Beretta();
     testDatabase();
+    testWavPlaceholder();
 
     // Official sample shipped in docs/.
     const std::string sample = maxfx::LevelsReader::locateLevelsTxt("docs");

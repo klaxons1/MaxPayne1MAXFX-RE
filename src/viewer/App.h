@@ -4,6 +4,7 @@
 #include "maxfx/db/Database.h"
 #include "maxfx/ldb/Ldb.h"
 #include "maxfx/levels/Levels.h"
+#include "viewer/Audio.h"
 #include "viewer/Camera.h"
 #include "viewer/Renderer.h"
 
@@ -41,6 +42,7 @@ private:
     Level level_;
     Database database_;
     Renderer renderer_;
+    ViewerAudio audio_;
     Camera camera_;
     bool running_;
     bool mouseCaptured_;

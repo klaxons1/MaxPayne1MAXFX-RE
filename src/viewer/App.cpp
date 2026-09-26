@@ -58,6 +58,7 @@ ViewerApp::ViewerApp()
 ViewerApp::~ViewerApp() { destroyWindow(); }
 
 void ViewerApp::destroyWindow() {
+    audio_.shutdown();
     renderer_.shutdown();
     if (glContext_) {
         SDL_GL_DestroyContext(static_cast<SDL_GLContext>(glContext_));
@@ -71,9 +72,11 @@ void ViewerApp::destroyWindow() {
 }
 
 bool ViewerApp::createWindow(char* error, std::size_t errorSize) {
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
-        std::snprintf(error, errorSize, "SDL_Init: %s", SDL_GetError());
-        return false;
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
+        if (!SDL_Init(SDL_INIT_VIDEO)) {
+            std::snprintf(error, errorSize, "SDL_Init: %s", SDL_GetError());
+            return false;
+        }
     }
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -278,6 +281,14 @@ bool ViewerApp::loadLevelIndex(int index, bool showLoading) {
             items.push_back(loaded.items[i].itemName);
         }
         DatabaseReader::loadModels(database_, skins, items);
+        std::string sphere;
+        if (index >= 0 && static_cast<std::size_t>(index) < levelInfos_.size()) {
+            sphere = levelInfos_[static_cast<std::size_t>(index)].worldSphereName;
+        }
+        DatabaseReader::loadWorldSphere(database_, sphere);
+        audio_.playLevel(database_, sphere);
+    } else {
+        audio_.playLevel(database_, std::string());
     }
 
     char error[1024];
@@ -408,6 +419,9 @@ void ViewerApp::handleKeyDown(int scancode, int key) {
         case SDLK_F6:
             renderer_.setShowService(!renderer_.showService());
             break;
+        case SDLK_F7:
+            audio_.toggleMuted();
+            break;
         case SDLK_H:
             renderer_.setShowHud(!renderer_.showHud());
             break;
@@ -460,6 +474,7 @@ void ViewerApp::update(float dt) {
     }
     const bool sprint = keys[SDL_SCANCODE_LSHIFT] != 0;
     camera_.fly(f, r, u, dt, sprint);
+    audio_.pump();
 }
 
 void ViewerApp::drawHud(float dt) {
@@ -507,22 +522,25 @@ void ViewerApp::drawHud(float dt) {
                   dt > 1.0e-4f ? 1.0f / dt : 0.0f, shade, roomName, spawnName);
     renderer_.drawHudText(12, 44, line, 0.70f, 0.75f, 0.80f);
 
-    if (renderer_.entityMeshCount() > 0 || renderer_.showService()) {
-        std::snprintf(line, sizeof(line), "service %s  kf2 meshes %u  kf2 tris %u",
-                      renderer_.showService() ? "on" : "off", renderer_.entityMeshCount(),
-                      renderer_.entityTriangleCount());
-        renderer_.drawHudText(12, 60, line, 0.65f, 0.70f, 0.75f);
-    }
+    std::snprintf(line, sizeof(line),
+                  "service %s  entities %u  kf2 tris %u  placeholders %u  items %zu  chars %zu",
+                  renderer_.showService() ? "on" : "off", renderer_.entityMeshCount(),
+                  renderer_.entityTriangleCount(), renderer_.entityPlaceholderCount(),
+                  level_.items.size(), level_.characters.size());
+    renderer_.drawHudText(12, 60, line, 0.65f, 0.70f, 0.75f);
+
+    std::snprintf(line, sizeof(line), "%s%s", audio_.statusLine(), audio_.muted() ? "  MUTE" : "");
+    renderer_.drawHudText(12, 76, line, 0.65f, 0.72f, 0.70f);
 
     if (!statusMessage_.empty()) {
-        renderer_.drawHudText(12, 76, statusMessage_.c_str(), 1.0f, 0.35f, 0.35f);
+        renderer_.drawHudText(12, 92, statusMessage_.c_str(), 1.0f, 0.35f, 0.35f);
     }
 
     if (showHelp_) {
         const char* help =
             "WASD fly   Q/E up/down   Shift sprint   mouse look\n"
             "Left/Right levels   [ ] isolate room   PgUp/PgDn jumppoints\n"
-            "F1 help  F2 wire  F3 shading  F4 helpers  F5 dynamic  F6 service   Esc grab/quit";
+            "F1 help  F2 wire  F3 shading  F4 helpers  F5 dynamic  F6 service  F7 mute   Esc grab/quit";
         renderer_.drawHudText(12, height_ - 52, help, 0.72f, 0.72f, 0.68f);
     }
     renderer_.presentHud();
@@ -558,6 +576,7 @@ int ViewerApp::run(const char* pathOrNull) {
         std::fprintf(stderr, "renderer init: %s\n", error);
         return 4;
     }
+    audio_.init();
     renderer_.resize(width_, height_);
 
     int start = levelIndex_ >= 0 ? levelIndex_ : 0;

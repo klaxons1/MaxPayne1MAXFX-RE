@@ -24,6 +24,7 @@ add_library(maxfx_ldb STATIC
     src/maxfx/image/Image.cpp
     src/maxfx/kf2/Kf2.cpp
     src/maxfx/db/Database.cpp
+    src/maxfx/sound/Sound.cpp
 )
 target_include_directories(maxfx_ldb PUBLIC src third_party)
 
@@ -55,6 +56,7 @@ if(MAXFX_BUILD_VIEWER)
         src/viewer/GL.cpp
         src/viewer/Renderer.cpp
         src/viewer/App.cpp
+        src/viewer/Audio.cpp
     )
     target_include_directories(ldb-viewer PRIVATE src)
     target_link_libraries(ldb-viewer PRIVATE maxfx_ldb SDL3::SDL3)

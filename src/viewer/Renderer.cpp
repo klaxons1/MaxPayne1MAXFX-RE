@@ -249,7 +249,8 @@ Renderer::Renderer()
       height_(1),
       triangleCount_(0),
       entityMeshCount_(0),
-      entityTriangleCount_(0) {}
+      entityTriangleCount_(0),
+      entityPlaceholderCount_(0) {}
 
 Renderer::~Renderer() {
     // GPU objects are released by shutdown() while the GL context is still alive.
@@ -298,6 +299,7 @@ void Renderer::clearLevelGpu() {
     triangleCount_ = 0;
     entityMeshCount_ = 0;
     entityTriangleCount_ = 0;
+    entityPlaceholderCount_ = 0;
     spawns_.clear();
     isolatedRoom_ = -1;
     lineCount_ = 0;
@@ -561,67 +563,76 @@ bool Renderer::loadLevel(const Level& level, const Database* database, char* err
                    mesh.properties.roomId, true, level, database, matTex, lmGpu, mesh.radiosity, lights);
     }
 
-    if (database) {
-        std::vector<std::string> nodeNames;
-        std::vector<Mat4x3> nodeWorlds;
-        for (std::size_t i = 0; i < level.items.size(); ++i) {
-            const LevelItem& it = level.items[i];
+    for (std::size_t i = 0; i < level.items.size(); ++i) {
+        const LevelItem& it = level.items[i];
+        const Mat4x3 roomX = roomTransform(level, it.properties.roomId);
+        const Mat4x3 entity = combine(roomX, it.properties.objectToRoom);
+        const Kf2File* kf = 0;
+        if (database) {
             const ItemDef* def = database->findItem(it.itemName);
-            if (def == 0 || def->lods.empty()) {
-                continue;
-            }
-            const Kf2File* kf = database->model(def->lods[0].resolvedExport);
-            if (kf == 0) {
-                continue;
-            }
-            std::vector<Kf2DrawMesh> draws;
-            kf2BuildDrawMeshes(*kf, draws);
-            kf2NodeWorldTransforms(*kf, &nodeNames, &nodeWorlds);
-            const Mat4x3 roomX = roomTransform(level, it.properties.roomId);
-            const Mat4x3 entity = combine(roomX, it.properties.objectToRoom);
-            const std::string modelDir = parentDir(kf->sourcePath);
-            for (std::size_t m = 0; m < draws.size(); ++m) {
-                Mat4x3 local;
-                for (std::size_t n = 0; n < nodeNames.size(); ++n) {
-                    if (nodeNames[n] == draws[m].nodeName) {
-                        local = nodeWorlds[n];
-                        break;
-                    }
-                }
-                appendKf2Mesh(draws[m], combine(entity, local), it.properties.roomId, lights, database,
-                              modelDir);
-                ++entityMeshCount_;
+            if (def != 0 && !def->lods.empty()) {
+                kf = database->model(def->lods[0].resolvedExport);
             }
         }
-        for (std::size_t i = 0; i < level.characters.size(); ++i) {
-            const Character& ch = level.characters[i];
+        int added = 0;
+        if (kf != 0) {
+            added = appendKf2File(*kf, entity, it.properties.roomId, lights, database);
+        }
+        if (added <= 0) {
+            appendOrientedBox(entity, it.properties.roomId, 0.12f, 0.08f, 0.18f, Vec3(1.0f, 0.75f, 0.15f));
+            ++entityPlaceholderCount_;
+        }
+        ++entityMeshCount_;
+    }
+    for (std::size_t i = 0; i < level.characters.size(); ++i) {
+        const Character& ch = level.characters[i];
+        const Mat4x3 roomX = roomTransform(level, ch.properties.roomId);
+        const Mat4x3 entity = combine(roomX, ch.properties.objectToRoom);
+        const Kf2File* kf = 0;
+        if (database) {
             const SkinDef* def = database->findSkin(ch.characterName);
-            if (def == 0 || def->lods.empty()) {
-                continue;
-            }
-            const Kf2File* kf = database->model(def->lods[0].resolvedExport);
-            if (kf == 0) {
-                continue;
-            }
-            std::vector<Kf2DrawMesh> draws;
-            kf2BuildDrawMeshes(*kf, draws);
-            kf2NodeWorldTransforms(*kf, &nodeNames, &nodeWorlds);
-            const Mat4x3 roomX = roomTransform(level, ch.properties.roomId);
-            const Mat4x3 entity = combine(roomX, ch.properties.objectToRoom);
-            const std::string modelDir = parentDir(kf->sourcePath);
-            for (std::size_t m = 0; m < draws.size(); ++m) {
-                Mat4x3 local;
-                for (std::size_t n = 0; n < nodeNames.size(); ++n) {
-                    if (nodeNames[n] == draws[m].nodeName) {
-                        local = nodeWorlds[n];
-                        break;
-                    }
-                }
-                appendKf2Mesh(draws[m], combine(entity, local), ch.properties.roomId, lights, database,
-                              modelDir);
-                ++entityMeshCount_;
+            if (def != 0 && !def->lods.empty()) {
+                kf = database->model(def->lods[0].resolvedExport);
             }
         }
+        int added = 0;
+        if (kf != 0) {
+            added = appendKf2File(*kf, entity, ch.properties.roomId, lights, database);
+        }
+        if (added <= 0) {
+            Mat4x3 body = entity;
+            body.rows[3] = transformPoint(entity, Vec3(0.0f, 0.9f, 0.0f));
+            appendOrientedBox(body, ch.properties.roomId, 0.22f, 0.9f, 0.22f, Vec3(0.95f, 0.25f, 0.2f));
+            ++entityPlaceholderCount_;
+        }
+        ++entityMeshCount_;
+    }
+    if (database && !database->worldSpherePath.empty()) {
+        const Kf2File* sphere = database->model(database->worldSpherePath);
+        if (sphere != 0) {
+            Mat4x3 identity;
+            appendKf2File(*sphere, identity, -1, lights, database);
+        }
+    }
+    for (std::size_t i = 0; i < level.pointLights.size(); ++i) {
+        const PointLight& pl = level.pointLights[i];
+        const Mat4x3 roomX = roomTransform(level, pl.properties.roomId);
+        const Mat4x3 entity = combine(roomX, pl.properties.objectToRoom);
+        appendOrientedBox(entity, pl.properties.roomId, 0.08f, 0.08f, 0.08f,
+                          Vec3(pl.r > 0.05f ? pl.r : 1.0f, pl.g > 0.05f ? pl.g : 0.9f,
+                               pl.b > 0.05f ? pl.b : 0.4f));
+    }
+    for (std::size_t i = 0; i < level.staticLights.size(); ++i) {
+        const StaticLight& sl = level.staticLights[i];
+        const Mat4x3 roomX = roomTransform(level, sl.properties.roomId);
+        const Mat4x3 entity = combine(roomX, sl.properties.objectToRoom);
+        appendOrientedBox(entity, sl.properties.roomId, 0.1f, 0.1f, 0.1f, Vec3(sl.r, sl.g, sl.b));
+    }
+    for (std::size_t i = 0; i < level.fsms.size(); ++i) {
+        const Fsm& fsm = level.fsms[i];
+        const Mat4x3 roomX = roomTransform(level, fsm.properties.roomId);
+        const Mat4x3 entity = combine(roomX, fsm.properties.objectToRoom);
+        appendOrientedBox(entity, fsm.properties.roomId, 0.15f, 0.15f, 0.15f, Vec3(0.3f, 0.95f, 0.45f));
     }
 
     uploadBatches();
@@ -831,9 +842,9 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
         key.diffuse = diff;
         key.lightmap = whiteTex_;
         key.roomId = roomId;
-        key.alphaTest = false;
+        key.alphaTest = part.textureFiles.size() > 1;
         key.dynamic = false;
-        key.service = part.invisible;
+        key.service = false;
         key.writesZ = true;
         key.vertexLit = true;
         key.detailOffset = 0;
@@ -842,7 +853,10 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
         for (std::size_t v = 0; v < part.vertices.size(); ++v) {
             const Vec3 pos = mirrorX(transformPoint(world, part.vertices[v].position));
             const Vec3 nrm = mirrorX(transformVector(world, part.vertices[v].normal));
-            const Vec3 col = shadeVertex(pos, nrm, lights);
+            Vec3 col = shadeVertex(pos, nrm, lights);
+            col.x = col.x * 0.45f + 0.55f;
+            col.y = col.y * 0.45f + 0.55f;
+            col.z = col.z * 0.45f + 0.55f;
             gpu.vertices.push_back(pos.x);
             gpu.vertices.push_back(pos.y);
             gpu.vertices.push_back(pos.z);
@@ -865,6 +879,92 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
             ++triangleCount_;
             ++entityTriangleCount_;
         }
+    }
+}
+
+int Renderer::appendKf2File(const Kf2File& kf, const Mat4x3& entity, int roomId,
+                            const std::vector<WorldLight>& lights, const Database* database) {
+    std::vector<Kf2DrawMesh> draws;
+    kf2BuildDrawMeshes(kf, draws);
+    if (draws.empty()) {
+        return 0;
+    }
+    std::vector<std::string> nodeNames;
+    std::vector<Mat4x3> nodeWorlds;
+    kf2NodeWorldTransforms(kf, &nodeNames, &nodeWorlds);
+    const std::string modelDir = parentDir(kf.sourcePath);
+    const unsigned int before = entityTriangleCount_;
+    for (std::size_t m = 0; m < draws.size(); ++m) {
+        Mat4x3 local;
+        bool found = false;
+        for (std::size_t n = 0; n < nodeNames.size(); ++n) {
+            if (nodeNames[n] == draws[m].nodeName) {
+                local = nodeWorlds[n];
+                found = true;
+                break;
+            }
+        }
+        const Mat4x3 world = found ? combine(entity, local) : entity;
+        appendKf2Mesh(draws[m], world, roomId, lights, database, modelDir);
+    }
+    return static_cast<int>(entityTriangleCount_ - before);
+}
+
+void Renderer::appendOrientedBox(const Mat4x3& entity, int roomId, float hx, float hy, float hz,
+                                 const Vec3& color) {
+    const Vec3 corners[8] = {
+        Vec3(-hx, -hy, -hz), Vec3(hx, -hy, -hz), Vec3(hx, hy, -hz), Vec3(-hx, hy, -hz),
+        Vec3(-hx, -hy, hz),  Vec3(hx, -hy, hz),  Vec3(hx, hy, hz),  Vec3(-hx, hy, hz),
+    };
+    Vec3 w[8];
+    for (int i = 0; i < 8; ++i) {
+        w[i] = mirrorX(transformPoint(entity, corners[i]));
+    }
+    const int faces[6][4] = {
+        {0, 1, 2, 3}, {5, 4, 7, 6}, {4, 0, 3, 7}, {1, 5, 6, 2}, {4, 5, 1, 0}, {3, 2, 6, 7},
+    };
+    BatchKey key;
+    key.diffuse = whiteTex_;
+    key.lightmap = whiteTex_;
+    key.roomId = roomId;
+    key.alphaTest = false;
+    key.dynamic = false;
+    key.service = false;
+    key.writesZ = true;
+    key.vertexLit = true;
+    key.detailOffset = 0;
+    GpuMesh& gpu = batchFor(key);
+    for (int f = 0; f < 6; ++f) {
+        const Vec3 a = w[faces[f][0]];
+        const Vec3 b = w[faces[f][1]];
+        const Vec3 c = w[faces[f][2]];
+        const Vec3 d = w[faces[f][3]];
+        const Vec3 n = normalize(cross(b - a, c - a));
+        const Vec3 tri[6] = {a, b, c, a, c, d};
+        const unsigned int base = static_cast<unsigned int>(gpu.vertices.size() / 13);
+        for (int v = 0; v < 6; ++v) {
+            gpu.vertices.push_back(tri[v].x);
+            gpu.vertices.push_back(tri[v].y);
+            gpu.vertices.push_back(tri[v].z);
+            gpu.vertices.push_back(n.x);
+            gpu.vertices.push_back(n.y);
+            gpu.vertices.push_back(n.z);
+            gpu.vertices.push_back(0.0f);
+            gpu.vertices.push_back(0.0f);
+            gpu.vertices.push_back(0.0f);
+            gpu.vertices.push_back(0.0f);
+            gpu.vertices.push_back(color.x);
+            gpu.vertices.push_back(color.y);
+            gpu.vertices.push_back(color.z);
+        }
+        gpu.indices.push_back(base + 0);
+        gpu.indices.push_back(base + 1);
+        gpu.indices.push_back(base + 2);
+        gpu.indices.push_back(base + 3);
+        gpu.indices.push_back(base + 4);
+        gpu.indices.push_back(base + 5);
+        triangleCount_ += 2;
+        entityTriangleCount_ += 2;
     }
 }
 
@@ -959,6 +1059,11 @@ void Renderer::buildHelpers(const Level& level) {
         addDiamond(lines, worldPoint(roomX, ch.properties.objectToRoom) + Vec3(0, 0.9f, 0), 0.35f, 1, 0.2f,
                    0.2f);
     }
+    for (std::size_t i = 0; i < level.fsms.size(); ++i) {
+        const Fsm& fsm = level.fsms[i];
+        const Mat4x3 roomX = roomTransform(level, fsm.properties.roomId);
+        addDiamond(lines, worldPoint(roomX, fsm.properties.objectToRoom), 0.25f, 0.3f, 0.95f, 0.4f);
+    }
     for (std::size_t i = 0; i < level.items.size(); ++i) {
         const LevelItem& it = level.items[i];
         const Mat4x3 roomX = roomTransform(level, it.properties.roomId);
@@ -1048,7 +1153,7 @@ void Renderer::drawBatches(bool alphaPass) {
         if (b.service && !showService_) {
             continue;
         }
-        if (isolatedRoom_ >= 0 && b.roomId != isolatedRoom_) {
+        if (isolatedRoom_ >= 0 && b.roomId >= 0 && b.roomId != isolatedRoom_) {
             continue;
         }
         glActiveTexture(GL_TEXTURE0);
@@ -1066,7 +1171,7 @@ void Renderer::drawBatches(bool alphaPass) {
             glDisable(GL_POLYGON_OFFSET_FILL);
         }
         glDepthMask(b.writesZ ? GL_TRUE : GL_FALSE);
-        if (b.alphaTest) {
+        if (b.alphaTest || b.vertexLit) {
             glDisable(GL_CULL_FACE);
         } else {
             glEnable(GL_CULL_FACE);
