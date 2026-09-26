@@ -153,6 +153,8 @@ struct CharacterActor {
     float idleTimer;
     Vec3 lastSeen;
     bool sawPlayer;
+    bool grounded;
+    float clipLock;
     const CharacterConfig* config;
 
     CharacterActor()
@@ -165,6 +167,8 @@ struct CharacterActor {
           interest(0.0f),
           idleTimer(0.0f),
           sawPlayer(false),
+          grounded(false),
+          clipLock(0.0f),
           config(0) {}
 
     void spawn(const Vec3& pos, float yawRadians, int room, const CharacterConfig* cfg,

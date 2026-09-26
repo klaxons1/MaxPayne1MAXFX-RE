@@ -319,6 +319,8 @@ void CharacterActor::spawn(const Vec3& pos, float yawRadians, int room, const Ch
     interest = 0.0f;
     idleTimer = 0.0f;
     sawPlayer = false;
+    grounded = false;
+    clipLock = 0.0f;
     lastSeen = pos;
 }
 
@@ -360,7 +362,7 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
     Vec3 los = playerEye - eye;
     const float losLen = length(los);
     bool visible = false;
-    if (dist < ai.visualPerceivingRadius && losLen > 0.05f) {
+    if (dist < ai.visualPerceivingRadius && losLen > 0.05f && dist < 35.0f) {
         const CollisionHit hit = world.raycast(eye, los, 1.0f);
         if (!hit.hit || hit.t > losLen * 0.95f) {
             visible = true;
@@ -406,31 +408,49 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
 
     if (health <= 0.0f) {
         activity = kCharDead;
-    } else if (sawPlayer && targetDist < 10.0f && std::fabs(facing) < cone) {
-        activity = kCharCombat;
-    } else if (sawPlayer && targetDist < 4.0f) {
-        activity = kCharAlert;
-    } else if (sawPlayer && targetDist > 1.2f) {
-        activity = kCharHunt;
-    } else if (interest > 0.0f) {
-        activity = kCharAlert;
     } else {
-        idleTimer += dt;
-        if (idleTimer > 6.0f) {
-            activity = kCharPatrol;
-            if (idleTimer > 10.0f) {
-                idleTimer = 0.0f;
+        // Sticky combat/hunt so facing-cone flicker does not restart clips
+        // every few frames (walk/stand popping).
+        bool sticky = false;
+        if (sawPlayer) {
+            if (activity == kCharCombat && targetDist < 14.0f) {
+                sticky = true;
+            } else if (activity == kCharHunt && targetDist > 0.8f && targetDist < 28.0f) {
+                sticky = true;
             }
-        } else {
-            activity = kCharIdle;
+        }
+        if (!sticky) {
+            if (sawPlayer && targetDist < 10.0f && std::fabs(facing) < cone) {
+                activity = kCharCombat;
+            } else if (sawPlayer && targetDist < 4.0f) {
+                activity = kCharAlert;
+            } else if (sawPlayer && targetDist > 1.2f) {
+                activity = kCharHunt;
+            } else if (interest > 0.0f) {
+                activity = kCharAlert;
+            } else {
+                idleTimer += dt;
+                if (idleTimer > 6.0f) {
+                    activity = kCharPatrol;
+                    if (idleTimer > 10.0f) {
+                        idleTimer = 0.0f;
+                    }
+                } else {
+                    activity = kCharIdle;
+                }
+            }
         }
     }
 
     const bool armed = findAnimClip(*config, kCharAnimWStand) != 0;
     const int want = pickAnimIndex(*config, activityAnim(activity, armed));
-    if (want != animIndex) {
+    if (clipLock > 0.0f) {
+        clipLock -= dt;
+    }
+    if (want != animIndex && clipLock <= 0.0f) {
         animIndex = want;
         animTime = 0.0f;
+        clipLock = 0.4f;
     } else {
         animTime += dt;
     }
@@ -456,14 +476,20 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
     // Never drop Y when the downward ray misses — missing collision used
     // to send every NPC through the map.
     const float centerY = capsuleCenterHeight();
-    Vec3 center = position + Vec3(0.0f, centerY, 0.0f);
-    center = world.moveSphere(center, delta, capsuleRadius());
-    position.x = center.x;
-    position.z = center.z;
-    const CollisionHit floor =
-        world.raycast(center + Vec3(0.0f, 1.2f, 0.0f), Vec3(0.0f, -1.0f, 0.0f), 4.0f);
-    if (floor.hit) {
-        position.y = floor.point.y - config->capsule.bottom;
+    const bool moving = length(delta) > 1.0e-5f;
+    if (moving || !grounded) {
+        Vec3 center = position + Vec3(0.0f, centerY, 0.0f);
+        if (moving) {
+            center = world.moveSphere(center, delta, capsuleRadius());
+        }
+        position.x = center.x;
+        position.z = center.z;
+        const CollisionHit floor =
+            world.raycast(center + Vec3(0.0f, 1.2f, 0.0f), Vec3(0.0f, -1.0f, 0.0f), 4.0f);
+        if (floor.hit) {
+            position.y = floor.point.y - config->capsule.bottom;
+            grounded = true;
+        }
     }
 
     if (others != 0) {

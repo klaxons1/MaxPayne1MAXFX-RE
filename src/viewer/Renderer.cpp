@@ -346,6 +346,7 @@ void Renderer::clearLevelGpu() {
     animCpu_.clear();
     animKeys_.clear();
     textureByPath_.clear();
+    restKf2Draws_.clear();
     lights_.clear();
     database_ = 0;
     recordingAnimated_ = false;
@@ -961,6 +962,11 @@ void Renderer::appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int r
             Vec3 col;
             if (recordingSky_) {
                 col = Vec3(1.0f, 1.0f, 1.0f);
+            } else if (recordingAnimated_) {
+                const float lift = 0.40f + 0.60f * clamp(0.5f + 0.5f * nrm.y, 0.0f, 1.0f);
+                col.x = clamp(lift * part.diffuseColor.x, 0.08f, 1.0f);
+                col.y = clamp(lift * part.diffuseColor.y, 0.08f, 1.0f);
+                col.z = clamp(lift * part.diffuseColor.z, 0.08f, 1.0f);
             } else {
                 col = shadeVertex(pos, nrm, lights);
                 col.x = clamp(col.x * part.diffuseColor.x, 0.05f, 1.0f);
@@ -1050,46 +1056,16 @@ int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, 
                                       const Kf2File* playAnim, float timeSeconds, const Mat4x3& entity,
                                       int roomId) {
     recordingAnimated_ = true;
-    std::vector<Kf2DrawMesh> draws;
-    kf2BuildSkinnedDrawMeshes(mesh, skin, bindAnim, playAnim, timeSeconds, draws);
+    std::vector<Kf2DrawMesh>& rest = restKf2Draws_[mesh.sourcePath];
+    if (rest.empty()) {
+        kf2BuildDrawMeshes(mesh, rest);
+    }
+    std::vector<Kf2DrawMesh> draws = rest;
+    kf2SkinDrawMeshes(mesh, skin, bindAnim, playAnim, timeSeconds, draws);
     if (draws.empty()) {
         return appendKf2File(mesh, entity, roomId, lights_, database_);
     }
-    const Vec3 origin = mirrorX(transformPoint(entity, Vec3(0.0f, 1.0f, 0.0f)));
     std::vector<WorldLight> localLights;
-    const int cap = 8;
-    if (static_cast<int>(lights_.size()) <= cap) {
-        localLights = lights_;
-    } else {
-        std::vector<int> idx(static_cast<std::size_t>(cap), -1);
-        std::vector<float> dist(static_cast<std::size_t>(cap), 1.0e30f);
-        for (std::size_t i = 0; i < lights_.size(); ++i) {
-            const Vec3 d = lights_[i].position - origin;
-            const float d2 = d.x * d.x + d.y * d.y + d.z * d.z;
-            int slot = -1;
-            float worst = -1.0f;
-            for (int k = 0; k < cap; ++k) {
-                if (idx[static_cast<std::size_t>(k)] < 0) {
-                    slot = k;
-                    break;
-                }
-                if (dist[static_cast<std::size_t>(k)] > worst) {
-                    worst = dist[static_cast<std::size_t>(k)];
-                    slot = k;
-                }
-            }
-            if (slot >= 0 &&
-                (idx[static_cast<std::size_t>(slot)] < 0 || d2 < dist[static_cast<std::size_t>(slot)])) {
-                idx[static_cast<std::size_t>(slot)] = static_cast<int>(i);
-                dist[static_cast<std::size_t>(slot)] = d2;
-            }
-        }
-        for (int k = 0; k < cap; ++k) {
-            if (idx[static_cast<std::size_t>(k)] >= 0) {
-                localLights.push_back(lights_[static_cast<std::size_t>(idx[static_cast<std::size_t>(k)])]);
-            }
-        }
-    }
     const std::string modelDir = parentDir(mesh.sourcePath);
     const unsigned int before = entityTriangleCount_;
     for (std::size_t m = 0; m < draws.size(); ++m) {

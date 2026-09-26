@@ -733,6 +733,7 @@ void appendTriangles(const Kf2Mesh& mesh, const Kf2File& file, Kf2DrawMesh& out)
         for (int k = 0; k < 3; ++k) {
             const int vi = mesh.polygons.indices[static_cast<std::size_t>(t * 3 + k)];
             Kf2DrawVertex dv;
+            dv.sourceVertex = vi;
             if (vi >= 0 && vi < static_cast<int>(verts.size())) {
                 dv.position = verts[static_cast<std::size_t>(vi)];
             }
@@ -1077,17 +1078,55 @@ Mat4x3 meshObjectWorld(const Kf2Mesh& mesh, const std::vector<std::string>& anim
     return mesh.node.objectToParent;
 }
 
-void poseGeometry(Kf2Mesh& mesh, const Kf2Skin* skin, const std::vector<std::string>& bindNames,
-                  const std::vector<Mat4x3>& bindWorlds, const std::vector<std::string>& playNames,
-                  const std::vector<Mat4x3>& playWorlds, const std::vector<std::string>& nodeNames,
-                  const std::vector<Mat4x3>& nodeWorlds) {
-    if (!mesh.hasGeometry) {
-        return;
+void lockRootXZ(const Kf2File& play, const std::vector<std::string>& bindNames,
+                const std::vector<Mat4x3>& bindWorlds, std::vector<std::string>& playNames,
+                std::vector<Mat4x3>& playWorlds) {
+    for (std::size_t a = 0; a < play.animations.size(); ++a) {
+        if (!play.animations[a].parentName.empty()) {
+            continue;
+        }
+        const int pi = findNameIndex(playNames, play.animations[a].targetName);
+        const int bi = findNameIndex(bindNames, play.animations[a].targetName);
+        if (pi < 0 || bi < 0) {
+            continue;
+        }
+        playWorlds[static_cast<std::size_t>(pi)].rows[3].x =
+            bindWorlds[static_cast<std::size_t>(bi)].rows[3].x;
+        playWorlds[static_cast<std::size_t>(pi)].rows[3].z =
+            bindWorlds[static_cast<std::size_t>(bi)].rows[3].z;
     }
-    const Mat4x3 meshBind = meshObjectWorld(mesh, bindNames, bindWorlds, nodeNames, nodeWorlds);
-    const Mat4x3 meshPlay = meshObjectWorld(mesh, playNames, playWorlds, nodeNames, nodeWorlds);
-    std::vector<Vec3>& verts = mesh.geometry.vertices;
-    std::vector<Vec3>& nrms = mesh.geometry.normals;
+}
+
+void buildBonePalette(const Kf2Skin& skin, const std::vector<std::string>& bindNames,
+                      const std::vector<Mat4x3>& bindWorlds, const std::vector<std::string>& playNames,
+                      const std::vector<Mat4x3>& playWorlds, std::vector<Mat4x3>* playPal,
+                      std::vector<Mat4x3>* invBindPal, std::vector<char>* ok) {
+    const std::size_t n = skin.skeletonObjectNames.size();
+    playPal->assign(n, Mat4x3());
+    invBindPal->assign(n, Mat4x3());
+    ok->assign(n, 0);
+    for (std::size_t i = 0; i < n; ++i) {
+        bool hasBind = false;
+        bool hasPlay = false;
+        const Mat4x3 bw = lookupWorld(bindNames, bindWorlds, skin.skeletonObjectNames[i], &hasBind);
+        const Mat4x3 pw = lookupWorld(playNames, playWorlds, skin.skeletonObjectNames[i], &hasPlay);
+        if (!hasBind || !hasPlay) {
+            continue;
+        }
+        (*invBindPal)[i] = inverseRigid(bw);
+        (*playPal)[i] = pw;
+        (*ok)[i] = 1;
+    }
+}
+
+void poseVertexArrays(const Kf2Mesh& mesh, const Kf2Skin* skin, const Mat4x3& meshBind,
+                      const Mat4x3& meshPlay, const std::vector<Mat4x3>& playPal,
+                      const std::vector<Mat4x3>& invBindPal, const std::vector<char>& boneOk,
+                      std::vector<Vec3>* outPos, std::vector<Vec3>* outNrm) {
+    const std::vector<Vec3>& verts = mesh.geometry.vertices;
+    const std::vector<Vec3>& nrms = mesh.geometry.normals;
+    outPos->resize(verts.size());
+    outNrm->resize(verts.size());
     for (std::size_t i = 0; i < verts.size(); ++i) {
         const Vec3 vLocal = verts[i];
         const Vec3 nLocal = i < nrms.size() ? nrms[i] : Vec3(0.0f, 1.0f, 0.0f);
@@ -1102,21 +1141,17 @@ void poseGeometry(Kf2Mesh& mesh, const Kf2Skin* skin, const std::vector<std::str
             float wsum = 0.0f;
             for (std::size_t b = 0; b < sv.bones.size(); ++b) {
                 const int bi = sv.bones[b];
-                if (bi < 0 || bi >= static_cast<int>(skin->skeletonObjectNames.size())) {
-                    continue;
-                }
-                const std::string& bone = skin->skeletonObjectNames[static_cast<std::size_t>(bi)];
-                bool hasBind = false;
-                bool hasPlay = false;
-                const Mat4x3 bw = lookupWorld(bindNames, bindWorlds, bone, &hasBind);
-                const Mat4x3 pw = lookupWorld(playNames, playWorlds, bone, &hasPlay);
-                if (!hasBind || !hasPlay) {
+                if (bi < 0 || static_cast<std::size_t>(bi) >= boneOk.size() ||
+                    boneOk[static_cast<std::size_t>(bi)] == 0) {
                     continue;
                 }
                 const float w = b < sv.weights.size() ? sv.weights[b] : 1.0f;
-                const Mat4x3 invB = inverseRigid(bw);
-                acc += transformPoint(pw, transformPoint(invB, vBind)) * w;
-                accN += transformVector(pw, transformVector(invB, nBind)) * w;
+                acc += transformPoint(playPal[static_cast<std::size_t>(bi)],
+                                      transformPoint(invBindPal[static_cast<std::size_t>(bi)], vBind)) *
+                       w;
+                accN += transformVector(playPal[static_cast<std::size_t>(bi)],
+                                        transformVector(invBindPal[static_cast<std::size_t>(bi)], nBind)) *
+                        w;
                 wsum += w;
             }
             if (wsum > 1.0e-5f) {
@@ -1124,61 +1159,104 @@ void poseGeometry(Kf2Mesh& mesh, const Kf2Skin* skin, const std::vector<std::str
                 posedN = accN * (1.0f / wsum);
             }
         }
-        verts[i] = posed;
-        if (i < nrms.size()) {
-            nrms[i] = normalize(posedN);
-        }
+        (*outPos)[i] = posed;
+        (*outNrm)[i] = normalize(posedN);
     }
-    if (mesh.hasNode) {
-        mesh.node.objectToParent = Mat4x3();
-        mesh.node.hasParent = false;
-        mesh.node.parentName.clear();
+}
+
+void prepareSkeleton(const Kf2File& meshFile, const Kf2File* bindAnim, const Kf2File* playAnim,
+                     float timeSeconds, std::vector<std::string>* bindNames,
+                     std::vector<Mat4x3>* bindWorlds, std::vector<std::string>* playNames,
+                     std::vector<Mat4x3>* playWorlds) {
+    const Kf2File* play = playAnim != 0 ? playAnim : bindAnim;
+    if (bindAnim != 0 && !bindAnim->animations.empty()) {
+        kf2BuildSkeletonWorlds(*bindAnim, 0.0f, 0, bindNames, bindWorlds);
+    } else {
+        kf2NodeWorldTransforms(meshFile, bindNames, bindWorlds);
+    }
+    if (play != 0 && !play->animations.empty()) {
+        kf2BuildSkeletonWorlds(*play, timeSeconds, bindAnim, playNames, playWorlds);
+        lockRootXZ(*play, *bindNames, *bindWorlds, *playNames, *playWorlds);
+    } else {
+        *playNames = *bindNames;
+        *playWorlds = *bindWorlds;
+    }
+}
+
+void kf2SkinDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile, const Kf2File* bindAnim,
+                       const Kf2File* playAnim, float timeSeconds, std::vector<Kf2DrawMesh>& draws) {
+    const Kf2Skin* skin = pickSkin(meshFile, skinFile);
+    if (skin == 0 || draws.empty()) {
+        return;
+    }
+    std::vector<std::string> bindNames;
+    std::vector<Mat4x3> bindWorlds;
+    std::vector<std::string> playNames;
+    std::vector<Mat4x3> playWorlds;
+    prepareSkeleton(meshFile, bindAnim, playAnim, timeSeconds, &bindNames, &bindWorlds, &playNames,
+                    &playWorlds);
+    std::vector<std::string> nodeNames;
+    std::vector<Mat4x3> nodeWorlds;
+    kf2NodeWorldTransforms(meshFile, &nodeNames, &nodeWorlds);
+    std::vector<Mat4x3> playPal;
+    std::vector<Mat4x3> invBindPal;
+    std::vector<char> boneOk;
+    buildBonePalette(*skin, bindNames, bindWorlds, playNames, playWorlds, &playPal, &invBindPal,
+                     &boneOk);
+
+    for (std::size_t i = 0; i < meshFile.meshes.size(); ++i) {
+        const Kf2Mesh* src = &meshFile.meshes[i];
+        const Kf2Mesh* resolved = src;
+        Kf2Mesh tmp;
+        if (!src->hasGeometry && !src->referenceToData.empty()) {
+            const Kf2Mesh* ref = findMeshByName(meshFile, src->referenceToData);
+            if (ref) {
+                tmp = *src;
+                tmp.geometry = ref->geometry;
+                tmp.hasGeometry = ref->hasGeometry;
+                resolved = &tmp;
+            }
+        }
+        if (!resolved->hasGeometry) {
+            continue;
+        }
+        const Mat4x3 meshBind =
+            meshObjectWorld(*resolved, bindNames, bindWorlds, nodeNames, nodeWorlds);
+        const Mat4x3 meshPlay =
+            meshObjectWorld(*resolved, playNames, playWorlds, nodeNames, nodeWorlds);
+        std::vector<Vec3> posedPos;
+        std::vector<Vec3> posedNrm;
+        poseVertexArrays(*resolved, skin, meshBind, meshPlay, playPal, invBindPal, boneOk, &posedPos,
+                         &posedNrm);
+        const std::string meshName = resolved->hasNode ? resolved->node.name : std::string();
+        for (std::size_t d = 0; d < draws.size(); ++d) {
+            if (!meshName.empty() && !draws[d].nodeName.empty() &&
+                lowerAscii(draws[d].nodeName) != lowerAscii(meshName)) {
+                continue;
+            }
+            for (std::size_t p = 0; p < draws[d].parts.size(); ++p) {
+                std::vector<Kf2DrawVertex>& dv = draws[d].parts[p].vertices;
+                for (std::size_t v = 0; v < dv.size(); ++v) {
+                    const int si = dv[v].sourceVertex;
+                    if (si < 0 || static_cast<std::size_t>(si) >= posedPos.size()) {
+                        continue;
+                    }
+                    dv[v].position = posedPos[static_cast<std::size_t>(si)];
+                    dv[v].normal = posedNrm[static_cast<std::size_t>(si)];
+                }
+            }
+            draws[d].modelSpace = true;
+            draws[d].objectToParent = Mat4x3();
+            draws[d].parentName.clear();
+        }
     }
 }
 
 void kf2BuildSkinnedDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile,
                                const Kf2File* bindAnim, const Kf2File* playAnim, float timeSeconds,
                                std::vector<Kf2DrawMesh>& out) {
-    const Kf2File* play = playAnim != 0 ? playAnim : bindAnim;
-    std::vector<std::string> bindNames;
-    std::vector<Mat4x3> bindWorlds;
-    std::vector<std::string> playNames;
-    std::vector<Mat4x3> playWorlds;
-    if (bindAnim != 0 && !bindAnim->animations.empty()) {
-        kf2BuildSkeletonWorlds(*bindAnim, 0.0f, 0, &bindNames, &bindWorlds);
-    } else {
-        kf2NodeWorldTransforms(meshFile, &bindNames, &bindWorlds);
-    }
-    if (play != 0 && !play->animations.empty()) {
-        kf2BuildSkeletonWorlds(*play, timeSeconds, bindAnim, &playNames, &playWorlds);
-    } else {
-        playNames = bindNames;
-        playWorlds = bindWorlds;
-    }
-
-    const Kf2Skin* skin = pickSkin(meshFile, skinFile);
-    if (skin == 0) {
-        kf2BuildDrawMeshes(meshFile, out);
-        return;
-    }
-    // Mesh vertices are object-local. KFS node worlds carry the 3ds Max
-    // Z-up → Y-up rotation; animation channels are named bones (Pelvis, …)
-    // and do not include the mesh object, so falling back to identity left
-    // every NPC lying on the floor.
-    std::vector<std::string> nodeNames;
-    std::vector<Mat4x3> nodeWorlds;
-    kf2NodeWorldTransforms(meshFile, &nodeNames, &nodeWorlds);
-    Kf2File posed = meshFile;
-    for (std::size_t i = 0; i < posed.meshes.size(); ++i) {
-        poseGeometry(posed.meshes[i], skin, bindNames, bindWorlds, playNames, playWorlds, nodeNames,
-                     nodeWorlds);
-    }
-    kf2BuildDrawMeshes(posed, out);
-    for (std::size_t i = 0; i < out.size(); ++i) {
-        out[i].modelSpace = true;
-        out[i].objectToParent = Mat4x3();
-        out[i].parentName.clear();
-    }
+    kf2BuildDrawMeshes(meshFile, out);
+    kf2SkinDrawMeshes(meshFile, skinFile, bindAnim, playAnim, timeSeconds, out);
 }
 
 }  // namespace maxfx

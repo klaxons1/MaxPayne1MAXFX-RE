@@ -208,6 +208,7 @@ private:
     const Database* database_;
     std::vector<WorldLight> lights_;
     std::map<std::string, GLuint> textureByPath_;
+    std::map<std::string, std::vector<Kf2DrawMesh> > restKf2Draws_;
     bool recordingAnimated_;
     bool recordingSky_;
     std::vector<GpuMesh> animCpu_;

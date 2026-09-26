@@ -478,13 +478,7 @@ void ViewerApp::update(float dt) {
         u -= 1;
     }
     const bool sprint = keys[SDL_SCANCODE_LSHIFT] != 0;
-    const Vec3 before = camera_.position;
     camera_.fly(f, r, u, dt, sprint);
-    const Vec3 after = camera_.position;
-    const Vec3 ldbBefore(-before.x, before.y, before.z);
-    const Vec3 ldbAfter(-after.x, after.y, after.z);
-    const Vec3 ldbNew = collision_.moveSphere(ldbBefore, ldbAfter - ldbBefore, 0.22f);
-    camera_.position = Vec3(-ldbNew.x, ldbNew.y, ldbNew.z);
     updateActors(dt);
     audio_.pump();
 }
@@ -513,8 +507,13 @@ void ViewerApp::updateActors(float dt) {
         actors_[i].update(dt, playerLdb, collision_, &actors_);
     }
     renderer_.beginAnimated();
+    const Vec3 camLdb(-camera_.position.x, camera_.position.y, camera_.position.z);
     for (std::size_t i = 0; i < actors_.size(); ++i) {
         CharacterActor& actor = actors_[i];
+        const Vec3 toCam = actor.position - camLdb;
+        if (toCam.x * toCam.x + toCam.y * toCam.y + toCam.z * toCam.z > 40.0f * 40.0f) {
+            continue;
+        }
         const SkinDef* def = database_.findSkin(actor.skinName);
         if (def == 0 || def->lods.empty()) {
             continue;

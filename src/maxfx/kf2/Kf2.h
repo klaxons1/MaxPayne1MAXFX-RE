@@ -265,6 +265,9 @@ struct Kf2DrawVertex {
     Vec3 position;
     Vec3 normal;
     Vec2 uv;
+    int sourceVertex;  // index into the source Kf2Mesh geometry
+
+    Kf2DrawVertex() : sourceVertex(-1) {}
 };
 
 struct Kf2DrawPart {
@@ -319,6 +322,11 @@ void kf2BuildSkeletonWorlds(const Kf2File& anim, float timeSeconds, const Kf2Fil
 void kf2BuildSkinnedDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile,
                                const Kf2File* bindAnim, const Kf2File* playAnim, float timeSeconds,
                                std::vector<Kf2DrawMesh>& out);
+
+// Pose `draws` built from the same mesh (via kf2BuildDrawMeshes) in place.
+// Avoids recopying the KF2 file and rebuilding triangle lists every frame.
+void kf2SkinDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile, const Kf2File* bindAnim,
+                       const Kf2File* playAnim, float timeSeconds, std::vector<Kf2DrawMesh>& draws);
 
 inline const char* kf2ChunkName(unsigned int id) {
     switch (id) {

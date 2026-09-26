@@ -1,6 +1,6 @@
 # MAX-FX reverse engineering — current status
 
-Last updated 2026-09-26 (upright skinning / camera-follow world sphere). Comments and this file
+Last updated 2026-09-26 (in-place walk / cheaper skin). Comments and this file
 are in English; the code is C++11. The target is the **PC** Max Payne 1
 MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
 names and version numbers only — its loaders were stripped and can disagree
