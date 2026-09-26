@@ -1,6 +1,6 @@
 # MAX-FX reverse engineering — current status
 
-Last updated 2026-09-26 (characters / AI / collision). Comments and this file
+Last updated 2026-09-26 (character clips / room-mesh collision). Comments and this file
 are in English; the code is C++11. The target is the **PC** Max Payne 1
 MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
 names and version numbers only — its loaders were stripped and can disagree
@@ -162,8 +162,8 @@ KF2 textures use the grey placeholder and search the material list's
 
 The stripped sample database has weapon KF2s and one character KFS
 (`balder_alex`); missing skins show the red placeholder. Characters with a
-KFS/SKD are **not** baked in bind pose: they are skinned every frame from
-`CHARANIM_STAND` / `WALK` / combat clips.
+KFS/SKD are skinned every frame from cached `CHARANIM_POSE` + STAND / WALK
+clips (not the bind T-pose). Animated VBOs are streamed, not recreated.
 
 PCM WAV loader (`src/maxfx/sound`) plus an SDL3 mixer (`src/viewer/Audio.cpp`)
 loops the level theme when the official banks are next to the exe. The
@@ -193,13 +193,20 @@ dodge FSM, and the binary `.ai` graph next to each LDB are still engine debt.
 
 ### Collision (`src/maxfx/collision`)
 
-`CollisionWorld` fan-triangulates `Level::bsp` (the same polygons the BSP
-nodes index). `X_Character::collideObjects` is object-object dispatch
-(characters, items, triggers, dynamic meshes); world collision is the
-capsule vs those triangles. The viewer:
+`CollisionWorld` fan-triangulates **room static meshes** (the same triangles
+the renderer draws). The LDB BSP is a vis / partition mesh — on Part1_Level1
+its vertices sit metres away from spawned NPCs, so using it as a floor made
+everyone T-pose-fall through the map while 110k triangles were tested every
+frame. Queries go through a 2 m uniform grid.
+
+`X_Character::collideObjects` is object-object dispatch (characters, items,
+triggers, dynamic meshes). The viewer:
 
 - slides the camera as a 0.22 m sphere (LDB space, X-unmirrored)
-- drops each character capsule onto the floor and separates overlaps
+- snaps each character capsule onto the static-mesh floor (keeps spawn Y if
+  the downward ray misses, instead of applying gravity into the void)
+- CHARANIM_POSE / STAND / WALK clips are cached with the skin so characters
+  are skinned from the idle/walk pose, not the bind T-pose
 
 ## What is still missing (engine-port debt, not viewer hacks)
 

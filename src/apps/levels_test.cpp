@@ -8,6 +8,7 @@
 #include "maxfx/db/Database.h"
 #include "maxfx/image/Image.h"
 #include "maxfx/kf2/Kf2.h"
+#include "maxfx/ldb/Ldb.h"
 #include "maxfx/levels/Levels.h"
 #include "maxfx/script/Script.h"
 #include "maxfx/sound/Sound.h"
@@ -496,6 +497,45 @@ static void testCollisionAndMath() {
     checkNear(back.x, p.x, "inverseRigid x");
     checkNear(back.y, p.y, "inverseRigid y");
     checkNear(back.z, p.z, "inverseRigid z");
+
+    maxfx::CollisionWorld gridWorld;
+    for (int i = 0; i < 40; ++i) {
+        const float x = 20.0f + static_cast<float>(i);
+        gridWorld.addTriangle(maxfx::Vec3(x, 5, 0), maxfx::Vec3(x + 1, 5, 0),
+                              maxfx::Vec3(x, 5, 1), 0, 10 + i);
+    }
+    gridWorld.addTriangle(maxfx::Vec3(0, 0, 0), maxfx::Vec3(4, 0, 0), maxfx::Vec3(0, 0, 4), 1, 99);
+    const maxfx::CollisionHit gridHit =
+        gridWorld.raycast(maxfx::Vec3(0.4f, 2.0f, 0.4f), maxfx::Vec3(0.0f, -1.0f, 0.0f), 5.0f);
+    check(gridHit.hit, "grid ray hits nearby floor among far triangles");
+    checkNear(gridHit.point.y, 0.0f, "grid floor y");
+
+    maxfx::StaticMesh sm;
+    sm.vertices.push_back(maxfx::Vec3(0, 1, 0));
+    sm.vertices.push_back(maxfx::Vec3(3, 1, 0));
+    sm.vertices.push_back(maxfx::Vec3(0, 1, 3));
+    maxfx::Polygon sp;
+    sp.textureVertexStart = 0;
+    sp.vertexCount = 3;
+    sp.id = 7;
+    sm.polygons.push_back(sp);
+    std::vector<maxfx::TextureVertex> tvs(3);
+    tvs[0].vertexIndex = 0;
+    tvs[1].vertexIndex = 1;
+    tvs[2].vertexIndex = 2;
+    maxfx::CollisionWorld meshWorld;
+    meshWorld.addStaticMesh(sm, tvs);
+    const maxfx::CollisionHit meshHit =
+        meshWorld.raycast(maxfx::Vec3(0.3f, 3.0f, 0.3f), maxfx::Vec3(0.0f, -1.0f, 0.0f), 5.0f);
+    check(meshHit.hit, "static mesh floor hit");
+    checkNear(meshHit.point.y, 1.0f, "static mesh floor y");
+
+    maxfx::CharacterConfig cfg;
+    maxfx::CharacterActor actor;
+    actor.spawn(maxfx::Vec3(1.0f, 4.0f, 1.0f), 0.0f, 0, &cfg, "dummy");
+    maxfx::CollisionWorld empty;
+    actor.update(0.05f, maxfx::Vec3(8.0f, 4.0f, 8.0f), empty, 0);
+    checkNear(actor.position.y, 4.0f, "missing collision does not drop the actor");
 }
 
 static void testKf2AnimationAndSkinAi() {
@@ -541,6 +581,17 @@ static void testKf2AnimationAndSkinAi() {
             maxfx::findAnimClip(mickey->character, maxfx::kCharAnimWalk);
         if (walkClip != 0) {
             check(maxfx::isFile(walkClip->resolvedPath), "walk clip resolves to kf2");
+        }
+        std::vector<std::string> names;
+        names.push_back("C1_All_Mickey");
+        maxfx::DatabaseReader::loadModels(db, names, std::vector<std::string>());
+        const maxfx::CharacterAnimClip* poseClip =
+            maxfx::findAnimClip(mickey->character, maxfx::kCharAnimPose);
+        if (walkClip != 0 && maxfx::isFile(walkClip->resolvedPath)) {
+            check(db.model(walkClip->resolvedPath) != 0, "walk clip is cached for skinning");
+        }
+        if (poseClip != 0 && maxfx::isFile(poseClip->resolvedPath)) {
+            check(db.model(poseClip->resolvedPath) != 0, "pose clip is cached for skinning");
         }
     }
 

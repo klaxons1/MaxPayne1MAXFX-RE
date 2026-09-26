@@ -128,6 +128,8 @@ struct Database {
     // Cached KF2/KFS/SKD. Missing files return null.
     const Kf2File* model(const std::string& resolvedPath) const;
     Kf2File* model(const std::string& resolvedPath);
+    // Parse and cache on first use (CHARANIM clips, extra LODs).
+    Kf2File* loadModel(const std::string& resolvedPath);
 
     std::map<std::string, Kf2File> models;  // key = lower-cased native path
 };

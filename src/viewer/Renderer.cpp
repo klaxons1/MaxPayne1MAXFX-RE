@@ -1030,7 +1030,6 @@ void Renderer::destroyAnimatedGpu() {
 
 void Renderer::beginAnimated() {
     recordingAnimated_ = true;
-    destroyAnimatedGpu();
     animCpu_.clear();
     animKeys_.clear();
 }
@@ -1044,6 +1043,41 @@ int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, 
     if (draws.empty()) {
         return appendKf2File(mesh, entity, roomId, lights_, database_);
     }
+    const Vec3 origin = mirrorX(transformPoint(entity, Vec3(0.0f, 1.0f, 0.0f)));
+    std::vector<WorldLight> localLights;
+    const int cap = 8;
+    if (static_cast<int>(lights_.size()) <= cap) {
+        localLights = lights_;
+    } else {
+        std::vector<int> idx(static_cast<std::size_t>(cap), -1);
+        std::vector<float> dist(static_cast<std::size_t>(cap), 1.0e30f);
+        for (std::size_t i = 0; i < lights_.size(); ++i) {
+            const Vec3 d = lights_[i].position - origin;
+            const float d2 = d.x * d.x + d.y * d.y + d.z * d.z;
+            int slot = -1;
+            float worst = -1.0f;
+            for (int k = 0; k < cap; ++k) {
+                if (idx[static_cast<std::size_t>(k)] < 0) {
+                    slot = k;
+                    break;
+                }
+                if (dist[static_cast<std::size_t>(k)] > worst) {
+                    worst = dist[static_cast<std::size_t>(k)];
+                    slot = k;
+                }
+            }
+            if (slot >= 0 &&
+                (idx[static_cast<std::size_t>(slot)] < 0 || d2 < dist[static_cast<std::size_t>(slot)])) {
+                idx[static_cast<std::size_t>(slot)] = static_cast<int>(i);
+                dist[static_cast<std::size_t>(slot)] = d2;
+            }
+        }
+        for (int k = 0; k < cap; ++k) {
+            if (idx[static_cast<std::size_t>(k)] >= 0) {
+                localLights.push_back(lights_[static_cast<std::size_t>(idx[static_cast<std::size_t>(k)])]);
+            }
+        }
+    }
     const std::string modelDir = parentDir(mesh.sourcePath);
     const unsigned int before = entityTriangleCount_;
     for (std::size_t m = 0; m < draws.size(); ++m) {
@@ -1051,20 +1085,56 @@ int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, 
         if (!draws[m].modelSpace) {
             world = combine(entity, draws[m].objectToParent);
         }
-        appendKf2Mesh(draws[m], world, roomId, lights_, database_, modelDir);
+        appendKf2Mesh(draws[m], world, roomId, localLights, database_, modelDir);
     }
     return static_cast<int>(entityTriangleCount_ - before);
 }
 
 void Renderer::uploadAnimated() {
     recordingAnimated_ = false;
-    destroyAnimatedGpu();
+    std::vector<std::size_t> live;
+    live.reserve(animCpu_.size());
     for (std::size_t i = 0; i < animCpu_.size(); ++i) {
-        GpuMesh& mesh = animCpu_[i];
-        if (mesh.indices.empty()) {
-            continue;
+        if (!animCpu_[i].indices.empty()) {
+            live.push_back(i);
         }
-        DrawBatch batch;
+    }
+    if (animBatches_.size() != live.size()) {
+        destroyAnimatedGpu();
+        animBatches_.resize(live.size());
+        const GLsizei stride = 13 * sizeof(float);
+        for (std::size_t k = 0; k < live.size(); ++k) {
+            DrawBatch& batch = animBatches_[k];
+            batch.vao = 0;
+            batch.vbo = 0;
+            batch.ebo = 0;
+            glGenVertexArrays(1, &batch.vao);
+            glGenBuffers(1, &batch.vbo);
+            glGenBuffers(1, &batch.ebo);
+            glBindVertexArray(batch.vao);
+            glBindBuffer(GL_ARRAY_BUFFER, batch.vbo);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.ebo);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride,
+                                  reinterpret_cast<void*>(3 * sizeof(float)));
+            glEnableVertexAttribArray(2);
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride,
+                                  reinterpret_cast<void*>(6 * sizeof(float)));
+            glEnableVertexAttribArray(3);
+            glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride,
+                                  reinterpret_cast<void*>(8 * sizeof(float)));
+            glEnableVertexAttribArray(4);
+            glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride,
+                                  reinterpret_cast<void*>(10 * sizeof(float)));
+            glBindVertexArray(0);
+        }
+    }
+    for (std::size_t k = 0; k < live.size(); ++k) {
+        const std::size_t i = live[k];
+        GpuMesh& mesh = animCpu_[i];
+        DrawBatch& batch = animBatches_[k];
         batch.diffuse = animKeys_[i].diffuse;
         batch.lightmap = animKeys_[i].lightmap;
         batch.roomId = animKeys_[i].roomId;
@@ -1077,9 +1147,6 @@ void Renderer::uploadAnimated() {
         batch.detailOffset = 0;
         batch.alphaRef = animKeys_[i].alphaRef;
         batch.indexCount = static_cast<int>(mesh.indices.size());
-        glGenVertexArrays(1, &batch.vao);
-        glGenBuffers(1, &batch.vbo);
-        glGenBuffers(1, &batch.ebo);
         glBindVertexArray(batch.vao);
         glBindBuffer(GL_ARRAY_BUFFER, batch.vbo);
         glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(mesh.vertices.size() * sizeof(float)),
@@ -1088,19 +1155,7 @@ void Renderer::uploadAnimated() {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                      static_cast<GLsizeiptr>(mesh.indices.size() * sizeof(unsigned int)),
                      &mesh.indices[0], GL_STREAM_DRAW);
-        const GLsizei stride = 13 * sizeof(float);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(3 * sizeof(float)));
-        glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(6 * sizeof(float)));
-        glEnableVertexAttribArray(3);
-        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(8 * sizeof(float)));
-        glEnableVertexAttribArray(4);
-        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(10 * sizeof(float)));
         glBindVertexArray(0);
-        animBatches_.push_back(batch);
     }
 }
 

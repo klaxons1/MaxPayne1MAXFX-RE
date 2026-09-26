@@ -452,23 +452,18 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
         }
     }
 
-    // Gravity onto the floor, then horizontal slide. Capsule centre is the
-    // sphere we feed the BSP (X_Character capsule vs room).
+    // Horizontal slide against room meshes, then snap feet to the floor.
+    // Never drop Y when the downward ray misses — missing collision used
+    // to send every NPC through the map.
     const float centerY = capsuleCenterHeight();
     Vec3 center = position + Vec3(0.0f, centerY, 0.0f);
-    center.y -= 9.81f * dt * 0.15f;
     center = world.moveSphere(center, delta, capsuleRadius());
+    position.x = center.x;
+    position.z = center.z;
     const CollisionHit floor =
-        world.raycast(center + Vec3(0.0f, 0.8f, 0.0f), Vec3(0.0f, -1.0f, 0.0f), 3.0f);
+        world.raycast(center + Vec3(0.0f, 1.2f, 0.0f), Vec3(0.0f, -1.0f, 0.0f), 4.0f);
     if (floor.hit) {
-        const float feet = floor.point.y - config->capsule.bottom;
-        position.x = center.x;
-        position.z = center.z;
-        position.y = feet;
-    } else {
-        position.x = center.x;
-        position.z = center.z;
-        position.y = center.y - centerY;
+        position.y = floor.point.y - config->capsule.bottom;
     }
 
     if (others != 0) {

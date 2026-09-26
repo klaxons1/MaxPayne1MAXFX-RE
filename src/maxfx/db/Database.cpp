@@ -291,23 +291,17 @@ std::string candidateDatabase(const std::string& start) {
     return std::string();
 }
 
-Kf2File* cacheModel(Database& db, const std::string& path) {
-    if (path.empty() || !isFile(path)) {
-        return 0;
-    }
-    const std::string key = lowerCopy(path);
-    std::map<std::string, Kf2File>::iterator it = db.models.find(key);
-    if (it != db.models.end()) {
-        return &it->second;
-    }
-    try {
-        Kf2File file = Kf2Reader::loadFromFile(path);
-        std::pair<std::map<std::string, Kf2File>::iterator, bool> ins =
-            db.models.insert(std::make_pair(key, file));
-        ++db.loadedModels;
-        return &ins.first->second;
-    } catch (...) {
-        return 0;
+Kf2File* cacheModel(Database& db, const std::string& path) { return db.loadModel(path); }
+
+void cacheSkinClips(Database& db, const SkinDef& skin) {
+    static const int kNeed[] = {kCharAnimPose,         kCharAnimWalk,        kCharAnimRun,
+                                kCharAnimStand,        kCharAnimWStand,      kCharAnimCustomIdle1,
+                                kCharAnimGetDamage,    kCharAnimRandomDeath1};
+    for (std::size_t i = 0; i < sizeof(kNeed) / sizeof(kNeed[0]); ++i) {
+        const CharacterAnimClip* clip = findAnimClip(skin.character, kNeed[i]);
+        if (clip != 0) {
+            db.loadModel(clip->resolvedPath);
+        }
     }
 }
 
@@ -398,6 +392,26 @@ Kf2File* Database::model(const std::string& resolvedPath) {
         return 0;
     }
     return &it->second;
+}
+
+Kf2File* Database::loadModel(const std::string& resolvedPath) {
+    if (resolvedPath.empty() || !isFile(resolvedPath)) {
+        return 0;
+    }
+    const std::string key = lowerCopy(resolvedPath);
+    std::map<std::string, Kf2File>::iterator it = models.find(key);
+    if (it != models.end()) {
+        return &it->second;
+    }
+    try {
+        Kf2File file = Kf2Reader::loadFromFile(resolvedPath);
+        std::pair<std::map<std::string, Kf2File>::iterator, bool> ins =
+            models.insert(std::make_pair(key, file));
+        ++loadedModels;
+        return &ins.first->second;
+    } catch (...) {
+        return 0;
+    }
 }
 
 std::string DatabaseReader::locateRoot(const std::string& hint) {
@@ -538,6 +552,7 @@ void DatabaseReader::loadModels(Database& db, const std::vector<std::string>& sk
         }
         cacheModel(db, skin->lods[0].resolvedExport);
         cacheModel(db, skin->lods[0].resolvedSkin);
+        cacheSkinClips(db, *skin);
     }
     for (std::size_t i = 0; i < itemNames.size(); ++i) {
         const ItemDef* item = db.findItem(itemNames[i]);

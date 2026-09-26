@@ -491,7 +491,7 @@ void ViewerApp::update(float dt) {
 
 void ViewerApp::spawnActors() {
     collision_.clear();
-    collision_.addBsp(level_.bsp);
+    collision_.addLevelGeometry(level_);
     actors_.clear();
     for (std::size_t i = 0; i < level_.characters.size(); ++i) {
         const Character& ch = level_.characters[i];
@@ -526,8 +526,8 @@ void ViewerApp::updateActors(float dt) {
         const Kf2File* skin = database_.model(def->lods[0].resolvedSkin);
         const CharacterAnimClip* poseClip = findAnimClip(def->character, kCharAnimPose);
         const CharacterAnimClip* playClip = findAnimClip(def->character, actor.animIndex);
-        const Kf2File* bindAnim = poseClip != 0 ? database_.model(poseClip->resolvedPath) : 0;
-        const Kf2File* playAnim = playClip != 0 ? database_.model(playClip->resolvedPath) : bindAnim;
+        const Kf2File* bindAnim = poseClip != 0 ? database_.loadModel(poseClip->resolvedPath) : 0;
+        const Kf2File* playAnim = playClip != 0 ? database_.loadModel(playClip->resolvedPath) : bindAnim;
         renderer_.appendAnimatedCharacter(*mesh, skin, bindAnim, playAnim, actor.animTime,
                                           actor.entityTransform(), actor.roomId);
     }
