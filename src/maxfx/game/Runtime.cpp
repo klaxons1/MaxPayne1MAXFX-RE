@@ -226,7 +226,9 @@ GameRuntime::GameRuntime()
       gameSpeedStart(1.0f),
       gameSpeedElapsed(0.0f),
       gameSpeedSeconds(0.0f),
-      bulletTime(false) {}
+      bulletTime(false),
+      playerShotTimer(0.0f),
+      currentActivatorActor(-1) {}
 
 void GameRuntime::loadCatalog(const std::string& dbRoot) { catalog = loadGameCatalog(dbRoot); }
 
@@ -442,6 +444,8 @@ void GameRuntime::resetLevel(const Level& level, const LevelInfo* info, const Ve
     gameSpeedElapsed = 0.0f;
     gameSpeedSeconds = 0.0f;
     bulletTime = false;
+    aiGraph = AiGraph();
+    playerShotTimer = 0.0f;
     if (info && info->playerSkinName.size()) {
         // max_payne.txt: MaximumHealth 60, CapsuleRadius 0.48, AirborneSpeed 2.5,
         // PLAYER_MOVEMENT 4.2, C_Jump(7.5).
@@ -697,6 +701,12 @@ bool GameRuntime::menuChoose(int* jumpLevel, int* openPage, bool* quit, bool* ne
 
 void GameRuntime::tickPlayer(float dt, bool forward, bool back, bool left, bool right, bool jump,
                              bool sprint, CollisionWorld& world, bool descend) {
+    if (playerShotTimer > 0.0f) {
+        playerShotTimer -= dt;
+        if (playerShotTimer < 0.0f) {
+            playerShotTimer = 0.0f;
+        }
+    }
     if (!player.controlsEnabled && !player.noclip) {
         return;
     }
@@ -893,6 +903,25 @@ void GameRuntime::dispatchList(const std::vector<std::string>& lines, const Leve
 void GameRuntime::dispatch(const GameMessage& msg, const Level& level, std::vector<CharacterActor>& actors,
                            int sourceTrigger) {
     (void)sourceTrigger;
+    // Character-entity routing: a message that names an NPC (or the
+    // character that touched a trigger, "Activator") drives that NPC, not
+    // the player (X_Characteristic receivers).
+    {
+        int actorIndex = -1;
+        for (std::size_t i = 0; i < actors.size(); ++i) {
+            if (actors[i].entityName == msg.target) {
+                actorIndex = static_cast<int>(i);
+                break;
+            }
+        }
+        if (actorIndex < 0 && lowerCopy(msg.target) == "activator") {
+            actorIndex = currentActivatorActor;
+        }
+        if (actorIndex >= 0 &&
+            handleCharacterMessage(msg, actorIndex, level, actors)) {
+            return;
+        }
+    }
     if (methodIs(msg, "c_jump")) {
         player.velocity.y = floatArg(msg, 0, player.jumpSpeed);
         player.grounded = false;
@@ -1365,6 +1394,7 @@ void GameRuntime::startLevel(const Level& level, std::vector<CharacterActor>& ac
     // (the same lists collectLevelSoundCues reads for A_Play3DSound). The PC
     // v32 "state specific" startup block stays raw (no sample level writes
     // it), so only the before/after lists run.
+    charActivated.assign(actors.size(), 0);
     for (std::size_t i = 0; i < level.fsms.size(); ++i) {
         const Fsm& fsm = level.fsms[i];
         (void)fsm;
@@ -1419,8 +1449,10 @@ void GameRuntime::tickTriggers(float dt, const Level& level, bool usePressed, co
                 }
                 break;
             case kTriggerCharacterCollide: {
-                // Any character (player or NPC) entering the sphere.
-                bool actorInside = false;
+                // Any character (player or NPC) entering the sphere; the
+                // NPC becomes the "Activator" for the message list
+                // (e.g. Activator->C_SendSpecial()).
+                int toucher = -1;
                 for (std::size_t a = 0; a < actors.size(); ++a) {
                     const CharacterActor& act = actors[a];
                     if (act.activity == kCharDead) {
@@ -1431,12 +1463,14 @@ void GameRuntime::tickTriggers(float dt, const Level& level, bool usePressed, co
                     const Vec3 dv = c - w;
                     const float reach = act.capsuleRadius() + rad;
                     if (dot(dv, dv) <= reach * reach) {
-                        actorInside = true;
+                        toucher = static_cast<int>(a);
                         break;
                     }
                 }
-                if (entered || actorInside) {
+                if (entered || toucher >= 0) {
+                    currentActivatorActor = toucher;
                     activateTrigger(static_cast<int>(i), level, actors);
+                    currentActivatorActor = -1;
                 }
                 break;
             }
@@ -1640,6 +1674,426 @@ bool GameRuntime::tryShoot(const Level& level, CollisionWorld& world, std::vecto
         activateTrigger(hit.triggerIndex, level, actors);
     }
     return true;
+}
+
+// --- character entities (X_Characteristic) ---
+
+namespace {
+
+bool isCombatStateMachine(const std::string& name) {
+    // State machine names from the PC data / decompile registry
+    // (X_CharacterStateMachineList): nonreactive and idle are the passive
+    // ones; everything else (mobstercombat, standandshoot,
+    // crouchandshootstatic, delay2s, ...) fights.
+    return name != "nonreactive" && name != "idle" && name != "default" && !name.empty();
+}
+
+}  // namespace
+
+Vec3 GameRuntime::waypointWorld(const Level& level, const std::string& name) const {
+    for (std::size_t i = 0; i < level.waypoints.size(); ++i) {
+        if (level.waypoints[i].sharedName == name) {
+            return entityWorld(level, level.waypoints[i].properties);
+        }
+    }
+    return Vec3();
+}
+
+void GameRuntime::activateCharacter(int actorIndex, const Level& level,
+                                    std::vector<CharacterActor>& actors) {
+    if (actorIndex < 0 || static_cast<std::size_t>(actorIndex) >= actors.size() ||
+        static_cast<std::size_t>(actorIndex) >= charActivated.size()) {
+        return;
+    }
+    if (charActivated[static_cast<std::size_t>(actorIndex)]) {
+        return;  // the activate list latches (one fight script per enemy)
+    }
+    charActivated[static_cast<std::size_t>(actorIndex)] = 1;
+    // Find the LDB Characteristic and run its onActivate list.
+    for (std::size_t i = 0; i < level.characters.size(); ++i) {
+        if (level.characters[i].sharedName == actors[static_cast<std::size_t>(actorIndex)].entityName) {
+            const Vec3 keep = soundOrigin;
+            soundOrigin = actors[static_cast<std::size_t>(actorIndex)].position;
+            dispatchList(level.characters[i].onActivate.messages, level, actors, -1);
+            soundOrigin = keep;
+            return;
+        }
+    }
+}
+
+void GameRuntime::characterSendSpecial(int actorIndex, const Level& level,
+                                       std::vector<CharacterActor>& actors) {
+    if (actorIndex < 0 || static_cast<std::size_t>(actorIndex) >= actors.size()) {
+        return;
+    }
+    for (std::size_t i = 0; i < level.characters.size(); ++i) {
+        if (level.characters[i].sharedName == actors[static_cast<std::size_t>(actorIndex)].entityName) {
+            const Vec3 keep = soundOrigin;
+            soundOrigin = actors[static_cast<std::size_t>(actorIndex)].position;
+            dispatchList(level.characters[i].onSpecial.messages, level, actors, -1);
+            soundOrigin = keep;
+            return;
+        }
+    }
+}
+
+// Character-entity message routing: any message whose target names a
+// character entity (::gate::enemy, Activator, ...) drives that NPC instead
+// of the player. Returns false for methods that the global handlers own.
+bool GameRuntime::handleCharacterMessage(const GameMessage& msg, int actorIndex,
+                                         const Level& level, std::vector<CharacterActor>& actors) {
+    CharacterActor& a = actors[static_cast<std::size_t>(actorIndex)];
+    if (msg.method == "c_setstatemachine") {
+        const std::string sm = lowerArg(msg, 0);
+        if (sm == "nonreactive") {
+            a.aiNonReactive = true;
+            a.aiActive = false;
+            a.hasScriptGoal = false;
+        } else if (sm == "idle" || sm == "default") {
+            a.aiNonReactive = false;  // normal perception state machine
+        } else if (isCombatStateMachine(sm)) {
+            // mobstercombat / standandshoot / crouchandshootstatic / ...
+            a.aiNonReactive = false;
+            a.aiActive = true;
+        }
+        return true;
+    }
+    if (msg.method == "c_gotoplayer") {
+        a.aiNonReactive = false;
+        a.aiActive = true;  // GoToPlayer state machine
+        return true;
+    }
+    if (msg.method == "c_gotoandshoot" || msg.method == "c_goto") {
+        // Walk to the waypoint first (speed factor arg 1), then fight.
+        if (!msg.args.empty()) {
+            a.scriptGoal = waypointWorld(level, msg.args[0]);
+            a.hasScriptGoal = true;
+            a.scriptSpeed = floatArg(msg, 1, 1.0f);
+            if (msg.method == "c_gotoandshoot") {
+                a.aiNonReactive = false;
+                a.aiActive = true;
+            }
+        }
+        return true;
+    }
+    if (msg.method == "c_teleport") {
+        if (!msg.args.empty()) {
+            const Vec3 w = waypointWorld(level, msg.args[0]);
+            a.position = w;
+            a.path.clear();
+            a.hasScriptGoal = false;
+        }
+        return true;
+    }
+    if (msg.method == "c_pickupweapon") {
+        if (!msg.args.empty()) {
+            setCharacterWeapon(a, msg.args[0]);
+            pushLog(std::string("enemy picked up ") + msg.args[0]);
+        }
+        return true;
+    }
+    if (msg.method == "c_removeallweapons") {
+        // Keep only the named weapon (empty = fists); see
+        // X_Character::receive(X_CharacterMessage_RemoveAllWeapons).
+        setCharacterWeapon(a, msg.args.empty() ? std::string() : msg.args[0]);
+        return true;
+    }
+    if (msg.method == "c_setidle") {
+        if (!msg.args.empty()) {
+            const int id = static_cast<int>(floatArg(msg, 0, -1.0f));
+            if (id >= 0) {
+                a.idleAnimIndex = id;
+            }
+        }
+        return true;
+    }
+    if (msg.method == "c_setimmortal" || msg.method == "c_setinvulnerable") {
+        const std::string arg = lowerArg(msg, 0);
+        a.immortal = arg != "false" && arg != "0";
+        return true;
+    }
+    if (msg.method == "c_sethealth") {
+        if (!msg.args.empty()) {
+            a.health = floatArg(msg, 0, a.health);
+        }
+        return true;
+    }
+    if (msg.method == "c_kill") {
+        a.health = 0.0f;
+        a.activity = kCharDead;
+        a.animIndex = a.config != 0 ? pickAnimIndex(*a.config, kCharAnimRandomDeath1)
+                                    : kCharAnimRandomDeath1;
+        return true;
+    }
+    if (msg.method == "c_sendspecial") {
+        characterSendSpecial(actorIndex, level, actors);
+        return true;
+    }
+    if (msg.method == "a_play3dsound") {
+        SoundRequest q;
+        q.category = msg.args.size() > 0 ? msg.args[0] : std::string();
+        q.name = msg.args.size() > 1 ? msg.args[1] : std::string();
+        q.position = a.position + Vec3(0.0f, 1.6f, 0.0f);  // head bone
+        q.is3d = true;
+        pendingSounds.push_back(q);
+        return true;
+    }
+    if (msg.method == "a_stopall3dsounds" || msg.method == "c_setinfiniteammo" ||
+        msg.method == "c_pickupammo" || msg.method == "c_setwoundedanimations" ||
+        msg.method == "c_setdyinganimations") {
+        return true;  // acknowledged; no NPC-side effect in the port yet
+    }
+    return false;  // camera / decal / effect messages: global handlers
+}
+
+// --- enemy combat (X_Character AI) ---
+
+void GameRuntime::loadLevelAi(const std::string& aiPath, const Level& level) {
+    aiGraph = loadAiFile(aiPath, level);
+}
+
+void GameRuntime::notePlayerShot() {
+    playerShotTimer = 1.0f;  // gunfire keeps waking nearby AI for a second
+}
+
+void GameRuntime::setCharacterWeapon(CharacterActor& actor, const std::string& weaponNameIn) {
+    // Weapon names arrive with the scripts' stray whitespace
+    // (e.g. C_PickupWeapon("beretta ")).
+    std::string name = weaponNameIn;
+    std::size_t b = 0;
+    std::size_t e = name.size();
+    while (b < e && (name[b] == ' ' || name[b] == '\t')) {
+        ++b;
+    }
+    while (e > b && (name[e - 1] == ' ' || name[e - 1] == '\t')) {
+        --e;
+    }
+    name = name.substr(b, e - b);
+    for (std::size_t i = 0; i < name.size(); ++i) {
+        name[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(name[i])));
+    }
+    actor.weaponName = name;
+    if (name.empty() || name == "empty") {
+        // WEAPONID_EMPTY: fists — the AI closes in but never fires.
+        actor.fireInterval = -1.0f;
+        return;
+    }
+    const WeaponDef* w = catalog.findWeapon(name);
+    if (w == 0 || w->shootHz <= 0.1f) {
+        actor.fireInterval = -1.0f;  // unarmed / melee: never fires
+        return;
+    }
+    actor.fireInterval = 1.0f / w->shootHz;
+    // WeaponDef::spread is the engine's accuracy figure (~100 for a pistol);
+    // treat it as a 100th of a degree per unit for the aim-jitter cone.
+    actor.fireSpreadDeg = w->spread > 0.0f ? w->spread * 0.02f : 1.5f;
+}
+
+void GameRuntime::applyCharacterStartup(CharacterActor& actor, const FsmMessages& startup) {
+    applyCharacterMessages(actor, startup.messages);
+}
+
+void GameRuntime::applyCharacterMessages(CharacterActor& actor,
+                                         const std::vector<std::string>& lines) {
+    for (std::size_t i = 0; i < lines.size(); ++i) {
+        const std::vector<GameMessage> msgs = parseGameMessages(lines[i]);
+        for (std::size_t m = 0; m < msgs.size(); ++m) {
+            const GameMessage& msg = msgs[m];
+            if (msg.method == "c_kill") {
+                // Spawned dead: lay the body down, no AI ever runs.
+                actor.health = 0.0f;
+                actor.activity = kCharDead;
+                actor.animIndex = actor.config != 0
+                                      ? pickAnimIndex(*actor.config, kCharAnimRandomDeath1)
+                                      : kCharAnimRandomDeath1;
+                actor.clipLock = 2.0f;
+            } else if (msg.method == "c_setstatemachine") {
+                const std::string sm = lowerArg(msg, 0);
+                if (sm == "nonreactive") {
+                    actor.aiNonReactive = true;  // scripted, never fights
+                    actor.aiActive = false;
+                } else if (sm != "idle" && sm != "default" && !sm.empty()) {
+                    // Combat state machines (mobstercombat, ...).
+                    actor.aiNonReactive = false;
+                    actor.aiActive = true;
+                } else {
+                    actor.aiNonReactive = false;  // idle: normal perception
+                }
+            } else if (msg.method == "c_removeallweapons") {
+                // C_RemoveAllWeapons(keep): keep only the named weapon.
+                if (!msg.args.empty()) {
+                    setCharacterWeapon(actor, msg.args[0]);
+                } else {
+                    setCharacterWeapon(actor, std::string());
+                }
+            } else if (msg.method == "c_pickupweapon") {
+                if (!msg.args.empty()) {
+                    setCharacterWeapon(actor, msg.args[0]);
+                }
+            } else if (msg.method == "c_setidle") {
+                // C_SetIdle(animId, true): custom idle clip while inactive.
+                if (!msg.args.empty()) {
+                    const int id = static_cast<int>(floatArg(msg, 0, -1.0f));
+                    if (id >= 0) {
+                        actor.idleAnimIndex = id;
+                    }
+                }
+            } else if (msg.method == "c_setimmortal" || msg.method == "c_setinvulnerable") {
+                // No argument (or true) enables; false / 0 disables.
+                const std::string arg = lowerArg(msg, 0);
+                actor.immortal = arg != "false" && arg != "0";
+            } else if (msg.method == "c_sethealth") {
+                if (!msg.args.empty()) {
+                    actor.health = floatArg(msg, 0, actor.health);
+                }
+            }
+        }
+    }
+}
+
+void GameRuntime::damagePlayer(float amount) {
+    if (player.health <= 0.0f) {
+        return;  // already down
+    }
+    player.health -= amount;
+    if (player.health <= 0.0f) {
+        player.health = 0.0f;
+        player.controlsEnabled = false;  // death: input off until reload
+        pushLog("max died");
+    }
+}
+
+// One enemy shot: the WEAPONANIM_SHOOT message list (A_Play3DSound,
+// PS_StartEffect) plus the projectile hit resolution. X_Character fires at
+// the player's capsule; other characters and the world block the ray too.
+void GameRuntime::enemyFire(const AiFireEvent& ev, const Level& level, CollisionWorld& world,
+                            std::vector<CharacterActor>& actors) {
+    if (ev.actorIndex < 0 || static_cast<std::size_t>(ev.actorIndex) >= actors.size()) {
+        return;
+    }
+    CharacterActor& shooter = actors[static_cast<std::size_t>(ev.actorIndex)];
+    const WeaponDef* w = !shooter.weaponName.empty() ? catalog.findWeapon(shooter.weaponName) : 0;
+    float dmg = 5.0f;
+    float cast = 100.0f;
+    if (w != 0) {
+        cast = w->castLength > 1.0f ? w->castLength : 100.0f;
+        const ProjectileDef* pr = catalog.findProjectile(w->projectileName);
+        dmg = pr != 0 ? pr->damage : w->damage;
+    }
+    // Fire sound + muzzle flash from the weapon's shoot message list.
+    if (w != 0 && !w->shootSoundName.empty()) {
+        SoundRequest q;
+        q.category = w->shootSoundCategory;
+        q.name = w->shootSoundName;
+        q.position = ev.muzzle;
+        q.is3d = true;
+        pendingSounds.push_back(q);
+    }
+    effects.startEffect(w != 0 && !w->muzzleEffect.empty() ? w->muzzleEffect : "muzzleflash",
+                        ev.muzzle, ev.dir);
+
+    const Vec3 nd = length(ev.dir) > 1.0e-6f ? normalize(ev.dir) : Vec3(0.0f, 0.0f, 1.0f);
+    float t = cast;
+    int hitActor = -1;
+    // Other characters (skip the shooter: the ray starts at his muzzle).
+    for (std::size_t i = 0; i < actors.size(); ++i) {
+        if (static_cast<int>(i) == ev.actorIndex || actors[i].activity == kCharDead) {
+            continue;
+        }
+        // Same capsule math as findActorCapsule, minus the shooter skip.
+        const CharacterActor& a = actors[i];
+        const Vec3 c(a.position.x, a.position.y + a.capsuleCenterHeight(), a.position.z);
+        const Vec3 wv = c - ev.muzzle;
+        const float pt = dot(wv, nd);
+        if (pt < 0.0f || pt > t) {
+            continue;
+        }
+        const Vec3 closest = ev.muzzle + nd * pt;
+        Vec3 d = closest - c;
+        const float half = std::max(0.4f, a.capsuleCenterHeight());
+        if (d.y > half) {
+            d.y -= half;
+        } else if (d.y < -half) {
+            d.y += half;
+        } else {
+            d.y = 0.0f;
+        }
+        const float rad = a.capsuleRadius();
+        if (dot(d, d) <= rad * rad) {
+            hitActor = static_cast<int>(i);
+            t = pt;
+        }
+    }
+    // Player capsule (feet at player.position, ~2 * eyeHeight tall).
+    bool hitPlayer = false;
+    {
+        const Vec3 c(player.position.x, player.position.y + player.eyeHeight * 0.55f,
+                     player.position.z);
+        const Vec3 wv = c - ev.muzzle;
+        const float pt = dot(wv, nd);
+        if (pt >= 0.0f && pt <= t) {
+            const Vec3 closest = ev.muzzle + nd * pt;
+            Vec3 d = closest - c;
+            const float half = player.eyeHeight * 0.55f;
+            if (d.y > half) {
+                d.y -= half;
+            } else if (d.y < -half) {
+                d.y += half;
+            } else {
+                d.y = 0.0f;
+            }
+            const float rad = std::max(0.25f, player.radius);
+            if (dot(d, d) <= rad * rad) {
+                hitPlayer = true;
+                t = pt;
+            }
+        }
+    }
+    const CollisionHit worldHit = world.raycast(ev.muzzle, nd, t);
+    if (worldHit.hit && worldHit.t < t) {
+        t = worldHit.t;
+        hitPlayer = false;
+        hitActor = -1;
+    }
+    const Vec3 point = ev.muzzle + nd * t;
+    if (hitPlayer) {
+        damagePlayer(dmg);
+        effects.startEffect("blood", point, Vec3(-nd.x, -nd.y, -nd.z));
+        pushLog(std::string("enemy fire hit: ") + shooter.skinName);
+    } else if (hitActor >= 0 && static_cast<std::size_t>(hitActor) < actors.size()) {
+        actors[static_cast<std::size_t>(hitActor)].applyDamage(dmg);
+        effects.startEffect("blood", point, Vec3(-nd.x, -nd.y, -nd.z));
+    } else if (worldHit.hit) {
+        if (w != 0) {
+            const ProjectileDef* pr = catalog.findProjectile(w->projectileName);
+            if (pr != 0 && !pr->messages.empty()) {
+                runImpactMessages(*pr, point, worldHit.normal, level, actors);
+            } else {
+                effects.startEffect("impact", point, worldHit.normal);
+            }
+        } else {
+            effects.startEffect("impact", point, worldHit.normal);
+        }
+    }
+    // Projectile-collide triggers react to enemy fire as well.
+    for (std::size_t i = 0; i < level.triggers.size(); ++i) {
+        if (level.triggers[i].type != kTriggerProjectileCollide) {
+            continue;
+        }
+        const Vec3 wpos = triggerWorld(level, level.triggers[i]);
+        const float rad = std::max(0.3f, level.triggers[i].radius);
+        const Vec3 wvec = wpos - ev.muzzle;
+        const float pt = dot(wvec, nd);
+        if (pt < 0.0f || pt > t) {
+            continue;
+        }
+        const Vec3 closest = ev.muzzle + nd * pt;
+        const Vec3 d = closest - wpos;
+        if (dot(d, d) <= rad * rad) {
+            activateTrigger(static_cast<int>(i), level, actors);
+            break;
+        }
+    }
 }
 
 // X_Projectile hit handling: run the projectile script's [Message] list at

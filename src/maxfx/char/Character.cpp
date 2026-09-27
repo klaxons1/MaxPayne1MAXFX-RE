@@ -2,6 +2,7 @@
 
 #include "maxfx/script/Script.h"
 
+#include "maxfx/ai/AiGraph.h"
 #include "maxfx/collision/Collision.h"
 #include "maxfx/core/Fs.h"
 
@@ -367,6 +368,9 @@ int pickAnimIndex(const CharacterConfig& cfg, int preferred) {
 }
 
 void CharacterActor::applyDamage(float amount) {
+    if (immortal) {
+        return;  // C_SetImmortal / C_SetInvulnerable startup message
+    }
     health -= amount;
     if (health <= 0.0f) {
         health = 0.0f;
@@ -381,12 +385,27 @@ void CharacterActor::applyDamage(float amount) {
 }
 
 void CharacterActor::spawn(const Vec3& pos, float yawRadians, int room, const CharacterConfig* cfg,
-                           const std::string& skin) {
+                           const std::string& skin, const std::string& entityNameIn) {
     position = pos;
     yaw = yawRadians;
     roomId = room;
     config = cfg;
     skinName = skin;
+    entityName = entityNameIn;
+    aiNonReactive = false;
+    immortal = false;
+    idleAnimIndex = -1;
+    aiActive = false;
+    reactionTimer = 0.0f;
+    fireCooldown = 0.0f;
+    fireInterval = -1.0f;
+    fireSpreadDeg = 2.0f;
+    path.clear();
+    pathCursor = 0;
+    repathTimer = 0.0f;
+    pathTarget = pos;
+    hasScriptGoal = false;
+    scriptSpeed = 1.0f;
     health = cfg != 0 ? cfg->maxHealth : 15.0f;
     activity = kCharIdle;
     animIndex = cfg != 0 ? pickAnimIndex(*cfg, kCharAnimStand) : kCharAnimStand;
@@ -414,7 +433,8 @@ float CharacterActor::capsuleCenterHeight() const {
 Mat4x3 CharacterActor::entityTransform() const { return makeEntity(position, yaw); }
 
 void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& world,
-                            std::vector<CharacterActor>* others) {
+                            std::vector<CharacterActor>* others, const AiUpdateContext* ai,
+                            std::vector<AiFireEvent>* fires, int selfIndex) {
     if (config == 0) {
         return;
     }
@@ -429,7 +449,8 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
         return;
     }
 
-    const CharacterAiConfig& ai = config->ai;
+    const CharacterAiConfig& aiCfg = config->ai;
+    const bool combat = ai != 0;  // full X_Character AI; null = viewer fallback
     Vec3 toPlayer = playerPos - position;
     toPlayer.y = 0.0f;
     const float dist = length(toPlayer);
@@ -437,32 +458,86 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
     const Vec3 playerEye = playerPos + Vec3(0.0f, 1.6f, 0.0f);
     Vec3 los = playerEye - eye;
     const float losLen = length(los);
+
+    // --- perception (X_SharedDBSkin statics) ---
+    // Visual: clear line of sight inside the visual radius. With AI inputs
+    // the sight cone is the skin's AimingSpeedCone (X_AIStateMachine checks
+    // it before promoting an enemy to active); the viewer fallback sees all
+    // around. PerceivingGroupOne/Two/Three activate through walls: player
+    // shooting / running / peeking at the class-specific radii.
     bool visible = false;
-    if (dist < ai.visualPerceivingRadius && losLen > 0.05f && dist < 35.0f) {
+    bool inSightCone = true;
+    if (dist < aiCfg.visualPerceivingRadius && losLen > 0.05f &&
+        (!combat || dist < 35.0f)) {
         const CollisionHit hit = world.raycast(eye, los, 1.0f);
         if (!hit.hit || hit.t > losLen * 0.95f) {
             visible = true;
         }
     }
-    if (!visible && dist < ai.generalPerceivingRadius) {
-        visible = true;
+    if (combat && visible && dist > 1.0f) {
+        const float facingToPlayer = std::fabs(wrapAngle(std::atan2(toPlayer.x, toPlayer.z) - yaw));
+        inSightCone = facingToPlayer < toRadians(aiCfg.aimingSpeedCone * 0.5f);
+    }
+    bool heard = false;
+    if (combat && !aiNonReactive && !aiActive) {
+        if (ai->playerShotRecently && dist < aiCfg.perceivingGroupOneRadius) {
+            heard = true;  // PerceivingGroupOne: gunfire
+        } else if (ai->playerSpeed > 4.0f && dist < aiCfg.perceivingGroupTwoRadius) {
+            heard = true;  // PerceivingGroupTwo: running / strafing
+        }
+    }
+    const bool perceived = (visible && inSightCone) || heard ||
+                           (!combat && dist < aiCfg.generalPerceivingRadius) ||
+                           (combat && aiCfg.generalPerceivingRadius > 0.01f &&
+                            dist < aiCfg.generalPerceivingRadius && ai->playerSpeed > 0.5f);
+    bool reacted = perceived;
+    if (combat) {
+        // ActivationReactionTime: X_AIStateMachine delays the switch to the
+        // combat state machine by the skin's reaction time once the enemy
+        // has perceived the player.
+        if (perceived && reactionTimer <= 0.0f && !aiActive) {
+            reactionTimer = aiCfg.activationReactionTime;
+            if (reactionTimer <= 0.0f) {
+                aiActive = true;  // zero reaction time: instant activation
+                reacted = true;
+            }
+        }
+        if (reactionTimer > 0.0f) {
+            reactionTimer -= dt;
+            reacted = aiActive;  // stay in the previous state while reacting
+            if (reactionTimer <= 0.0f && perceived) {
+                aiActive = true;
+                reacted = true;
+            }
+        } else if (aiActive) {
+            reacted = true;
+        }
+        if (ai->forceActive && !aiNonReactive) {
+            aiActive = true;
+            reacted = true;
+        }
+        if (aiNonReactive) {
+            // c_setstatemachine(nonreactive): scripted, never fights.
+            reacted = false;
+            aiActive = false;
+        }
     }
 
-    if (visible) {
+    if (perceived) {
         lastSeen = playerPos;
         sawPlayer = true;
-        interest = ai.enemyInterestTime;
-        if (others != 0 && ai.activateOtherCharactersRadius > 0.01f) {
+        interest = aiCfg.enemyInterestTime;
+        if (others != 0 && aiCfg.activateOtherCharactersRadius > 0.01f) {
             for (std::size_t i = 0; i < others->size(); ++i) {
                 CharacterActor& o = (*others)[i];
-                if (&o == this || o.activity == kCharDead) {
+                if (&o == this || o.activity == kCharDead || o.aiNonReactive) {
                     continue;
                 }
                 const float d = length(Vec3(o.position.x - position.x, 0.0f, o.position.z - position.z));
-                if (d <= ai.activateOtherCharactersRadius) {
+                if (d <= aiCfg.activateOtherCharactersRadius) {
                     o.sawPlayer = true;
                     o.lastSeen = lastSeen;
-                    o.interest = ai.enemyInterestTime;
+                    o.interest = aiCfg.enemyInterestTime;
                 }
             }
         }
@@ -471,24 +546,74 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
         if (interest < 0.0f) {
             interest = 0.0f;
             sawPlayer = false;
+            if (combat) {
+                aiActive = false;  // lost interest: back to idle state machine
+                path.clear();
+            }
         }
     }
 
     Vec3 toTarget = lastSeen - position;
     toTarget.y = 0.0f;
     const float targetDist = length(toTarget);
+    // Where the actor wants to walk this frame (path waypoint or target).
+    Vec3 moveGoal = lastSeen;
+    if (hasScriptGoal) {
+        // C_GoTo: walk the scripted route (through the .ai network when
+        // available); arriving ends the goal (the FSM continues the story).
+        moveGoal = scriptGoal;
+        Vec3 toGoal = scriptGoal - position;
+        toGoal.y = 0.0f;
+        if (length(toGoal) < 0.7f) {
+            hasScriptGoal = false;
+            moveGoal = lastSeen;
+        }
+    }
+    if (combat && ai->graph != 0 && ai->graph->loaded && !hasScriptGoal) {
+        repathTimer -= dt;
+        const bool needPath = path.empty() || pathCursor >= path.size() ||
+                              length(pathTarget - lastSeen) > 3.0f;
+        if (needPath && repathTimer <= 0.0f) {
+            // X_Character::goToPlayer: A* over the level .ai network, then
+            // follow the waypoints; straight-line fallback inside a room.
+            if (ai->graph->findPath(position, lastSeen, &path) && !path.empty()) {
+                pathCursor = path.size() > 1 ? 1 : 0;
+                pathTarget = lastSeen;
+            } else {
+                path.clear();
+            }
+            repathTimer = 0.7f;  // don't re-run A* every frame
+        }
+        if (!path.empty() && pathCursor < path.size()) {
+            moveGoal = path[pathCursor];
+            const Vec3 toWaypoint = moveGoal - position;
+            const Vec3 flat(toWaypoint.x, 0.0f, toWaypoint.z);
+            if (length(flat) < 0.6f) {
+                ++pathCursor;  // waypoint reached, aim for the next one
+                if (pathCursor < path.size()) {
+                    moveGoal = path[pathCursor];
+                }
+            }
+        }
+    }
+    Vec3 toMove = moveGoal - position;
+    toMove.y = 0.0f;
+    const float moveDist = length(toMove);
     const float desiredYaw =
-        targetDist > 0.05f ? std::atan2(toTarget.x, toTarget.z) : yaw;
+        (combat && reacted && targetDist < 12.0f && targetDist > 0.05f)
+            ? std::atan2(toPlayer.x, toPlayer.z)
+            : (moveDist > 0.05f ? std::atan2(toMove.x, toMove.z) : yaw);
     const float facing = wrapAngle(desiredYaw - yaw);
-    const float cone = toRadians(ai.shootingCone * 0.5f);
+    const float shootCone = toRadians(aiCfg.shootingCone * 0.5f);
 
     if (health <= 0.0f) {
         activity = kCharDead;
     } else {
         // Sticky combat/hunt so facing-cone flicker does not restart clips
         // every few frames (walk/stand popping).
+        const bool alert = (combat ? reacted : sawPlayer) || hasScriptGoal;
         bool sticky = false;
-        if (sawPlayer) {
+        if (alert) {
             if (activity == kCharCombat && targetDist < 14.0f) {
                 sticky = true;
             } else if (activity == kCharHunt && targetDist > 0.8f && targetDist < 28.0f) {
@@ -496,11 +621,11 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
             }
         }
         if (!sticky) {
-            if (sawPlayer && targetDist < 10.0f && std::fabs(facing) < cone) {
+            if (alert && targetDist < 10.0f && std::fabs(facing) < shootCone) {
                 activity = kCharCombat;
-            } else if (sawPlayer && targetDist < 4.0f) {
+            } else if (alert && targetDist < 4.0f) {
                 activity = kCharAlert;
-            } else if (sawPlayer && targetDist > 1.2f) {
+            } else if (alert && targetDist > 1.2f) {
                 activity = kCharHunt;
             } else if (interest > 0.0f) {
                 activity = kCharAlert;
@@ -518,8 +643,12 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
         }
     }
 
-    const bool armed = findAnimClip(*config, kCharAnimWStand) != 0;
-    const int want = pickAnimIndex(*config, activityAnim(activity, armed));
+    const bool armed = fireInterval > 0.0f || findAnimClip(*config, kCharAnimWStand) != 0;
+    // C_SetIdle(n, true): play the scripted idle clip while inactive.
+    const int want =
+        activity == kCharIdle && idleAnimIndex >= 0
+            ? pickAnimIndex(*config, idleAnimIndex)
+            : pickAnimIndex(*config, activityAnim(activity, armed));
     if (clipLock > 0.0f) {
         clipLock -= dt;
     }
@@ -543,17 +672,55 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
     }
 
     if (activity == kCharCombat || activity == kCharAlert || activity == kCharHunt) {
-        turnToward(&yaw, desiredYaw, ai.turnLeftRightSpeed, dt);
+        turnToward(&yaw, desiredYaw, aiCfg.turnLeftRightSpeed, dt);
     } else if (activity == kCharPatrol) {
-        turnToward(&yaw, yaw + toRadians(40.0f) * dt, ai.turnLeftRightSpeed, dt);
+        turnToward(&yaw, yaw + toRadians(40.0f) * dt, aiCfg.turnLeftRightSpeed, dt);
+    }
+
+    // --- shooting (X_Character::shootWeaponWhenNeeded) ---
+    // Fires when active, the player is inside the ShootingCone and line of
+    // fire is clear; the interval is the weapon's rate scaled by the skin's
+    // ShootingFrequencyMultiplier (calculateShootingFrequencyMultiplier).
+    if (combat && fires != 0 && aiActive && fireInterval > 0.0f && ai->playerAlive &&
+        !aiNonReactive) {
+        fireCooldown -= dt;
+        const float aimError = std::fabs(facing);
+        if (visible && dist < aiCfg.visualPerceivingRadius && aimError < shootCone &&
+            fireCooldown <= 0.0f) {
+            AiFireEvent fire;
+            fire.actorIndex = selfIndex;
+            fire.muzzle = eye;
+            Vec3 aim = playerEye - eye;
+            // Aim jitter: the WeaponDef spread, widened while the target
+            // moves (the engine's accuracy model).
+            const float spreadRad = toRadians(fireSpreadDeg * (ai->playerSpeed > 4.0f ? 1.5f : 1.0f));
+            const float a = (std::rand() / static_cast<float>(RAND_MAX) - 0.5f) * spreadRad;
+            const float b = (std::rand() / static_cast<float>(RAND_MAX) - 0.5f) * spreadRad;
+            const Vec3 fwd = normalize(aim);
+            const Vec3 side = normalize(cross(fwd, Vec3(0.0f, 1.0f, 0.0f)));
+            const Vec3 up = cross(side, fwd);
+            aim = fwd + side * std::tan(a) + up * std::tan(b);
+            fire.dir = normalize(aim);
+            fires->push_back(fire);
+            fireCooldown = fireInterval / (aiCfg.shootingFrequencyMultiplier > 0.01f
+                                               ? aiCfg.shootingFrequencyMultiplier
+                                               : 1.0f);
+        }
+    } else if (fireCooldown > 0.0f) {
+        fireCooldown -= dt;
     }
 
     Vec3 delta(0.0f, 0.0f, 0.0f);
     if (activity == kCharHunt || activity == kCharPatrol) {
-        const float speed = moveSpeed > 0.0f ? moveSpeed : clipWalkSpeed(*config);
+        float speed = moveSpeed > 0.0f ? moveSpeed : clipWalkSpeed(*config);
+        if (hasScriptGoal) {
+            speed *= scriptSpeed > 0.05f ? scriptSpeed : 1.0f;
+        }
         const Vec3 fwd = Vec3(std::sin(yaw), 0.0f, std::cos(yaw));
-        if (activity == kCharHunt && targetDist > 1.0f) {
-            delta = fwd * (speed * dt);
+        if (activity == kCharHunt && moveDist > 0.4f) {
+            // Walk along the path; face the player only in close combat.
+            const Vec3 dir = moveDist > 0.05f ? toMove * (1.0f / moveDist) : fwd;
+            delta = dir * (speed * dt);
         } else if (activity == kCharPatrol) {
             delta = fwd * (speed * 0.5f * dt);
         }

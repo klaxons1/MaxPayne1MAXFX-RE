@@ -7,6 +7,7 @@
 #ifndef MAXFX_GAME_RUNTIME_H
 #define MAXFX_GAME_RUNTIME_H
 
+#include "maxfx/ai/AiGraph.h"
 #include "maxfx/char/Character.h"
 #include "maxfx/collision/Collision.h"
 #include "maxfx/core/Math.h"
@@ -220,6 +221,14 @@ struct GameRuntime {
     float gameSpeedElapsed;  // ramp progress in real seconds
     float gameSpeedSeconds;  // transition time to the target, 0 = snap
     bool bulletTime;
+    // Level movement network (.ai) + player-noise window for AI perception.
+    AiGraph aiGraph;
+    float playerShotTimer;  // > 0 while the player's shots still alert AI
+    // Per-character latches (parallel to the actor array): onActivate runs
+    // once when the character's AI activates; the trigger activator names
+    // the character that touched a type-3 trigger this dispatch.
+    std::vector<char> charActivated;
+    int currentActivatorActor;
 
     GameRuntime();
 
@@ -301,6 +310,42 @@ struct GameRuntime {
 
     bool tryShoot(const Level& level, CollisionWorld& world, std::vector<CharacterActor>& actors,
                   const Vec3& origin, const Vec3& dir);
+
+    // --- enemy combat (X_Character AI) ---
+    // Load <level>.ai next to the LDB; missing/incompatible files simply
+    // leave the graph empty (the engine plays on without a network too).
+    void loadLevelAi(const std::string& aiPath, const Level& level);
+    // Register the player's shot for PerceivingGroupOne (heard through
+    // walls at the skin's GroupOne radius for a short window).
+    void notePlayerShot();
+    bool playerShotRecently() const { return playerShotTimer > 0.0f; }
+    // LDB character startup messages (c_kill, c_setstatemachine,
+    // C_RemoveAllWeapons, C_PickupWeapon, C_SetHealth, C_SetIdle, ...).
+    void applyCharacterStartup(CharacterActor& actor, const FsmMessages& startup);
+    // Skin [OnInit] message list (C_PickupWeapon from the skin) or any other
+    // raw message list applied to a character.
+    void applyCharacterMessages(CharacterActor& actor, const std::vector<std::string>& lines);
+    // X_Characteristic activation: the onActivate list runs once when the
+    // character's AI activates (it perceives the player / a script switches
+    // it to a combat state machine).
+    void activateCharacter(int actorIndex, const Level& level,
+                           std::vector<CharacterActor>& actors);
+    // C_SendSpecial: run the character's onSpecial list.
+    void characterSendSpecial(int actorIndex, const Level& level,
+                              std::vector<CharacterActor>& actors);
+    // Waypoint entity position in LDB space (C_Teleport / C_GoTo targets).
+    Vec3 waypointWorld(const Level& level, const std::string& name) const;
+    // Route one message to a character entity; false = not a character
+    // method (global handlers take it).
+    bool handleCharacterMessage(const GameMessage& msg, int actorIndex, const Level& level,
+                                std::vector<CharacterActor>& actors);
+    // Equip an NPC (fire interval / spread from the WeaponDef).
+    void setCharacterWeapon(CharacterActor& actor, const std::string& weaponNameIn);
+    // Resolve one enemy shot: weapon sound + muzzle flash, hitscan against
+    // the player capsule, other characters and the world.
+    void enemyFire(const AiFireEvent& ev, const Level& level, CollisionWorld& world,
+                   std::vector<CharacterActor>& actors);
+    void damagePlayer(float amount);
 
     void dispatch(const GameMessage& msg, const Level& level, std::vector<CharacterActor>& actors,
                   int sourceTrigger);

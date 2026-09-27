@@ -37,6 +37,16 @@ struct DrawBatch {
     bool followCamera;  // world sphere, translated in the VS
     int detailOffset;   // materials.txt DetailOffset, plus alpha decals
     int alphaRef;       // 0..255, materials.txt AlphaReference
+    // Per-batch model matrix (uWorld). Identity for pre-transformed
+    // batches; level dynamic meshes keep object-space geometry and only
+    // update this matrix when the animated pose changes.
+    Mat4 world;
+    // World-space bounds for frustum culling (hasBounds false = always draw).
+    Vec3 boundsMin;
+    Vec3 boundsMax;
+    bool hasBounds;
+
+    DrawBatch() : hasBounds(false) {}
 };
 
 struct LineVertex {
@@ -67,7 +77,8 @@ public:
     static Mat4x3 roomMatrix(const Level& level, int roomId);
     // Stream one dynamic level mesh (doors, platforms, ...) with its
     // animated world transform. Call between beginAnimated() and render().
-    void appendDynamicLevelMesh(const Level& level, std::size_t meshIndex, const Mat4x3& world);
+    // Per-frame pose update for an uploaded dynamic mesh (no re-upload).
+    void setDynamicMeshWorld(std::size_t meshIndex, const Mat4x3& world);
     int appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, const Kf2File* bindAnim,
                                 const Kf2File* playAnim, float timeSeconds, const Mat4x3& entity,
                                 int roomId, bool lockRootToBind = true, const Kf2File* crossAnim = 0,
@@ -150,13 +161,16 @@ private:
         bool followCamera;
         int detailOffset;
         int alphaRef;
+        int owner;  // dynamic-mesh index: one mesh never merges into another's batch
+
+        BatchKey() : owner(-1) {}
 
         bool operator==(const BatchKey& o) const {
             return diffuse == o.diffuse && lightmap == o.lightmap && roomId == o.roomId &&
                    alphaTest == o.alphaTest && blend == o.blend && dynamic == o.dynamic &&
                    service == o.service && writesZ == o.writesZ && vertexLit == o.vertexLit &&
                    followCamera == o.followCamera && detailOffset == o.detailOffset &&
-                   alphaRef == o.alphaRef;
+                   alphaRef == o.alphaRef && owner == o.owner;
         }
     };
 
@@ -165,6 +179,24 @@ private:
         Vec3 color;
         float intensity;
         float falloff;
+    };
+
+    // Cached uniform locations (glGetUniformLocation per batch per frame is
+    // a measurable driver cost with hundreds of batches).
+    struct MeshUniforms {
+        GLint viewProj;
+        GLint origin;
+        GLint world;
+        GLint mode;
+        GLint lmScale;
+        GLint alphaTest;
+        GLint vertexLit;
+        GLint alphaRef;
+        GLint diffuse;
+        GLint lightmap;
+
+        MeshUniforms() : viewProj(-1), origin(-1), world(-1), mode(-1), lmScale(-1),
+                         alphaTest(-1), vertexLit(-1), alphaRef(-1), diffuse(-1), lightmap(-1) {}
     };
 
     GLuint uploadTexture(const unsigned char* rgba, int w, int h, bool mipmaps, bool clamp);
@@ -190,6 +222,11 @@ private:
     GLuint textureFromFile(const std::string& path);
     GLuint textureFromColorAlpha(const std::string& colorPath, const std::string& alphaPath);
     void uploadBatches();
+    // Level dynamic meshes: geometry uploaded ONCE in object space; the
+    // animated pose only updates DrawBatch::world (uWorld uniform), instead
+    // of re-transforming and re-uploading vertices every frame.
+    void uploadDynamicLevelMeshes(const Level& level);
+    void destroyDynamicGpu();
     void buildHelpers(const Level& level);
     void buildFont();
     void drawBatches(bool alphaPass, const Vec3& cameraPos);
@@ -255,6 +292,16 @@ private:
     std::vector<GpuMesh> animCpu_;
     std::vector<BatchKey> animKeys_;
     std::vector<DrawBatch> animBatches_;
+
+    bool recordingDynamic_;
+    int dynOwner_;
+    std::vector<GpuMesh> dynCpu_;
+    std::vector<BatchKey> dynKeys_;
+    std::vector<DrawBatch> dynBatches_;
+    std::vector<std::vector<int> > dynMeshBatches_;  // meshIndex -> batch indices
+    std::vector<std::pair<Vec3, Vec3> > dynObjBounds_;  // batch -> object-space AABB
+    MeshUniforms u_;
+    Mat4 frustumMatrix_;  // last frame's view-projection for batch culling
 };
 
 }  // namespace maxfx

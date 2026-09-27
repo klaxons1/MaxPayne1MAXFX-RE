@@ -29,6 +29,7 @@ add_library(maxfx_ldb STATIC
     src/maxfx/db/Database.cpp
     src/maxfx/sound/Sound.cpp
     src/maxfx/collision/Collision.cpp
+    src/maxfx/ai/AiGraph.cpp
     src/maxfx/char/Character.cpp
     src/maxfx/game/Message.cpp
     src/maxfx/game/Catalog.cpp

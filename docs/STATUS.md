@@ -204,6 +204,22 @@ cached (the per-frame directory list was the hitch on Windows). Animated
 CPU buffers keep capacity; GPU VBOs stay `GL_STREAM_DRAW`. The default
 camera is the player capsule (walk / jump / gravity). F10 toggles noclip.
 
+Frame-time hitches on large maps are gone:
+
+- uniform locations are resolved once per program (`MeshUniforms`), not per
+  batch per frame
+- static geometry stays in one `GL_STATIC_DRAW` upload; **dynamic level
+  meshes (doors, trains) are uploaded once in object space** and from then
+  on only a `uWorld` matrix moves them (`setDynamicMeshWorld`), so opening
+  a door no longer re-streams vertices
+- every batch (static / dynamic / animated) is frustum-culled by AABB
+  (Gribb-Hartmann planes extracted from the cached view-projection matrix)
+- dynamic batches never merge across owners, so a moving mesh rebinds only
+  its own VAO
+
+Remaining known per-frame costs: animated characters re-upload their whole
+vertex buffer, and every character within 40 m is re-skinned each frame.
+
 ### Game runtime (`src/maxfx/game`)
 
 PC `MP.exe` message table plus the database scripts:
@@ -381,10 +397,53 @@ runtime `CharacterActor` implements the activity set named by
 | Patrol | idle timeout | slow walk |
 | Pain / Dead | health API | GETDAMAGE / RANDOMDEATH1 |
 
-Perception uses `VisualPerceivingRadius` (LOS ray vs BSP) and
-`GeneralPerceivingRadius`. `ActivateOtherCharactersRadius` wakes neighbours.
-This is the official script contract, not a viewer hack; projectile fire,
-dodge FSM, and the binary `.ai` graph next to each LDB are still engine debt.
+Perception is the full `X_SharedDBSkin` static set: `VisualPerceivingRadius`
+(LOS ray vs BSP inside the `AimingSpeedCone` sight cone) plus the three
+noise groups — `PerceivingGroupOneRadius` hears the player's gunfire
+through walls, `GroupTwo` hears running, `GroupThree` peeking — and
+`GeneralPerceivingRadius`. `ActivationReactionTime` delays the switch to
+combat; `ActivateOtherCharactersRadius` wakes neighbours; `EnemyInterestTime`
+drops the AI back to idle when the player is lost.
+
+**Enemies shoot.** A character with a weapon (skin `[OnInit]`
+`C_PickupWeapon`, or `C_RemoveAllWeapons(keep)` / `C_PickupWeapon` runtime
+messages) fires at the player inside its `ShootingCone` on a clear line of
+fire, at the weapon's `DefaultShootingFrequency` divided by the skin's
+`ShootingFrequencyMultiplier`. Every shot plays the weapon's
+`WEAPONANIM_SHOOT` messages — `A_Play3DSound(weapons, shoot_*)` fire sound
+and `PS_StartEffect(Muzzle_*)` muzzle flash (the placeholder synthesis
+stands in for stripped WAVs) — then resolves as a hitscan against the
+player capsule, other characters and the world, with damage from the
+weapon's projectile script (`bullet_beretta` = 5 hp). Enemies pathfind to
+the player over the level's binary `.ai` movement network (A*, 0.7 s
+re-plan throttle) instead of walking in a straight line.
+
+Character entities are full message receivers: `c_setstatemachine`
+(nonreactive / idle / mobstercombat / standandshoot / ...), `c_gotoplayer`,
+`c_gotoandshoot(waypoint, speed)`, `c_goto`, `c_teleport`, `c_kill`,
+`c_sethealth`, `c_setidle`, `c_setimmortal` / `c_setinvulnerable`,
+`c_sendspecial`, `a_play3dsound`, `c_removeallweapons`, `c_pickupweapon`
+all drive the named NPC (`::gate::enemy`-style targets, plus `Activator`
+from character-collide triggers). The LDB `OnInit` / `OnActivate` /
+`OnSpecial` lists run at spawn / first AI activation / `C_SendSpecial` —
+that is what starts the staged fights (e.g. `::teleport::e1` activating
+sends `::p5::script->FSM_Send(start)`, which switches both finale enemies
+to `mobstercombat` / `crouchandshoot` and sends them `c_gotoplayer`).
+
+### AI movement network (`src/maxfx/ai`)
+
+The binary `.ai` file next to each LDB (`X_GlobalAIObject`) is fully parsed
+with `TaggedReader` (see `docs/AI_FORMAT.md`): exit-hull arrays between
+rooms plus one `X_RoomMovementNetwork` per room, nodes with four link slots
+and pre-computed link distances. World positions resolve through
+`roomMatrix(room) * arrayTransform(room)` (exit hulls) or
+`roomMatrix(room)` (room grids). `X_RoomMovementNetwork::save` writes the
+room index **twice** (once inside the node-array record, once after it) —
+the parser mirrors that. A* (`findPath`) searches node ids with
+Euclidean heuristics; `nearestNode` biases same-room nodes. Part1_Level1:
+4295 nodes / 14787 links / 38 room networks, parsed in ~5 ms. A missing or
+incompatible file leaves the graph empty and the game plays on, exactly
+like the engine's `X_GlobalAIObject` exception path.
 
 ### Collision (`src/maxfx/collision`)
 
@@ -406,12 +465,11 @@ triggers, dynamic meshes). The viewer:
 ## What is still missing (engine-port debt, not viewer hacks)
 
 - Shootdodge / bullet-time / CHARANIM_SHOOT* first-person overlay
-- Dodge / cover / wounded locomotion (clips are parsed, not selected)
+- Enemy dodge / cover / wounded locomotion and upper-body aiming
+  (`X_AimSetup` blends aim clips; enemies currently fire from the standing
+  pose)
 - Clip cross-fade (`crossAnimateObject` adds two samples, then
   `fixCrossAnimation` re-orthonormalizes — see docs/ANIMATION.md)
-- Binary `.ai` path graph next to each `.ldb` (tagged, not R_Script) —
-  format fully reverse-engineered and documented in `docs/AI_FORMAT.md`;
-  runtime parser / pathfinding still to be ported
 - Level-exit streaming
 - Dynamic mesh animation (doors, trains)
 - Save / load
@@ -434,7 +492,10 @@ make test    # levels-test: R_Script (nested quotes, 3DSound), levels.txt,
              # materials / items / skins / sounds / music, placeholder.wav,
              # S_SoundOmni gain, FSM A_Play3DSound collect, comic chapters,
              # camera paths / cinematic frame hooks / fades / [Exit] dispatch,
-             # dynamic-object poses / door state, noclip descend
+             # dynamic-object poses / door state, noclip descend,
+             # .ai graph parse + A* detour, enemy perception / reaction /
+             # weapon fire + sound pairing, nonreactive gate, character
+             # message routing (C_SetStateMachine / C_PickupWeapon)
 ```
 
 No SDL required. The viewer is `cmake -S . -B build && cmake --build build`
@@ -450,7 +511,8 @@ src/maxfx/levels   levels.txt
 src/maxfx/ldb      Level database
 src/maxfx/kf2         KF2 / KFS / SKD + keyframe animation / skinning
 src/maxfx/db          shared text database (skins include [AI] / clips)
-src/maxfx/char        CharacterConfig + activity FSM
+src/maxfx/ai          binary .ai movement network + A*
+src/maxfx/char        CharacterConfig + activity FSM + combat AI
 src/maxfx/collision   BSP triangle soup, sphere slide, capsule
 src/maxfx/sound       WAV + S_SoundOmni gain
 src/maxfx/image       texture decode

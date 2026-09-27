@@ -22,11 +22,12 @@ const char* kMeshVS =
     "layout(location=4) in vec3 aColor;\n"
     "uniform mat4 uViewProj;\n"
     "uniform vec3 uOrigin;\n"
+    "uniform mat4 uWorld;\n"
     "out vec2 vUV;\n"
     "out vec2 vLM;\n"
     "out vec3 vColor;\n"
     "void main(){\n"
-    "  gl_Position = uViewProj * vec4(aPos + uOrigin,1.0);\n"
+    "  gl_Position = uViewProj * vec4((uWorld * vec4(aPos,1.0)).xyz + uOrigin,1.0);\n"
     "  vUV = aUV;\n"
     "  vLM = aLM;\n"
     "  vColor = aColor;\n"
@@ -345,7 +346,9 @@ void addCircle(std::vector<LineVertex>& lines, const Vec3& p, float radius, floa
 }  // namespace
 
 Renderer::Renderer()
-    : meshProgram_(0),
+    : recordingDynamic_(false),
+      dynOwner_(-1),
+      meshProgram_(0),
       lineProgram_(0),
       fontProgram_(0),
       hudImageProgram_(0),
@@ -407,6 +410,16 @@ bool Renderer::init(char* error, std::size_t errorSize) {
     if (effectProgram_ == 0) {
         return false;
     }
+    u_.viewProj = glGetUniformLocation(meshProgram_, "uViewProj");
+    u_.origin = glGetUniformLocation(meshProgram_, "uOrigin");
+    u_.world = glGetUniformLocation(meshProgram_, "uWorld");
+    u_.mode = glGetUniformLocation(meshProgram_, "uMode");
+    u_.lmScale = glGetUniformLocation(meshProgram_, "uLmScale");
+    u_.alphaTest = glGetUniformLocation(meshProgram_, "uAlphaTest");
+    u_.vertexLit = glGetUniformLocation(meshProgram_, "uVertexLit");
+    u_.alphaRef = glGetUniformLocation(meshProgram_, "uAlphaRef");
+    u_.diffuse = glGetUniformLocation(meshProgram_, "uDiffuse");
+    u_.lightmap = glGetUniformLocation(meshProgram_, "uLightmap");
     whiteTex_ = makeSolidTexture(255, 255, 255);
     greyTex_ = makeSolidTexture(128, 128, 128);
     buildFont();
@@ -432,6 +445,7 @@ void Renderer::clearLevelGpu() {
         glDeleteBuffers(1, &batches_[i].ebo);
     }
     batches_.clear();
+    destroyDynamicGpu();
     cpuBatches_.clear();
     cpuKeys_.clear();
     destroyAnimatedGpu();
@@ -445,6 +459,9 @@ void Renderer::clearLevelGpu() {
     database_ = 0;
     recordingAnimated_ = false;
     recordingSky_ = false;
+    recordingDynamic_ = false;
+    dynOwner_ = -1;
+    destroyDynamicGpu();
     triangleCount_ = 0;
     entityMeshCount_ = 0;
     entityTriangleCount_ = 0;
@@ -477,6 +494,7 @@ void Renderer::shutdown() {
         glDeleteBuffers(1, &batches_[i].ebo);
     }
     batches_.clear();
+    destroyDynamicGpu();
     if (!ownedTextures_.empty()) {
         glDeleteTextures(static_cast<GLsizei>(ownedTextures_.size()), &ownedTextures_[0]);
         ownedTextures_.clear();
@@ -861,12 +879,19 @@ bool Renderer::loadLevel(const Level& level, const Database* database, char* err
         sp.roomId = wp.properties.roomId;
         spawns_.push_back(sp);
     }
+    // Persistent GPU buffers for the dynamic meshes (object space); the
+    // per-frame pose updates DrawBatch::world only.
+    uploadDynamicLevelMeshes(level);
     return true;
 }
 
 Renderer::GpuMesh& Renderer::batchFor(const BatchKey& key) {
     std::vector<BatchKey>& keys = recordingAnimated_ ? animKeys_ : cpuKeys_;
     std::vector<GpuMesh>& batches = recordingAnimated_ ? animCpu_ : cpuBatches_;
+    if (recordingDynamic_) {
+        keys = dynKeys_;
+        batches = dynCpu_;
+    }
     for (std::size_t b = 0; b < keys.size(); ++b) {
         if (keys[b] == key) {
             return batches[b];
@@ -1011,6 +1036,7 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
         key.followCamera = false;
         key.detailOffset = detailOffset;
         key.alphaRef = alphaRef;
+        key.owner = recordingDynamic_ ? dynOwner_ : -1;
         GpuMesh& gpu = batchFor(key);
         const unsigned int base = static_cast<unsigned int>(gpu.vertices.size() / 13);
 
@@ -1206,14 +1232,154 @@ Mat4x3 Renderer::roomMatrix(const Level& level, int roomId) {
     return roomTransform(level, roomId);
 }
 
-void Renderer::appendDynamicLevelMesh(const Level& level, std::size_t meshIndex, const Mat4x3& world) {
-    if (!recordingAnimated_ || meshIndex >= level.dynamicMeshes.size()) {
+void Renderer::destroyDynamicGpu() {
+    for (std::size_t i = 0; i < dynBatches_.size(); ++i) {
+        if (dynBatches_[i].vao) {
+            glDeleteVertexArrays(1, &dynBatches_[i].vao);
+        }
+        if (dynBatches_[i].vbo) {
+            glDeleteBuffers(1, &dynBatches_[i].vbo);
+        }
+        if (dynBatches_[i].ebo) {
+            glDeleteBuffers(1, &dynBatches_[i].ebo);
+        }
+    }
+    dynBatches_.clear();
+    dynCpu_.clear();
+    dynKeys_.clear();
+    dynMeshBatches_.clear();
+    dynObjBounds_.clear();
+}
+
+// Upload every level dynamic mesh ONCE in object space; the per-frame pose
+// only touches DrawBatch::world (uWorld). This replaces the old per-frame
+// appendDynamicLevelMesh stream (CPU re-transform + glBufferData of every
+// door on every frame).
+void Renderer::uploadDynamicLevelMeshes(const Level& level) {
+    destroyDynamicGpu();
+    recordingDynamic_ = true;
+    recordingAnimated_ = false;
+    dynMeshBatches_.assign(level.dynamicMeshes.size(), std::vector<int>());
+    for (std::size_t m = 0; m < level.dynamicMeshes.size(); ++m) {
+        const DynamicMesh& mesh = level.dynamicMeshes[m];
+        dynOwner_ = static_cast<int>(m);
+        const std::size_t first = dynKeys_.size();
+        appendMesh(mesh.vertices, mesh.normals, level.dynamicTextureVertices, mesh.polygons,
+                   Mat4x3(), mesh.properties.roomId, true, level, database_,
+                   levelMaterialTextures_, levelLightmapTextures_, mesh.radiosity, lights_);
+        for (std::size_t k = first; k < dynKeys_.size(); ++k) {
+            dynMeshBatches_[m].push_back(static_cast<int>(k));
+        }
+    }
+    dynOwner_ = -1;
+    recordingDynamic_ = false;
+    if (dynCpu_.empty()) {
         return;
     }
-    const DynamicMesh& mesh = level.dynamicMeshes[meshIndex];
-    appendMesh(mesh.vertices, mesh.normals, level.dynamicTextureVertices, mesh.polygons, world,
-               mesh.properties.roomId, true, level, database_, levelMaterialTextures_,
-               levelLightmapTextures_, mesh.radiosity, lights_);
+    dynBatches_.resize(dynCpu_.size());
+    const GLsizei stride = 13 * sizeof(float);
+    for (std::size_t k = 0; k < dynCpu_.size(); ++k) {
+        DrawBatch& batch = dynBatches_[k];
+        batch.vao = 0;
+        batch.vbo = 0;
+        batch.ebo = 0;
+        batch.diffuse = dynKeys_[k].diffuse;
+        batch.lightmap = dynKeys_[k].lightmap;
+        batch.roomId = dynKeys_[k].roomId;
+        batch.alphaTest = dynKeys_[k].alphaTest;
+        batch.blend = dynKeys_[k].blend;
+        batch.dynamic = true;
+        batch.service = dynKeys_[k].service;
+        batch.writesZ = dynKeys_[k].writesZ;
+        batch.vertexLit = dynKeys_[k].vertexLit;
+        batch.followCamera = false;
+        batch.detailOffset = dynKeys_[k].detailOffset;
+        batch.alphaRef = dynKeys_[k].alphaRef;
+        batch.indexCount = static_cast<int>(dynCpu_[k].indices.size());
+        if (dynCpu_[k].vertices.empty() || dynCpu_[k].indices.empty()) {
+            batch.indexCount = 0;
+            dynObjBounds_.push_back(std::make_pair(Vec3(), Vec3()));
+            continue;
+        }
+        glGenVertexArrays(1, &batch.vao);
+        glGenBuffers(1, &batch.vbo);
+        glGenBuffers(1, &batch.ebo);
+        glBindVertexArray(batch.vao);
+        glBindBuffer(GL_ARRAY_BUFFER, batch.vbo);
+        glBufferData(GL_ARRAY_BUFFER,
+                     static_cast<GLsizeiptr>(dynCpu_[k].vertices.size() * sizeof(float)),
+                     &dynCpu_[k].vertices[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                     static_cast<GLsizeiptr>(dynCpu_[k].indices.size() * sizeof(unsigned int)),
+                     &dynCpu_[k].indices[0], GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride,
+                              reinterpret_cast<void*>(3 * sizeof(float)));
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, stride,
+                              reinterpret_cast<void*>(6 * sizeof(float)));
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride,
+                              reinterpret_cast<void*>(8 * sizeof(float)));
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride,
+                              reinterpret_cast<void*>(10 * sizeof(float)));
+        glBindVertexArray(0);
+        // Object-space bounds (stored vertices are appendMesh-mirrored).
+        Vec3 mn(1e9f, 1e9f, 1e9f), mx(-1e9f, -1e9f, -1e9f);
+        const std::vector<float>& vts = dynCpu_[k].vertices;
+        for (std::size_t v = 0; v + 2 < vts.size(); v += 13) {
+            mn.x = std::min(mn.x, vts[v + 0]);
+            mn.y = std::min(mn.y, vts[v + 1]);
+            mn.z = std::min(mn.z, vts[v + 2]);
+            mx.x = std::max(mx.x, vts[v + 0]);
+            mx.y = std::max(mx.y, vts[v + 1]);
+            mx.z = std::max(mx.z, vts[v + 2]);
+        }
+        batch.boundsMin = mn;
+        batch.boundsMax = mx;
+        batch.hasBounds = true;
+        dynObjBounds_.push_back(std::make_pair(mn, mx));
+    }
+}
+
+void Renderer::setDynamicMeshWorld(std::size_t meshIndex, const Mat4x3& world) {
+    if (meshIndex >= dynMeshBatches_.size()) {
+        return;
+    }
+    // Stored vertices are mirrorX(object): the shader world matrix must be
+    // mirror * world * mirror so that uWorld * stored == mirrored world pos.
+    Mat4x3 mirror;
+    mirror.rows[0] = Vec3(-1.0f, 0.0f, 0.0f);
+    const Mat4x3 w = combine(mirror, combine(world, mirror));
+    const Mat4 w4 = mat4FromTransform(w);
+    const std::vector<int>& idx = dynMeshBatches_[meshIndex];
+    for (std::size_t i = 0; i < idx.size(); ++i) {
+        const std::size_t b = static_cast<std::size_t>(idx[i]);
+        DrawBatch& batch = dynBatches_[b];
+        batch.world = w4;
+        if (batch.hasBounds) {
+            const Vec3 omn = dynObjBounds_[b].first;
+            const Vec3 omx = dynObjBounds_[b].second;
+            Vec3 mn(1e9f, 1e9f, 1e9f), mx(-1e9f, -1e9f, -1e9f);
+            for (int c = 0; c < 8; ++c) {
+                const Vec3 corner(c & 1 ? omx.x : omn.x, c & 2 ? omx.y : omn.y,
+                                  c & 4 ? omx.z : omn.z);
+                const Vec3 p = transformPoint(w, corner);
+                mn.x = std::min(mn.x, p.x);
+                mn.y = std::min(mn.y, p.y);
+                mn.z = std::min(mn.z, p.z);
+                mx.x = std::max(mx.x, p.x);
+                mx.y = std::max(mx.y, p.y);
+                mx.z = std::max(mx.z, p.z);
+            }
+            batch.boundsMin = mn;
+            batch.boundsMax = mx;
+        }
+    }
 }
 
 void Renderer::beginAnimated() {
@@ -1391,6 +1557,7 @@ void Renderer::uploadBatches() {
         glDeleteBuffers(1, &batches_[i].ebo);
     }
     batches_.clear();
+    destroyDynamicGpu();
     batches_.reserve(cpuBatches_.size());
     for (std::size_t i = 0; i < cpuBatches_.size(); ++i) {
         GpuMesh& mesh = cpuBatches_[i];
@@ -1434,6 +1601,19 @@ void Renderer::uploadBatches() {
         glEnableVertexAttribArray(4);
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(10 * sizeof(float)));
         glBindVertexArray(0);
+        // Static geometry is pre-transformed: its vertices ARE world space.
+        Vec3 mn(1e9f, 1e9f, 1e9f), mx(-1e9f, -1e9f, -1e9f);
+        for (std::size_t v = 0; v + 2 < mesh.vertices.size(); v += 13) {
+            mn.x = std::min(mn.x, mesh.vertices[v + 0]);
+            mn.y = std::min(mn.y, mesh.vertices[v + 1]);
+            mn.z = std::min(mn.z, mesh.vertices[v + 2]);
+            mx.x = std::max(mx.x, mesh.vertices[v + 0]);
+            mx.y = std::max(mx.y, mesh.vertices[v + 1]);
+            mx.z = std::max(mx.z, mesh.vertices[v + 2]);
+        }
+        batch.boundsMin = mn;
+        batch.boundsMax = mx;
+        batch.hasBounds = true;
         batches_.push_back(batch);
     }
     // Opaque, then DetailOffset overlays, then alpha-tested decals, then service.
@@ -1562,13 +1742,64 @@ void Renderer::cycleRoom(int delta, int roomCount) {
     }
 }
 
+// Frustum culling: AABB vs the six view-projection planes. A box is culled
+// only when it is fully outside one plane (conservative).
+static bool aabbInFrustum(const float planes[6][4], const Vec3& mn, const Vec3& mx) {
+    for (int p = 0; p < 6; ++p) {
+        const float* pl = planes[p];
+        // Pick the AABB corner furthest along the plane normal.
+        const float px = pl[0] > 0.0f ? mx.x : mn.x;
+        const float py = pl[1] > 0.0f ? mx.y : mn.y;
+        const float pz = pl[2] > 0.0f ? mx.z : mn.z;
+        if (pl[0] * px + pl[1] * py + pl[2] * pz + pl[3] < 0.0f) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Gribb-Hartmann frustum planes from the view-projection matrix. The matrix
+// is column-major (m[col*4+row]); row i is (m[0*4+i], m[1*4+i], m[2*4+i], m[3*4+i]).
+static void extractFrustumPlanes(const Mat4& vp, float planes[6][4]) {
+    const float* m = vp.m;
+    float rows[4][4];
+    for (int r = 0; r < 4; ++r) {
+        for (int c = 0; c < 4; ++c) {
+            rows[r][c] = m[c * 4 + r];
+        }
+    }
+    // left, right, bottom, top, near, far = row3 +/- rowK
+    const int k[6] = {0, 0, 1, 1, 2, 2};
+    const float sign[6] = {1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f};
+    for (int p = 0; p < 6; ++p) {
+        float nx = rows[3][0] + sign[p] * rows[k[p]][0];
+        float ny = rows[3][1] + sign[p] * rows[k[p]][1];
+        float nz = rows[3][2] + sign[p] * rows[k[p]][2];
+        float d = rows[3][3] + sign[p] * rows[k[p]][3];
+        const float len = std::sqrt(nx * nx + ny * ny + nz * nz);
+        if (len > 1.0e-9f) {
+            nx /= len;
+            ny /= len;
+            nz /= len;
+            d /= len;
+        }
+        planes[p][0] = nx;
+        planes[p][1] = ny;
+        planes[p][2] = nz;
+        planes[p][3] = d;
+    }
+}
+
 void Renderer::drawBatches(bool alphaPass, const Vec3& cameraPos) {
+    float frustum[6][4];
+    extractFrustumPlanes(frustumMatrix_, frustum);
+    const std::vector<DrawBatch>* lists[3] = {&batches_, &dynBatches_, &animBatches_};
     for (int skyPass = 1; skyPass >= 0; --skyPass) {
-    for (int pass = 0; pass < 2; ++pass) {
+    for (int pass = 0; pass < 3; ++pass) {
     if (skipWorld_ && pass == 0) {
         continue;
     }
-    const std::vector<DrawBatch>& list = pass == 0 ? batches_ : animBatches_;
+    const std::vector<DrawBatch>& list = *lists[pass];
     for (std::size_t i = 0; i < list.size(); ++i) {
         const DrawBatch& b = list[i];
         if (b.indexCount <= 0) {
@@ -1590,15 +1821,19 @@ void Renderer::drawBatches(bool alphaPass, const Vec3& cameraPos) {
         if (isolatedRoom_ >= 0 && b.roomId >= 0 && b.roomId != isolatedRoom_) {
             continue;
         }
+        if (b.hasBounds && !aabbInFrustum(frustum, b.boundsMin, b.boundsMax)) {
+            continue;  // fully outside the view frustum
+        }
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, b.diffuse);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, b.lightmap);
-        glUniform1i(glGetUniformLocation(meshProgram_, "uAlphaTest"), b.alphaTest ? 1 : 0);
-        glUniform1i(glGetUniformLocation(meshProgram_, "uVertexLit"), b.vertexLit ? 1 : 0);
+        glUniformMatrix4fv(u_.world, 1, GL_FALSE, b.world.m);
+        glUniform1i(u_.alphaTest, b.alphaTest ? 1 : 0);
+        glUniform1i(u_.vertexLit, b.vertexLit ? 1 : 0);
         {
             const float ref = static_cast<float>(b.alphaRef > 0 ? b.alphaRef : 15) / 255.0f;
-            glUniform1f(glGetUniformLocation(meshProgram_, "uAlphaRef"), ref);
+            glUniform1f(u_.alphaRef, ref);
         }
         if (b.blend) {
             glEnable(GL_BLEND);
@@ -1620,10 +1855,9 @@ void Renderer::drawBatches(bool alphaPass, const Vec3& cameraPos) {
             glEnable(GL_CULL_FACE);
         }
         if (b.followCamera) {
-            glUniform3f(glGetUniformLocation(meshProgram_, "uOrigin"), cameraPos.x, cameraPos.y,
-                        cameraPos.z);
+            glUniform3f(u_.origin, cameraPos.x, cameraPos.y, cameraPos.z);
         } else {
-            glUniform3f(glGetUniformLocation(meshProgram_, "uOrigin"), 0.0f, 0.0f, 0.0f);
+            glUniform3f(u_.origin, 0.0f, 0.0f, 0.0f);
         }
         glBindVertexArray(b.vao);
         glDrawElements(GL_TRIANGLES, b.indexCount, GL_UNSIGNED_INT, 0);
@@ -1653,17 +1887,19 @@ void Renderer::render(const Mat4& view, const Vec3& cameraPos) {
     glPolygonMode(GL_FRONT_AND_BACK, wireframe_ ? GL_LINE : GL_FILL);
 
     glUseProgram(meshProgram_);
-    glUniformMatrix4fv(glGetUniformLocation(meshProgram_, "uViewProj"), 1, GL_FALSE, vp.m);
-    glUniform1i(glGetUniformLocation(meshProgram_, "uDiffuse"), 0);
-    glUniform1i(glGetUniformLocation(meshProgram_, "uLightmap"), 1);
-    glUniform1i(glGetUniformLocation(meshProgram_, "uMode"), static_cast<int>(shading_));
-    glUniform1f(glGetUniformLocation(meshProgram_, "uLmScale"), 2.0f);
-    glUniform1i(glGetUniformLocation(meshProgram_, "uVertexLit"), 0);
-    glUniform1f(glGetUniformLocation(meshProgram_, "uAlphaRef"), 0.45f);
+    frustumMatrix_ = vp;
+    glUniformMatrix4fv(u_.viewProj, 1, GL_FALSE, vp.m);
+    glUniform1i(u_.diffuse, 0);
+    glUniform1i(u_.lightmap, 1);
+    glUniform1i(u_.mode, static_cast<int>(shading_));
+    glUniform1f(u_.lmScale, 2.0f);
+    glUniform1i(u_.vertexLit, 0);
+    glUniform1f(u_.alphaRef, 0.45f);
     if (recordingAnimated_) {
         uploadAnimated();
     }
-    glUniform3f(glGetUniformLocation(meshProgram_, "uOrigin"), 0.0f, 0.0f, 0.0f);
+    glUniform3f(u_.origin, 0.0f, 0.0f, 0.0f);
+    glUniformMatrix4fv(u_.world, 1, GL_FALSE, Mat4().m);
     drawBatches(false, cameraPos);
     drawBatches(true, cameraPos);
     glEnable(GL_CULL_FACE);

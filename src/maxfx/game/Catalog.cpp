@@ -62,6 +62,31 @@ void walkNamed(const ScriptBlock& block, const char* name, std::vector<const Scr
     }
 }
 
+// [AnimationSet] walk: every [Animation] whose Index is a WEAPONANIM_SHOOT
+// variant (1 shoot, 2 no-case, 3 no-effects per weaponanimid.h) contributes
+// the [Message] list of its sibling [Properties] block.
+void collectShootMessages(const ScriptBlock& parent, std::vector<const ScriptBlock*>* out) {
+    for (std::size_t b = 0; b < parent.children.size(); ++b) {
+        const ScriptBlock& blk = parent.children[b];
+        if (blk.name == "animation") {
+            const int idx = parseIntCatch(assignmentOf(blk, "index"), -1);
+            const bool isShoot = idx == 1 || idx == 2 || idx == 3;
+            if (isShoot) {
+                for (std::size_t s = b + 1; s < parent.children.size(); ++s) {
+                    const ScriptBlock& sib = parent.children[s];
+                    if (sib.name == "animation") {
+                        break;
+                    }
+                    if (sib.name == "properties") {
+                        walkNamed(sib, "message", out);
+                    }
+                }
+            }
+        }
+        collectShootMessages(blk, out);
+    }
+}
+
 std::string nativeFromScript(const std::string& p) {
     std::string s = p;
     for (std::size_t i = 0; i < s.size(); ++i) {
@@ -107,21 +132,14 @@ void loadWeapons(const std::string& dir, GameCatalog* cat) {
                 w.castLength = parseFloatCatch(assignmentOf(*cross, "castlength"), w.castLength);
                 w.sphereRadius = parseFloatCatch(assignmentOf(*cross, "sphereradius"), w.sphereRadius);
             }
-            // WEAPONANIM_* blocks carry the per-shot messages. The shoot
-            // variants (WEAPONANIM_SHOOT / SHOOTLOW / SHOOTHIGH) fire with
-            // every trigger pull: projectile, fire sound, muzzle flash.
+            // WEAPONANIM_* blocks carry the per-shot messages. In the
+            // weapon scripts they are [Animation] Index = WEAPONANIM_SHOOT
+            // (defines expand to numbers, weaponanimid.h) entries nested in
+            // [AnimationSet], each with a SIBLING [Properties] block holding
+            // the frame-timed [Message] list (projectile, fire sound, muzzle
+            // flash) — the shoot variants fire with every trigger pull.
             std::vector<const ScriptBlock*> animMsgs;
-            for (std::size_t b = 0; b < sc.root().children.size(); ++b) {
-                const ScriptBlock& blk = sc.root().children[b];
-                const std::string bn = blk.name;
-                if (bn.compare(0, 11, "weaponanim_") != 0) {
-                    continue;
-                }
-                const bool isShoot = bn == "weaponanim_shoot" || bn == "weaponanim_shootlow" ||
-                                     bn == "weaponanim_shoothigh";
-                walkNamed(blk, "message", &animMsgs);
-                (void)isShoot;
-            }
+            collectShootMessages(sc.root(), &animMsgs);
             for (std::size_t m = 0; m < animMsgs.size(); ++m) {
                 const std::string str = assignmentOf(*animMsgs[m], "string");
                 const std::vector<GameMessage> parsed = parseGameMessages(str);

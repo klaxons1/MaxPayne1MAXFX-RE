@@ -464,6 +464,16 @@ bool ViewerApp::loadLevelIndex(int index, bool showLoading) {
                          ? &levelInfos_[static_cast<std::size_t>(index)]
                          : 0,
                      ldbFromView(camera_.position, game_.player.eyeHeight), camera_.yaw);
+    // Movement network: <level>.ai beside the LDB (X_GlobalAIObject).
+    {
+        std::string aiPath = path;
+        if (aiPath.size() > 4 && aiPath.compare(aiPath.size() - 4, 4, ".ldb") == 0) {
+            aiPath.replace(aiPath.size() - 4, 4, ".ai");
+        } else {
+            aiPath += ".ai";
+        }
+        game_.loadLevelAi(existingPathIgnoreCase(aiPath), level_);
+    }
     playerSkinName_ =
         (index >= 0 && static_cast<std::size_t>(index) < levelInfos_.size() &&
          !levelInfos_[static_cast<std::size_t>(index)].playerSkinName.empty())
@@ -1050,7 +1060,13 @@ void ViewerApp::spawnActors() {
         const SkinDef* def = database_.findSkin(ch.characterName);
         CharacterActor actor;
         actor.spawn(world.translation(), yaw, ch.properties.roomId,
-                    def != 0 ? &def->character : 0, ch.characterName);
+                    def != 0 ? &def->character : 0, ch.characterName, ch.sharedName);
+        // Skin [OnInit] (e.g. this->C_PickupWeapon("beretta")) runs first,
+        // then the LDB startup list can override it (C_RemoveAllWeapons).
+        if (def != 0) {
+            game_.applyCharacterMessages(actor, def->character.onInitMessages);
+        }
+        game_.applyCharacterStartup(actor, ch.onStartup);
         actors_.push_back(actor);
     }
 }
@@ -1091,9 +1107,28 @@ void ViewerApp::fillActorMoveSpeed(CharacterActor& actor) {
 
 void ViewerApp::updateActors(float dt) {
     const Vec3 playerLdb(-camera_.position.x, camera_.position.y - 1.6f, camera_.position.z);
+    AiUpdateContext ai;
+    ai.graph = &game_.aiGraph;
+    ai.playerAlive = game_.player.health > 0.0f;
+    ai.playerShotRecently = game_.playerShotRecently();
+    ai.playerSpeed = length(game_.player.velocity);
+    ai.playerPosition = playerLdb;
+    std::vector<AiFireEvent> fires;
     for (std::size_t i = 0; i < actors_.size(); ++i) {
         fillActorMoveSpeed(actors_[i]);
-        actors_[i].update(dt, playerLdb, collision_, &actors_);
+        actors_[i].update(dt, playerLdb, collision_, &actors_, &ai, &fires,
+                          static_cast<int>(i));
+    }
+    for (std::size_t i = 0; i < fires.size(); ++i) {
+        game_.enemyFire(fires[i], level_, collision_, actors_);
+    }
+    // X_Characteristic onActivate: runs once when the character's AI
+    // activates (perception / combat state machine switch) — this starts
+    // the staged fights (e.g. ::teleport::e1 -> ::p5::script FSM_Send).
+    for (std::size_t i = 0; i < actors_.size(); ++i) {
+        if (actors_[i].aiActive) {
+            game_.activateCharacter(static_cast<int>(i), level_, actors_);
+        }
     }
     renderer_.beginAnimated();
     const Vec3 camLdb(-camera_.position.x, camera_.position.y, camera_.position.z);
@@ -1128,29 +1163,27 @@ void ViewerApp::updateActors(float dt) {
                                           actor.entityTransform(), actor.roomId, true, crossAnim,
                                           actor.prevAnimTime, crossBlend);
     }
-    // Dynamic level objects (doors, platforms): streamed every frame with
-    // the animated transform from tickDoors, exactly like the engine poses
-    // X_LevelRuntimeDynamicObject between the MeshAnimation keyframes.
-    if (renderer_.showDynamic()) {
-        for (std::size_t i = 0; i < level_.dynamicMeshes.size(); ++i) {
-            const DynamicMesh& mesh = level_.dynamicMeshes[i];
-            Mat4x3 local = mesh.properties.objectToRoom;
-            float t = 0.0f;
-            if (i < game_.doors.size()) {
-                t = game_.doors[i].t;
-            }
-            if (t > 0.0f && !mesh.animations.empty()) {
-                const MeshAnimation& anim = mesh.animations[0];
-                const Mat4x3 pose = game_.dynamicMeshPose(anim, t);
-                // pose(t) is authored from startTransform; re-base it onto
-                // the bind placement so t=0 is seamless.
-                const Mat4x3 rebased =
-                    combine(pose, combine(inverseRigid(anim.startTransform), local));
-                local = rebased;
-            }
-            const Mat4x3 world = combine(Renderer::roomMatrix(level_, mesh.properties.roomId), local);
-            renderer_.appendDynamicLevelMesh(level_, i, world);
+    // Dynamic level objects (doors, platforms): the geometry sits in
+    // persistent GPU buffers; the animated transform from tickDoors only
+    // updates the per-batch uWorld matrix (no per-frame re-upload).
+    for (std::size_t i = 0; i < level_.dynamicMeshes.size(); ++i) {
+        const DynamicMesh& mesh = level_.dynamicMeshes[i];
+        Mat4x3 local = mesh.properties.objectToRoom;
+        float t = 0.0f;
+        if (i < game_.doors.size()) {
+            t = game_.doors[i].t;
         }
+        if (t > 0.0f && !mesh.animations.empty()) {
+            const MeshAnimation& anim = mesh.animations[0];
+            const Mat4x3 pose = game_.dynamicMeshPose(anim, t);
+            // pose(t) is authored from startTransform; re-base it onto
+            // the bind placement so t=0 is seamless.
+            const Mat4x3 rebased =
+                combine(pose, combine(inverseRigid(anim.startTransform), local));
+            local = rebased;
+        }
+        const Mat4x3 world = combine(Renderer::roomMatrix(level_, mesh.properties.roomId), local);
+        renderer_.setDynamicMeshWorld(i, world);
     }
 
     // The player acts in cutscenes: render his skin with the cinematic clip
@@ -1796,7 +1829,9 @@ int ViewerApp::run(const char* pathOrNull) {
                     const Vec3 eye(game_.player.position.x,
                                    game_.player.position.y + game_.player.eyeHeight,
                                    game_.player.position.z);
-                    game_.tryShoot(level_, collision_, actors_, eye, playerLookLdb());
+                    if (game_.tryShoot(level_, collision_, actors_, eye, playerLookLdb())) {
+                        game_.notePlayerShot();  // PerceivingGroupOne noise
+                    }
                 } else if (!mouseCaptured_ && game_.mode == kModePlaying) {
                     mouseCaptured_ = true;
                     SDL_SetWindowRelativeMouseMode(window_, true);

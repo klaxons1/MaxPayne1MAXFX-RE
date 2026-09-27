@@ -77,6 +77,7 @@ struct CharacterAiConfig {
     float perceivingGroupThreeRadius;
     float enemyInterestTime;
     float activateOtherCharactersRadius;
+    float shootingFrequencyMultiplier;
 
     CharacterAiConfig()
         : aimingSpeed(20.0f),
@@ -91,7 +92,8 @@ struct CharacterAiConfig {
           perceivingGroupTwoRadius(4.0f),
           perceivingGroupThreeRadius(0.0f),
           enemyInterestTime(30.0f),
-          activateOtherCharactersRadius(0.0f) {}
+          activateOtherCharactersRadius(0.0f),
+          shootingFrequencyMultiplier(0.8f) {}
 };
 
 struct CharacterCapsule {
@@ -154,6 +156,34 @@ inline const char* characterActivityName(CharacterActivity a) {
     }
 }
 
+struct AiGraph;
+
+// Per-frame AI inputs (X_Character AI update): what the enemies know about
+// the player right now. The host fills this in; actors without it keep the
+// legacy idle/patrol behaviour.
+struct AiUpdateContext {
+    const AiGraph* graph;         // level movement network (may be null)
+    bool playerAlive;
+    bool playerShotRecently;      // PerceivingGroupOne: player is shooting
+    float playerSpeed;            // m/s; running alerts GroupTwo AI
+    bool forceActive;             // debug: wake nonreactive enemies
+    Vec3 playerPosition;
+
+    AiUpdateContext()
+        : graph(0), playerAlive(true), playerShotRecently(false), playerSpeed(0.0f),
+          forceActive(false) {}
+};
+
+// One enemy shot: the runtime resolves the weapon (sound, muzzle flash,
+// projectile, damage) from the actor's inventory.
+struct AiFireEvent {
+    int actorIndex;
+    Vec3 muzzle;  // LDB space
+    Vec3 dir;     // normalized, already spread-jittered
+
+    AiFireEvent() : actorIndex(-1) {}
+};
+
 // One spawned LDB character. Position / yaw are in MAX-FX (LDB) space.
 struct CharacterActor {
     std::string skinName;
@@ -183,6 +213,31 @@ struct CharacterActor {
     // back to the script-only estimate in clipWalkSpeed().
     float moveSpeed;
     const CharacterConfig* config;
+    // --- LDB character state (startup messages) ---
+    std::string entityName;      // sharedName, e.g. "::a5::e1"
+    std::string weaponName;      // C_RemoveAllWeapons(keep) / C_PickupWeapon
+    bool aiNonReactive;          // c_setstatemachine(nonreactive)
+    bool immortal;               // C_SetImmortal / C_SetInvulnerable
+    int idleAnimIndex;           // C_SetIdle(n, true)
+    // --- combat AI state ---
+    bool aiActive;               // activated (perceived the player once)
+    float reactionTimer;         // ActivationReactionTime countdown
+    float fireCooldown;          // seconds until the next shot
+    // Weapon timing resolved from the equipped WeaponDef by the runtime:
+    // fireInterval <= 0 means unarmed (never fires), spread is the aim
+    // jitter cone in degrees (WeaponDef::spread scaled like the engine's
+    // accuracy calculation).
+    float fireInterval;
+    float fireSpreadDeg;
+    // Pathfinding over the level .ai network (hunt/chase).
+    std::vector<Vec3> path;
+    std::size_t pathCursor;
+    float repathTimer;
+    Vec3 pathTarget;
+    // Scripted walk (C_GoTo / C_GoToAndShoot waypoint target).
+    Vec3 scriptGoal;
+    bool hasScriptGoal;
+    float scriptSpeed;  // speed factor from the message (0.5 = half speed)
 
     CharacterActor()
         : roomId(-1),
@@ -200,13 +255,30 @@ struct CharacterActor {
           blendTime(0.0f),
           prevAnimTime(0.0f),
           moveSpeed(0.0f),
-          config(0) {}
+          config(0),
+          aiNonReactive(false),
+          immortal(false),
+          idleAnimIndex(-1),
+          aiActive(false),
+          reactionTimer(0.0f),
+          fireCooldown(0.0f),
+          fireInterval(-1.0f),
+          fireSpreadDeg(2.0f),
+          pathCursor(0),
+          repathTimer(0.0f),
+          hasScriptGoal(false),
+          scriptSpeed(1.0f) {}
 
     void spawn(const Vec3& pos, float yawRadians, int room, const CharacterConfig* cfg,
-               const std::string& skin);
+               const std::string& skin, const std::string& entityName = std::string());
     void applyDamage(float amount);
+    // Legacy idle/patrol update (no AI inputs). With `ai` the full combat
+    // behaviour runs: perception, reaction, aiming-cone turning, weapon fire
+    // (events appended to `fires`, resolved by GameRuntime::enemyFire) and
+    // .ai-network pathfinding for the chase.
     void update(float dt, const Vec3& playerPos, CollisionWorld& world,
-                std::vector<CharacterActor>* others);
+                std::vector<CharacterActor>* others, const AiUpdateContext* ai = 0,
+                std::vector<AiFireEvent>* fires = 0, int selfIndex = -1);
     Mat4x3 entityTransform() const;
     float capsuleRadius() const;
     float capsuleCenterHeight() const;

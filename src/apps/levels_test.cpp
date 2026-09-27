@@ -2,6 +2,7 @@
 // Built as `levels-test` from the Makefile.
 
 #include "maxfx/char/Character.h"
+#include "maxfx/ai/AiGraph.h"
 #include "maxfx/collision/Collision.h"
 #include "maxfx/core/Fs.h"
 #include "maxfx/core/Math.h"
@@ -1625,6 +1626,201 @@ static void testDynamicObjectsAndNoclip() {
     check(!rt.cine.active, "cinematic terminates without a KF2");
 }
 
+// --- enemy combat AI (.ai network + X_Character shooting) ---
+static void testEnemyCombatAi() {
+    const std::string root = maxfx::DatabaseReader::locateRoot("docs");
+    if (root.empty()) {
+        return;
+    }
+    maxfx::Level level;
+    try {
+        level = maxfx::LdbReader::loadFromFile("docs/Part1_Level1.ldb");
+    } catch (const std::exception&) {
+        return;  // sample level not shipped in this checkout
+    }
+
+    // 1. X_GlobalAIObject parse: 37 exit arrays + 38 room networks.
+    maxfx::AiGraph graph = maxfx::loadAiFile("docs/Part1_Level1.ai", level);
+    check(graph.loaded, "ai graph loads");
+    check(graph.nodeCount() > 4000, "ai node count (sample)");
+    int links = 0;
+    for (std::size_t i = 0; i < graph.nodeCount(); ++i) {
+        links += static_cast<int>(graph.nodes[i].links.size());
+    }
+    check(links > 14000, "ai link count (sample)");
+    check(graph.rooms.size() == 38, "ai room network count");
+    // A* detours around geometry: the waypoint route must be longer than
+    // the straight line but still connect the two nodes.
+    {
+        std::vector<maxfx::Vec3> path;
+        const bool ok = graph.findPath(graph.nodes[200].world, graph.nodes[261].world, &path);
+        check(ok && path.size() >= 4, "ai A* finds multi-hop path");
+        float len = 0.0f;
+        for (std::size_t i = 1; i < path.size(); ++i) {
+            len += maxfx::length(path[i] - path[i - 1]);
+        }
+        const float straight = maxfx::length(graph.nodes[261].world - graph.nodes[200].world);
+        check(len > straight * 1.05f, "ai A* path detours around walls");
+    }
+
+    // 2. Full runtime with the level's characters.
+    maxfx::Database db = maxfx::DatabaseReader::load(root);
+    {
+        std::vector<std::string> skins;
+        for (std::size_t i = 0; i < level.characters.size(); ++i) {
+            skins.push_back(level.characters[i].characterName);
+        }
+        maxfx::DatabaseReader::loadModels(db, skins, std::vector<std::string>());
+    }
+    maxfx::GameRuntime rt;
+    rt.loadCatalog(root);
+    rt.loadLevelAi("docs/Part1_Level1.ai", level);
+    check(rt.aiGraph.loaded, "runtime loads level ai graph");
+
+    maxfx::CollisionWorld world;
+    world.addLevelGeometry(level);
+
+    std::vector<maxfx::CharacterActor> actors;
+    int mickey = -1;
+    int finale1 = -1;
+    for (std::size_t i = 0; i < level.characters.size(); ++i) {
+        const maxfx::Character& ch = level.characters[i];
+        const maxfx::Mat4x3 roomX = maxfx::roomWorldTransform(level, ch.properties.roomId);
+        const maxfx::Mat4x3 wx = maxfx::combine(roomX, ch.properties.objectToRoom);
+        const maxfx::Vec3 z = wx.zAxis();
+        const maxfx::SkinDef* def = db.findSkin(ch.characterName);
+        maxfx::CharacterActor actor;
+        actor.spawn(wx.translation(), std::atan2(z.x, z.z), ch.properties.roomId,
+                    def != 0 ? &def->character : 0, ch.characterName, ch.sharedName);
+        if (def != 0) {
+            rt.applyCharacterMessages(actor, def->character.onInitMessages);
+        }
+        rt.applyCharacterStartup(actor, ch.onStartup);
+        if (ch.sharedName == "::gate::enemy") {
+            mickey = static_cast<int>(actors.size());
+        }
+        if (ch.sharedName == "::teleport::e1") {
+            finale1 = static_cast<int>(actors.size());
+        }
+        actors.push_back(actor);
+    }
+    check(mickey >= 0, "gate enemy spawned");
+    check(finale1 >= 0, "finale enemy spawned");
+    check(actors[static_cast<std::size_t>(mickey)].fireInterval > 0.0f,
+          "skin OnInit arms the gate enemy (beretta)");
+    check(actors[static_cast<std::size_t>(finale1)].fireInterval < 0.0f,
+          "C_RemoveAllWeapons(empty) disarms the finale enemy");
+    check(actors[static_cast<std::size_t>(finale1)].aiNonReactive,
+          "c_setstatemachine(nonreactive) applied");
+
+    // 3. Mickey fights: put the player where the gate enemy can see him
+    // (his booth has solid walls; sight lines run through the opening).
+    maxfx::CharacterActor& mic = actors[static_cast<std::size_t>(mickey)];
+    const maxfx::Vec3 eye =
+        mic.position + maxfx::Vec3(0.0f, mic.config->capsule.top * 0.85f, 0.0f);
+    maxfx::Vec3 playerPos = mic.position;
+    bool spotFound = false;
+    // Prefer spots inside his sight cone (AimingSpeedCone) so the AI
+    // activates immediately; fall back to any clear line.
+    for (int pass = 0; pass < 2 && !spotFound; ++pass) {
+        for (float off = 0.0f; off < 3.15f && !spotFound; off += 0.1f) {
+            for (int side = (off < 0.01f ? 0 : -1); side <= 1 && !spotFound; side += 2) {
+                const float a = mic.yaw + off * static_cast<float>(side == 0 ? 0 : side);
+                for (float d = 4.0f; d <= 16.0f && !spotFound; d += 2.0f) {
+                    const maxfx::Vec3 cand(eye.x + std::sin(a) * d, eye.y - 0.06f,
+                                           eye.z + std::cos(a) * d);
+                    const maxfx::Vec3 los = (cand + maxfx::Vec3(0.0f, 1.6f, 0.0f)) - eye;
+                    const maxfx::CollisionHit hit = world.raycast(eye, los, 1.0f);
+                    if ((!hit.hit || hit.t >= maxfx::length(los) * 0.95f) &&
+                        (pass == 1 || std::fabs(off) < 0.25f)) {
+                        playerPos = cand;
+                        spotFound = true;
+                    }
+                }
+            }
+        }
+    }
+    check(spotFound, "clear sight line to the gate enemy exists");
+    rt.player.position = playerPos;
+    rt.player.controlsEnabled = true;
+    rt.charActivated.assign(actors.size(), 0);
+
+    int fired = 0;
+    int shootSounds = 0;
+    const float startHealth = rt.player.health;
+    for (int frame = 0; frame < 300; ++frame) {  // 10 s at 30 fps
+        // The player keeps firing (the gate fight): PerceivingGroupOne
+        // hears gunfire through walls at the skin's GroupOne radius.
+        if (frame % 15 == 0) {
+            rt.notePlayerShot();
+        }
+        maxfx::AiUpdateContext ctx;
+        ctx.graph = &rt.aiGraph;
+        ctx.playerAlive = rt.player.health > 0.0f;
+        ctx.playerShotRecently = rt.playerShotRecently();
+        ctx.playerPosition = playerPos;
+        std::vector<maxfx::AiFireEvent> fires;
+        for (std::size_t i = 0; i < actors.size(); ++i) {
+            actors[i].update(1.0f / 30.0f, playerPos, world, &actors, &ctx, &fires,
+                             static_cast<int>(i));
+        }
+        for (std::size_t i = 0; i < fires.size(); ++i) {
+            ++fired;
+            rt.enemyFire(fires[i], level, world, actors);
+        }
+        for (std::size_t i = 0; i < actors.size(); ++i) {
+            if (actors[i].aiActive) {
+                rt.activateCharacter(static_cast<int>(i), level, actors);
+            }
+        }
+        // The fire sound + muzzle flash are the WEAPONANIM_SHOOT messages.
+        for (std::size_t i = 0; i < rt.pendingSounds.size(); ++i) {
+            if (rt.pendingSounds[i].name.find("shoot_beretta") != std::string::npos) {
+                ++shootSounds;
+            }
+        }
+        rt.pendingSounds.clear();
+    }
+    check(fired > 5, "gate enemy fires at the player");
+    check(shootSounds == fired, "every shot plays the weapon sound");
+    check(rt.player.health < startHealth, "enemy fire damages the player");
+    check(mic.aiActive, "gate enemy AI activated");
+
+    // 4. Non-reactive enemies never fire even at point blank.
+    {
+        maxfx::CharacterActor& e1 = actors[static_cast<std::size_t>(finale1)];
+        const maxfx::Vec3 p2 = e1.position + maxfx::Vec3(2.0f, 0.0f, 0.0f);
+        int finaleFired = 0;
+        for (int frame = 0; frame < 120; ++frame) {
+            maxfx::AiUpdateContext ctx;
+            ctx.graph = &rt.aiGraph;
+            ctx.playerPosition = p2;
+            std::vector<maxfx::AiFireEvent> fires;
+            for (std::size_t i = 0; i < actors.size(); ++i) {
+                actors[i].update(1.0f / 30.0f, p2, world, &actors, &ctx, &fires,
+                                 static_cast<int>(i));
+            }
+            finaleFired += static_cast<int>(fires.size());
+        }
+        check(finaleFired == 0, "nonreactive enemy does not fire");
+    }
+
+    // 5. Character-entity messages: combat state machine switch + weapon.
+    {
+        maxfx::CharacterActor& e1 = actors[static_cast<std::size_t>(finale1)];
+        const std::vector<maxfx::GameMessage> msgs = maxfx::parseGameMessages(
+            "::teleport::e1->C_SetStateMachine(mobstercombat);"
+            "::teleport::e1->C_PickupWeapon(deserteagle);");
+        rt.currentActivatorActor = -1;
+        for (std::size_t i = 0; i < msgs.size(); ++i) {
+            rt.dispatch(msgs[i], level, actors, -1);
+        }
+        check(e1.aiActive && !e1.aiNonReactive, "C_SetStateMachine(mobstercombat) activates");
+        check(e1.weaponName == "deserteagle", "C_PickupWeapon routed to the character");
+        check(e1.fireInterval > 0.0f, "deserteagle fire interval set");
+    }
+}
+
 static void testWavPlaceholder() {
     if (!maxfx::isFile("docs/database/sounds/placeholder.wav")) {
         std::fprintf(stderr, "skip wav (placeholder.wav missing)\\n");
@@ -1656,6 +1852,7 @@ int main() {
     testCinematics("/tmp");
     testDynamicObjectsAndNoclip();
     testWavPlaceholder();
+    testEnemyCombatAi();
 
     // Official sample shipped in docs/.
     const std::string sample = maxfx::LevelsReader::locateLevelsTxt("docs");
