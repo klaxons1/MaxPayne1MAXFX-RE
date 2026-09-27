@@ -124,6 +124,9 @@ void mergeSkeletonConfig(CharacterConfig& cfg, const ScriptBlock& skeletonRoot,
 
 const CharacterAnimClip* findAnimClip(const CharacterConfig& cfg, int index);
 int pickAnimIndex(const CharacterConfig& cfg, int preferred);
+// CHARANIM_SHOOT<weapon> (characteranimid.h 310..326): the clip a character
+// plays with every trigger pull (RightHandWeapon->WS_AnimateShooting).
+int weaponShootAnimIndex(const std::string& weaponName);
 
 enum CharacterActivity {
     kCharIdle = 0,
@@ -229,6 +232,8 @@ struct CharacterActor {
     // accuracy calculation).
     float fireInterval;
     float fireSpreadDeg;
+    // > 0 while the weapon's shoot clip (CHARANIM_SHOOT<weapon>) plays.
+    float shootAnimTimer;
     // Pathfinding over the level .ai network (hunt/chase).
     std::vector<Vec3> path;
     std::size_t pathCursor;
@@ -264,6 +269,7 @@ struct CharacterActor {
           fireCooldown(0.0f),
           fireInterval(-1.0f),
           fireSpreadDeg(2.0f),
+          shootAnimTimer(0.0f),
           pathCursor(0),
           repathTimer(0.0f),
           hasScriptGoal(false),

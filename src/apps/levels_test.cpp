@@ -1674,6 +1674,7 @@ static void testEnemyCombatAi() {
     }
     maxfx::GameRuntime rt;
     rt.loadCatalog(root);
+    rt.resetLevel(level, 0, maxfx::Vec3(0.0f, 0.0f, 0.0f), 0.0f);
     rt.loadLevelAi("docs/Part1_Level1.ai", level);
     check(rt.aiGraph.loaded, "runtime loads level ai graph");
 
@@ -1706,6 +1707,7 @@ static void testEnemyCombatAi() {
     }
     check(mickey >= 0, "gate enemy spawned");
     check(finale1 >= 0, "finale enemy spawned");
+    rt.startLevel(level, actors);  // FSM startup lists (trigger latches, ...)
     check(actors[static_cast<std::size_t>(mickey)].fireInterval > 0.0f,
           "skin OnInit arms the gate enemy (beretta)");
     check(actors[static_cast<std::size_t>(finale1)].fireInterval < 0.0f,
@@ -1747,6 +1749,9 @@ static void testEnemyCombatAi() {
 
     int fired = 0;
     int shootSounds = 0;
+    bool sawShootAnim = false;
+    const bool hasShootClip =
+        maxfx::findAnimClip(*mic.config, maxfx::weaponShootAnimIndex("beretta")) != 0;
     const float startHealth = rt.player.health;
     for (int frame = 0; frame < 300; ++frame) {  // 10 s at 30 fps
         // The player keeps firing (the gate fight): PerceivingGroupOne
@@ -1780,11 +1785,25 @@ static void testEnemyCombatAi() {
             }
         }
         rt.pendingSounds.clear();
+        if (hasShootClip &&
+            mic.animIndex == maxfx::weaponShootAnimIndex("beretta")) {
+            sawShootAnim = true;  // CHARANIM_SHOOTBERETTA plays while firing
+        }
+    }
+    if (hasShootClip) {
+        check(sawShootAnim, "enemy plays the weapon shoot clip");
     }
     check(fired > 5, "gate enemy fires at the player");
     check(shootSounds == fired, "every shot plays the weapon sound");
     check(rt.player.health < startHealth, "enemy fire damages the player");
     check(mic.aiActive, "gate enemy AI activated");
+
+    check(maxfx::weaponShootAnimIndex("beretta") == 313 &&
+              maxfx::weaponShootAnimIndex("deserteagle") == 315 &&
+              maxfx::weaponShootAnimIndex("ingram") == 318 &&
+              maxfx::weaponShootAnimIndex("sawedshotgun") == 316 &&
+              maxfx::weaponShootAnimIndex("nonexistent") == 313,
+          "CHARANIM_SHOOT<weapon> mapping");
 
     // 4. Non-reactive enemies never fire even at point blank.
     {
@@ -1805,7 +1824,21 @@ static void testEnemyCombatAi() {
         check(finaleFired == 0, "nonreactive enemy does not fire");
     }
 
-    // 5. Character-entity messages: combat state machine switch + weapon.
+    // 5. Death messages: e1's onDeath sends ::p5::death_counter fsm_send(add1),
+    //    which makes the survivor e2 C_GoToAndShoot + standandshootstatic.
+    {
+        maxfx::CharacterActor& e1 = actors[static_cast<std::size_t>(finale1)];
+        maxfx::CharacterActor& e2 = actors[static_cast<std::size_t>(finale1 + 1)];
+        check(e2.entityName == "::teleport::e2", "finale pair adjacency");
+        check(e1.activity != maxfx::kCharDead, "finale enemy starts alive");
+        rt.applyCharacterDamage(finale1, 10000.0f, level, actors);
+        check(e1.activity == maxfx::kCharDead, "damage kills the finale enemy");
+        check(e2.aiActive && !e2.aiNonReactive,
+              "onDeath -> death_counter add1 -> survivor standandshootstatic");
+        check(e2.hasScriptGoal, "survivor C_GoToAndShoot waypoint goal");
+    }
+
+    // 6. Character-entity messages: combat state machine switch + weapon.
     {
         maxfx::CharacterActor& e1 = actors[static_cast<std::size_t>(finale1)];
         const std::vector<maxfx::GameMessage> msgs = maxfx::parseGameMessages(

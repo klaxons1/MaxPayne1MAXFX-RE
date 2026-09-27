@@ -342,6 +342,28 @@ const CharacterAnimClip* findAnimClip(const CharacterConfig& cfg, int index) {
     return 0;
 }
 
+int weaponShootAnimIndex(const std::string& weaponName) {
+    // characteranimid.h CHARANIM_SHOOT* — one shoot clip per weapon.
+    if (weaponName == "empty") return 310;
+    if (weaponName == "leadpipe") return 311;
+    if (weaponName == "baseballbat") return 312;
+    if (weaponName == "beretta") return 313;
+    if (weaponName == "berettadual") return 314;
+    if (weaponName == "deserteagle") return 315;
+    if (weaponName == "sawedshotgun") return 316;
+    if (weaponName == "pumpshotgun") return 317;
+    if (weaponName == "ingram") return 318;
+    if (weaponName == "ingramdual") return 319;
+    if (weaponName == "mp5") return 320;
+    if (weaponName == "jackhammer") return 321;
+    if (weaponName == "molotov") return 322;
+    if (weaponName == "grenade") return 323;
+    if (weaponName == "m79") return 324;
+    if (weaponName == "sniper") return 325;
+    if (weaponName == "painkiller") return 326;
+    return 313;  // generic one-handed pistol pose
+}
+
 int pickAnimIndex(const CharacterConfig& cfg, int preferred) {
     int cur = preferred;
     for (int guard = 0; guard < 8; ++guard) {
@@ -400,6 +422,7 @@ void CharacterActor::spawn(const Vec3& pos, float yawRadians, int room, const Ch
     fireCooldown = 0.0f;
     fireInterval = -1.0f;
     fireSpreadDeg = 2.0f;
+    shootAnimTimer = 0.0f;
     path.clear();
     pathCursor = 0;
     repathTimer = 0.0f;
@@ -644,11 +667,22 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
     }
 
     const bool armed = fireInterval > 0.0f || findAnimClip(*config, kCharAnimWStand) != 0;
-    // C_SetIdle(n, true): play the scripted idle clip while inactive.
-    const int want =
-        activity == kCharIdle && idleAnimIndex >= 0
-            ? pickAnimIndex(*config, idleAnimIndex)
-            : pickAnimIndex(*config, activityAnim(activity, armed));
+    if (shootAnimTimer > 0.0f) {
+        shootAnimTimer -= dt;
+        if (shootAnimTimer < 0.0f) {
+            shootAnimTimer = 0.0f;
+        }
+    }
+    // Fire clip first (X_Character::shootWeapon plays CHARANIM_SHOOT<weapon>
+    // with every shot), then C_SetIdle's scripted idle, then the activity
+    // stance.
+    int want = pickAnimIndex(*config, activityAnim(activity, armed));
+    if (activity == kCharIdle && idleAnimIndex >= 0) {
+        want = pickAnimIndex(*config, idleAnimIndex);
+    }
+    if (shootAnimTimer > 0.0f && activity == kCharCombat && health > 0.0f) {
+        want = pickAnimIndex(*config, weaponShootAnimIndex(weaponName));
+    }
     if (clipLock > 0.0f) {
         clipLock -= dt;
     }
@@ -705,6 +739,8 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
             fireCooldown = fireInterval / (aiCfg.shootingFrequencyMultiplier > 0.01f
                                                ? aiCfg.shootingFrequencyMultiplier
                                                : 1.0f);
+            // The character plays its shoot clip with every trigger pull.
+            shootAnimTimer = fireCooldown > 0.0f ? std::min(fireCooldown, 0.55f) : 0.3f;
         }
     } else if (fireCooldown > 0.0f) {
         fireCooldown -= dt;

@@ -228,7 +228,8 @@ GameRuntime::GameRuntime()
       gameSpeedSeconds(0.0f),
       bulletTime(false),
       playerShotTimer(0.0f),
-      currentActivatorActor(-1) {}
+      currentActivatorActor(-1),
+      currentCharacterActor(-1) {}
 
 void GameRuntime::loadCatalog(const std::string& dbRoot) { catalog = loadGameCatalog(dbRoot); }
 
@@ -916,6 +917,11 @@ void GameRuntime::dispatch(const GameMessage& msg, const Level& level, std::vect
         }
         if (actorIndex < 0 && lowerCopy(msg.target) == "activator") {
             actorIndex = currentActivatorActor;
+        }
+        if (actorIndex < 0 && lowerCopy(msg.target) == "this") {
+            // X_Character registers itself as the "this" local receiver
+            // (X_MessageLocalReceivers::insertReceiver, decompile @1030868).
+            actorIndex = currentCharacterActor;
         }
         if (actorIndex >= 0 &&
             handleCharacterMessage(msg, actorIndex, level, actors)) {
@@ -1643,8 +1649,8 @@ bool GameRuntime::tryShoot(const Level& level, CollisionWorld& world, std::vecto
     HitscanHit hit = fireHitscan(level, world, actors, origin, dir);
     if (hit.actorIndex >= 0 && static_cast<std::size_t>(hit.actorIndex) < actors.size()) {
         CharacterActor& a = actors[static_cast<std::size_t>(hit.actorIndex)];
-        a.applyDamage(dmg);
         pushLog(std::string("hitscan ") + a.skinName);
+        applyCharacterDamage(hit.actorIndex, dmg, level, actors);
         // X_Projectile runs its message list when it damages a character.
         if (w) {
             const ProjectileDef* pr = catalog.findProjectile(w->projectileName);
@@ -1713,8 +1719,11 @@ void GameRuntime::activateCharacter(int actorIndex, const Level& level,
     for (std::size_t i = 0; i < level.characters.size(); ++i) {
         if (level.characters[i].sharedName == actors[static_cast<std::size_t>(actorIndex)].entityName) {
             const Vec3 keep = soundOrigin;
+            const int keepSelf = currentCharacterActor;
             soundOrigin = actors[static_cast<std::size_t>(actorIndex)].position;
+            currentCharacterActor = actorIndex;
             dispatchList(level.characters[i].onActivate.messages, level, actors, -1);
+            currentCharacterActor = keepSelf;
             soundOrigin = keep;
             return;
         }
@@ -1729,8 +1738,11 @@ void GameRuntime::characterSendSpecial(int actorIndex, const Level& level,
     for (std::size_t i = 0; i < level.characters.size(); ++i) {
         if (level.characters[i].sharedName == actors[static_cast<std::size_t>(actorIndex)].entityName) {
             const Vec3 keep = soundOrigin;
+            const int keepSelf = currentCharacterActor;
             soundOrigin = actors[static_cast<std::size_t>(actorIndex)].position;
+            currentCharacterActor = actorIndex;
             dispatchList(level.characters[i].onSpecial.messages, level, actors, -1);
+            currentCharacterActor = keepSelf;
             soundOrigin = keep;
             return;
         }
@@ -1887,6 +1899,40 @@ void GameRuntime::setCharacterWeapon(CharacterActor& actor, const std::string& w
     // WeaponDef::spread is the engine's accuracy figure (~100 for a pistol);
     // treat it as a 100th of a degree per unit for the aim-jitter cone.
     actor.fireSpreadDeg = w->spread > 0.0f ? w->spread * 0.02f : 1.5f;
+}
+
+void GameRuntime::applyCharacterDamage(int actorIndex, float amount, const Level& level,
+                                       std::vector<CharacterActor>& actors) {
+    if (actorIndex < 0 || static_cast<std::size_t>(actorIndex) >= actors.size()) {
+        return;
+    }
+    CharacterActor& a = actors[static_cast<std::size_t>(actorIndex)];
+    const bool wasAlive = a.activity != kCharDead && a.health > 0.0f;
+    a.applyDamage(amount);
+    if (wasAlive && a.activity == kCharDead) {
+        pushLog(std::string("character died: ") + a.entityName);
+        runCharacterDeath(actorIndex, level, actors);
+    }
+}
+
+void GameRuntime::runCharacterDeath(int actorIndex, const Level& level,
+                                    std::vector<CharacterActor>& actors) {
+    if (actorIndex < 0 || static_cast<std::size_t>(actorIndex) >= actors.size()) {
+        return;
+    }
+    const CharacterActor& a = actors[static_cast<std::size_t>(actorIndex)];
+    for (std::size_t i = 0; i < level.characters.size(); ++i) {
+        if (level.characters[i].sharedName == a.entityName) {
+            const Vec3 keep = soundOrigin;
+            const int keepSelf = currentCharacterActor;
+            soundOrigin = a.position;
+            currentCharacterActor = actorIndex;
+            dispatchList(level.characters[i].onDeath.messages, level, actors, -1);
+            currentCharacterActor = keepSelf;
+            soundOrigin = keep;
+            return;
+        }
+    }
 }
 
 void GameRuntime::applyCharacterStartup(CharacterActor& actor, const FsmMessages& startup) {
@@ -2061,7 +2107,7 @@ void GameRuntime::enemyFire(const AiFireEvent& ev, const Level& level, Collision
         effects.startEffect("blood", point, Vec3(-nd.x, -nd.y, -nd.z));
         pushLog(std::string("enemy fire hit: ") + shooter.skinName);
     } else if (hitActor >= 0 && static_cast<std::size_t>(hitActor) < actors.size()) {
-        actors[static_cast<std::size_t>(hitActor)].applyDamage(dmg);
+        applyCharacterDamage(hitActor, dmg, level, actors);
         effects.startEffect("blood", point, Vec3(-nd.x, -nd.y, -nd.z));
     } else if (worldHit.hit) {
         if (w != 0) {

@@ -217,8 +217,11 @@ Frame-time hitches on large maps are gone:
 - dynamic batches never merge across owners, so a moving mesh rebinds only
   its own VAO
 
-Remaining known per-frame costs: animated characters re-upload their whole
-vertex buffer, and every character within 40 m is re-skinned each frame.
+Animated characters keep a persistent, grow-only VAO pool (entering or
+leaving the 40 m skinning range no longer rebuilds GL objects): vertices
+re-fill via `glBufferSubData` into the kept allocation and the index list
+uploads only when the topology actually changes. Remaining known per-frame
+cost: every character within 40 m is re-skinned each frame.
 
 ### Game runtime (`src/maxfx/game`)
 
@@ -405,11 +408,19 @@ through walls, `GroupTwo` hears running, `GroupThree` peeking — and
 combat; `ActivateOtherCharactersRadius` wakes neighbours; `EnemyInterestTime`
 drops the AI back to idle when the player is lost.
 
+Character deaths run the LDB `OnDeath` list (`applyCharacterDamage`):
+death counters, story FSM sends and camera hooks all fire — e.g. killing
+one finale enemy sends `::p5::death_counter->fsm_send(add1)`, which switches
+the survivor to `standandshootstatic` + `C_GoToAndShoot`. While a list
+runs, `this->` addresses the character itself (the engine registers the
+character as its own `X_MessageLocalReceivers` "this" receiver).
+
 **Enemies shoot.** A character with a weapon (skin `[OnInit]`
 `C_PickupWeapon`, or `C_RemoveAllWeapons(keep)` / `C_PickupWeapon` runtime
 messages) fires at the player inside its `ShootingCone` on a clear line of
 fire, at the weapon's `DefaultShootingFrequency` divided by the skin's
-`ShootingFrequencyMultiplier`. Every shot plays the weapon's
+`ShootingFrequencyMultiplier`, playing the weapon's `CHARANIM_SHOOT<weapon>`
+clip (characteranimid.h 310-326) with every trigger pull. Every shot plays the weapon's
 `WEAPONANIM_SHOOT` messages — `A_Play3DSound(weapons, shoot_*)` fire sound
 and `PS_StartEffect(Muzzle_*)` muzzle flash (the placeholder synthesis
 stands in for stripped WAVs) — then resolves as a hitscan against the
@@ -466,8 +477,8 @@ triggers, dynamic meshes). The viewer:
 
 - Shootdodge / bullet-time / CHARANIM_SHOOT* first-person overlay
 - Enemy dodge / cover / wounded locomotion and upper-body aiming
-  (`X_AimSetup` blends aim clips; enemies currently fire from the standing
-  pose)
+  (`X_AimSetup` blends aim/up/down clips; enemies currently fire from the
+  standing shoot clip only)
 - Clip cross-fade (`crossAnimateObject` adds two samples, then
   `fixCrossAnimation` re-orthonormalizes — see docs/ANIMATION.md)
 - Level-exit streaming
@@ -494,8 +505,9 @@ make test    # levels-test: R_Script (nested quotes, 3DSound), levels.txt,
              # camera paths / cinematic frame hooks / fades / [Exit] dispatch,
              # dynamic-object poses / door state, noclip descend,
              # .ai graph parse + A* detour, enemy perception / reaction /
-             # weapon fire + sound pairing, nonreactive gate, character
-             # message routing (C_SetStateMachine / C_PickupWeapon)
+             # weapon fire + sound pairing + shoot clip, nonreactive gate,
+             # character message routing (C_SetStateMachine /
+             # C_PickupWeapon), onDeath lists -> FSM death counters
 ```
 
 No SDL required. The viewer is `cmake -S . -B build && cmake --build build`

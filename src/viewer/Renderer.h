@@ -292,6 +292,12 @@ private:
     std::vector<GpuMesh> animCpu_;
     std::vector<BatchKey> animKeys_;
     std::vector<DrawBatch> animBatches_;
+    // Persistent animated-batch state: VBO capacity (floats) so a frame
+    // re-fills with glBufferSubData instead of re-specifying the buffer,
+    // and the last uploaded index list (character topology is stable while
+    // posing, so the EBO upload is skipped until it changes).
+    std::vector<std::size_t> animVboCapacity_;
+    std::vector<std::vector<unsigned int> > animLastIndices_;
 
     bool recordingDynamic_;
     int dynOwner_;

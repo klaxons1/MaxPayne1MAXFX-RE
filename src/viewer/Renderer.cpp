@@ -1226,6 +1226,8 @@ void Renderer::destroyAnimatedGpu() {
         }
     }
     animBatches_.clear();
+    animVboCapacity_.clear();
+    animLastIndices_.clear();
 }
 
 Mat4x3 Renderer::roomMatrix(const Level& level, int roomId) {
@@ -1425,11 +1427,16 @@ int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, 
 
 void Renderer::uploadAnimated() {
     recordingAnimated_ = false;
-    if (animBatches_.size() != animCpu_.size()) {
-        destroyAnimatedGpu();
+    // Grow-only batch pool: characters entering/leaving the 40 m skinning
+    // range must not rebuild every VAO (the old resize-on-count-change
+    // churned GL objects every frame at the boundary).
+    if (animCpu_.size() > animBatches_.size()) {
+        const std::size_t first = animBatches_.size();
         animBatches_.resize(animCpu_.size());
+        animVboCapacity_.resize(animCpu_.size(), 0);
+        animLastIndices_.resize(animCpu_.size());
         const GLsizei stride = 13 * sizeof(float);
-        for (std::size_t k = 0; k < animCpu_.size(); ++k) {
+        for (std::size_t k = first; k < animCpu_.size(); ++k) {
             DrawBatch& batch = animBatches_[k];
             batch.vao = 0;
             batch.vbo = 0;
@@ -1457,7 +1464,11 @@ void Renderer::uploadAnimated() {
             glBindVertexArray(0);
         }
     }
-    for (std::size_t i = 0; i < animCpu_.size(); ++i) {
+    for (std::size_t i = 0; i < animBatches_.size(); ++i) {
+        if (i >= animCpu_.size()) {
+            animBatches_[i].indexCount = 0;  // batch pool slot idle this frame
+            continue;
+        }
         GpuMesh& mesh = animCpu_[i];
         DrawBatch& batch = animBatches_[i];
         batch.diffuse = animKeys_[i].diffuse;
@@ -1479,12 +1490,26 @@ void Renderer::uploadAnimated() {
         }
         glBindVertexArray(batch.vao);
         glBindBuffer(GL_ARRAY_BUFFER, batch.vbo);
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(mesh.vertices.size() * sizeof(float)),
-                     &mesh.vertices[0], GL_STREAM_DRAW);
+        // Re-specify only when the pool slot grows; otherwise refill the
+        // existing allocation (no orphan + realloc per frame).
+        const std::size_t need = mesh.vertices.size();
+        if (animVboCapacity_[i] < need) {
+            glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(need * sizeof(float)),
+                         need ? &mesh.vertices[0] : 0, GL_STREAM_DRAW);
+            animVboCapacity_[i] = need;
+        } else if (need > 0) {
+            glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(need * sizeof(float)),
+                            &mesh.vertices[0]);
+        }
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     static_cast<GLsizeiptr>(mesh.indices.size() * sizeof(unsigned int)),
-                     &mesh.indices[0], GL_STREAM_DRAW);
+        // Topology is stable while a character is only being posed; upload
+        // the index list solely when it actually changes.
+        if (!mesh.indices.empty() && animLastIndices_[i] != mesh.indices) {
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                         static_cast<GLsizeiptr>(mesh.indices.size() * sizeof(unsigned int)),
+                         &mesh.indices[0], GL_STREAM_DRAW);
+            animLastIndices_[i] = mesh.indices;
+        }
         glBindVertexArray(0);
     }
 }

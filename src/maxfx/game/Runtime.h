@@ -229,6 +229,9 @@ struct GameRuntime {
     // the character that touched a type-3 trigger this dispatch.
     std::vector<char> charActivated;
     int currentActivatorActor;
+    // Character whose message list is executing ("this" receiver — the
+    // engine registers it in X_MessageLocalReceivers on the character).
+    int currentCharacterActor;
 
     GameRuntime();
 
@@ -333,6 +336,13 @@ struct GameRuntime {
     // C_SendSpecial: run the character's onSpecial list.
     void characterSendSpecial(int actorIndex, const Level& level,
                               std::vector<CharacterActor>& actors);
+    // Apply damage to a character and, on the living->dead transition, run
+    // its LDB onDeath list (death counters, story FSMs).
+    void applyCharacterDamage(int actorIndex, float amount, const Level& level,
+                              std::vector<CharacterActor>& actors);
+    // The LDB OnDeath list of the matching character entity.
+    void runCharacterDeath(int actorIndex, const Level& level,
+                           std::vector<CharacterActor>& actors);
     // Waypoint entity position in LDB space (C_Teleport / C_GoTo targets).
     Vec3 waypointWorld(const Level& level, const std::string& name) const;
     // Route one message to a character entity; false = not a character
