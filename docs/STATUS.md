@@ -2,8 +2,8 @@
 
 Last updated 2026-09-27 (noclip + cutscene regression fixes against the
 Android 1.0 decompile; `[Animation]`/`[Properties]` sibling pairing;
-GM_ChangeGameSpeed / bullet-time game speed; skinning verified — see
-`docs/ANIMATION.md`).
+GM_ChangeGameSpeed / bullet-time game speed; skinning verified end to end on
+the shipped Max Payne model — see `docs/ANIMATION.md`).
 Comments and this file are in English; the code is C++11. The target is the **PC** Max Payne 1
 MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
 names and version numbers only — its loaders were stripped and can disagree
@@ -316,6 +316,14 @@ clip (root **not** locked to bind) and the movement file carrying the
 entity, and draws the widescreen letterbox + fade. Key **C** cycles the
 player skin's scripted clips (the stock trigger into a cutscene is the
 level FSM's state machine, not yet parsed); Esc aborts.
+
+The shipped Max Payne model (`docs/database/skins/max_payne/`, KFS + SKD +
+textures) drives the whole chain on real data: `testRealSkinning` in
+`levels-test` locks the SKD weight model (874 slots, sums exactly 1, ≤4
+bones), the 28/28 name-matched bone palette, an **exact** bind-pose identity
+(max error 0.0000 over 5 460 vertices) and sane animated poses; the
+`maxpayne-collision.kfs` node hierarchy doubles as the bind skeleton
+reference for the character-root basis (Y up, Pelvis y≈0.94).
 
 Character animation blending: clip switches cross-fade over 0.25 s the
 way `X_ObjectAnimation::crossAnimateObject` + `fixCrossAnimation` do

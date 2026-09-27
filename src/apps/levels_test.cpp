@@ -493,6 +493,155 @@ static void testDatabase() {
     check(!db.worldSpherePath.empty() && maxfx::isFile(db.worldSpherePath), "worldsphere bronx kf2");
 }
 
+// Real Max Payne model (docs/database/skins/max_payne): the full skinning
+// chain end to end on shipped data — SKD weights, name-matched bone palette,
+// exact bind-pose identity and a sane animated pose. This is the fixture the
+// Android 1.0 decompile skinning verdict (docs/ANIMATION.md) was verified on.
+static void testRealSkinning() {
+    using namespace maxfx;
+    const std::string root = DatabaseReader::locateRoot("docs");
+    if (root.empty() || !isFile("docs/database/skins/max_payne/Payne_Max_L0.KFS")) {
+        std::fprintf(stderr, "skip real skinning (max payne model missing)\n");
+        return;
+    }
+    Database db = DatabaseReader::load(root);
+    const SkinDef* def = db.findSkin("max_payne");
+    check(def != 0 && !def->lods.empty(), "max_payne skin def");
+    if (def == 0 || def->lods.empty()) {
+        return;
+    }
+    const Kf2File* mesh = db.loadModel(def->lods[0].resolvedExport);
+    const Kf2File* skinFile = db.loadModel(def->lods[0].resolvedSkin);
+    check(mesh != 0 && skinFile != 0, "KFS + SKD load");
+    if (mesh == 0 || skinFile == 0 || skinFile->skins.empty()) {
+        return;
+    }
+    const Kf2Skin& skin = skinFile->skins[0];
+    check(!mesh->meshes.empty() && mesh->meshes[0].hasGeometry, "mesh geometry");
+    if (mesh->meshes.empty() || !mesh->meshes[0].hasGeometry) {
+        return;
+    }
+    // SKD vertex slots align with the geometry vertices (per-primitive order).
+    check(skin.vertices.size() == mesh->meshes[0].geometry.vertices.size(),
+          "skin vertices align with geometry");
+    // Weights: every vertex sums to 1, at most 4 bones (DirectX limit the
+    // engine enforces in KF_SkinMeshCallback::allocatePrimitive).
+    float maxBones = 0.0f;
+    bool weightsOk = true;
+    for (std::size_t i = 0; i < skin.vertices.size(); ++i) {
+        const Kf2SkinVertex& sv = skin.vertices[i];
+        float sum = 0.0f;
+        for (std::size_t b = 0; b < sv.bones.size(); ++b) {
+            sum += b < sv.weights.size() ? sv.weights[b] : 1.0f;
+            const int bi = sv.bones[b];
+            if (bi < 0 || static_cast<std::size_t>(bi) >= skin.skeletonObjectNames.size()) {
+                weightsOk = false;
+            }
+        }
+        if (std::fabs(sum - 1.0f) > 0.01f) {
+            weightsOk = false;
+        }
+        maxBones = std::max(maxBones, static_cast<float>(sv.bones.size()));
+    }
+    check(weightsOk, "skin weights sum to 1, bone indices in range");
+    check(maxBones <= 4.0f, "at most 4 bones per vertex");
+    // The pose clip (bind) covers every skin bone by name.
+    const CharacterAnimClip* poseClip = findAnimClip(def->character, kCharAnimPose);
+    check(poseClip != 0 && isFile(poseClip->resolvedPath), "CHARANIM_POSE clip");
+    const Kf2File* poseK = poseClip != 0 ? db.loadModel(poseClip->resolvedPath) : 0;
+    const Kf2File* standK = db.loadModel(
+        findAnimClip(def->character, kCharAnimStand) != 0
+            ? findAnimClip(def->character, kCharAnimStand)->resolvedPath
+            : std::string());
+    check(poseK != 0 && standK != 0, "pose + stand clips load");
+    if (poseK == 0 || standK == 0) {
+        return;
+    }
+    std::vector<std::string> poseNames;
+    std::vector<Mat4x3> poseWorlds;
+    kf2BuildSkeletonWorlds(*poseK, 0.0f, 0, &poseNames, &poseWorlds);
+    std::size_t matched = 0;
+    for (std::size_t i = 0; i < skin.skeletonObjectNames.size(); ++i) {
+        for (std::size_t j = 0; j < poseNames.size(); ++j) {
+            if (poseNames[j] == skin.skeletonObjectNames[i]) {
+                ++matched;
+                break;
+            }
+        }
+    }
+    check(matched == skin.skeletonObjectNames.size(),
+          "every skin bone matches a pose channel by name");
+    // Bind-pose identity: playing the bind clip as both bind and play must
+    // reproduce the node-transformed mesh exactly (the defining property of
+    // the inverse-bind chain).
+    std::vector<Kf2DrawMesh> skinned;
+    kf2BuildSkinnedDrawMeshes(*mesh, skinFile, poseK, poseK, 0.0f, skinned);
+    std::vector<Kf2DrawMesh> raw;
+    kf2BuildDrawMeshes(*mesh, raw);
+    std::vector<std::string> nodeNames;
+    std::vector<Mat4x3> nodeWorlds;
+    kf2NodeWorldTransforms(*mesh, &nodeNames, &nodeWorlds);
+    Mat4x3 nodeWorld;
+    if (!nodeWorlds.empty()) {
+        nodeWorld = nodeWorlds[0];
+    }
+    std::size_t compared = 0;
+    float maxDiff = 0.0f;
+    for (std::size_t d = 0; d < skinned.size() && d < raw.size(); ++d) {
+        for (std::size_t p = 0; p < skinned[d].parts.size(); ++p) {
+            for (std::size_t v = 0; v < skinned[d].parts[p].vertices.size(); ++v) {
+                const Vec3 a = skinned[d].parts[p].vertices[v].position;
+                const Vec3 b = transformPoint(nodeWorld, raw[d].parts[p].vertices[v].position);
+                maxDiff = std::max(maxDiff, length(a - b));
+                ++compared;
+            }
+        }
+    }
+    check(compared > 4000, "compared real draw vertices");
+    checkNear(maxDiff, 0.0f, "bind-pose identity on the real model");
+    // Animated pose: standing character, no NaN, real volume in every axis.
+    for (int t = 0; t < 3; ++t) {
+        std::vector<Kf2DrawMesh> anim;
+        kf2BuildSkinnedDrawMeshes(*mesh, skinFile, poseK, standK, 0.3f * t, anim);
+        Vec3 mn(1e9f, 1e9f, 1e9f), mx(-1e9f, -1e9f, -1e9f);
+        bool nan = false;
+        for (std::size_t d = 0; d < anim.size(); ++d) {
+            for (std::size_t p = 0; p < anim[d].parts.size(); ++p) {
+                for (std::size_t v = 0; v < anim[d].parts[p].vertices.size(); ++v) {
+                    const Vec3 a = anim[d].parts[p].vertices[v].position;
+                    if (a.x != a.x || a.y != a.y || a.z != a.z) {
+                        nan = true;
+                        continue;
+                    }
+                    mn.x = std::min(mn.x, a.x); mn.y = std::min(mn.y, a.y); mn.z = std::min(mn.z, a.z);
+                    mx.x = std::max(mx.x, a.x); mx.y = std::max(mx.y, a.y); mx.z = std::max(mx.z, a.z);
+                }
+            }
+        }
+        check(!nan, "animated pose has no NaN");
+        check(mx.y - mn.y > 1.5f && mx.y < 2.2f, "standing height ~1.8 m");
+        check(mx.x - mn.x > 0.3f && mx.z - mn.z > 0.15f, "animated pose keeps volume");
+    }
+    // The KFS materials' diffuse textures resolve next to the model
+    // (textures/ directory, the first candidate in the viewer's chain).
+    std::size_t texFound = 0, texTotal = 0;
+    for (std::size_t ml = 0; ml < mesh->materialLists.size(); ++ml) {
+        for (std::size_t m = 0; m < mesh->materialLists[ml].materials.size(); ++m) {
+            const Kf2Material& mat = mesh->materialLists[ml].materials[m];
+            for (std::size_t t = 0; t < mat.diffuseTexture.files.size(); ++t) {
+                ++texTotal;
+                const std::string cand = joinPath(
+                    joinPath(parentDir(def->lods[0].resolvedExport), "textures"),
+                    fileName(mat.diffuseTexture.files[t]));
+                if (isFile(existingPathIgnoreCase(cand))) {
+                    ++texFound;
+                }
+            }
+        }
+    }
+    check(texTotal > 0 && texFound == texTotal, "skin diffuse textures resolve");
+}
+
 static void testCollisionAndMath() {
     maxfx::CollisionWorld world;
     world.addTriangle(maxfx::Vec3(0, 0, 0), maxfx::Vec3(2, 0, 0), maxfx::Vec3(0, 0, 2), 0, 1);
@@ -1497,6 +1646,7 @@ int main() {
     testPcxAlpha();
     testKf2Beretta();
     testDatabase();
+    testRealSkinning();
     testCollisionAndMath();
     testKf2EngineSampling();
     testKf2AnimationAndSkinAi();

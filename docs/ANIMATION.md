@@ -201,20 +201,37 @@ animated bone world brings them back out. The decompile's
 bones + weights and the per-bone matrices to `P_SkinMesh`, which folds the
 bind composition into its matrix palette on the CPU/GPU.
 
-Empirical checks on the real `docs/database` fixtures (2026-09-27):
+Empirical checks on the real fixtures (updated 2026-09-27, after the shipped
+Max Payne model was added to `docs/database/skins/max_payne/`:
+`Payne_Max_L0.KFS` + `PAYNE_MAX_L0.SKD` + 7 texture JPGs):
 
-* the shipped `.kfs` meshes and `.skd` skins are **not part of the uploaded
-  database** (only `maxpayne-collision.kfs` and 762 animation KF2s are), so
-  the end-to-end vertex blend runs on the synthetic beretta/alex fixtures
-  (`levels-test`, 285 tests green);
-* every real skeleton animation sampled through our sampler is clean:
+* **bind-pose identity is exact on the shipped model**: skinning with
+  play = bind = the pose clip at t=0 reproduces the node-world-transformed
+  mesh with max vertex error 0.0000 over all 5 460 draw vertices — the
+  defining property of the inverse-bind chain;
+* the SKD reads clean: 874 vertex slots aligned with the geometry vertices,
+  every weight row sums to exactly 1.000, at most 2 bones per vertex (engine
+  hard limit 4), all bone indices in range;
+* all 28 SKD skeleton object names match pose-clip channels by name, and the
+  `maxpayne-collision.kfs` node hierarchy (28 nodes named like the bones,
+  Pelvis→Torso→…→Toe-L, Pelvis at y≈0.939 in character-root space) confirms
+  the skeleton basis: Y up, feet at 0 — the same space the skin mesh node
+  lands in (its object-to-parent maps mesh-local +Z down / +Y forward, so
+  the authored Z-up mesh stands upright through the node transform);
+* animated `Stand` sampled at t = 0 / 0.3 / 0.6 s: 1.85 m standing figure,
+  no NaN, real volume on every axis (earlier "flat Z" readings were a probe
+  printf bug, not an engine defect);
+* every real skeleton animation samples clean through the sampler:
   `Pose.kf2` 0.07 s / `Stand.kf2` 14.67 s / `Walk.kf2` 1.25 s / `Run.kf2`
-  0.80 s — 28 bone channels each, all matrices orthonormal (|det|=1), no NaN,
-  translations within human scale (max |t| ≈ 1.63 m);
-* bind-pose identity holds (skinning with play = bind = pose clip at t=0
-  reproduces the unskinned node-transformed vertices), which is the defining
-  property of the inverse-bind chain.
+  0.80 s — 28 bone channels each, orthonormal (|det|=1), no NaN;
+* the KFS material list (`textures;..\sharedtextures`) resolves all four
+  diffuse materials (Face expression set / Pants / Jacket / Hand) into
+  `docs/database/skins/max_payne/textures/`.
 
-Verdict: **the skinning pipeline agrees with the Android 1.0 decompile**; the
-one visible gap is that `P_SkinMesh`'s GPU-side matrix palette folding is a
-render-path detail we already reproduce mathematically on the CPU side.
+All of the above is locked in `levels-test` (`testRealSkinning`, runs on the
+committed fixtures).
+
+Verdict: **the skinning pipeline agrees with the Android 1.0 decompile,
+verified end to end on the shipped Max Payne model**; the one visible gap is
+that `P_SkinMesh`'s GPU-side matrix palette folding is a render-path detail
+we already reproduce mathematically on the CPU side.
