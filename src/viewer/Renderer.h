@@ -207,7 +207,8 @@ private:
                     const Database* database, const std::vector<GLuint>& materialTextures,
                     const std::vector<GLuint>& lightmapTextures,
                     const std::vector<RadiositySample>& radiosity,
-                    const std::vector<WorldLight>& lights);
+                    const std::vector<WorldLight>& lights,
+                    const Mat4x3* shadeTransform = 0);
     int appendKf2File(const Kf2File& kf, const Mat4x3& entity, int roomId,
                       const std::vector<WorldLight>& lights, const Database* database);
     void appendKf2Mesh(const Kf2DrawMesh& mesh, const Mat4x3& world, int roomId,

@@ -2004,8 +2004,21 @@ void GameRuntime::damagePlayer(float amount) {
     player.health -= amount;
     if (player.health <= 0.0f) {
         player.health = 0.0f;
-        player.controlsEnabled = false;  // death: input off until reload
-        pushLog("max died");
+        player.controlsEnabled = false;  // death: input off until respawn
+        pushLog("max died - press F9 to respawn");
+    }
+}
+
+void GameRuntime::revivePlayer() {
+    player.health = player.maxHealth;
+    player.controlsEnabled = true;
+    player.velocity = Vec3();
+    player.shootCooldown = 0.0f;
+    if (bulletTime || gameSpeedTarget != 1.0f) {
+        bulletTime = false;
+        gameSpeedTarget = 1.0f;
+        gameSpeed = 1.0f;
+        gameSpeedSeconds = 0.0f;
     }
 }
 

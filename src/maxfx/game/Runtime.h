@@ -356,6 +356,9 @@ struct GameRuntime {
     void enemyFire(const AiFireEvent& ev, const Level& level, CollisionWorld& world,
                    std::vector<CharacterActor>& actors);
     void damagePlayer(float amount);
+    // Death recovery: the engine loads the last save after the death cam;
+    // the port respawns (F9) — full health, controls back, slow-mo off.
+    void revivePlayer();
 
     void dispatch(const GameMessage& msg, const Level& level, std::vector<CharacterActor>& actors,
                   int sourceTrigger);

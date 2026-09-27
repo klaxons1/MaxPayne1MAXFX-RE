@@ -268,6 +268,18 @@ decals as surface-projected textured quads (decals.txt radius + random
 roll) and particles as camera billboards; particle material bitmaps
 wait on the binary `.pse`/particles.txt chain, so profiles use a
 generated soft-dot texture with the profile colour / alpha ramps.
+Effect definitions live in a `std::deque` (stable addresses): the
+`PS_StartEffect` name fallback appends renamed copies at runtime, and a
+`std::vector` realloc there used to dangle every live instance's def
+pointer — heap-use-after-free reads in `update()` (seen as random
+crashes and particles dying instantly once the allocator reused the
+block; ASAN loop harness catches it).
+
+Level dynamic meshes (doors, trains) upload once in object space and
+pose through a per-batch `uWorld`; batches force `service = false` /
+`vertexLit = true` (the old per-frame animated-stream semantics —
+always drawn, radiosity/vertex lighting, never lightmaps), with
+vertex-lighting samples taken at the mesh's bind-pose world transform.
 
 Cutscenes always terminate and always hand control back: Esc is a full
 abort (clip + camera path + fade + letterbox), moving cancels an
@@ -483,7 +495,7 @@ triggers, dynamic meshes). The viewer:
   `fixCrossAnimation` re-orthonormalizes — see docs/ANIMATION.md)
 - Level-exit streaming
 - Dynamic mesh animation (doors, trains)
-- Save / load
+- Save / load (death currently respawns in place — F9)
 - Full FSM / `[Message]` execution beyond the targeted subset
   (T_/DO_/FSM_Switch/FSM_Send/MPGNM/s_modeswitch/A_Play*)
 - SCX / DDS texture decode
@@ -507,7 +519,8 @@ make test    # levels-test: R_Script (nested quotes, 3DSound), levels.txt,
              # .ai graph parse + A* detour, enemy perception / reaction /
              # weapon fire + sound pairing + shoot clip, nonreactive gate,
              # character message routing (C_SetStateMachine /
-             # C_PickupWeapon), onDeath lists -> FSM death counters
+             # C_PickupWeapon), onDeath lists -> FSM death counters,
+             # player death / F9 respawn
 ```
 
 No SDL required. The viewer is `cmake -S . -B build && cmake --build build`

@@ -970,7 +970,8 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
                          const Database* database, const std::vector<GLuint>& materialTextures,
                          const std::vector<GLuint>& lightmapTextures,
                          const std::vector<RadiositySample>& radiosity,
-                         const std::vector<WorldLight>& lights) {
+                         const std::vector<WorldLight>& lights,
+                         const Mat4x3* shadeTransform) {
     std::map<int, Vec3> radio;
     float radioMax = 0.0f;
     for (std::size_t i = 0; i < radiosity.size(); ++i) {
@@ -1061,6 +1062,18 @@ void Renderer::appendMesh(const std::vector<Vec3>& vertices, const std::vector<V
             }
             if (it != radio.end()) {
                 col = it->second * radioScale;
+            } else if (shadeTransform) {
+                // Object-space upload (dynamic meshes): vertices are stored
+                // relative to the mesh pivot, but vertex lighting must be
+                // sampled at the mesh's bind-pose world position, exactly
+                // like the old per-frame transform path did.
+                const std::size_t vi = static_cast<std::size_t>(tv.vertexIndex);
+                const Vec3 spos = mirrorX(transformPoint(*shadeTransform, vertices[vi]));
+                Vec3 snrm(0, 1, 0);
+                if (vi < normals.size()) {
+                    snrm = mirrorX(transformVector(*shadeTransform, normals[vi]));
+                }
+                col = shadeVertex(spos, snrm, lights);
             } else {
                 col = shadeVertex(pos, nrm, lights);
             }
@@ -1265,10 +1278,16 @@ void Renderer::uploadDynamicLevelMeshes(const Level& level) {
     for (std::size_t m = 0; m < level.dynamicMeshes.size(); ++m) {
         const DynamicMesh& mesh = level.dynamicMeshes[m];
         dynOwner_ = static_cast<int>(m);
+        // Bind-pose world transform: only used for vertex-lighting samples
+        // (stored vertices stay in object space; the live pose is applied on
+        // the GPU through uWorld).
+        const Mat4x3 bindWorld = combine(roomMatrix(level, mesh.properties.roomId),
+                                         mesh.properties.objectToRoom);
         const std::size_t first = dynKeys_.size();
         appendMesh(mesh.vertices, mesh.normals, level.dynamicTextureVertices, mesh.polygons,
                    Mat4x3(), mesh.properties.roomId, true, level, database_,
-                   levelMaterialTextures_, levelLightmapTextures_, mesh.radiosity, lights_);
+                   levelMaterialTextures_, levelLightmapTextures_, mesh.radiosity, lights_,
+                   &bindWorld);
         for (std::size_t k = first; k < dynKeys_.size(); ++k) {
             dynMeshBatches_[m].push_back(static_cast<int>(k));
         }
@@ -1291,9 +1310,12 @@ void Renderer::uploadDynamicLevelMeshes(const Level& level) {
         batch.alphaTest = dynKeys_[k].alphaTest;
         batch.blend = dynKeys_[k].blend;
         batch.dynamic = true;
-        batch.service = dynKeys_[k].service;
+        // Old per-frame animated path forced these two: level dynamic meshes
+        // (doors, trains) always draw regardless of material service flags
+        // and are lit by radiosity/vertex colors, never lightmaps.
+        batch.service = false;
         batch.writesZ = dynKeys_[k].writesZ;
-        batch.vertexLit = dynKeys_[k].vertexLit;
+        batch.vertexLit = true;
         batch.followCamera = false;
         batch.detailOffset = dynKeys_[k].detailOffset;
         batch.alphaRef = dynKeys_[k].alphaRef;

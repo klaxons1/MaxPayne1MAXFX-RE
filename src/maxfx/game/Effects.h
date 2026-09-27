@@ -21,6 +21,7 @@
 
 #include <string>
 #include <vector>
+#include <deque>
 
 namespace maxfx {
 
@@ -185,7 +186,12 @@ public:
     DecalSystem decals;
 
 private:
-    std::vector<ParticleEffectDef> defs_;
+    // Stable storage: ParticleEffectInstance stores a const def pointer, and
+    // addDefinition() (PS_StartEffect name fallback appends renamed copies at
+    // runtime) must never invalidate those pointers — a vector realloc here
+    // caused heap-use-after-free reads in update() (freed def garbage also
+    // killed live particle rendering before the crash).
+    std::deque<ParticleEffectDef> defs_;
     std::vector<ParticleEffectInstance> effects_;
     static const int kMaxParticles = 2048;
     static const int kMaxEffects = 64;

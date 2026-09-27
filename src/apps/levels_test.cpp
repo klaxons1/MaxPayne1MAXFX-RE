@@ -1796,6 +1796,16 @@ static void testEnemyCombatAi() {
     check(fired > 5, "gate enemy fires at the player");
     check(shootSounds == fired, "every shot plays the weapon sound");
     check(rt.player.health < startHealth, "enemy fire damages the player");
+    {
+        // Death locks the input (engine: death cam + last save); F9 revive.
+        const float full = rt.player.maxHealth;
+        rt.damagePlayer(full + 10.0f);
+        check(rt.player.health == 0.0f && !rt.player.controlsEnabled,
+              "player death disables controls");
+        rt.revivePlayer();
+        check(rt.player.health == full && rt.player.controlsEnabled,
+              "revivePlayer restores health and controls");
+    }
     check(mic.aiActive, "gate enemy AI activated");
 
     check(maxfx::weaponShootAnimIndex("beretta") == 313 &&

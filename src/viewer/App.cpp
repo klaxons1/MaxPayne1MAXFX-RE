@@ -906,6 +906,7 @@ void ViewerApp::handleKeyDown(int scancode, int key) {
             game_.player.position = ldbFromView(camera_.position, game_.player.eyeHeight);
             game_.player.yaw = camera_.yaw;
             game_.player.velocity = Vec3();
+            game_.revivePlayer();  // death recovery (engine: load last save)
             break;
         case SDLK_1:
         case SDLK_2:
