@@ -1,0 +1,474 @@
+#include <..\soundid.h>
+// -------------------------------------------------------------------
+[P2L0a_006_cam]	// Max: Somewhere, the baby was crying... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\P2L0a_006_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_01]	// Frankie: Should have known when we found you...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_02]	// Frankie: I really love to watch cartoons...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_02.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_03]	// Frankie: Cartoon violence, a facinating thing...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_03.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_04]	// Frankie: You can slice em, dice em...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_04.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_05]	// Frankie: Nothing like that ever happens...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_05.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_Max_01]	// Max finds photos and newspaper clippings
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_Max_02]	// Max looks at photos of his family
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_Max_02.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_Max_03]	// Max looks at Michelles diary
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_Max_03.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_06]	// Michelle begs to Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_06.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l0a_07]	// Michelle screams Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l0a_07.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// -------------------------------------------------------------------
+
+[michelle_screaming] 				// Muffled scream
+{
+	[Properties] ID = SOUNDID_DEFAULT; AdultContent = TRUE;
+	[Default]
+	{
+		[Sound]
+        Filename = maxhouse\michelle_screaming.wav;
+		Volume = 0.7;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 100;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = false;
+	}
+}
+
+[baby_crying] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; AdultContent = TRUE;
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\baby_crying.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = 1;
+		FallOff = 30;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = false;
+	}
+}
+
+[baby_crying_2] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; AdultContent = TRUE;
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\baby_crying_2.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 30;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = false;
+	}
+}
+
+[michelle_crying] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; AdultContent = TRUE;
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\michelle_crying.wav;
+		Volume = 0.9;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = false;
+	}
+}
+
+[smash] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = dynamic\elevator\elevator_doors_close.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[BB_Hit01] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\bb_hit01.wav;
+		Volume = 0.6;
+		Pitch = 11050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[BB_Hit02] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\bb_hit02.wav;
+		Volume = 0.6;
+		Pitch = 11050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[BB_Hit03] 				
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = nightmare\bb_hit03.wav;
+		Volume = 0.6;
+		Pitch = 11050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+[Cube_stop]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = cold_steel\Oven_doors_slam.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+

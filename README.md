@@ -142,7 +142,12 @@ docs/              Android decompile, sample LDB, sample levels.txt, STATUS.md
 ```
 
 `levels.txt` field tables and the script grammar are documented in
-`docs/LEVELS.md`. The viewer and `levels-dump` both look for
+`docs/LEVELS.md`; the keyframe animation sampler (loop wrap, seam blend,
+interpolation methods) decoded from the decompile is in `docs/ANIMATION.md`,
+the trigger / FSM-message / sound-pitch runtime semantics in
+`docs/TRIGGERS.md`, and the AI movement-network `.ai` format in
+`docs/AI_FORMAT.md`.
+The viewer and `levels-dump` both look for
 `data/database/levels/levels.txt` next to the exe.
 
 ## PC vs Android

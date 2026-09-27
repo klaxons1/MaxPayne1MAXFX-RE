@@ -1,0 +1,551 @@
+#include <..\soundid.h>
+// -------------------------------------------------------------------
+[P3L4a_006_cam]	// Max: A bad cop on the take... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L4a_006_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L4a_01]	// BB shouts go go go
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L4a_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 15;
+		FallOff = 70;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L4a_02]	// BB talks sarcasm to Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L4a_02.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 15;
+		FallOff = 70;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L4a_03]	// BB imitates Max (must do the right thing...)
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L4a_03.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 15;
+		FallOff = 70;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L4a_04]	// BB blames Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L4a_04.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 15;
+		FallOff = 70;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L4a_Max_00]	// Max: comments BB turning out to be another...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L4a_Max_00.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L4a_Max_01]	// Max: comments on phone ringing
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L4a_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// -------------------------------------------------------------------
+
+[car_door_close]
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\car_door_close.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[car_door_open]
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\car_door_open.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[car_idle]
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\car_idle.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+[car_idle_revving]
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\car_idle_revving.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[car_starts_off]
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\car_starts_off.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[car_skid_crash] 				// A car skidding and crashing in distance
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\car_skid_crash_garage_distance.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 50;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Garage_Door_Close]
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\Garage_Door_Closes.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 3;
+		FallOff = 15;
+		Priority = 15;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Garage_Door_Open]
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\Garage_Door_Opens.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 3;
+		FallOff = 15;
+		Priority = 15;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Garage_Door_Slide]
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\Garage_Door_Slide.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 3;
+		FallOff = 15;
+		Priority = 15;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[van_crash_garage] 				// Van crashing to a wall inside the garage
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\van_crash_garage.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 10;
+		FallOff = 50;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[van_idle_loop] 				// Van idling
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\van_idle.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 20;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[van_idle_garage_loop] 		// Van idling in an echoing garage
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\van_idle_garage.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 20;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[van_pass_by_garage] 		// Van passing by in a garage
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\van_pass_by_garage.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 2;
+		FallOff = 30;
+		Priority = 30;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[van_start_off_garage] 		// Van starting off in a garage and going away
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\van_start_off_garage.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 10;
+		FallOff = 30;
+		Priority = 30;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[van_start_off_outdoors] 		// Van startingoutdoors and going away
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\van_start_off_outdoors.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 30;
+		Priority = 30;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[van_revving_garage_loop] 		// Van revving inside a garage
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\van_revving_garage.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 30;
+		Priority = 30;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[van_revving_loop] 		// Van revving 
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = garage\van_revving.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 30;
+		Priority = 30;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+
+
+
+
+

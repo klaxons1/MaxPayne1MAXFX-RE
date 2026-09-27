@@ -1,0 +1,62 @@
+#include <..\object_lods.h>
+#include <..\shooting.h>
+#include <..\weaponanimid.h>
+#include <..\weaponid.h>
+
+// Empty - No weapon
+
+[LOD] { [Geometry] ExportData = empty.kf2; Distance = 0.001; }
+
+[Animationset]
+{
+	[Animation] Index = WEAPONANIM_DEFAULT; 	Filename = empty.kf2;	
+}
+
+[Attributes]
+TwoHandedBones 		= NO;
+TwoHandedAnimation 	= NO;
+UseMultipleGunBones = NO;
+ShootDodgeAllowed	= NO;
+AutoAimingAllowed 	= NO;
+ProjectileOffset	= (0,0,0);
+
+SlotIndex 	= SLOTID_EMPTY;
+InventoryID = INVENTORYID_EMPTY;
+WeaponID 	= WEAPONID_EMPTY;
+
+Clipsize 	= 1;
+Pocketsize	= 100;
+
+MaximumShootingFrequency = 1.001;
+DefaultShootingFrequency = 1;
+// [0..1] affects only player character
+// when multiplier is close to 0, shooting will slow down when time slows down
+// when multiplier is close to 1, shooting will happen with constant speed when time slows down 
+ShootingFrequencyMultiplier		= 0.8;
+
+ReloadAmount 	= -1;
+UseModeSwitchAnimation 	= NO;
+SidewaysAimingMultiplier= 0.0;
+
+FOVMultiplier = 1.0;
+// shakes are only applied when sniper zoom is on
+ShakeLength = 0.0;
+ShakeStrengthX = 0.0;
+ShakeStrengthY = 0.0;
+CrouchingShakeLength = 0.0;
+CrouchingShakeStrengthX = 0.0;
+CrouchingShakeStrengthY = 0.0;
+UsesLowerActivationGroup = false;
+
+[CrosshairAttributes]
+CastLength				= CROSSHAIR_CASTLENGTH ;
+SphereRadius 			= CROSSHAIR_SPHERERADIUS ;
+SmallProjectile 		= TRUE ;
+ScreenSizeFrontLimit	= CROSSHAIR_SIZEFRONTLIMIT ;
+ScreenSizeBackLimit		= CROSSHAIR_SIZEBACKLIMIT ;
+
+[Crosshair] 
+{ 
+	[Geometry] 
+	ExportData = ..\crosshairs\invisible.kf2;
+}

@@ -1,6 +1,9 @@
 # MAX-FX reverse engineering — current status
 
-Last updated 2026-09-26 (OpenAL Soft 3D env sounds, graphic-novel reader UI).
+Last updated 2026-09-27 (keyframe sampler ported from the decompile —
+`docs/ANIMATION.md`; engine trigger semantics `T_Activate`/`T_Enable`;
+FSM startup dispatch with the level intro comic; sound pitch =
+script Pitch / WAV rate).
 Comments and this file are in English; the code is C++11. The target is the **PC** Max Payne 1
 MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
 names and version numbers only — its loaders were stripped and can disagree
@@ -112,6 +115,20 @@ the parent walk tore the waist. Skeleton worlds are built from parent
 indices (no per-compare string alloc). Multi-mesh SKDs skin listed objects
 with a concatenated vertex base.
 
+`sampleChannel` is a full port of the decompiled sampler (see
+`docs/ANIMATION.md`): looping channels wrap into
+`[LoopToFrame, TotalKeyframeCount)` so the intro plays once,
+`UseLoopInterpolation` blends the last key towards the loop-start key during
+the final frame, non-looping channels hold the last key from
+`total - 1`, and the component lerp is **raw** — re-orthogonalisation only
+happens for `interpolationMethod` 1 (row normalize) / 2
+(`M_Matrix3::orthonormalize`), with `maintainMatrixScaling` re-applying row
+lengths lerped in frame space. `levels-test` pins all of that with synthetic
+channels (`testKf2EngineSampling`, no game data needed). Character
+locomotion uses `|EndPosition| / clipLength` (`X_CRSplineMovementUpdate`
+moves the spline over the clip duration), cached per actor in
+`CharacterActor::moveSpeed` once the walk clip has been loaded.
+
 Self-test: `beretta_levelitem.kf2`, `Alex_Balder_L0.kfs` + `.SKD`,
 `Widepose.kf2` / `Walk.kf2`.
 
@@ -139,7 +156,13 @@ playlist is missing.
 | --- | --- |
 | F3 | lit (lightmapx2) -> diffuse -> lightmap -> **vertex** |
 | F6 | show service / no-draw materials |
-| F7 | mute music |
+| F7 | mute music / one-shots |
+| F8 | item debug overlay (model resolution + LDB rotation rows) |
+| F9 | respawn at the starting place |
+| 1..0 | C_SelectWeapon slot row |
+| Wheel / R | cycle weapons / C_Reload |
+| C | play the next scripted cinematic clip of the player skin |
+| N / F10 | noclip (Space up, Ctrl down) |
 | Left/Right | next map in `levels.txt` |
 
 Vertex colour is LDB radiosity (`std::map<int, vec3>` on static/dynamic
@@ -190,12 +213,96 @@ PC `MP.exe` message table plus the database scripts:
 | Menu | `MaxPayne_MenuMode` + custom **Jump to Level** (`levels.txt`) |
 | Player | `max_payne.txt` (`PLAYER_MOVEMENT` 4.2, `AirborneSpeed` 2.5, `C_Jump(7.5)`), gravity −9.81 m/s² (levels.txt −981 cm/s²) |
 | Hitscan | `CROSSHAIR_CASTLENGTH` / beretta `[Attributes]` + `bullet_beretta` Damage |
-| Triggers | LDB type 0..4 = action / player collide / projectile / character / look-at; `T_Activate` |
-| Doors | `DO_Animate` / `DO_InvertAnimation` on dynamic-mesh clips |
+| Triggers | `X_LevelRuntimeTrigger` port: types 0/1/2/3/4 = action button (use) / player collide / projectile / character collide / look-at; `activate()` latches (one fire), `T_Enable(bool)` re-arms, `T_Activate` dispatches to the trigger's own FSM only (the level FSM named like the trigger minus `.TRIGGER`) |
+| FSMs | startup messages run at level load (level intro comic via `::startroom::fsm_start`); `FSM_Switch`, `FSM_Send`, `DO_Animate`/`DO_*` and `T_*` route by message target; MPGNM note queue |
+| Doors | `DO_Animate` / `DO_InvertAnimation` on dynamic-mesh clips; `dynamicMeshPose` interpolates the `MeshAnimation` start/end transforms (translation/rotation graphs as easing when sane), the viewer streams the meshes at the animated transform every frame and rebuilds collision when a `dynamicCollisions` object crosses half-open |
 | Comics | `graphicnovelpages.txt` chapters + full-screen reader (KF2 plate, not a world billboard) |
 | OnInit | `C_PickupWeapon`, `C_PickupAmmo`, `C_SetHealth`, `C_DisplayCrosshair`, `GM_SetPlayerControls` |
 
-Esc opens the menu. WASD walk, Space jump, E use, LMB shoot.
+Esc opens the menu. WASD walk, Space jump, E use, LMB shoot,
+LMB fire plays the weapon's fire sound (3D at the muzzle) + muzzle-flash
+effect, spawns the impact decal / sparks via the projectile's
+`WEAPONANIM_HIT` messages (blood on characters), 1..0 select weapon slots,
+wheel cycles `weaponpriority.txt` `[CycleWeapons]` order, R reloads
+pocket -> clip (auto-reload at 0 with a 0.6 s cooldown).
+
+Weapons come from `data/weaponpriority.txt` + every `weapons/*.txt` /
+`level_items/*.txt` `[Attributes]` block: `WeaponID/SlotIndex/InventoryID`
+(`weaponid.h` defines resolved), clip / pocket sizes, `castLength`, the fire
+sound and muzzle effect from `WEAPONANIM_SHOOT*` message lists. The player
+starts with all weapons (`giveAllWeapons`) for viewer testing.
+
+HUD is the PC `data/hud/hud.txt` (`src/maxfx/game/Hud.cpp`):
+`[Health]` sprite + background, `[ActiveWeapon]` per `WeaponID` sprite
+(bitmaps + `_alpha` masks, `ReferencePoint` anchoring, 640x480-scaled),
+`[Weapons]` ammo counters. Missing hud.txt falls back to the built-in
+text HUD.
+
+Effects (`src/maxfx/game/Effects.cpp`): `PS_StartEffect` /
+`PS_StopAllEmissions` / `D_CreateDecal` dispatch with a built-in profile
+library (muzzle flash, impacts, blood, smoke, explosion; caps 2048
+particles / 64 effects / 256 decals FIFO). `D_CreateDecal` and
+`PS_StartEffect` orient against the **projectile hit normal**
+(`GameRuntime::impactNormal`), so wall shots project the decal on the
+wall instead of a floor-plane quad seen edge-on. The viewer renders
+decals as surface-projected textured quads (decals.txt radius + random
+roll) and particles as camera billboards; particle material bitmaps
+wait on the binary `.pse`/particles.txt chain, so profiles use a
+generated soft-dot texture with the profile colour / alpha ramps.
+
+Cutscenes always terminate and always hand control back: Esc is a full
+abort (clip + camera path + fade + letterbox), moving cancels an
+`Abortable` camera path once the clip is done
+(`userAbortCameraPathIfAbortable`), the camera-path duration can never
+stay unresolved (0 would mean "not resolved yet" every frame), and a
+finished fade-to-black no longer outlives the cutscene - the
+presentation state clears when the whole cutscene (clip + path) is over.
+
+Cutscene camera sampling walks the KF2 parent chain (the camera node is
+parented to a root that carries the path placement — sampling the bare
+channel local put the camera at the origin, inside geometry = black
+screen), parented / in-place bases are built in LDB space, and both the
+clip and the camera path always terminate (duration falls back to the
+last frame hook + 1s when the clip KF2 is missing; a missing path KF2
+ends the path immediately after running its `[Exit]` messages).
+
+Cutscenes (in-engine cinematics): `camerapaths.txt`
+(`src/maxfx/game/CameraPaths.cpp`) provides the camera paths
+(`[Attributes]` FadeIn/Out + Abortable, `[AnimationSet]` KF2, `[Exit]`
+messages). `CAM_AnimateAbsolute(block, room)` / `InPlace` / `Parented`
+/ `PlayerParented`, `C_EnableCinematicMode`, `GM_EnableWideScreen`,
+`MPHM_EnableHUD`, `MPHM_FadeToColor` and `C_TeleportXYZ` dispatch on
+the runtime's `CinematicState`. Scripted clips carry their
+`[Properties] [Message] Frame = N` hooks and the `[Movement] Filename`
+root-motion KF2 (`CharacterAnimClip::frameMessages` /
+`resolvedMovement`); the runtime fires the frame hooks on their edges
+and runs the path's `[Exit]` list when it ends, while the viewer
+samples the path KF2 for the camera, plays the player skin with the
+clip (root **not** locked to bind) and the movement file carrying the
+entity, and draws the widescreen letterbox + fade. Key **C** cycles the
+player skin's scripted clips (the stock trigger into a cutscene is the
+level FSM's state machine, not yet parsed); Esc aborts.
+
+Character animation blending: clip switches cross-fade over 0.25 s the
+way `X_ObjectAnimation::crossAnimateObject` + `fixCrossAnimation` do
+(lerp the sampled bone worlds, then re-orthonormalize) instead of
+hard-popping. Root XZ locking to the bind pose (locomotion plays
+in place, the capsule carries the character) is now optional and off
+for cinematic / root-motion clips.
+
+Dropped sounds are fixed end to end: runtime message dispatch
+(`A_Play3DSound` / `A_PlayFloating3DSound` / `A_PlaySound` /
+`A_PlayMusic` / `A_StopMusic`) queues `SoundRequest`s positioned at the
+message origin (trigger world position, door keyframe entity position,
+impact point); the viewer drains the queue every frame into OpenAL
+one-shot voices (`[Random]` file pick, mono buffers for 3D, hotspot /
+falloff distances, cap 32 live). Music only plays when a level script
+asks (`A_PlayMusic`), never auto-started. One-shot voices never loop
+and `setEnvPaused(false)` only resumes sources that are actually
+`AL_PAUSED` — `alSourcePlay` on a playing source restarts it from
+sample 0, and calling that every frame sliced every sound into a 60 Hz
+restart buzz (the crackle); it also leaked a source per request
+dropped while the reader was up.
 
 PCM WAV loader (`src/maxfx/sound`) plus **OpenAL Soft** in the viewer
 (`src/viewer/Audio.cpp`). Music is a 2D relative source. FSM startup
@@ -204,6 +311,14 @@ becomes `S_SoundOmni` voices: `AL_LINEAR_DISTANCE_CLAMPED` with
 `AL_REFERENCE_DISTANCE = Hotspot` and `AL_MAX_DISTANCE = FallOff`.
 `Database::findSound(category, name)` falls back to name-only so
 `ambient, electric_hum_loop` still resolves from `dynamic.txt`.
+Playback pitch follows `X_SoundFactory::getSound`:
+`setFrequency(Pitch / wavSampleRate)` — the script `Pitch` is a rate in Hz
+divided by the file's own sample rate (`soundPitchMultiplier`), not a
+hardcoded 22050 divisor (that made 44.1 kHz graphic-novel narration run at
+double speed). The comic page sound no longer restarts every frame.
+The viewer stamps its git hash into the window title, the menu HUD and
+stdout (`b83b840b`-style) — `scripts/build-windows.bat` copies the exe
+next to the game data, and that copy silently goes stale on rebuild.
 CMake fetches OpenAL Soft 1.23.1 if the system has none. The stripped
 tree only ships silent `placeholder.wav`; the HUD then reads
 `3d 0/N  (wavs not extracted)` while the emitters still start. F7 mutes.
@@ -250,14 +365,16 @@ triggers, dynamic meshes). The viewer:
 
 - Shootdodge / bullet-time / CHARANIM_SHOOT* first-person overlay
 - Dodge / cover / wounded locomotion (clips are parsed, not selected)
-- Dynamic-mesh GPU transform (doors animate in state; textured mesh stays at bind)
-- Binary `.ai` path graph next to each `.ldb` (tagged, not R_Script)
+- Clip cross-fade (`crossAnimateObject` adds two samples, then
+  `fixCrossAnimation` re-orthonormalizes — see docs/ANIMATION.md)
+- Binary `.ai` path graph next to each `.ldb` (tagged, not R_Script) —
+  format fully reverse-engineered and documented in `docs/AI_FORMAT.md`;
+  runtime parser / pathfinding still to be ported
 - Level-exit streaming
-- Runtime bullet-hole / blood decals from `decals/decals.txt`
 - Dynamic mesh animation (doors, trains)
-- Particles (sparks, shells, smoke)
 - Save / load
-- Full FSM / `[Message]` execution beyond startup A_Play3DSound / comics OnInit
+- Full FSM / `[Message]` execution beyond the targeted subset
+  (T_/DO_/FSM_Switch/FSM_Send/MPGNM/s_modeswitch/A_Play*)
 - SCX / DDS texture decode
 - Graphic-novel KF2 cameras (pages are framed from the plate AABB)
 - KF2 cameras / point-light animation chunks
@@ -269,9 +386,13 @@ triggers, dynamic meshes). The viewer:
 ```
 make test    # levels-test: R_Script (nested quotes, 3DSound), levels.txt,
              # unbraced blocks, PCX alpha, KF2 beretta + alex KFS,
-             # keyframe animation + skin AI + BSP capsule collision,
+             # engine keyframe sampling (loop wrap / seam blend / methods),
+             # trigger latch / T_Enable / own-FSM dispatch on Part1_Level1,
+             # skin AI + BSP capsule collision,
              # materials / items / skins / sounds / music, placeholder.wav,
-             # S_SoundOmni gain, FSM A_Play3DSound collect, comic chapters
+             # S_SoundOmni gain, FSM A_Play3DSound collect, comic chapters,
+             # camera paths / cinematic frame hooks / fades / [Exit] dispatch,
+             # dynamic-object poses / door state, noclip descend
 ```
 
 No SDL required. The viewer is `cmake -S . -B build && cmake --build build`

@@ -1,0 +1,47 @@
+#include <..\projectiles.h>
+#include <..\projectileanimid.h>
+#include <..\object_lods.h>
+
+
+// -------------------------------------------------------------------
+// Blood pool
+// -------------------------------------------------------------------
+
+[LOD] { [Geometry] exportdata = blood_pool_default.kf2; Distance = PROJECTILE_LOD_DRAW_ALWAYS ; }
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = blood_pool_default.kf2;
+	[Animation] Index = PROJECTILEANIM_RICOCHET; Filename = blood_pool_default.kf2;
+	[Animation] Index = PROJECTILEANIM_FROZEN; Filename = blood_pool_frozen.kf2;
+}
+
+[Attributes]
+Direction 	= (0,0,0);
+Accuracy 	= 2000;
+Speed 		= 1;
+SpeedRandom = 30%;
+Damage 		= 0;			 
+
+RicochetMaximumAngle 	= 0;
+RicochetSpeedMultiplier = 0.3;
+RicochetMinimumSpeed 	= PROJECTILE_CLIP_RICOCHET_MINIMUMSPEED;		
+RicochetUntilOnGround	= false; // true for projectiles that create level items
+VisibilityMaximumSpeed  = 30; // m/s
+
+SmallProjectile	 		= TRUE;
+Debris 					= TRUE;	
+RandomizeDirection 		= FALSE;	
+RandomizeRotation		= FALSE;
+
+CollisionExplosion		= FALSE;
+DelayedExplosion 		= FALSE;
+ExplosionDelay			= 0.0;
+GravityMultiplier		= 1.0;
+UseLookAt				= FALSE;
+DamagesCharacter		= FALSE;
+ItemsToCache			= 20;
+MeshesToCache			= 3;
+DeathCause				= PROJECTILEDEATH_RANDOM;
+AdultContent			= TRUE;
+BloodProjectile			= FALSE;	// uses same detail level settings as debris but is not debris

@@ -1,0 +1,117 @@
+#include <..\soundid.h>
+
+[swoosh_01]  			
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = camera\camera_swoosh_01.wav;
+		Volume = 0.5;
+		Pitch = 27050;
+		Random = 0%;  
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[swoosh_01_loud]
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = camera\camera_swoosh_01.wav;
+		Volume = 1.0;
+		Pitch = 27050;
+		Random = 0%;  
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[shot_01]  			
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = camera\camera_shot_01.wav;
+		Volume = 0.4;
+		Pitch = 54100;
+		Random = 0%;  
+        3DSound = NO;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Cut]
+{
+	[properties] id = 0;
+
+	[Default]
+	{
+		[Sound]
+        Filename = camera\camera_cut_01.wav;
+		Volume = 0.6;
+		Pitch = 44100;
+		Random = 0%;
+        Looping = no;
+        Streamed = yes;
+        3DSound = yes;
+		Hotspot = 2;
+		FallOff = 50;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = camera\camera_cut_02.wav;
+		Volume = 0.6;
+		Pitch = 44100;
+		Random = 0%;
+        Looping = no;
+        Streamed = yes;
+        3DSound = yes;
+		Hotspot = 2;
+		FallOff = 50;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Flash]
+{
+	[properties] id = 0;
+
+	[Default]
+	{
+
+		[Sound]
+        Filename = camera\cinematic_flash_04.wav;
+		Volume = 1.0;
+		Pitch = 44100;
+		Random = 0%;
+        Looping = no;
+        Streamed = yes;
+        3DSound = yes;
+		Hotspot = 2;
+		FallOff = 50;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}

@@ -1,0 +1,1632 @@
+#include <..\soundid.h>
+
+// -------------------------------------------------------------------
+
+[P1L1a_004_cam]	// Max: My beretta stirred... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_004_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1b_002_cam]	// Max: One way or another... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1b_002_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_01]	// Mobsters: Gun down everyone getting out
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_02]	// Mobster: Yea he's dead allright
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_02.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_03]	// Mobster: Yo guys, stop kidding, hitting on door
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_03.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_04]	// Mobster: Kiss it goodbye cop
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_04.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_04b]	// Transit: No dont
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_04b.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_04c_loop]	// Transit: Oh no oh no oh no...
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_04c.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 3;
+		FallOff = 15;
+		Looping = YES;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_05]	// Mobster: Hey, who the hell
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_05.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_06]	// Transit: You saved me man
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_06.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_07]	// Max and Transit: What's going on here - a massacre... Follow me.
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_07.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_07b-e]	// Transit cop idle talk
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_07b.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+		Filename = ingame\part1\P1L1a_07c.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+		Filename = ingame\part1\P1L1a_07d.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+		Filename = ingame\part1\P1L1a_07e.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+	}
+}
+
+[P1L1a_07f]	// Transit: The control panel is up the stairs
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_07f.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_08]	// Transit: Home free, this way
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_08.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_08b]	// Transit: Lookout
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_08b.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_09]	// Transit cop death scream
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_09.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_10]	// Mobster: Hitting roscoe bank isn't exactly...
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_10.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_11]	// Mobster: Like Lupino, spooky etc, cellphone ringing
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_11.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_12]	// Mobster: All done here, gimme the detonator
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_12.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_13]	// Mobster: Ok fellows, the police are on their way...
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_13.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_14]	// Mobster: Incoming, vault B, take care.
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_14.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_15]	// Alex and Max: Hold it... (long)
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_15.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_16]	// Wound sound
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_16.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_17]	// Max shouts Alex twice
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_17.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_18]	// Mobster: Lets get the hell out of here...
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_18.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_01]	// Max: The station was... Alex not seen
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_02]	// Max: The gate was locked, Alex wouldn't have...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_02.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_03]	// Max: Death was in the air at roscoe street, I'd had to find alex
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_03.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_04]	// Max: The security panel let out a mocking...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_04.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_05]	// Max: Something big was going down at Roscoe street
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_05.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_06]	// Max: The power to the rail had been cut... get it back to get train moving
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_06.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_08]	// Max: The train lit like a christmas tree
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_08.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_10]	// Max: The door had ... the bomb was missing detonator
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_10.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+[P1L1a_Max_11]	// Max: Bank robbers had left their tools on the table
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_11.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_12]	// Max: Judging by the detonators...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_12.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_13]	// Max: The bank robbers score lay on the table
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_13.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_14]	// Max: There was nothing I could do, he was dead...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_14.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_15]	// Max: While looking for Alex..
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_15.wav;
+
+		Volume = 0.8;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_16]	// Max: The gate was locked...
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_16.wav;
+
+		Volume = 0.8;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_17]	// Max: So much for being subtle
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_17.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L1a_Max_18]	// Max: What the hell was that
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L1a_Max_18.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// -------------------------------------------------------------------
+
+[bullethit_character]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+	
+	[Default]
+	{
+		[Sound]
+		Filename = projectiles\bullethit\character_hit_01.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = 4;
+		FallOff = 30;
+		Priority = 1000;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+		
+		[Sound]
+		Filename = projectiles\bullethit\character_hit_02.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = 4;
+		FallOff = 30;
+		Priority = 1000;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+		
+		[Sound]
+		Filename = projectiles\bullethit\character_hit_03.wav;
+		Volume = ID_BULLETHIT_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = 4;
+		FallOff = 30;
+		Priority = 1000;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+
+
+[Bank_vault_door_lock_opens]
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\Bank_vault_door_lock_opens.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 12;
+        Looping = NO;
+		Streamed = NO;
+		Priority = 15;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Bank_vault_door_moving]
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\Bank_vault_door_moving.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 12;
+        Looping = YES;
+		Streamed = YES;
+		Priority = 15;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[bank_vault_door_slam_shut]
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\bank_vault_door_slam_shut.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 12;
+        Looping = NO;
+		Streamed = YES;
+		Priority = 15;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Bank_vault_door_starts_moving]
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\Bank_vault_door_starts_moving.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 2%;
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 12;
+        Looping = NO;
+		Streamed = YES;
+		Priority = 15;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[computer_room_loop]  			// Matrix printers in the background
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = ambient\computer\ambience_computer_room01.wav;
+		Volume = 0.7;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 3;
+		FallOff = 8;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[control_room_ambience_loop]  			// Looping control room noise
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = subway\control_room_ambience.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 4;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[control_room_shutdown]  			// Whole control room shutdown
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = subway\control_room_shutdown.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 2;
+		FallOff = 5;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[control_room_switch_off]  			// Control room switch turned off
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = subway\control_room_switch_off.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 2;
+		FallOff = 5;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[wood_gate_crash]  		// Wood gate crashes
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\wood_gate_crash.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 30;
+		FallOff = 70;
+        Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+[inspection_wagon_starts]  		// Inspection train starts, starts moving in 6s
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\inspection_wagon_starts.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 10;
+		FallOff = 70;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[inspection_wagon_idle]  		// Inspection train idling
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\inspection_wagon_idle.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 1;
+		FallOff = 30;
+        Looping = YES;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+
+[Rail_3_starts]  		// Platform 2 third rail turned on
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\Rail_3_starts.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 5;
+		FallOff = 15;
+        Looping = NO;
+		Streamed = YES;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[metal_door_fall]  			// Large metal door falls to the floor
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = subway\metal_door_fall.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 10;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Crash_Junk]  			// Stuff crashing
+{
+	[Properties] ID = ID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = subway\Crash_Junk.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 10;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[break_subway_sign]                     // Blue subway sign breaks
+{
+	[Properties] ID = ID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+		Filename = subway\break_subway_sign.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 1%;
+		3DSound = YES;
+		Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 15;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[explosion_distant]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = subway\explosion_distant.wav;
+
+		Volume = 1.0;
+		Pitch = 11025;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = NO;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[small_debris_falling]
+{
+	[Properties]
+	ID = 0;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = subway\small_debris_falling.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		Hotspot = 5;
+		FallOff = 30;
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 100;
+		ItemsToCache = 6;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[vault_sign_falls]  		// Vault sign falls
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\vault_sign_falls.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 5;
+		FallOff = 15;
+        Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[surveillance_camera_whirr]  		// Camera rotating
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = subway\surveillance_camera_whirr_02.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 1;
+		FallOff = 8;
+        Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[cop_wail_siren_loop]  			// Slow siren wailing far away.
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = dynamic\cars\Police_Wail_Siren_Distant.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 1%;
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 60;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}

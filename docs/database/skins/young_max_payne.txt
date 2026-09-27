@@ -1,0 +1,1260 @@
+// --------------------------------------------------------
+// Young Max Payne
+// --------------------------------------------------------
+
+#define PLAYER_JUMPUP			7.5
+#define PLAYER_JUMPFORWARD		7.5
+#define PLAYER_JUMPSIDE			3
+#define PLAYER_JUMPBACKWARD		3
+
+#define	PLAYER_SHOOTDODGEJUMP	3
+
+#define PLAYER_MOVEMENT 		4.2
+#define PLAYER_DIAGONAL 		3.0
+#define PLAYER_DODGE	 		3.5
+
+#define PLAYER_W_MOVEMENT 		3
+#define PLAYER_W_DIAGONAL 		2.12
+
+#define PLAYER_W_BONUS	 		0.5
+
+#include <..\ai_ranges.h>
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponid.h>
+#include <..\weaponanimid.h>
+#include <..\object_lods.h>
+
+[AI]
+AimingSpeed = 20.0;
+AimingSpeedCone = 14.0;
+AimUpDownSpeed = 30.0;
+TurnLeftRightSpeed = 90.0;
+VisualPerceivingRadius = 40.0;
+GeneralPerceivingRadius = 4.0;
+ActivationReactionTime = 0.8;
+ShootingCone = 20.0;
+PerceivingGroupOneRadius = 30.0;
+PerceivingGroupTwoRadius = 30.0;
+PerceivingGroupThreeRadius = 30.0;
+EnemyInterestTime = 3.0;
+ActivateOtherCharactersRadius = 0;
+
+
+[Properties]
+Skeleton = default_skeleton;
+CapsuleTop = 1.95;
+CapsuleBottom = 0.0;
+CapsuleRadius = 0.48;
+AirborneSpeed = 3.0;		// in m/s
+CanShootDodgeFrame = 13;	// enable blending from dodge to shootdodge until this frame
+CanAbortShootDodgeFrame = 50;
+RandomizeTextureSet = FALSE;
+MaximumHealth = 100;
+WoundedHealth = 25;
+HealthBonusForKiller = HEALTHBONUS_NONE;
+SlowMotionBonusForKiller = BONUS_SLOWMOTION; // percents of full slowmotion
+WoundedHealthUpperLimit = 100;
+ShootingFrequencyMultiplier = 1.0;
+AutoAimTarget = NO;
+ShadowsEnabled = true;
+CanPlayerSwitchToThisSkin = true; // true=player is able to change to this skin with PGUP/PGDN
+GiveTimedModeBonusForKiller = true; // timed mode bonus defined in levels.txt
+
+[OnInit]
+{
+	[Message] String = "this->c_removeallweapons( leadpipe );";
+	[Message] String = "this->c_pickupweapon ( painkiller );";
+	[Message] String = "this->c_pickupweapon ( beretta );";
+	[Message] String = "this->c_pickupammo ( beretta, 90 );";
+	[Message] String = "this->c_sethealth( 1 );";
+	[Message] String = "RightHandWeapon->WS_Hide(false);";
+	[Message] String = "LeftHandWeapon->WS_Hide(true);";
+	[Message] String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEFAULT_ID "," 0 ");";
+	[Message] String = "maxpayne_gamemode->gm_setplayercontrols(true);";
+	[Message] String = "this->C_DisplayCrosshair(true);";
+}
+
+[OnDeath]
+{
+	[Message] String = "this->A_StopAll3DSounds(head);";
+}
+
+[TextureAnimation]
+Texturename = "FaceTexture";
+GroupIndex = 0;
+
+[LOD] 	
+{
+	[Geometry] ExportData = young_max_payne_l0.kfs; SkinData = young_max_payne_l0.skd;
+	Distance = SKIN_LOD_FAR;
+
+	EnableBoundingSphere	= TRUE;
+	BoundingSphereRadius	= 1.90;
+	EnableBoundingBox		= FALSE;
+}
+
+[Modifiers]		// These override any default Skeleton settings
+{
+	[Animation]
+	Index = CHARANIM_W_CUSTOMIDLE1; Filename = anim\custom_max_falls_on_knees.kf2;
+	[Properties]
+	{ 
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_WOUNDED_ID ", 0 );";
+	}
+
+	[Animation]
+	Index = CHARANIM_2_STAND; Filename = anim\2_stand.kf2;
+	[Properties]
+	{ 
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate( " WEAPONANIM_DEFAULT " );";
+	}
+
+	[Animation] Index = CHARANIM_W_STAND; Filename = anim\w_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate( " WEAPONANIM_DEFAULT " );";
+		[Message] Frame = 9; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 19; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 29; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 49; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 59; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 69; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 79; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 89; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 99; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 109; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 119; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+	}
+
+	[Animation] Index = CHARANIM_W_CROUCH; Filename = anim\crouch.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate( " WEAPONANIM_DEFAULT " );";
+		[Message] Frame = 19; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 59; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+	}
+
+	[Animation] Index = CHARANIM_W_2_STAND; Filename = anim\2_w_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate( " WEAPONANIM_DEFAULT " );";
+		[Message] Frame = 9; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 19; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 29; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 49; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 59; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 69; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 79; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 89; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 99; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 109; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 119; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+	}
+
+	[Animation] Index = CHARANIM_W_2_CROUCH; Filename = anim\2_crouch.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 19; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 59; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+	}
+
+	[Animation] Index = CHARANIM_LAND; Filename = anim\land.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, pelvis );";
+		[Message] Frame = 1; String = "this->A_Play3DSound ( characters, land_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_2_LAND; Filename = anim\2_land.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, pelvis );";
+		[Message] Frame = 1; String = "this->A_Play3DSound ( characters, land_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_DODGELEFT; Filename = anim\dodgeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - PLAYER_DODGE , 0, 0 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 0.5, 0.0 );";
+ 		[Message] Frame = 6; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 10; String = "this->C_Jump( " PLAYER_JUMPSIDE "  );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 35; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 35; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 39; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Animation] Index = CHARANIM_DODGERIGHT; Filename = anim\dodgeright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_DODGE , 0, 0 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 0.5, 0.0 );";
+ 		[Message] Frame = 6; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 10; String = "this->C_Jump( " PLAYER_JUMPSIDE "  );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 33; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 35; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 39; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Animation] Index = CHARANIM_DODGEFORWARDRIGHT; Filename = anim\dodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 1.41, 0, 1.41 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 0.5, 0.0 );";
+ 		[Message] Frame = 6; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 10; String = "this->C_Jump( 3.5  );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 35; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 35; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 39; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Animation] Index = CHARANIM_DODGEFORWARDLEFT; Filename = anim\dodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -1.41, 0, 1.41 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 0.5, 0.0 );";
+ 		[Message] Frame = 6; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 10; String = "this->C_Jump( 3.5  );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 35; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 35; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 39; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Animation] Index = CHARANIM_DODGEFORWARD; Filename = anim\dodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 2 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 0.5, 0.0 );";
+ 		[Message] Frame = 6; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 10; String = "this->C_Jump( 2.5  );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 35; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 35; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 39; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Animation] Index = CHARANIM_DODGEBACKWARD; Filename = anim\dodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,- PLAYER_DODGE ); Rotation = (0,0,0); //MiddlePosition1 = (0,0,-0.357); MiddlePosition2 = (0, 0,-1.6125);
+		[Message] Frame = 11; String = "this->C_Jump( " PLAYER_JUMPSIDE "  );";
+		[Message] Frame = 16; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 20; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 25; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+ 		[Message] Frame = 29; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 30; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Animation] Index = CHARANIM_DODGEBACKWARDRIGHT; Filename = anim\2_dodgebackwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 2.04, 0, -2.04 ); Rotation = (0,0,0); // Middleposition1 = ( 0.33, 0, -0.33 ); Middleposition2 = ( 1.52, 0, -1.52 );
+		[Message] Frame = 11; String = "this->C_Jump( " PLAYER_JUMPSIDE "  );";
+		[Message] Frame = 16; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 20; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 25; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+ 		[Message] Frame = 29; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 30; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Animation] Index = CHARANIM_DODGEBACKWARDLEFT; Filename = anim\2_dodgebackwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -2.04, 0, -2.04 ); Rotation = (0,0,0); // Middleposition1 = ( -0.33, 0, -0.33 ); Middleposition2 = ( -1.52, 0, -1.52 );
+		[Message] Frame = 11; String = "this->C_Jump( " PLAYER_JUMPSIDE "  );";
+		[Message] Frame = 16; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 20; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 25; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+ 		[Message] Frame = 29; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 30; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Revert] From = CHARANIM_2_DODGEFORWARDRIGHT; To = CHARANIM_DODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_2_DODGEFORWARDLEFT; To = CHARANIM_DODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_2_DODGEFORWARD; To = CHARANIM_DODGEFORWARD;
+
+	[Animation] Index = CHARANIM_2_DODGELEFT; Filename = anim\2_dodgeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - PLAYER_DODGE , 0, 0 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 0.5, 0.0 );";
+ 		[Message] Frame = 6; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 10; String = "this->C_Jump( " PLAYER_JUMPSIDE "  );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 35; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-l);";
+		[Message] Frame = 35; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 39; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Animation] Index = CHARANIM_2_DODGERIGHT; Filename = anim\2_dodgeright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_DODGE , 0, 0 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 0.5, 0.0 );";
+ 		[Message] Frame = 6; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 10; String = "this->C_Jump( " PLAYER_JUMPSIDE "  );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+ 		[Message] Frame = 33; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 35; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+
+		[Message] Frame = 1; String = "this->C_enableprojectilecollisions(false);";
+		[Message] Frame = 39; String = "this->C_enableprojectilecollisions(true);";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGELEFT; Filename = anim\shootdodgeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -5.25, 0, 0 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( -2.30, 0, 0 ); MiddlePosition2 = ( -4.30, 0, 0 );
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGERIGHT; Filename = anim\shootdodgeright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 5.25, 0, 0 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 2.30, 0, 0 ); MiddlePosition2 = ( 4.30, 0, 0 );
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARD; Filename = anim\shootdodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 5.25 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 0, 0, 2.30 ); MiddlePosition2 = ( 0, 0, 4.30 );
+		[Message] Frame = 0; String = "this->C_Reload();";
+		[Message] Frame = 0; String = "this->a_play3dsound ( weapons, reload_mp5, pelvis );";
+		[Message] Frame = 1; String = "maxpayne_gamemode->A_PlaySound ( characters, shootdodge );";
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 30; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 17; String = "this->C_Jump( " PLAYER_SHOOTDODGEJUMP " );";
+		[Message] Frame = 34; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 40; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 55; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+
+		[Message] Frame = 12; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 12; String = "maxpayne_gamemode->gm_enablebullettimeBlock( true );";		
+		//TIME CONTROLS
+		[Message] Frame = 10; String = "maxpayne_gamemode->gm_changegamespeed( 0.2, 0.3 );";
+		[Message] Frame = 30; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";		
+		//END TIME CONTROLS
+
+		[Message] Frame = 1; String = "this->C_SetDodgeImmortal( true );";
+		[Message] Frame = 49; String = "this->C_SetDodgeImmortal( false );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARD; Filename = anim\shootdodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -5.25 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 0, 0, -2.30 ); MiddlePosition2 = ( 0, 0, -4.30 );
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARDLEFT; Filename = anim\shootdodgeforwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3.50, 0, 3.50 ); Rotation = ( 0, 0, 0 ); Middleposition1 = ( -1.15, 0, 1.15 ); Middleposition2 = ( -2.70, 0, 2.70 );
+	}
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARDLEFT; Filename = anim\shootdodgebackwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3.25, 0, -3.25 ); Rotation = ( 0, 0, 0 ); Middleposition1 = ( -0.65, 0, -0.65 ); Middleposition2 = ( -2.30, 0, -2.30 );
+	}
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARDRIGHT; Filename = anim\shootdodgebackwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3.25, 0, -3.25 ); Rotation = ( 0, 0, 0 ); Middleposition1 = ( 0.65, 0, -0.65 ); Middleposition2 = ( 2.30, 0, -2.30 );
+	}
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARDRIGHT; Filename = anim\shootdodgeforwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3.50, 0, 3.50 ); Rotation = ( 0, 0, 0 ); Middleposition1 = ( 1.15, 0, 1.15 ); Middleposition2 = ( 2.70, 0, 2.70 );
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGELEFT_GETUP; Filename = anim\shootdodgeleft_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (-0.75,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+		[Message] Frame = 20; String = "maxpayne_gamemode->gm_enablebullettimeBlock( false );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGERIGHT_GETUP; Filename = anim\shootdodgeright_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0.75,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+		[Message] Frame = 20; String = "maxpayne_gamemode->gm_enablebullettimeBlock( false );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARD_GETUP; Filename = anim\shootdodgeforward_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0.75); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+		[Message] Frame = 20; String = "maxpayne_gamemode->gm_enablebullettimeBlock( false );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARD_GETUP; Filename = anim\shootdodgebackward_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,-0.75); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";
+ 		[Message] Frame = 16; String = "this->P_Createprojectiletobone( dummy_footstep_left, 1, foot-l );";
+ 		[Message] Frame = 16; String = "this->P_Createprojectiletobone( dummy_footstep_right, 1, foot-r );"; 		
+		[Message] Frame = 20; String = "maxpayne_gamemode->gm_enablebullettimeBlock( false );";
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGELEFT; Filename = anim\2_shootdodgeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -4.59451, 0, 0 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( -0.93497, 0, 0 ); MiddlePosition2 = ( -3.27559, 0, 0 );
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGERIGHT; Filename = anim\2_shootdodgeright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 4.59451, 0, 0 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 0.93497, 0, 0 ); MiddlePosition2 = ( 3.27559, 0, 0 );
+
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEFORWARD; Filename = anim\2_shootdodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 5.25 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 0, 0, 2.30 ); MiddlePosition2 = ( 0, 0, 4.30 );
+		[Message] Frame = 0; String = "this->C_Reload();";	// Workaround for autoreloading pump action shotgun
+		[Message] Frame = 0; String = "this->C_Reload();";
+		[Message] Frame = 0; String = "this->C_Reload();";
+		[Message] Frame = 0; String = "this->C_Reload();";
+		[Message] Frame = 0; String = "this->C_Reload();";
+		[Message] Frame = 0; String = "this->C_Reload();";
+		[Message] Frame = 0; String = "this->C_Reload();";
+		[Message] Frame = 0; String = "this->a_play3dsound ( weapons, reload_mp5, pelvis );";
+		[Message] Frame = 1; String = "maxpayne_gamemode->A_PlaySound ( characters, shootdodge );";
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 30; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 17; String = "this->C_Jump( " PLAYER_SHOOTDODGEJUMP " );";
+		[Message] Frame = 34; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 40; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 55; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+
+		[Message] Frame = 12; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 12; String = "maxpayne_gamemode->gm_enablebullettimeBlock( true );";		
+		//TIME CONTROLS
+		[Message] Frame = 10; String = "maxpayne_gamemode->gm_changegamespeed( 0.2, 0.3 );";
+		[Message] Frame = 30; String = "maxpayne_gamemode->gm_changegamespeed( 1.0, 0.5 );";		
+		//END TIME CONTROLS
+
+		[Message] Frame = 1; String = "this->C_SetDodgeImmortal( true );";
+		[Message] Frame = 49; String = "this->C_SetDodgeImmortal( false );";
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEBACKWARD; Filename = anim\2_shootdodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -4.59451 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 0, 0, -0.93497 ); MiddlePosition2 = ( 0, 0, -3.27559 );
+	}
+
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEFORWARDLEFT; Filename = anim\2_shootdodgeforwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3.37, 0, 3.37 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( -1.22, 0, 1.22 ); MiddlePosition2 = ( -2.60, 0, 2.60 );
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEBACKWARDLEFT; Filename = anim\2_shootdodgebackwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3.37, 0, -3.37 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( -1.22, 0, -1.22 ); MiddlePosition2 = ( -2.60, 0, -2.60 );
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEBACKWARDRIGHT; Filename = anim\2_shootdodgebackwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3.37, 0, -3.37 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 1.22, 0, -1.22 ); MiddlePosition2 = ( 2.60, 0, -2.60 );
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEFORWARDRIGHT; Filename = anim\2_shootdodgeforwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3.37, 0, 3.37 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 1.22, 0, 1.22 ); MiddlePosition2 = ( 2.60, 0, 2.60 );
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGELEFT_GETUP; Filename = anim\2_shootdodgeleft_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (-0.75,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "maxpayne_gamemode->gm_enablebullettimeBlock( false );";
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGERIGHT_GETUP; Filename = anim\2_shootdodgeright_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0.75,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "maxpayne_gamemode->gm_enablebullettimeBlock( false );";
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEFORWARD_GETUP; Filename = anim\2_shootdodgeforward_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0.75); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "maxpayne_gamemode->gm_enablebullettimeBlock( false );";
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEBACKWARD_GETUP; Filename = anim\2_shootdodgebackward_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,-0.75); Rotation = (0,0,0);
+ 		[Message] Frame = 16; String = "this->P_Createprojectiletobone( dummy_footstep_left, 1, foot-l );";
+ 		[Message] Frame = 16; String = "this->P_Createprojectiletobone( dummy_footstep_right, 1, foot-r );"; 		
+		[Message] Frame = 20; String = "maxpayne_gamemode->gm_enablebullettimeBlock( false );";
+	}
+
+	// Player deaths
+	[Animation] Index = CHARANIM_RANDOMDEATH1; Filename = anim\death_backward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -0.5 ); Rotation = (0,0,0); MiddlePosition1 = (0,0,-0.4); MiddlePosition2 = (0,0,-0.8);
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playmusic( \"\" );";
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playsound( characters, player_death_music );";
+ 		[Message] Frame = 0; String = "this->CAM_AnimatePlayerParented ( player_death_01 );";
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 1; String = "this->P_CreateProjectileToBone( blood_dummy, 3, neck );";
+ 		[Message] Frame = 30; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+ 		[Message] Frame = 40; String = "this->P_CreateProjectileToBone( blood_dummy, 1, torso );";
+ 		[Message] Frame = 50; String = "this->P_CreateProjectileToBone( blood_dummy, 1, pelvis );";
+	}
+
+// ----------------------
+	[Revert] From = CHARANIM_RANDOMDEATH2; 		To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_RANDOMDEATH2;	To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_2_RANDOMDEATH2;	To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH2;	To = CHARANIM_RANDOMDEATH1;
+
+	[Revert] From = CHARANIM_RANDOMDEATH3;		To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_RANDOMDEATH3;	To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_2_RANDOMDEATH3;	To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH3;	To = CHARANIM_RANDOMDEATH1;
+
+	[Revert] From = CHARANIM_RANDOMDEATH4;		To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_RANDOMDEATH4;	To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_2_RANDOMDEATH4;	To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH4;	To = CHARANIM_RANDOMDEATH1;
+
+	[Animation] Index = CHARANIM_SHOTGUNDEATH; Filename = anim\death_shotgun_a.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -3.63855 ); Rotation = (0,0,0); Middleposition1 = ( 0, 0, -2.57104); Middleposition2 = ( 0, 0, -3.28023 );
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playmusic( \"\" );";
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playsound( characters, player_death_music );";
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->CAM_AnimatePlayerParented ( player_death_01 );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+// 		[Message] Frame = 5; String = "this->A_Play3DSound ( characters, player_death, head );";
+ 		[Message] Frame = 24; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+ 		[Message] Frame = 38; String = "this->P_CreateProjectileToBone( blood_dummy, 3, torso );";
+	}
+	[Revert] From = CHARANIM_W_SHOTGUNDEATH; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_2_SHOTGUNDEATH; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_W_2_SHOTGUNDEATH; To = CHARANIM_SHOTGUNDEATH;
+	
+	[Revert] From = CHARANIM_SHOTGUNDEATH2; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_W_SHOTGUNDEATH2; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_2_SHOTGUNDEATH2; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_W_2_SHOTGUNDEATH2; To = CHARANIM_SHOTGUNDEATH;
+
+	[Animation] Index = CHARANIM_BURNINGDEATH; Filename = anim\death_fire.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -0.05987, 0, 1.199 ); Rotation = (0,0,0); Middleposition1 = ( -0.10, 0, 0.114 ); Middleposition2 = ( 0.4165, 0, 0.93415 );
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playmusic( \"\" );";
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playsound( characters, player_death_music );";
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 0; String = "this->CAM_AnimatePlayerParented ( player_death_01 );";
+		[Message] Frame = 0; String = "this->PS_StartEffect( fire_death, torso );";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+// 		[Message] Frame = 5; String = "this->A_Play3DSound ( characters, player_death, head );";
+ 		[Message] Frame = 38; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+	}
+	[Revert] From = CHARANIM_W_BURNINGDEATH; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_2_BURNINGDEATH; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_W_2_BURNINGDEATH; To = CHARANIM_BURNINGDEATH;
+
+	[Revert] From = CHARANIM_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_W_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_2_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_W_2_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH;
+
+
+	[Animation] Index = CHARANIM_GRENADEDEATH; Filename = anim\death_explosion_b.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -2.48856 ); Rotation = (0,0,0); Middleposition1 = ( 0, 0, -1.15703 ); Middleposition2 = ( 0, 0, -2.05285);
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playmusic( \"\" );";
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playsound( characters, player_death_music );";
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->CAM_AnimatePlayerParented ( player_death_01 );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 0; String = "this->c_jump(6);";
+		[Message] Frame = 6; String = "this->c_jump(2);";
+// 		[Message] Frame = 5; String = "this->A_Play3DSound ( characters, player_death, head );";
+		[Message] Frame = 12; String = "this->c_jump(2);";
+		[Message] Frame = 17; String = "this->c_jump(2);";
+		[Message] Frame = 24; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+		[Message] Frame = 36; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+ 		[Message] Frame = 38; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+ 		[Message] Frame = 38; String = "this->P_CreateProjectileToBone( blood_dummy, 4, torso );";
+	}
+	[Revert] From = CHARANIM_W_GRENADEDEATH; To = CHARANIM_GRENADEDEATH;
+	[Revert] From = CHARANIM_2_GRENADEDEATH; To = CHARANIM_GRENADEDEATH;
+	[Revert] From = CHARANIM_W_2_GRENADEDEATH; To = CHARANIM_GRENADEDEATH;
+
+	[Animation] Index = CHARANIM_FALLINGDEATH; Filename = anim\death_falling.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 0.9825 ); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playmusic( \"\" );";
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playsound( characters, player_death_music );";
+ 		[Message] Frame = 0; String = "this->CAM_AnimatePlayerParented ( player_death_01 );";
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->c_displaycrosshair(" FALSE ");";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 38; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 39; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Revert] From = CHARANIM_W_FALLINGDEATH; To = CHARANIM_FALLINGDEATH;
+	[Revert] From = CHARANIM_2_FALLINGDEATH; To = CHARANIM_FALLINGDEATH;
+	[Revert] From = CHARANIM_W_2_FALLINGDEATH; To = CHARANIM_FALLINGDEATH;
+
+	[Revert] From = CHARANIM_CUSTOMDEATH1; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_CUSTOMDEATH2; To = CHARANIM_RANDOMDEATH1;
+
+// Begin animations that toggle bullet time off
+
+	[Animation] Index = CHARANIM_HOLSTERWEAPON; Filename = anim\holsterweapon.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+	}
+	[Revert] From = CHARANIM_W_HOLSTERWEAPON; To = CHARANIM_HOLSTERWEAPON;
+	[Revert] From = CHARANIM_2_HOLSTERWEAPON; To = CHARANIM_HOLSTERWEAPON;
+	[Revert] From = CHARANIM_W_2_HOLSTERWEAPON; To = CHARANIM_HOLSTERWEAPON;
+
+	[Revert] From = CHARANIM_RELOADEMPTY; To = CHARANIM_RELOADGRENADE;
+	[Animation] Index = CHARANIM_RELOADLEADPIPE; Filename = anim\shootleadpipe.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_DODGESHOOTGRINTIME ");";
+		[Message] Frame = 7; String = "this->p_createprojectiletobone( bullet_leadpipe, 1, neck );";
+		[Message] Frame = 9; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_leadpipe, \"\" );";
+		[Message] Frame = 29; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_leadpipe, \"\" );";
+		[Message] Frame = 31; String = "this->p_createprojectiletobone( bullet_leadpipe, 1, neck );";
+	}
+
+
+	[Animation] Index = CHARANIM_RELOADBASEBALLBAT; Filename = anim\shootbaseballbat.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0;  String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_DODGESHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_SHOOT ");";
+		[Message] Frame = 4;  String = "this->p_createprojectiletobone( bullet_baseballbat, 1, head );";
+		[Message] Frame = 7; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_baseballbat, \"\" );";
+		[Message] Frame = 32; String = "this->p_createprojectiletobone( bullet_baseballbat, 1, head );";
+		[Message] Frame = 30; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_baseballbat, \"\" );";
+	}
+
+	[Animation] Index = CHARANIM_RELOADBERETTA; Filename = anim\reloadberetta.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Hide( FALSE );";
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADBERETTADUAL; Filename = anim\reloadberettadual.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 10; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADDESERTEAGLE; Filename = anim\reloaddeserteagle.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 35; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADSAWEDSHOTGUN; Filename = anim\reloadsawedshotgun.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 20; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 37; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADPUMPSHOTGUN; Filename = anim\reloadpumpshotgun.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 2; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 17; String = "this->A_Play3DSound( weapons, Reload_PumpShotgun, gun);";
+		[Message] Frame = 17; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADINGRAM; Filename = anim\reloadingram.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 30; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 59; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADINGRAMDUAL; Filename = anim\reloadberettadual.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 10; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Revert] From = CHARANIM_RELOADSNIPER; To = CHARANIM_RELOADMP5;
+
+	[Animation] Index = CHARANIM_RELOADMP5; Filename = anim\reloadmp5.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 20; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADJACKHAMMER; Filename = anim\reloadjackhammer.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 20; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Revert] From = CHARANIM_RELOADMOLOTOV; To = CHARANIM_RELOADGRENADE;
+
+	[Animation] Index = CHARANIM_RELOADGRENADE; Filename = anim\reloadgrenade.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 14;  String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 14; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADM79; Filename = anim\reloadm79.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+		[Message] Frame = 20; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Revert] From = CHARANIM_RELOADPAINKILLER; To = CHARANIM_RELOADGRENADE;
+
+
+	[Revert]	From = CHARANIM_DISCARDEMPTY; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDLEADPIPE; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDBASEBALLBAT; To = CHARANIM_DISCARDBERETTA;
+
+	[Animation] Index = CHARANIM_DISCARDBERETTA; Filename = anim\holsterweapon.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablebullettime( false );";
+	}
+
+	[Revert]	From = CHARANIM_DISCARDBERETTADUAL; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDDESERTEAGLE; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDSAWEDSHOTGUN; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDPUMPSHOTGUN;  To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDINGRAM; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDINGRAMDUAL; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDSNIPER; To = CHARANIM_DISCARDBERETTA;
+
+	[Revert]	From = CHARANIM_DISCARDMP5; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDJACKHAMMER; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDMOLOTOV; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDGRENADE; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDM79; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDPAINKILLER; To = CHARANIM_DISCARDBERETTA;
+
+	[Animation] Index = CHARANIM_2_CUSTOMIDLE2; Filename = anim\idle_2_aim_max_crouching.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Animate( " WEAPONANIM_DEFAULT " );";
+	}
+
+	[Animation] Index = CHARANIM_W_2_CUSTOMIDLE2; Filename = anim\idle_2_aim_max.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Animate( " WEAPONANIM_DEFAULT " );";
+	}
+		
+// ----------------------------------------------------------------------------------------------
+// MOVEMENT AND WALKING MODIFIERS 
+// ----------------------------------------------------------------------------------------------
+
+	// 1 Walk
+	[Revert] From = CHARANIM_WALK; To = CHARANIM_RUN;
+
+	// 2 Run
+	[Animation] Index = CHARANIM_RUN; Filename = anim\run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0, PLAYER_MOVEMENT ); Rotation = (0,0,0);
+		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l );";
+	}
+
+	// 3 Walk Backward
+	[Animation] Index = CHARANIM_WALKBACKWARD; Filename = anim\walkbackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,- PLAYER_MOVEMENT ); Rotation = (0,0,0); //approx the same as run speed 
+		[Message] Frame = 16; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 36; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 4 Strafe Left
+	[Animation] Index = CHARANIM_STRAFELEFT; Filename = anim\strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (- PLAYER_MOVEMENT ,0,0); Rotation = (0,0,0);
+		[Message] Frame = 16; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 36; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 5 Strafe Right
+	[Animation] Index = CHARANIM_STRAFERIGHT; Filename = anim\straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_MOVEMENT ,0,0); Rotation = (0,0,0);
+		[Message] Frame = 16; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 36; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+
+	[Animation] Index = CHARANIM_FORWARDLEFT; Filename = anim\forwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (- PLAYER_DIAGONAL ,0, PLAYER_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_FORWARDRIGHT; Filename = anim\forwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_DIAGONAL ,0, PLAYER_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_BACKWARDLEFT; Filename = anim\backwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (- PLAYER_DIAGONAL ,0,- PLAYER_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_BACKWARDRIGHT; Filename = anim\backwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_DIAGONAL ,0,- PLAYER_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+	
+
+// 2 HANDED MOVEMENT
+	
+	[Revert] From = CHARANIM_2_WALK; To = CHARANIM_2_RUN;
+
+	[Animation] Index = CHARANIM_2_RUN; Filename = anim\2_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0, PLAYER_MOVEMENT ); Rotation = (0,0,0);
+		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 83 - 2 Handed Walk Backward
+	[Animation] Index = CHARANIM_2_WALKBACKWARD; Filename = anim\2_walkbackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,- PLAYER_MOVEMENT ); Rotation = (0,0,0);
+		[Message] Frame = 16; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 36; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 84 - 2 Handed Strafe Left
+	[Animation] Index = CHARANIM_2_STRAFELEFT; Filename = anim\2_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (- PLAYER_MOVEMENT ,0,0); Rotation = (0,0,0);
+		[Message] Frame = 16; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 36; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 85 - 2 Hand Strafe Right
+	[Animation] Index = CHARANIM_2_STRAFERIGHT; Filename = anim\2_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_MOVEMENT ,0,0); Rotation = (0,0,0);
+		[Message] Frame = 16; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 36; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+	
+	[Animation] Index = CHARANIM_2_FORWARDLEFT; Filename = anim\2_forwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (- PLAYER_DIAGONAL ,0, PLAYER_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_2_FORWARDRIGHT; Filename = anim\2_forwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_DIAGONAL ,0, PLAYER_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_2_BACKWARDLEFT; Filename = anim\2_backwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (- PLAYER_DIAGONAL ,0,- PLAYER_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_2_BACKWARDRIGHT; Filename = anim\2_backwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_DIAGONAL ,0,- PLAYER_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 32; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_TURNLEFT; Filename = anim\turnleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+//		[Message] Frame = 16; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+// 		[Message] Frame = 19; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+	}
+
+	// 7 Turn Right
+	[Animation] Index = CHARANIM_TURNRIGHT; Filename = anim\turnright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+// 		[Message] Frame = 10; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+//		[Message] Frame = 19; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_TURNLEFT; Filename = anim\w_turnleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+ 		[Message] Frame = 19; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+	}
+
+	// 47 Wounded Turn Right
+	[Animation] Index = CHARANIM_W_TURNRIGHT; Filename = anim\w_turnright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 13; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 19; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+
+// WOUNDED MOVEMENT
+
+	[Revert] From = CHARANIM_W_WALK; To = CHARANIM_W_RUN;
+
+	[Animation] Index = CHARANIM_W_RUN; Filename = anim\w_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, PLAYER_W_MOVEMENT ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 38; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_WALKBACKWARD; Filename = anim\w_walkbackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, - PLAYER_W_MOVEMENT ); Rotation = (0,0,0);
+ 		[Message] Frame = 10; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 44 Wounded Strafe Left
+	[Animation] Index = CHARANIM_W_STRAFELEFT; Filename = anim\w_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - PLAYER_W_MOVEMENT , 0, 0) ; Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 38; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 45 Wounded Strafe Right
+	[Animation] Index = CHARANIM_W_STRAFERIGHT; Filename = anim\w_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_W_MOVEMENT , 0 , 0 ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 38; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_FORWARDLEFT; Filename = anim\w_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - PLAYER_W_DIAGONAL , 0, PLAYER_W_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 38; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_FORWARDRIGHT; Filename = anim\w_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_W_DIAGONAL , 0, PLAYER_W_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 38; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_BACKWARDLEFT; Filename = anim\w_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (- PLAYER_W_DIAGONAL , 0, - PLAYER_W_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 10; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_BACKWARDRIGHT; Filename = anim\w_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_W_DIAGONAL , 0, - PLAYER_W_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 10; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+// 2 HANDED WOUNDED MOVEMENT
+
+	// 121 - 2 Handed Wounded Walk
+	[Revert] From = CHARANIM_W_2_WALK; To = CHARANIM_W_2_RUN;
+
+	// 122 - 2 Handed Wounded Run
+	[Animation] Index = CHARANIM_W_2_RUN; Filename = anim\2_w_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, PLAYER_W_MOVEMENT ); Rotation = (0,0,0);
+ 		[Message] Frame = 11; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 38; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 123 - 2 Handed Wounded Walk Backward
+	[Animation] Index = CHARANIM_W_2_WALKBACKWARD; Filename = anim\2_w_walkbackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, - PLAYER_W_MOVEMENT ); Rotation = (0,0,0);
+ 		[Message] Frame = 10; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 124 - 2 Handed Wounded Strafe Left
+	[Animation] Index = CHARANIM_W_2_STRAFELEFT; Filename = anim\2_w_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - PLAYER_W_MOVEMENT , 0, 0 ); Rotation = (0,0,0);
+ 		[Message] Frame = 13; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 36; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	// 125 - 2 Handed Wounded Strafe Right
+	[Animation] Index = CHARANIM_W_2_STRAFERIGHT; Filename = anim\2_w_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_W_MOVEMENT , 0, 0 ); Rotation = (0,0,0);
+ 		[Message] Frame = 12; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 38; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_2_FORWARDLEFT; Filename = anim\2_w_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - PLAYER_W_DIAGONAL , 0, PLAYER_W_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 11; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 38; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_2_FORWARDRIGHT; Filename = anim\2_w_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_W_DIAGONAL , 0, PLAYER_W_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 11; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 38; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_2_BACKWARDLEFT; Filename = anim\2_w_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (- PLAYER_W_DIAGONAL , 0, - PLAYER_W_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 10; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+	[Animation] Index = CHARANIM_W_2_BACKWARDRIGHT; Filename = anim\2_w_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( PLAYER_W_DIAGONAL , 0, - PLAYER_W_DIAGONAL ); Rotation = (0,0,0);
+ 		[Message] Frame = 10; String = "this->P_Createprojectiletobone(dummy_footstep_right,1,foot-r);";
+		[Message] Frame = 20; String = "this->C_AddHealth ( " PLAYER_W_BONUS " );";
+		[Message] Frame = 39; String = "this->P_Createprojectiletobone(dummy_footstep_left,1,foot-l);";
+	}
+
+// Start shooting
+
+	[Animation] Index = CHARANIM_SHOOTDESERTEAGLE; Filename = anim\shootdeserteagle.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->CAM_AnimateInPlace( gunshot_small );";
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTPUMPSHOTGUN; Filename = anim\shootpumpshotgun.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->CAM_AnimateInPlace( gunshot_big );";
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+ 		[Message] Frame = 14; String = "this->A_Play3DSound( weapons, Shoot_PumpShotgun_Cock, gun );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTSNIPER; Filename = anim\shootSniper.kf2;
+	[Properties]
+	{
+ 		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWSNIPER; Filename = anim\shootSniper_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHSNIPER; Filename = anim\shootSniper_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+// Sniper modeswitching
+	[Animation] Index = CHARANIM_MODESWITCHSNIPER; Filename = anim\reloadmp5.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+}

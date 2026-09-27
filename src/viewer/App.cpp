@@ -13,6 +13,14 @@
 
 #include <SDL3/SDL.h>
 
+// Build stamp from CMake (git short hash). Shown in the window title, the
+// HUD and stdout so a stale exe copied next to the game data is easy to
+// spot: scripts/build-windows.bat copies the exe out of build\Release, and
+// that copy never updates on rebuild.
+#ifndef MAXFX_BUILD_HASH
+#define MAXFX_BUILD_HASH "dev"
+#endif
+
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
@@ -121,6 +129,54 @@ bool frameComicCamera(const Kf2File& kf, float aspect, Camera* cam) {
     return true;
 }
 
+// hud.txt / decals.txt image paths are game-relative with backslashes; try
+// the candidate roots under the data folder and return the first hit.
+std::string resolveGameAsset(const std::string& dataRoot, const std::string& rel,
+                             const char* const* roots, int rootCount) {
+    if (rel.empty()) {
+        return std::string();
+    }
+    std::string n = rel;
+    for (std::size_t i = 0; i < n.size(); ++i) {
+        if (n[i] == '\\') {
+            n[i] = '/';
+        }
+    }
+    for (int r = 0; r < rootCount; ++r) {
+        const std::string cand = joinPath(joinPath(dataRoot, roots[r]), n);
+        if (isFile(cand)) {
+            return cand;
+        }
+    }
+    // Some scripts reference the file with a sub path or a different folder
+    // ("decals\foo.bmp"); fall back to the bare file name per root.
+    const std::string base = fileName(n);
+    if (base != n) {
+        for (int r = 0; r < rootCount; ++r) {
+            const std::string cand = joinPath(joinPath(dataRoot, roots[r]), base);
+            if (isFile(cand)) {
+                return cand;
+            }
+        }
+    }
+    return std::string();
+}
+
+// Camera-pitch / yaw from a direction vector in viewer space.
+void yawPitchFromDirection(const Vec3& dir, float* yaw, float* pitch) {
+    Vec3 d = dir;
+    const float l = length(d);
+    if (l < 1.0e-5f) {
+        *yaw = 0.0f;
+        *pitch = 0.0f;
+        return;
+    }
+    d = Vec3(d.x / l, d.y / l, d.z / l);
+    *pitch = std::asin(std::max(-1.0f, std::min(1.0f, d.y)));
+    // Camera::forward() = (sin(yaw)cp, sp, -cos(yaw)cp)
+    *yaw = std::atan2(d.x, -d.z);
+}
+
 bool hitRow(float x, float y, int x0, int y0, int w, int h) {
     return x >= static_cast<float>(x0) && x <= static_cast<float>(x0 + w) &&
            y >= static_cast<float>(y0) && y <= static_cast<float>(y0 + h);
@@ -135,11 +191,14 @@ ViewerApp::ViewerApp()
       levelLoaded_(false),
       mouseCaptured_(false),
       showHelp_(true),
+      showItemDebug_(false),
       spawnIndex_(-1),
       width_(1280),
       height_(720),
       levelIndex_(-1),
-      lastComicPage_(-1) {}
+      lastComicPage_(-1),
+      cinematicClipCursor_(-1),
+      wasCineOn_(false) {}
 
 ViewerApp::~ViewerApp() { destroyWindow(); }
 
@@ -170,7 +229,11 @@ bool ViewerApp::createWindow(char* error, std::size_t errorSize) {
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-    window_ = SDL_CreateWindow("MAXFX Level Viewer", width_, height_,
+    std::printf("ldb-viewer  build %s  (%s %s)\n", MAXFX_BUILD_HASH, __DATE__, __TIME__);
+    std::fflush(stdout);
+    char stampTitle[128];
+    std::snprintf(stampTitle, sizeof(stampTitle), "MAXFX Level Viewer  b%s", MAXFX_BUILD_HASH);
+    window_ = SDL_CreateWindow(stampTitle, width_, height_,
                                SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if (window_ == 0) {
         std::snprintf(error, errorSize, "SDL_CreateWindow: %s", SDL_GetError());
@@ -400,13 +463,19 @@ bool ViewerApp::loadLevelIndex(int index, bool showLoading) {
                          ? &levelInfos_[static_cast<std::size_t>(index)]
                          : 0,
                      ldbFromView(camera_.position, game_.player.eyeHeight), camera_.yaw);
-    const SkinDef* playerSkin = database_.findSkin(
+    playerSkinName_ =
         (index >= 0 && static_cast<std::size_t>(index) < levelInfos_.size() &&
          !levelInfos_[static_cast<std::size_t>(index)].playerSkinName.empty())
             ? levelInfos_[static_cast<std::size_t>(index)].playerSkinName
-            : std::string("max_payne"));
+            : std::string("max_payne");
+    const SkinDef* playerSkin = database_.findSkin(playerSkinName_);
     game_.applyPlayerOnInit(playerSkin != 0 ? &playerSkin->character : 0);
+    cinematicClipCursor_ = -1;
     game_.mode = kModePlaying;
+    // X_LevelRuntimeFSM startup messages run at level load — on Part1_Level1
+    // ::startroom::fsm_start queues the intro graphic-novel pages and switches
+    // to the reader once.
+    game_.startLevel(level_, actors_);
     mouseCaptured_ = true;
     if (window_) {
         SDL_SetWindowRelativeMouseMode(window_, true);
@@ -414,8 +483,8 @@ bool ViewerApp::loadLevelIndex(int index, bool showLoading) {
     syncCameraFromPlayer();
 
     char title[256];
-    std::snprintf(title, sizeof(title), "MAXFX Level Viewer  -  %s  [%d/%zu]", fileName_.c_str(),
-                  levelIndex_ + 1, levelPaths_.size());
+    std::snprintf(title, sizeof(title), "MAXFX Level Viewer b%s  -  %s  [%d/%zu]", MAXFX_BUILD_HASH,
+                  fileName_.c_str(), levelIndex_ + 1, levelPaths_.size());
     if (window_) {
         SDL_SetWindowTitle(window_, title);
     }
@@ -512,6 +581,17 @@ void ViewerApp::enterComic(int page, bool fromMenu) {
 void ViewerApp::leaveComic() {
     audio_.stop2d();
     lastComicPage_ = -1;
+    // MPGNM_PickUpNote queue: show the next picked note (level intro pages,
+    // in-game note pickups) before returning to the game.
+    if (!game_.comicFromMenu) {
+        const int next = game_.nextPendingNote();
+        if (next >= 0) {
+            game_.comicIndex = next;
+            game_.mode = kModeGraphicNovel;
+            playComicSound();
+            return;
+        }
+    }
     if (game_.comicFromMenu || !levelLoaded_) {
         game_.mode = kModeMenu;
         game_.menu = kMenuComicPages;
@@ -745,6 +825,15 @@ void ViewerApp::handleKeyDown(int scancode, int key) {
     }
     switch (key) {
         case SDLK_ESCAPE:
+            if (game_.cine.active || game_.cine.cameraActive) {
+                // Esc always aborts the whole cutscene: clip, camera path,
+                // fade overlay and letterbox (a held fade-to-black used to
+                // keep the screen black after the clip had already ended).
+                game_.abortCinematic();
+                syncCameraFromPlayer();
+                camera_.pitch = 0.0f;
+                break;
+            }
             game_.mode = kModeMenu;
             game_.menu = kMenuRoot;
             game_.menuCursor = 0;
@@ -772,19 +861,51 @@ void ViewerApp::handleKeyDown(int scancode, int key) {
         case SDLK_F7:
             audio_.toggleMuted();
             break;
+        case SDLK_F8:
+            showItemDebug_ = !showItemDebug_;
+            break;
         case SDLK_F10:
+        case SDLK_N:
             game_.player.noclip = !game_.player.noclip;
             game_.pushLog(game_.player.noclip ? "noclip on" : "noclip off");
             break;
         case SDLK_H:
             renderer_.setShowHud(!renderer_.showHud());
             break;
-        case SDLK_R:
+        case SDLK_R:  // C_Reload
+            if (!game_.reloadWeapon()) {
+                game_.pushLog(game_.player.clip >= game_.player.clipSize
+                                  ? "reload: clip full"
+                                  : "reload: no reserve ammo");
+            }
+            weaponListTimer_ = 1.5f;
+            break;
+        case SDLK_C:
+            startNextCinematic();
+            break;
+        case SDLK_F9:  // respawn at the starting place
             placeAtSpawn(-1);
             game_.player.position = ldbFromView(camera_.position, game_.player.eyeHeight);
             game_.player.yaw = camera_.yaw;
             game_.player.velocity = Vec3();
             break;
+        case SDLK_1:
+        case SDLK_2:
+        case SDLK_3:
+        case SDLK_4:
+        case SDLK_5:
+        case SDLK_6:
+        case SDLK_7:
+        case SDLK_8:
+        case SDLK_9:
+        case SDLK_0: {
+            // C_SelectWeapon via the 1..0 slot row.
+            const int slot = key == SDLK_0 ? 9 : key - SDLK_1;
+            if (game_.selectSlot(slot)) {
+                weaponListTimer_ = 1.5f;
+            }
+            break;
+        }
         default:
             break;
     }
@@ -804,29 +925,73 @@ void ViewerApp::update(float dt) {
     }
     audio_.setEnvPaused(false);
     const bool* keys = SDL_GetKeyboardState(0);
-    const bool jump = keys[SDL_SCANCODE_SPACE] != 0;
-    const bool use = keys[SDL_SCANCODE_E] != 0;
-    const bool sprint = keys[SDL_SCANCODE_LSHIFT] != 0;
-    game_.player.yaw = camera_.yaw;
-    game_.player.pitch = camera_.pitch;
-    game_.tickPlayer(dt, keys[SDL_SCANCODE_W] != 0, keys[SDL_SCANCODE_S] != 0,
-                     keys[SDL_SCANCODE_A] != 0, keys[SDL_SCANCODE_D] != 0, jump, sprint, collision_);
-    syncCameraFromPlayer();
+    const bool scriptOwned = game_.cine.active;  // the clip drives the player
+    if (!scriptOwned) {
+        const bool jump = keys[SDL_SCANCODE_SPACE] != 0;
+        const bool sprint = keys[SDL_SCANCODE_LSHIFT] != 0;
+        game_.player.yaw = camera_.yaw;
+        game_.player.pitch = camera_.pitch;
+        game_.tickPlayer(dt, keys[SDL_SCANCODE_W] != 0, keys[SDL_SCANCODE_S] != 0,
+                         keys[SDL_SCANCODE_A] != 0, keys[SDL_SCANCODE_D] != 0, jump, sprint,
+                         collision_, keys[SDL_SCANCODE_LCTRL] != 0);
+        syncCameraFromPlayer();
+        // Only the camera path is left: moving cancels an Abortable path
+        // (X_CameraImplementation::userAbortCameraPathIfAbortable), so a long
+        // path never traps the player after the clip already ended.
+        if (game_.cine.cameraActive && game_.cameraPathAbortable()) {
+            const bool moved = keys[SDL_SCANCODE_W] != 0 || keys[SDL_SCANCODE_A] != 0 ||
+                               keys[SDL_SCANCODE_S] != 0 || keys[SDL_SCANCODE_D] != 0 ||
+                               keys[SDL_SCANCODE_SPACE] != 0;
+            if (moved) {
+                game_.abortCameraPath(level_, actors_);
+                syncCameraFromPlayer();
+            }
+        }
+    }
+    // Cutscene timing (clip frame hooks, fades, camera path + [Exit]) always
+    // advances, even when the player is controllable again.
+    tickCinematicFrame(dt);
     const Vec3 look = playerLookLdb();
     const Vec3 eye = Vec3(game_.player.position.x, game_.player.position.y + game_.player.eyeHeight,
                           game_.player.position.z);
     audio_.setListener(eye, look);
     static bool useWasDown = false;
-    const bool usePress = use && !useWasDown;
-    useWasDown = use;
+    const bool useNow = !scriptOwned && keys[SDL_SCANCODE_E] != 0;
+    const bool usePress = useNow && !useWasDown;
+    useWasDown = useNow;
     game_.tickDoors(dt, level_);
+    // Door collision refresh: only when a dynamic object crossed the
+    // half-open threshold (a full rebuild per frame would be wasteful).
+    if (doorSolid_.size() == level_.dynamicMeshes.size()) {
+        bool changed = false;
+        for (std::size_t i = 0; i < level_.dynamicMeshes.size() && !changed; ++i) {
+            if (!level_.dynamicMeshes[i].config.dynamicCollisions) {
+                continue;
+            }
+            const float t = i < game_.doors.size() ? game_.doors[i].t : 0.0f;
+            if ((t < 0.5f) != (doorSolid_[i] != 0)) {
+                changed = true;
+            }
+        }
+        if (changed) {
+            rebuildCollision();
+        }
+    }
     game_.tickTriggers(dt, level_, usePress, look, actors_);
+    // Runtime-queued one-shots (trigger / door / weapon / impact messages).
+    audio_.playRequests(database_, game_.pendingSounds);
+    game_.pendingSounds.clear();
+    game_.effects.update(dt);
+    if (weaponListTimer_ > 0.0f) {
+        weaponListTimer_ -= dt;
+    }
     if (game_.mode == kModeGraphicNovel) {
         mouseCaptured_ = false;
         if (window_) {
             SDL_SetWindowRelativeMouseMode(window_, false);
         }
-        lastComicPage_ = -1;
+        // playComicSound no-ops while the page is unchanged; resetting
+        // lastComicPage_ here used to restart the narration every frame.
         playComicSound();
         audio_.setEnvPaused(true);
         audio_.pump();
@@ -836,9 +1001,32 @@ void ViewerApp::update(float dt) {
     audio_.pump();
 }
 
-void ViewerApp::spawnActors() {
+void ViewerApp::rebuildCollision() {
     collision_.clear();
     collision_.addLevelGeometry(level_);
+    // Closed dynamic objects stay solid (X_LevelRuntimeDynamicObject
+    // collisions); open ones stop blocking after the half-way point.
+    doorSolid_.assign(level_.dynamicMeshes.size(), 0);
+    for (std::size_t i = 0; i < level_.dynamicMeshes.size(); ++i) {
+        const DynamicMesh& mesh = level_.dynamicMeshes[i];
+        if (!mesh.config.dynamicCollisions) {
+            continue;
+        }
+        float t = 0.0f;
+        if (i < game_.doors.size()) {
+            t = game_.doors[i].t;
+        }
+        if (t < 0.5f && !mesh.animations.empty()) {
+            const Mat4x3 roomX = Renderer::roomMatrix(level_, mesh.properties.roomId);
+            const Mat4x3 world = combine(roomX, mesh.properties.objectToRoom);
+            collision_.addDynamicMesh(mesh, level_.dynamicTextureVertices, world);
+            doorSolid_[i] = 1;
+        }
+    }
+}
+
+void ViewerApp::spawnActors() {
+    rebuildCollision();
     actors_.clear();
     for (std::size_t i = 0; i < level_.characters.size(); ++i) {
         const Character& ch = level_.characters[i];
@@ -854,9 +1042,44 @@ void ViewerApp::spawnActors() {
     }
 }
 
+// X_CRSplineMovementUpdate moves a character from the origin to the clip's
+// [Movement] EndPosition over the clip duration, so the locomotion speed is
+// |EndPosition| / clipLength. clipWalkSpeed() alone assumes 1-second clips,
+// which makes NPCs skate on longer walk cycles. Load the walk (or run) clip
+// once per actor and cache the real speed on the actor.
+void ViewerApp::fillActorMoveSpeed(CharacterActor& actor) {
+    if (actor.moveSpeed != 0.0f || actor.config == 0) {
+        return;  // resolved ( > 0), failed before ( < 0), or no config
+    }
+    const SkinDef* def = database_.findSkin(actor.skinName);
+    if (def == 0) {
+        actor.moveSpeed = -1.0f;
+        return;
+    }
+    static const int kLocomotion[] = {kCharAnimWalk, kCharAnimRun};
+    for (std::size_t c = 0; c < sizeof(kLocomotion) / sizeof(kLocomotion[0]); ++c) {
+        const CharacterAnimClip* clip = findAnimClip(def->character, kLocomotion[c]);
+        if (clip == 0 || clip->resolvedPath.empty()) {
+            continue;
+        }
+        const Kf2File* anim = database_.loadModel(clip->resolvedPath);
+        if (anim == 0 || anim->animations.empty()) {
+            continue;
+        }
+        const float duration = kf2AnimationDuration(*anim);
+        const float distance = length(clip->endPosition);
+        if (duration > 1.0e-4f && distance > 1.0e-4f) {
+            actor.moveSpeed = distance / duration;
+            return;
+        }
+    }
+    actor.moveSpeed = -1.0f;  // keep the script-only estimate
+}
+
 void ViewerApp::updateActors(float dt) {
     const Vec3 playerLdb(-camera_.position.x, camera_.position.y - 1.6f, camera_.position.z);
     for (std::size_t i = 0; i < actors_.size(); ++i) {
+        fillActorMoveSpeed(actors_[i]);
         actors_[i].update(dt, playerLdb, collision_, &actors_);
     }
     renderer_.beginAnimated();
@@ -880,9 +1103,291 @@ void ViewerApp::updateActors(float dt) {
         const CharacterAnimClip* playClip = findAnimClip(def->character, actor.animIndex);
         const Kf2File* bindAnim = poseClip != 0 ? database_.loadModel(poseClip->resolvedPath) : 0;
         const Kf2File* playAnim = playClip != 0 ? database_.loadModel(playClip->resolvedPath) : bindAnim;
+        // Cross-fade from the previous clip (crossAnimateObject).
+        const Kf2File* crossAnim = 0;
+        float crossBlend = 0.0f;
+        if (actor.prevAnimIndex >= 0 && actor.blendTime > 0.0f) {
+            const CharacterAnimClip* prevClip = findAnimClip(def->character, actor.prevAnimIndex);
+            crossAnim = prevClip != 0 ? database_.loadModel(prevClip->resolvedPath) : 0;
+            crossBlend = 1.0f - actor.blendTime / 0.25f;
+        }
         renderer_.appendAnimatedCharacter(*mesh, skin, bindAnim, playAnim, actor.animTime,
-                                          actor.entityTransform(), actor.roomId);
+                                          actor.entityTransform(), actor.roomId, true, crossAnim,
+                                          actor.prevAnimTime, crossBlend);
     }
+    // Dynamic level objects (doors, platforms): streamed every frame with
+    // the animated transform from tickDoors, exactly like the engine poses
+    // X_LevelRuntimeDynamicObject between the MeshAnimation keyframes.
+    if (renderer_.showDynamic()) {
+        for (std::size_t i = 0; i < level_.dynamicMeshes.size(); ++i) {
+            const DynamicMesh& mesh = level_.dynamicMeshes[i];
+            Mat4x3 local = mesh.properties.objectToRoom;
+            float t = 0.0f;
+            if (i < game_.doors.size()) {
+                t = game_.doors[i].t;
+            }
+            if (t > 0.0f && !mesh.animations.empty()) {
+                const MeshAnimation& anim = mesh.animations[0];
+                const Mat4x3 pose = game_.dynamicMeshPose(anim, t);
+                // pose(t) is authored from startTransform; re-base it onto
+                // the bind placement so t=0 is seamless.
+                const Mat4x3 rebased =
+                    combine(pose, combine(inverseRigid(anim.startTransform), local));
+                local = rebased;
+            }
+            const Mat4x3 world = combine(Renderer::roomMatrix(level_, mesh.properties.roomId), local);
+            renderer_.appendDynamicLevelMesh(level_, i, world);
+        }
+    }
+
+    // The player acts in cutscenes: render his skin with the cinematic clip
+    // (root NOT locked to the bind pose — the movement file carries him).
+    if (game_.cine.active) {
+        const SkinDef* def = database_.findSkin(playerSkinName_);
+        if (def != 0 && !def->lods.empty()) {
+            const Kf2File* mesh = database_.model(def->lods[0].resolvedExport);
+            if (mesh != 0) {
+                const Kf2File* skinKf = database_.model(def->lods[0].resolvedSkin);
+                const CharacterAnimClip* poseClip = findAnimClip(def->character, kCharAnimPose);
+                const CharacterAnimClip* playClip =
+                    findAnimClip(def->character, game_.cine.clipIndex);
+                const Kf2File* bindAnim =
+                    poseClip != 0 ? database_.loadModel(poseClip->resolvedPath) : 0;
+                const Kf2File* playAnim =
+                    playClip != 0 ? database_.loadModel(playClip->resolvedPath) : bindAnim;
+                renderer_.appendAnimatedCharacter(*mesh, skinKf, bindAnim, playAnim,
+                                                  game_.cine.time, cinematicEntity_, -1, false);
+            }
+        }
+    }
+}
+
+void ViewerApp::drawWeaponHud() {
+    if (!levelLoaded_ || !game_.cine.hudVisible) {
+        return;
+    }
+    const PlayerState& pl = game_.player;
+    const WeaponDef* def = game_.currentWeaponDef();
+    // hud.txt is authored for 640x480; keep the anchor geometry on other
+    // window sizes.
+    const float scale = height_ > 0 ? static_cast<float>(height_) / 480.0f : 1.0f;
+
+    if (hud_.valid) {
+        // [Health] sprite (and its background) at the bottom-left.
+        if (hud_.healthBackground.valid()) {
+            const HudSprite& sp = hud_.healthBackground;
+            renderer_.drawHudImage(hud_.healthBackground.filename, hud_.healthBackground.alphaFilename,
+                                   sp.position[0] * scale, sp.position[1] * scale, sp.width * scale,
+                                   sp.height * scale, hudReferencePoint(sp.referencePoint), sp.alpha);
+        }
+        if (hud_.healthSprite.valid()) {
+            const HudSprite& sp = hud_.healthSprite;
+            renderer_.drawHudImage(sp.filename, sp.alphaFilename, sp.position[0] * scale,
+                                   sp.position[1] * scale, sp.width * scale, sp.height * scale,
+                                   hudReferencePoint(sp.referencePoint), sp.alpha);
+        }
+        // [ActiveWeapon] sprite + ammo counters for the selected weapon.
+        if (def != 0) {
+            const HudWeaponSprite* ws = findHudWeapon(hud_, def->weaponId);
+            if (ws != 0 && ws->sprite.valid()) {
+                const HudSprite& sp = ws->sprite;
+                renderer_.drawHudImage(sp.filename, sp.alphaFilename, sp.position[0] * scale,
+                                       sp.position[1] * scale, sp.width * scale, sp.height * scale,
+                                       hudReferencePoint(sp.referencePoint), sp.alpha);
+            }
+        }
+    }
+
+    // Ammo counters: clip / pocket in the lower right (PC hud.txt positions
+    // when available, otherwise the fixed viewer spot).
+    char line[128];
+    std::snprintf(line, sizeof(line), "%d / %d", pl.clip, pl.ammo);
+    const float ax = hud_.valid && hud_.ammoInClipsText.valid
+                         ? hud_.ammoInClipsText.position[0] * scale
+                         : static_cast<float>(width_) - 120.0f;
+    const float ay = hud_.valid && hud_.ammoInClipsText.valid
+                         ? hud_.ammoInClipsText.position[1] * scale
+                         : static_cast<float>(height_) - 60.0f;
+    renderer_.drawHudText(static_cast<int>(ax), static_cast<int>(ay), line, 0.95f, 0.92f, 0.6f);
+    if (def != 0 && !def->projectileName.empty() && def->clipSize == 0) {
+        // Thrown weapons show no clip; just the pocket count.
+        std::snprintf(line, sizeof(line), "%d", pl.ammo);
+        renderer_.drawHudText(static_cast<int>(ax), static_cast<int>(ay), line, 0.95f, 0.92f, 0.6f);
+    }
+
+    // Weapon cycle overlay: the slot row, kept visible a moment after a
+    // selection change (like the PC quick-select strip).
+    if (weaponListTimer_ > 0.0f && !pl.slots.empty()) {
+        const int rowH = 16;
+        int y = height_ / 2 - static_cast<int>(pl.slots.size()) * rowH / 2;
+        for (std::size_t i = 0; i < pl.slots.size(); ++i) {
+            const bool sel = static_cast<int>(i) == pl.selectedSlot;
+            std::snprintf(line, sizeof(line), "%s%d  %s  %d+%d", sel ? "> " : "  ",
+                          static_cast<int>(i + 1) % 10, pl.slots[i].name.c_str(), pl.slots[i].clip,
+                          pl.slots[i].ammo);
+            renderer_.drawHudText(width_ / 2 - 90, y, line, sel ? 1.0f : 0.7f, sel ? 0.9f : 0.7f,
+                                  sel ? 0.45f : 0.65f);
+            y += rowH;
+        }
+    }
+}
+
+void ViewerApp::startNextCinematic() {
+    if (!levelLoaded_) {
+        return;
+    }
+    if (game_.cine.active || game_.cine.cameraActive) {
+        game_.abortCinematic();
+        syncCameraFromPlayer();
+    }
+    const SkinDef* def = database_.findSkin(playerSkinName_);
+    if (def == 0) {
+        statusMessage_ = "cinematic: player skin not found";
+        return;
+    }
+    // Scripted clips: any clip with [Message] Frame hooks (the cinematics on
+    // the stock skins are CHARANIM_CUSTOM* / cinematic blocks).
+    std::vector<const CharacterAnimClip*> scripted;
+    for (std::size_t i = 0; i < def->character.animations.size(); ++i) {
+        const CharacterAnimClip& clip = def->character.animations[i];
+        if (!clip.frameMessages.empty()) {
+            scripted.push_back(&clip);
+        }
+    }
+    if (scripted.empty()) {
+        statusMessage_ = "cinematic: no scripted clips on " + playerSkinName_;
+        return;
+    }
+    cinematicClipCursor_ = (cinematicClipCursor_ + 1) % static_cast<int>(scripted.size());
+    const CharacterAnimClip* clip = scripted[static_cast<std::size_t>(cinematicClipCursor_)];
+    float duration = 0.0f;
+    int fps = 30;
+    const Kf2File* anim = database_.loadModel(clip->resolvedPath);
+    if (anim != 0 && !anim->animations.empty()) {
+        duration = kf2AnimationDuration(*anim);
+        fps = anim->animations[0].frameRate;
+    }
+    if (duration <= 0.0f && !clip->frameMessages.empty()) {
+        // KF2 missing (stripped database): run to the last frame hook + 1s
+        // so the cutscene still terminates instead of hanging forever.
+        int last = 0;
+        for (std::size_t m = 0; m < clip->frameMessages.size(); ++m) {
+            if (clip->frameMessages[m].frame > last) {
+                last = clip->frameMessages[m].frame;
+            }
+        }
+        duration = static_cast<float>(last) / static_cast<float>(fps > 0 ? fps : 30) + 1.0f;
+    }
+    game_.startCinematic(clip->index, duration, fps, clip->frameMessages, clip->resolvedMovement);
+    // The player entity when the clip started; the movement KF2 offsets it.
+    cinematicStartEntity_ = makeEntity(game_.player.position, -game_.player.yaw);
+    cinematicEntity_ = cinematicStartEntity_;
+    cameraPathName_.clear();
+}
+
+void ViewerApp::tickCinematicFrame(float dt) {
+    game_.tickCinematic(dt, level_, actors_);
+    // Resolve the active camera path's duration from its KF2 once (the
+    // runtime only sees plain data; KF2 loading stays viewer-side). A path
+    // whose KF2 is missing ends immediately instead of hanging the view.
+    if (game_.cine.cameraActive && game_.cine.cameraDuration <= 0.0f) {
+        const CameraPathDef* def = game_.cameraPaths.find(game_.cine.cameraPath);
+        const Kf2File* kf =
+            def != 0 && !def->resolvedAnimation.empty() ? database_.loadModel(def->resolvedAnimation) : 0;
+        const float d = kf != 0 && !kf->animations.empty() ? kf2AnimationDuration(*kf) : 0.0f;
+        // 0 would mean "unresolved" forever (tickCinematic skips the end
+        // check), so clamp to a minimal fly-by instead.
+        game_.cine.cameraDuration = d > 0.01f ? d : 0.05f;
+    }
+    // Movement root motion ("*_mov.kf2"): the clip acts in place while the
+    // movement file carries the character.
+    cinematicEntity_ = cinematicStartEntity_;
+    if (game_.cine.active && !game_.cine.movementFile.empty()) {
+        const Kf2File* mov = database_.loadModel(game_.cine.movementFile);
+        if (mov != 0 && !mov->animations.empty()) {
+            std::vector<std::string> mn;
+            std::vector<Mat4x3> ml;
+            kf2BuildSkeletonWorlds(*mov, game_.cine.time, 0, &mn, &ml);
+            if (!ml.empty()) {
+                cinematicEntity_ = combine(cinematicStartEntity_, ml[0]);
+            }
+        }
+    }
+    game_.player.position = cinematicEntity_.translation();
+    const Vec3 ldbFwd = cinematicEntity_.rows[2];  // Z axis = forward (rotationY)
+    game_.player.yaw = -std::atan2(ldbFwd.x, ldbFwd.z);  // LDB -> view yaw
+
+    // Cutscene over: hand the camera back to the player.
+    const bool on = game_.cine.active || game_.cine.cameraActive;
+    if (wasCineOn_ && !on) {
+        syncCameraFromPlayer();
+        camera_.pitch = 0.0f;
+    }
+    wasCineOn_ = on;
+}
+
+void ViewerApp::applyCinematicCamera(Camera* cam) {
+    if (!game_.cine.cameraActive) {
+        return;
+    }
+    const CameraPathDef* def = game_.cameraPaths.find(game_.cine.cameraPath);
+    if (def == 0) {
+        return;
+    }
+    // Capture the base transform when the path activates (parented modes are
+    // relative to the camera / player at start).
+    if (cameraPathName_ != game_.cine.cameraPath) {
+        cameraPathName_ = game_.cine.cameraPath;
+        if (game_.cine.cameraMode == 2) {  // in place: relative to the camera
+            // Build the base in LDB space (viewer X is the mirror of LDB X).
+            const Vec3 fLdb(-camera_.forward().x, camera_.forward().y, camera_.forward().z);
+            const Vec3 up(0.0f, 1.0f, 0.0f);
+            Vec3 r = normalize(cross(fLdb, up));
+            Vec3 u = cross(r, fLdb);
+            Mat4x3 m;
+            m.rows[0] = Vec3(-r.x, r.y, r.z);
+            m.rows[1] = Vec3(-u.x, u.y, u.z);
+            m.rows[2] = Vec3(-fLdb.x, fLdb.y, fLdb.z);
+            m.rows[3] = Vec3(-camera_.position.x, camera_.position.y, camera_.position.z);
+            cameraBase_ = m;
+        } else if (game_.cine.cameraMode == 3 || game_.cine.cameraMode == 4) {
+            cameraBase_ = cinematicEntity_;  // parented to the character
+        } else {
+            cameraBase_ = Mat4x3();  // absolute
+        }
+    }
+    const Kf2File* kf =
+        !def->resolvedAnimation.empty() ? database_.loadModel(def->resolvedAnimation) : 0;
+    if (kf == 0 || kf->animations.empty()) {
+        return;
+    }
+    // Walk the parent chain: the camera node is usually a child of a root
+    // node that carries the path's world placement. Sampling only the
+    // channel's LOCAL matrix put the camera at the origin (inside geometry,
+    // hence a black screen).
+    std::vector<std::string> names;
+    std::vector<Mat4x3> worlds;
+    kf2BuildSkeletonWorlds(*kf, game_.cine.cameraTime, 0, &names, &worlds);
+    if (worlds.empty()) {
+        return;
+    }
+    std::size_t channel = 0;
+    for (std::size_t i = 0; i < names.size(); ++i) {
+        if (lowerCopy(names[i]).find("camera") != std::string::npos) {
+            channel = i;
+            break;
+        }
+    }
+    // Parented paths follow the (possibly moving) player.
+    if (game_.cine.cameraMode == 3 || game_.cine.cameraMode == 4) {
+        cameraBase_ = cinematicEntity_;
+    }
+    const Mat4x3 world = combine(cameraBase_, worlds[channel]);
+    // LDB -> viewer: points mirror X, directions mirror X (basis rows are
+    // direction vectors in LDB space).
+    cam->position = Vec3(-world.rows[3].x, world.rows[3].y, world.rows[3].z);
+    const Vec3 fwd = normalize(Vec3(-world.rows[2].x, world.rows[2].y, world.rows[2].z));
+    yawPitchFromDirection(fwd, &cam->yaw, &cam->pitch);
 }
 
 void ViewerApp::drawMenuHud() {
@@ -890,6 +1395,11 @@ void ViewerApp::drawMenuHud() {
     renderer_.drawHudQuad(0, 0, width_, 56, 0.08f, 0.06f, 0.03f, 0.95f);
     renderer_.drawHudText(24, 24, "MAX PAYNE  /  MAX-FX", 0.95f, 0.82f, 0.35f);
     renderer_.drawHudText(24, 44, "PC message table  C_  DO_  T_  GM_  MPGNM_", 0.55f, 0.55f, 0.58f);
+    {
+        char stamp[96];
+        std::snprintf(stamp, sizeof(stamp), "build %s  (%s)", MAXFX_BUILD_HASH, __DATE__);
+        renderer_.drawHudText(24, height_ - 20, stamp, 0.45f, 0.45f, 0.5f);
+    }
     if (game_.menu == kMenuRoot) {
         renderer_.drawHudQuad(32, 72, 280, 88, 0.10f, 0.09f, 0.07f, 0.85f);
         const char* items[4] = {"New Game", "Jump to Level", "Graphic Novel", "Quit"};
@@ -1105,26 +1615,72 @@ void ViewerApp::drawHud(float dt) {
         renderer_.drawHudText(12, 92, statusMessage_.c_str(), 1.0f, 0.35f, 0.35f);
     }
 
-    std::snprintf(line, sizeof(line), "HP %.0f/%.0f  %s  clip %d/%d  ammo %d  %s%s",
+    std::snprintf(line, sizeof(line), "HP %.0f/%.0f  %s  %s%s",
                   game_.player.health, game_.player.maxHealth, game_.player.weaponName.c_str(),
-                  game_.player.clip, game_.player.clipSize, game_.player.ammo,
                   game_.player.grounded ? "ground" : "air", game_.player.noclip ? "  NOCLIP" : "");
     renderer_.drawHudText(12, 108, line, 0.95f, 0.45f, 0.35f);
+    drawWeaponHud();
     if (!game_.prompt.empty()) {
         renderer_.drawHudText(width_ / 2 - 80, height_ / 2 + 36, game_.prompt.c_str(), 0.95f, 0.9f, 0.4f);
     }
     if (!game_.lastEvent.empty()) {
         renderer_.drawHudText(12, 124, game_.lastEvent.c_str(), 0.7f, 0.75f, 0.55f);
     }
-    if (game_.player.crosshair) {
+    if (game_.player.crosshair && game_.cine.hudVisible) {
         renderer_.drawHudText(width_ / 2 - 4, height_ / 2 - 4, "+", 0.95f, 0.9f, 0.4f);
+    }
+
+    if (showItemDebug_ && !level_.items.empty()) {
+        // Item-angle diagnostics: which KF2 each item resolved to (or the
+        // placeholder box) plus the LDB objectToRoom rotation rows.
+        int y = height_ - 52 - static_cast<int>(std::min<std::size_t>(level_.items.size(), 14)) * 14 - 14;
+        renderer_.drawHudText(12, y, "items: name -> model | room | rot rows (objectToRoom)", 0.6f,
+                              0.85f, 0.9f);
+        y += 14;
+        for (std::size_t i = 0; i < level_.items.size() && i < 14; ++i) {
+            const LevelItem& it = level_.items[static_cast<std::size_t>(i)];
+            const ItemDef* def = database_.findItem(it.itemName);
+            std::string model = def != 0 && !def->lods.empty() && !def->lods[0].resolvedExport.empty()
+                                    ? fileName(def->lods[0].resolvedExport)
+                                    : "PLACEHOLDER";
+            const Mat4x3& m = it.properties.objectToRoom;
+            std::snprintf(line, sizeof(line),
+                          "%-22s %-24s r%u | %4.2f %4.2f %4.2f / %4.2f %4.2f %4.2f / %4.2f %4.2f %4.2f",
+                          it.itemName.c_str(), model.c_str(), it.properties.roomId, m.rows[0].x,
+                          m.rows[0].y, m.rows[0].z, m.rows[1].x, m.rows[1].y, m.rows[1].z,
+                          m.rows[2].x, m.rows[2].y, m.rows[2].z);
+            renderer_.drawHudText(12, y, line, 0.75f, 0.8f, 0.85f);
+            y += 14;
+        }
+        if (level_.items.size() > 14) {
+            std::snprintf(line, sizeof(line), "... %zu more", level_.items.size() - 14);
+            renderer_.drawHudText(12, y, line, 0.6f, 0.65f, 0.7f);
+        }
     }
 
     if (showHelp_) {
         const char* help =
             "WASD walk  Space jump  E use  LMB shoot  Shift run  Esc menu\n"
-            "F10 noclip  F1 help  F2 wire  F3 shading  F4 helpers  F5 dynamic  F6 service  F7 mute";
+            "1-0 weapons  wheel cycle  R reload  C cinematic  F9 respawn\n"
+            "F8 item debug  N noclip (Ctrl down)  F1 help  F2 wire  F3 shading  F4 helpers  F5 dynamic  F6 service  F7 mute";
         renderer_.drawHudText(12, height_ - 52, help, 0.72f, 0.72f, 0.68f);
+    }
+
+    // Cutscene presentation: GM_EnableWideScreen letterbox and the
+    // MPHM_FadeToColor overlay (drawn last so they cover the HUD).
+    if (game_.cine.widescreen) {
+        const int bar = static_cast<int>(static_cast<float>(height_) * 0.12f);
+        if (bar > 0) {
+            renderer_.drawHudQuad(0, 0, width_, bar, 0.0f, 0.0f, 0.0f, 1.0f);
+            renderer_.drawHudQuad(0, height_ - bar, width_, bar, 0.0f, 0.0f, 0.0f, 1.0f);
+        }
+    }
+    {
+        float rgba[4];
+        game_.cine.fadeColor(rgba);
+        if (rgba[3] > 0.003f) {
+            renderer_.drawHudQuad(0, 0, width_, height_, rgba[0], rgba[1], rgba[2], rgba[3]);
+        }
     }
     renderer_.presentHud();
 }
@@ -1141,6 +1697,25 @@ int ViewerApp::run(const char* pathOrNull) {
             std::fprintf(stderr, "database: %s\n", ex.what());
         }
         game_.loadCatalog(dbRoot);
+        game_.loadCameraPaths(dbRoot);
+        const std::string dataRoot = parentDir(dbRoot);
+        hud_ = loadHudDef(dataRoot);
+        // decals.txt -> engine DecalSystem materials + viewer texture paths.
+        game_.decalMaterials.clear();
+        decalFiles_.clear();
+        for (std::size_t i = 0; i < database_.decals.size(); ++i) {
+            const DecalMaterialDef& def = database_.decals[i];
+            DecalMaterialInfo info;
+            info.name = def.name;
+            info.minRadius = def.minRadius;
+            info.maxRadius = def.maxRadius;
+            game_.decalMaterials.push_back(info);
+            static const char* const kRoots[] = {"database/decals", "database", "hud", ""};
+            decalFiles_[def.name] = std::make_pair(
+                resolveGameAsset(dataRoot, def.filename, kRoots, 4),
+                resolveGameAsset(dataRoot, def.alphaFilename, kRoots, 4));
+        }
+        game_.effects.decals.setMaterials(game_.decalMaterials);
     }
 
     if (!createWindow(error, sizeof(error))) {
@@ -1167,6 +1742,7 @@ int ViewerApp::run(const char* pathOrNull) {
                 handleKeyDown(static_cast<int>(ev.key.scancode), static_cast<int>(ev.key.key));
             } else if (ev.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
                 if (game_.mode == kModePlaying && mouseCaptured_ &&
+                    !game_.cine.active && !game_.cine.cameraActive &&
                     ev.button.button == SDL_BUTTON_LEFT) {
                     const Vec3 eye(game_.player.position.x,
                                    game_.player.position.y + game_.player.eyeHeight,
@@ -1183,6 +1759,11 @@ int ViewerApp::run(const char* pathOrNull) {
                 camera_.addLook(static_cast<float>(ev.motion.xrel), static_cast<float>(ev.motion.yrel));
                 game_.player.yaw = camera_.yaw;
                 game_.player.pitch = camera_.pitch;
+            } else if (ev.type == SDL_EVENT_MOUSE_WHEEL && game_.mode == kModePlaying &&
+                       mouseCaptured_) {
+                if (game_.cycleWeapon(ev.wheel.y > 0 ? 1 : -1)) {
+                    weaponListTimer_ = 1.5f;
+                }
             } else if (ev.type == SDL_EVENT_WINDOW_RESIZED) {
                 width_ = ev.window.data1;
                 height_ = ev.window.data2;
@@ -1205,6 +1786,9 @@ int ViewerApp::run(const char* pathOrNull) {
         renderer_.setSkipWorld(game_.mode == kModeGraphicNovel || game_.mode == kModeMenu);
         renderer_.setFovY(game_.mode == kModeGraphicNovel ? 40.0f : 70.0f);
         Camera renderCam = camera_;
+        if (game_.mode == kModePlaying) {
+            applyCinematicCamera(&renderCam);
+        }
         if (game_.mode == kModeGraphicNovel && game_.comicIndex >= 0 &&
             static_cast<std::size_t>(game_.comicIndex) < game_.catalog.pages.size() &&
             !game_.catalog.pages[static_cast<std::size_t>(game_.comicIndex)].resolvedKf2.empty()) {
@@ -1221,6 +1805,11 @@ int ViewerApp::run(const char* pathOrNull) {
             }
         }
         renderer_.render(renderCam.viewMatrix(), renderCam.position);
+        if (game_.mode == kModePlaying) {
+            renderer_.renderEffects(renderCam.viewMatrix(), renderCam.position,
+                                    game_.effects.decals.list(), game_.effects.effects(),
+                                    decalFiles_.empty() ? 0 : &decalFiles_);
+        }
         drawHud(dt);
         SDL_GL_SwapWindow(window_);
     }

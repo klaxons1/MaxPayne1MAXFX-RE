@@ -1,0 +1,39 @@
+#include <..\level_items.h>
+#include <..\object_lods.h>
+#include <..\weaponid.h>
+
+[LOD]
+{
+    [Geometry]
+	ExportData = ..\..\weapons\pumpshotgun\pumpshotgun_LevelItem.kf2;
+    Distance = PROJECTILE_LOD_DRAW_ALWAYS;
+}
+
+[Properties]
+TriggerRadius = RADIUS_PUMPSHOTGUN;
+CantPickupMessagesTimeout = CANTPICKUP_TIMEOUT;
+MatchingWeaponID = WEAPONID_PUMPSHOTGUN;
+PickupIfNewWeapon = true;
+PickupIfAmmoNotFull = true;
+
+[OnFirstPickup]
+{
+	[Message] string = "activator->C_PickupWeapon( "pumpshotgun" );";
+	[Message] string = "activator->C_PickupAmmo( "pumpshotgun"," PICKUPAMMO_PUMPSHOTGUN ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_rifle );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_PUMPSHOTGUN\" );";
+}
+
+[OnPickUp]
+{
+	[Message] string = "activator->C_PickupWeapon( "pumpshotgun" );";
+	[Message] string = "activator->C_PickupAmmo( "pumpshotgun"," PICKUPAMMO_PUMPSHOTGUN ");";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_rifle );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_PUMPSHOTGUN\" );";
+}
+
+[OnCantPickup]
+{
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_ammo_full );";
+	[Message] string = "maxpayne_hudmode->mphm_print( HUDPRINT_PICKUP_SHOTGUN_AMMO_FULL );";
+}

@@ -1,0 +1,36 @@
+#include <..\level_items.h>
+#include <..\object_lods.h>
+#include <..\weaponid.h>
+
+[LOD]
+{
+    [Geometry]
+	ExportData = ammo_beretta_l0.kf2;
+    Distance = PROJECTILE_LOD_DRAW_ALWAYS;
+}
+
+[Properties]
+TriggerRadius = AMMOBOX_RADIUS ;
+CantPickupMessagesTimeout = CANTPICKUP_TIMEOUT;
+MatchingWeaponID = WEAPONID_BERETTA;
+PickupIfAmmoNotFull = true;
+
+[OnFirstPickup]
+{
+	[Message] string = "activator->c_pickupammo( beretta, " AMMOBOX_BERETTA " );";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_ammo );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_BERETTA_AMMO\" );";
+}
+
+[OnPickUp]
+{
+	[Message] string = "activator->c_pickupammo( beretta, " AMMOBOX_BERETTA " );";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_ammo );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_BERETTA_AMMO\" );";
+}
+
+[OnCantPickup]
+{
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_ammo_full );";
+	[Message] string = "maxpayne_hudmode->mphm_print( HUDPRINT_PICKUP_BERETTA_AMMO_FULL );";
+}

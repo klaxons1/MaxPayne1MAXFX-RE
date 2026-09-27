@@ -1,0 +1,1797 @@
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponanimid.h>
+
+#define ENEMY_JUMP	 				7.5
+#define ENEMY_JUMPFORWARD			7.5
+#define ENEMY_JUMPDODGESIDEWAYS		3.0
+#define	ENEMY_SHOOTDODGEJUMP		3.0
+
+#define	ENEMY_WALK					1.5
+#define	ENEMY_RUN					3.0
+#define	ENEMY_STRAFE				2.5
+#define	ENEMY_DIAGONAL				2.25
+#define	ENEMY_BACKWARDS				1.5
+
+[Skeleton]
+{
+	[Geometry]
+	ExportData = maxpayne-collision.kfs; CrossMode = Orthonormalized;
+
+	// 0 Default
+	[Animation] Index = CHARANIM_POSE; Filename = anim\widepose.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+		[Message] Frame = 0; String = "this->C_DisplayCrosshair(1);";
+	}
+
+	// 1 Walk
+	[Animation] Index = CHARANIM_WALK; Filename = anim\walk.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, ENEMY_WALK ); Rotation = (0,0,0);
+	}
+
+	// 2 Run
+	[Animation] Index = CHARANIM_RUN; Filename = anim\run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0, ENEMY_RUN ); Rotation = (0,0,0);
+	}
+
+	// 3 Walk Backward
+	[Animation] Index = CHARANIM_WALKBACKWARD; Filename = anim\walkbackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0, - ENEMY_BACKWARDS ); Rotation = (0,0,0);
+	}
+
+	// 4 Strafe Left
+	[Animation] Index = CHARANIM_STRAFELEFT; Filename = anim\strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - ENEMY_STRAFE ,0,0); Rotation = (0,0,0);
+	}
+
+	// 5 Strafe Right
+	[Animation] Index = CHARANIM_STRAFERIGHT; Filename = anim\straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( ENEMY_STRAFE ,0,0); Rotation = (0,0,0);
+	}
+
+	// 6 Turn Left
+	[Animation] Index = CHARANIM_TURNLEFT; Filename = anim\turnleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+//		[Message] Frame = 5; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+//		[Message] Frame = 9; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+	}
+
+	// 7 Turn Right
+	[Animation] Index = CHARANIM_TURNRIGHT; Filename = anim\turnright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+//		[Message] Frame = 5; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+//		[Message] Frame = 9; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+	}
+
+//	// 8 Turn 180
+//	[Animation] Index = CHARANIM_TURN180; Filename = anim\turnleft.kf2;
+//	[Properties]
+//	{
+//		[Movement] EndPosition = (0,0,0); Rotation = (0,180,0);
+//		[Message] Frame = 5; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+//		[Message] Frame = 9; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+//	}
+
+	// 9 Stand
+	[Animation] Index = CHARANIM_STAND; Filename = anim\mobster_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+
+	// 10 Crouch
+	[Animation] Index = CHARANIM_CROUCH; Filename = anim\crouch.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+
+	// Idle
+	[Animation] Index = CHARANIM_CUSTOMIDLE1; Filename = anim\idle_gangsta_onactivate.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_CUSTOMIDLE2; Filename = anim\idle_aim_beretta.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_CUSTOMIDLE3; Filename = anim\idle_sitting_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_CUSTOMIDLE4; Filename = anim\idle_operating_onehand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	// 14 Dodge Left
+	[Animation] Index = CHARANIM_DODGELEFT; Filename = anim\dodgeleft_enemy.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (-3.795,0,0); Rotation = (0,0,0); // MiddlePosition1 = (-1.1,0,0); MiddlePosition2 = (-3.0525,0,0);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	// 15 Dodge Right
+	[Animation] Index = CHARANIM_DODGERIGHT; Filename = anim\dodgeright_enemy.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (3.795,0,0); Rotation = (0,0,0); // MiddlePosition1 = (1.65,0,0); MiddlePosition2 = (3.0525,0,0);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	// 16 Dodge Forward
+	[Animation] Index = CHARANIM_DODGEFORWARD; Filename = anim\dodgeforward_enemy.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 3.5 ); Rotation = ( 0, 0, 0 ); //MiddlePosition1 = ( 0, 0, 0 ); MiddlePosition2 = ( 0, 0, 0 );
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_DODGEFORWARDLEFT; Filename = anim\dodgeforward_enemy.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3, 0, 3.5 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_DODGEFORWARDRIGHT; Filename = anim\dodgeforward_enemy.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3, 0, 3.5 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_DODGEBACKWARD; Filename = anim\dodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,-2.1675); Rotation = (0,0,0); MiddlePosition1 = (0,0,-0.357); MiddlePosition2 = (0, 0,-1.6125);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 16; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 20; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_DODGEBACKWARDLEFT; Filename = anim\dodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -2.5, 0, -2.5); Rotation = (0,0,0);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 16; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 20; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_DODGEBACKWARDRIGHT; Filename = anim\dodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3.0, 0, -3.0 ); Rotation = (0,0,0);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 16; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 20; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGELEFT; Filename = anim\enemy_shootdodgeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3.50, 0, 0 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( -1.00, 0, 0 ); MiddlePosition2 = ( -3.00, 0, 0 );
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGERIGHT; Filename = anim\enemy_shootdodgeright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3.50, 0, 0 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 1.00, 0, 0 ); MiddlePosition2 = ( 3.00, 0, 0 );
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARD; Filename = anim\enemy_shootdodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 4.50 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 0, 0, 1.50 ); MiddlePosition2 = ( 0, 0, 3.50 );
+		[Message] Frame = 1; String = "this->A_Play3DSound ( characters, slow_motion, pelvis );";
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 8; String = "this->C_Reload();";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 11; String = "this->C_Jump( " ENEMY_SHOOTDODGEJUMP " );";
+		[Message] Frame = 34; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 45; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARD; Filename = anim\enemy_shootdodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -2.50 ); Rotation = (0,0,0); MiddlePosition1 = ( 0, 0, -1.50 ); MiddlePosition2 = ( 0, 0, -2.00 );
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARDLEFT; Filename = anim\enemy_shootdodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3.50, 0, 3.50 ); Rotation = ( 0, 0, 0 );
+	}
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARDLEFT; Filename = anim\enemy_shootdodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3.50, 0, -3.50 ); Rotation = ( 0, 0, 0 );
+	}
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARDRIGHT; Filename = anim\enemy_shootdodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3.50, 0, -3.50 ); Rotation = ( 0, 0, 0 );
+	}
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARDRIGHT; Filename = anim\enemy_shootdodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3.50, 0, 3.50 ); Rotation = ( 0, 0, 0 );
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGELEFT_GETUP; Filename = anim\shootdodgeleft_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+//		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+//		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGERIGHT_GETUP; Filename = anim\shootdodgeright_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+//		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+//		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEFORWARD_GETUP; Filename = anim\shootdodgeforward_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+//		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+//		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDODGEBACKWARD_GETUP; Filename = anim\shootdodgebackward_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+//		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+//		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_JUMP; Filename = anim\jumpUp.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+ 		[Message] Frame = 10; String = "this->C_Jump( 7.5  );";
+	}
+
+	[Animation] Index = CHARANIM_JUMPFORWARD; Filename = anim\jumpForward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 1.25 ); Rotation = ( 0, 0, 0 ); //MiddlePosition1 = ( 0, 0, 0 ); MiddlePosition2 = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "this->C_Jump( 7.5 );";
+		[Message] Frame = 0; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 49; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_JUMPFORWARDRIGHT; Filename = anim\jumpForwardRight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0.5, 0, 0.5 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "this->C_Jump( 7.5  );";
+		[Message] Frame = 0; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 49; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_JUMPFORWARDLEFT; Filename = anim\jumpForwardLeft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -0.5, 0, 0.5 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "this->C_Jump( 7.5 );";
+		[Message] Frame = 0; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 49; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_FALL; Filename = anim\fall.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 2; String = "this->P_Createprojectiletobone( dummy_footstep_land, 1, foot-r);";
+		[Message] Frame = 6; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, foot-r );";
+		[Message] Frame = 10; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, foot-r );";
+		[Message] Frame = 69; String = "this->a_play3dsound( characters, Death_Starting_Falling, head );";
+	}
+
+	[Animation] Index = CHARANIM_LAND; Filename = anim\land_enemy.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, pelvis );";
+		[Message] Frame = 1; String = "this->A_Play3DSound ( characters, land_medium, pelvis );";
+	}
+
+	// 25 Use
+	[Animation] Index = CHARANIM_USE; Filename = anim\use.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_Use();";
+		[Message] Frame = 1; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+	}
+
+	// 26 Get Weapon
+	[Animation] Index = CHARANIM_GETWEAPON; Filename = anim\getweapon.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Hide( FALSE );";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Animate( " WEAPONANIM_DEFAULT " );";
+		[Message] Frame = 0; String = "this->C_Reload();";
+	}
+
+	// 27 Holster Weapon
+	[Animation] Index = CHARANIM_HOLSTERWEAPON; Filename = anim\holsterweapon.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0); 
+	}
+
+	// 30 Getting Damage
+	[Animation] Index = CHARANIM_GETDAMAGE; Filename = anim\gethit_1000ms.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_gethit, head );";
+	}
+
+	[Animation] Index = CHARANIM_GETDAMAGECROUCHED; Filename = anim\gethit_crouched_0750ms.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_gethit, head );";
+	}
+
+	// Death
+	[Animation] Index = CHARANIM_RANDOMDEATH1; Filename = anim\death_minimum.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_death, head );";
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 2, torso );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 40; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 46; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_RANDOMDEATH2; Filename = anim\death_stomach.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -1.05 ); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_death, head );";
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 2, torso );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 34; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 38; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_RANDOMDEATH3; Filename = anim\death_staggerbackwards.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0.38, 0, -2.26 ); Rotation = (0,0,0); Middleposition1 = ( 0.07, 0, -0.59 ); Middleposition2 = ( 0.31, 0, -1.87 );
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_death, head );";
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 2, torso );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 34; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+ 		[Message] Frame = 34; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 51; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_RANDOMDEATH4; Filename = anim\death_headshot.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (  -1.43, 0, 0 ); Rotation = (0,0,0); Middleposition1 = ( -0.12, 0, 0 ); Middleposition2 = ( -1.21, 0, 0 );
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_death, head );";
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 2, torso );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 40; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 40; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_SHOTGUNDEATH; Filename = anim\death_shotgun_a.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -3.63855 ); Rotation = (0,0,0); Middleposition1 = ( 0, 0, -2.57104); Middleposition2 = ( 0, 0, -3.28023 );
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_death, head );";
+		[Message] Frame = 0; String = "this->c_jump(5);";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 22; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 24; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+		[Message] Frame = 36; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+ 		[Message] Frame = 36; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+ 		[Message] Frame = 38; String = "this->P_CreateProjectileToBone( blood_dummy, 2, torso );";
+	}
+
+	[Animation] Index = CHARANIM_SHOTGUNDEATH2; Filename = anim\death_shotgun_b.kf2;
+	[Properties]
+	{
+		
+		[Movement] EndPosition = ( 0, 0, -3.63855 ); Rotation = ( 0, 45, 0 ); Middleposition1 = ( 0, 0, -2.57104); Middleposition2 = ( 0, 0, -3.28023 );
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 0; String = "this->c_jump(5);";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 22; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 24; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+		[Message] Frame = 36; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+ 		[Message] Frame = 38; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+ 		[Message] Frame = 38; String = "this->P_CreateProjectileToBone( blood_dummy, 2, torso );";
+	}
+
+	[Animation] Index = CHARANIM_BURNINGDEATH; Filename = anim\death_fire.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -0.05987, 0, 1.199 ); Rotation = (0,0,0); Middleposition1 = ( -0.10, 0, 0.114 ); Middleposition2 = ( 0.4165, 0, 0.93415 );
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+		[Message] Frame = 0; String = "this->PS_StartEffect( fire_death, torso );";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, generic_fire_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 38; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 62; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+		[Message] Frame = 90; String = "this->P_CreateprojectileToBone( dummy_smokingbody, 1, shoulders );";
+		[Message] Frame = 91; String = "this->P_CreateprojectileToBone( dummy_smokingbody, 1, pelvis );";
+		
+		[Message] Frame = 1; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 21; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 41; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 61; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 81; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 101; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_BURNINGDEATH2; Filename = anim\death_fire_b.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 1.545 ); Rotation = (0,0,0);  Middleposition1 = ( 0, 0, 0.282 ); Middleposition2 = ( 0, 0, 1.212 );
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+		[Message] Frame = 0; String = "this->PS_StartEffect( fire_death, torso );";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, generic_fire_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 38; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 62; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+		[Message] Frame = 100; String = "this->P_CreateprojectileToBone( dummy_smokingbody, 1, shoulders );";
+		[Message] Frame = 101; String = "this->P_CreateprojectileToBone( dummy_smokingbody, 1, pelvis );";
+		
+		[Message] Frame = 1; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 21; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 41; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 61; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 81; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+		[Message] Frame = 101; String = "this->P_CreateprojectileToBone( damage_molotovfire, 1, torso );";
+	}
+
+/*
+	[Animation] Index = CHARANIM_GRENADEDEATH; Filename = anim\death_explosion_a.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -2.48856 ); Rotation = (0,-35,0); Middleposition1 = ( 0, 0, -1.15703 ); Middleposition2 = ( 0, 0, -2.05285);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 0; String = "this->c_jump(6);";
+		[Message] Frame = 6; String = "this->c_jump(2);";
+		[Message] Frame = 12; String = "this->c_jump(2);";
+		[Message] Frame = 17; String = "this->c_jump(2);";
+		[Message] Frame = 24; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+		[Message] Frame = 36; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+ 		[Message] Frame = 38; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+ 		[Message] Frame = 38; String = "this->P_CreateProjectileToBone( blood_dummy, 3, torso );";
+	}
+*/
+
+	[Animation] Index = CHARANIM_GRENADEDEATH; Filename = anim\death_explosion_b.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -2.48856 ); Rotation = (0,0,0); Middleposition1 = ( 0, 0, -1.15703 ); Middleposition2 = ( 0, 0, -2.05285);
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 0; String = "this->c_jump(6);";
+		[Message] Frame = 6; String = "this->c_jump(2);";
+		[Message] Frame = 12; String = "this->c_jump(2);";
+		[Message] Frame = 17; String = "this->c_jump(2);";
+		[Message] Frame = 24; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+		[Message] Frame = 36; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+ 		[Message] Frame = 38; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+ 		[Message] Frame = 38; String = "this->P_CreateProjectileToBone( blood_dummy, 4, torso );";
+	}
+
+	[Animation] Index = CHARANIM_FALLINGDEATH; Filename = anim\death_falling.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 0.9825 ); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 0; String = "this->c_displaycrosshair(" FALSE ");";
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 38; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 39; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_CUSTOMDEATH1; Filename = anim\dead_body.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 3, torso );";
+	}
+
+	[Animation] Index = CHARANIM_CUSTOMDEATH2; Filename = anim\dead_body2.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 0; String = "this->P_CreateProjectileToBone( blood_dummy, 3, torso );";
+	}
+
+	[Animation] Index = CHARANIM_FORWARDLEFT; Filename = anim\forwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - ENEMY_DIAGONAL , 0, ENEMY_DIAGONAL ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_FORWARDRIGHT; Filename = anim\forwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( ENEMY_DIAGONAL , 0, ENEMY_DIAGONAL ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_BACKWARDLEFT; Filename = anim\backwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - ENEMY_DIAGONAL , 0, - ENEMY_DIAGONAL ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_BACKWARDRIGHT; Filename = anim\backwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( ENEMY_DIAGONAL , 0, - ENEMY_DIAGONAL ); Rotation = (0,0,0);
+	}
+
+// ------------------------------------------------------------------
+// 1 Handed Wounded Animations
+// ------------------------------------------------------------------
+
+	// 41 Wounded Walk
+	[Animation] Index = CHARANIM_W_WALK; Filename = anim\w_walk.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,2.06); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "this->C_AddHealth ( 0.5 );";
+	}
+
+	// 42 Wounded Run
+	[Animation] Index = CHARANIM_W_RUN; Filename = anim\w_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,2.53); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "this->C_AddHealth ( 0.5 );";
+	}
+
+	// 43 Wounded Walkbackward
+	[Animation] Index = CHARANIM_W_WALKBACKWARD; Filename = anim\w_walkbackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,-2.58); Rotation = (0,0,0);
+	}
+
+	// 44 Wounded Strafe Left
+	[Animation] Index = CHARANIM_W_STRAFELEFT; Filename = anim\w_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (-2.54,0,0); Rotation = (0,0,0);
+	}
+
+	// 45 Wounded Strafe Right
+	[Animation] Index = CHARANIM_W_STRAFERIGHT; Filename = anim\w_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (2.54,0,0); Rotation = (0,0,0);
+	}
+
+	// 46 Wounded Turn Left
+	[Animation] Index = CHARANIM_W_TURNLEFT; Filename = anim\w_turnleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+//		[Message] Frame = 5; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+//		[Message] Frame = 9; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+	}
+
+	// 47 Wounded Turn Right
+	[Animation] Index = CHARANIM_W_TURNRIGHT; Filename = anim\w_turnright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+//		[Message] Frame = 5; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+//		[Message] Frame = 9; String = "this->A_Play3DSound ( characters, turn_medium, pelvis );";
+	}
+
+//	[Revert] From = CHARANIM_W_TURN180; To = CHARANIM_TURN180;
+
+	// 49 - Wounded Stand
+	[Animation] Index = CHARANIM_W_STAND; Filename = anim\w_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "this->C_AddHealth ( 0.5 );";
+	}
+
+	[Revert] From = CHARANIM_W_CROUCH; To = CHARANIM_CROUCH;
+
+	[Animation] Index = CHARANIM_W_CUSTOMIDLE1; Filename = anim\stand_idle_smoking.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_W_CUSTOMIDLE2; Filename = anim\idle_aim_deserteagle_crouching.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_W_CUSTOMIDLE3; Filename = anim\idle_sitting.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_W_CUSTOMIDLE4; Filename = anim\idle_max_talk.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Revert] From = CHARANIM_W_DODGELEFT; To = CHARANIM_DODGELEFT;
+	[Revert] From = CHARANIM_W_DODGERIGHT; To = CHARANIM_DODGERIGHT;
+	[Revert] From = CHARANIM_W_DODGEFORWARD; To = CHARANIM_DODGEFORWARD;
+	[Revert] From = CHARANIM_W_DODGEBACKWARD; To = CHARANIM_DODGEBACKWARD;
+	[Revert] From = CHARANIM_W_DODGEFORWARDLEFT; To = CHARANIM_DODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_W_DODGEBACKWARDLEFT; To = CHARANIM_DODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_W_DODGEFORWARDRIGHT; To = CHARANIM_DODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_DODGEBACKWARDRIGHT; To = CHARANIM_DODGEBACKWARDRIGHT;
+
+	[Revert] From = CHARANIM_W_SHOOTDODGELEFT; To = CHARANIM_SHOOTDODGELEFT;
+	[Revert] From = CHARANIM_W_SHOOTDODGERIGHT; To = CHARANIM_SHOOTDODGERIGHT;
+	[Revert] From = CHARANIM_W_SHOOTDODGEFORWARD; To = CHARANIM_SHOOTDODGEFORWARD;
+	[Revert] From = CHARANIM_W_SHOOTDODGEBACKWARD; To = CHARANIM_SHOOTDODGEBACKWARD;
+
+	[Revert] From = CHARANIM_W_SHOOTDODGEFORWARDLEFT; To = CHARANIM_SHOOTDODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_W_SHOOTDODGEFORWARDRIGHT; To = CHARANIM_SHOOTDODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_SHOOTDODGEBACKWARDLEFT; To = CHARANIM_SHOOTDODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_W_SHOOTDODGEBACKWARDRIGHT; To = CHARANIM_SHOOTDODGEBACKWARDRIGHT;
+
+	[Revert] From = CHARANIM_W_SHOOTDODGELEFT_GETUP; To = CHARANIM_SHOOTDODGELEFT_GETUP;
+	[Revert] From = CHARANIM_W_SHOOTDODGERIGHT_GETUP; To = CHARANIM_SHOOTDODGERIGHT_GETUP;
+	[Revert] From = CHARANIM_W_SHOOTDODGEFORWARD_GETUP; To = CHARANIM_SHOOTDODGEFORWARD_GETUP;
+	[Revert] From = CHARANIM_W_SHOOTDODGEBACKWARD_GETUP; To = CHARANIM_SHOOTDODGEBACKWARD_GETUP;
+
+	[Revert] From = CHARANIM_W_JUMP; To = CHARANIM_JUMP;
+	[Revert] From = CHARANIM_W_JUMPFORWARD; To = CHARANIM_JUMPFORWARD;
+	[Revert] From = CHARANIM_W_JUMPFORWARDLEFT; To = CHARANIM_JUMPFORWARDLEFT;
+	[Revert] From = CHARANIM_W_JUMPFORWARDRIGHT; To = CHARANIM_JUMPFORWARDRIGHT;
+		
+	[Revert] From = CHARANIM_W_FALL; To = CHARANIM_FALL;
+	[Revert] From = CHARANIM_W_LAND; To = CHARANIM_LAND;
+
+	[Revert] From = CHARANIM_W_USE; To = CHARANIM_USE;
+	[Revert] From = CHARANIM_W_GETWEAPON; To = CHARANIM_GETWEAPON;
+	[Revert] From = CHARANIM_W_HOLSTERWEAPON; To = CHARANIM_HOLSTERWEAPON;
+	
+	[Revert] From = CHARANIM_W_GETDAMAGE; To = CHARANIM_GETDAMAGE;
+	[Revert] From = CHARANIM_W_GETDAMAGECROUCHED; To = CHARANIM_GETDAMAGECROUCHED;
+	
+	[Revert] From = CHARANIM_W_RANDOMDEATH1; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_RANDOMDEATH2; To = CHARANIM_RANDOMDEATH2;
+	[Revert] From = CHARANIM_W_RANDOMDEATH3; To = CHARANIM_RANDOMDEATH3;
+	[Revert] From = CHARANIM_W_RANDOMDEATH4; To = CHARANIM_RANDOMDEATH4;
+	[Revert] From = CHARANIM_W_SHOTGUNDEATH; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_W_SHOTGUNDEATH2; To = CHARANIM_SHOTGUNDEATH2;
+	[Revert] From = CHARANIM_W_BURNINGDEATH; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_W_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH2;
+	[Revert] From = CHARANIM_W_GRENADEDEATH; To = CHARANIM_GRENADEDEATH;
+	[Revert] From = CHARANIM_W_FALLINGDEATH; To = CHARANIM_FALLINGDEATH;
+	[Revert] From = CHARANIM_W_CUSTOMDEATH1; To = CHARANIM_CUSTOMDEATH1;
+	[Revert] From = CHARANIM_W_CUSTOMDEATH2; To = CHARANIM_CUSTOMDEATH2;
+
+	[Revert] From = CHARANIM_W_FORWARDLEFT; To = CHARANIM_FORWARDLEFT;
+	[Revert] From = CHARANIM_W_FORWARDRIGHT; To = CHARANIM_FORWARDRIGHT;
+	[Revert] From = CHARANIM_W_BACKWARDLEFT; To = CHARANIM_BACKWARDLEFT;
+	[Revert] From = CHARANIM_W_BACKWARDRIGHT; To = CHARANIM_BACKWARDRIGHT;
+
+// ------------------------------------------------------------------
+// 2 Handed Animations
+// ------------------------------------------------------------------
+
+	[Animation] Index = CHARANIM_2_WALK; Filename = anim\2_walk.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, ENEMY_WALK ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_RUN; Filename = anim\2_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, ENEMY_RUN ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_WALKBACKWARD; Filename = anim\2_walkbackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, - ENEMY_BACKWARDS ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_STRAFELEFT; Filename = anim\2_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - ENEMY_STRAFE , 0, 0 ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_STRAFERIGHT; Filename = anim\2_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( ENEMY_STRAFE , 0, 0 ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_TURNLEFT; Filename = anim\2_turnleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_TURNRIGHT; Filename = anim\2_turnright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_STAND; Filename = anim\mobster_2_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_CROUCH; Filename = anim\2_crouch.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_CUSTOMIDLE1; Filename = anim\idle_2_mobster_onactivate.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 12; String = "this->A_Play3DSound ( weapons, reload_jackhammer, gun );";
+	}
+
+	[Animation] Index = CHARANIM_2_CUSTOMIDLE2; Filename = anim\idle_aim_pumpshotgun.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Revert] From = CHARANIM_2_CUSTOMIDLE3; To = CHARANIM_CUSTOMIDLE3;
+	[Revert] From = CHARANIM_2_CUSTOMIDLE4; To = CHARANIM_CUSTOMIDLE4;
+/*
+	[Animation] Index = CHARANIM_2_SHOOTDODGELEFT; Filename = anim\2_enemy_shootdodgeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -3.50, 0, 0 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( -1.00, 0, 0 ); MiddlePosition2 = ( -3.00, 0, 0 );
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGERIGHT; Filename = anim\2_enemy_shootdodgeright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 3.50, 0, 0 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 1.00, 0, 0 ); MiddlePosition2 = ( 3.00, 0, 0 );
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEFORWARD; Filename = anim\2_enemy_shootdodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 4.50 ); Rotation = ( 0, 0, 0 ); MiddlePosition1 = ( 0, 0, 1.50 ); MiddlePosition2 = ( 0, 0, 3.50 );
+		[Message] Frame = 1; String = "this->A_Play3DSound ( characters, slow_motion, pelvis );";
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 8; String = "this->C_Reload();";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 11; String = "this->C_Jump( " ENEMY_SHOOTDODGEJUMP " );";
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEBACKWARD; Filename = anim\2_enemy_shootdodgebackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -2.50 ); Rotation = (0,0,0); MiddlePosition1 = ( 0, 0, -1.50 ); MiddlePosition2 = ( 0, 0, -2.00 );
+	}
+*/
+[Revert] From = CHARANIM_2_SHOOTDODGEFORWARD; To = CHARANIM_SHOOTDODGEFORWARD;
+[Revert] From = CHARANIM_2_SHOOTDODGERIGHT; To = CHARANIM_SHOOTDODGERIGHT;
+[Revert] From = CHARANIM_2_SHOOTDODGEBACKWARD; To = CHARANIM_SHOOTDODGEBACKWARD;
+[Revert] From = CHARANIM_2_SHOOTDODGELEFT; To = CHARANIM_SHOOTDODGELEFT;
+[Revert] From = CHARANIM_2_SHOOTDODGEFORWARDLEFT; To = CHARANIM_SHOOTDODGEFORWARDLEFT;
+[Revert] From = CHARANIM_2_SHOOTDODGEFORWARDRIGHT; To = CHARANIM_SHOOTDODGEFORWARDRIGHT;
+[Revert] From = CHARANIM_2_SHOOTDODGEBACKWARDLEFT; To = CHARANIM_SHOOTDODGEBACKWARDLEFT;
+[Revert] From = CHARANIM_2_SHOOTDODGEBACKWARDRIGHT; To = CHARANIM_SHOOTDODGEBACKWARDRIGHT;
+
+	[Animation] Index = CHARANIM_2_DODGELEFT; Filename = anim\2_dodgeleft_enemy.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (-3.795,0,0); Rotation = (0,0,0); MiddlePosition1 = (-1.2375,0,0); MiddlePosition2 = (-3.0525,0,0);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_2_DODGERIGHT; Filename = anim\2_dodgeright_enemy.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (3.795,0,0); Rotation = (0,0,0); MiddlePosition1 = (1.2375,0,0); MiddlePosition2 = (3.0525,0,0);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+		[Message] Frame = 23; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+		[Message] Frame = 28; String = "this->P_CreateprojectileToBone( dummy_character_roll, 1, torso );";
+	}
+
+	[Revert] From = CHARANIM_2_DODGEFORWARD; To = CHARANIM_DODGEFORWARD;
+	[Revert] From = CHARANIM_2_DODGEBACKWARD; To = CHARANIM_DODGEBACKWARD;
+
+	[Revert] From = CHARANIM_2_DODGEFORWARDLEFT; To = CHARANIM_DODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_2_DODGEBACKWARDLEFT; To = CHARANIM_DODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_2_DODGEFORWARDRIGHT; To = CHARANIM_DODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_2_DODGEBACKWARDRIGHT; To = CHARANIM_DODGEBACKWARDRIGHT;
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGELEFT_GETUP; Filename = anim\shootdodgeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (-3.75,0,0); Rotation = (0,0,0); MiddlePosition1 = (-1.575,0,0); MiddlePosition2 = (-3.15,0,0);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGERIGHT_GETUP; Filename = anim\shootdodgeright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (3.75,0,0); Rotation = (0,0,0); MiddlePosition1 = (1.575,0,0); MiddlePosition2 = (3.15,0,0);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 16; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEFORWARD_GETUP; Filename = anim\shootdodgeforward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,3.5); Rotation = (0,0,0); MiddlePosition1 = (0,0,1.5); MiddlePosition2 = (0,0,3);
+		[Message] Frame = 3; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_2_SHOOTDODGEBACKWARD_GETUP; Filename = anim\shootdodgebackward_getup.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 18; String = "this->A_Play3DSound ( characters, dodge_medium, pelvis );";
+	}
+
+	[Animation] Index = CHARANIM_2_JUMP; Filename = anim\2_jumpUp.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+ 		[Message] Frame = 10; String = "this->C_Jump( 7.5  );";
+	}
+
+	[Animation] Index = CHARANIM_2_JUMPFORWARD; Filename = anim\2_jumpForward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, 1.25 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "this->C_Jump( 7.5 );";
+		[Message] Frame = 0; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 49; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_2_JUMPFORWARDRIGHT; Filename = anim\2_jumpForwardRight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0.6, 0, 0.6 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "this->C_Jump( 7.5  );";
+		[Message] Frame = 0; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 49; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_2_JUMPFORWARDLEFT; Filename = anim\2_jumpForwardLeft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( -0.5, 0, 0.5 ); Rotation = ( 0, 0, 0 );
+		[Message] Frame = 0; String = "this->C_Jump( 7.5 );";
+		[Message] Frame = 0; String = "this->A_Play3DSound ( characters, jump_medium, pelvis );";
+		[Message] Frame = 49; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_2_FALL; Filename = anim\2_fall.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 2; String = "this->P_Createprojectiletobone(dummy_footstep_land,1,foot-l);";
+		[Message] Frame = 6; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, foot-l );";
+		[Message] Frame = 10; String = "this->P_CreateprojectileToBone( dummy_footstep_land, 1, foot-l );";
+		[Message] Frame = 69; String = "this->a_play3dsound( characters, Death_Starting_Falling, head );";
+	}
+
+	[Revert] From = CHARANIM_2_LAND; To = CHARANIM_LAND;
+
+	[Revert] From = CHARANIM_2_USE; To = CHARANIM_USE;
+
+	[Revert] From = CHARANIM_2_GETWEAPON; To = CHARANIM_GETWEAPON;
+	[Revert] From = CHARANIM_2_HOLSTERWEAPON; To = CHARANIM_HOLSTERWEAPON;
+
+	[Animation] Index = CHARANIM_2_GETDAMAGE; Filename = anim\2_gethit_1000ms.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_gethit, head );";
+	}
+
+	[Animation] Index = CHARANIM_2_GETDAMAGECROUCHED; Filename = anim\2_gethit_crouched_0750ms.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_gethit, head );";
+	}
+
+	[Revert] From = CHARANIM_2_RANDOMDEATH1; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_2_RANDOMDEATH2; To = CHARANIM_RANDOMDEATH2;
+	[Revert] From = CHARANIM_2_RANDOMDEATH3; To = CHARANIM_RANDOMDEATH3;
+	[Revert] From = CHARANIM_2_RANDOMDEATH4; To = CHARANIM_RANDOMDEATH4;
+	[Revert] From = CHARANIM_2_SHOTGUNDEATH; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_2_SHOTGUNDEATH2; To = CHARANIM_SHOTGUNDEATH2;
+	[Revert] From = CHARANIM_2_BURNINGDEATH; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_2_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH2;
+	[Revert] From = CHARANIM_2_GRENADEDEATH; To = CHARANIM_GRENADEDEATH;
+	[Revert] From = CHARANIM_2_FALLINGDEATH; To = CHARANIM_FALLINGDEATH;
+	[Revert] From = CHARANIM_2_CUSTOMDEATH1; To = CHARANIM_CUSTOMDEATH1;
+	[Revert] From = CHARANIM_2_CUSTOMDEATH2; To = CHARANIM_CUSTOMDEATH2;
+
+	[Animation] Index = CHARANIM_2_FORWARDLEFT; Filename = anim\2_forwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - ENEMY_DIAGONAL , 0, ENEMY_DIAGONAL ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_FORWARDRIGHT; Filename = anim\2_forwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( ENEMY_DIAGONAL , 0, ENEMY_DIAGONAL ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_BACKWARDLEFT; Filename = anim\2_backwardleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( - ENEMY_DIAGONAL , 0, - ENEMY_DIAGONAL ); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_2_BACKWARDRIGHT; Filename = anim\2_backwardright.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( ENEMY_DIAGONAL , 0, - ENEMY_DIAGONAL ); Rotation = (0,0,0);
+	}
+
+// ------------------------------------------------------------------
+// Wounded 2 Handed
+// ------------------------------------------------------------------
+
+	// 121 - 2 Handed Wounded Walk
+	[Animation] Index = CHARANIM_W_2_WALK; Filename = anim\2_w_walk.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,2.06); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "this->C_AddHealth ( 0.5 );";
+	}
+
+	// 122 - 2 Handed Wounded Run
+	[Animation] Index = CHARANIM_W_2_RUN; Filename = anim\2_w_run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,2.54); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_AddHealth ( 0.5 );";
+		[Message] Frame = 20; String = "this->C_AddHealth ( 0.5 );";
+	}
+
+	// 123 - 2 Handed Wounded Walk Backward
+	[Animation] Index = CHARANIM_W_2_WALKBACKWARD; Filename = anim\2_w_walkbackward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,-2.58); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "this->C_AddHealth ( 0.5 );";
+	}
+
+	// 124 - 2 Handed Wounded Strafe Left
+	[Animation] Index = CHARANIM_W_2_STRAFELEFT; Filename = anim\2_w_strafeleft.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (-2.54,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "this->C_AddHealth ( 0.5 );";
+	}
+
+	// 125 - 2 Handed Wounded Strafe Right
+	[Animation] Index = CHARANIM_W_2_STRAFERIGHT; Filename = anim\2_w_straferight.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (2.54,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "this->C_AddHealth ( 0.5 );";
+	}
+
+//	[Revert] From = CHARANIM_W_2_TURN180; To = CHARANIM_2_TURN180;
+	[Revert] From = CHARANIM_W_2_TURNLEFT; To = CHARANIM_2_TURNLEFT;
+	[Revert] From = CHARANIM_W_2_TURNRIGHT; To = CHARANIM_2_TURNRIGHT;
+
+	// 129 - 2 Handed Wounded Stand
+	[Animation] Index = CHARANIM_W_2_STAND; Filename = anim\2_w_stand.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "this->C_AddHealth ( 0.5 );";
+	}
+
+
+	[Revert] From = CHARANIM_W_2_CROUCH; To = CHARANIM_2_CROUCH;
+	[Revert] From = CHARANIM_W_2_CUSTOMIDLE1; To = CHARANIM_W_CUSTOMIDLE1;
+
+	[Animation] Index = CHARANIM_W_2_CUSTOMIDLE2; Filename = anim\idle_aim_coltcommando_crouching.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Revert] From = CHARANIM_W_2_CUSTOMIDLE3; To = CHARANIM_W_CUSTOMIDLE3;
+	[Revert] From = CHARANIM_W_2_CUSTOMIDLE4; To = CHARANIM_W_CUSTOMIDLE4;
+
+	[Revert] From = CHARANIM_W_2_DODGELEFT; To = CHARANIM_2_DODGELEFT;
+	[Revert] From = CHARANIM_W_2_DODGERIGHT; To = CHARANIM_2_DODGERIGHT;
+	[Revert] From = CHARANIM_W_2_DODGEFORWARD; To = CHARANIM_2_DODGEFORWARD;
+	[Revert] From = CHARANIM_W_2_DODGEBACKWARD; To = CHARANIM_2_DODGEBACKWARD;
+	[Revert] From = CHARANIM_W_2_DODGEFORWARDLEFT; To = CHARANIM_DODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_W_2_DODGEBACKWARDLEFT; To = CHARANIM_DODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_W_2_DODGEFORWARDRIGHT; To = CHARANIM_DODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_2_DODGEBACKWARDRIGHT; To = CHARANIM_DODGEBACKWARDRIGHT;
+
+	[Revert] From = CHARANIM_W_2_SHOOTDODGELEFT; To = CHARANIM_2_SHOOTDODGELEFT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGERIGHT; To = CHARANIM_2_SHOOTDODGERIGHT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEFORWARD; To = CHARANIM_2_SHOOTDODGEFORWARD;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEBACKWARD; To = CHARANIM_2_SHOOTDODGEBACKWARD;
+
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEFORWARDLEFT; To = CHARANIM_2_SHOOTDODGEFORWARDLEFT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEFORWARDRIGHT; To = CHARANIM_2_SHOOTDODGEFORWARDRIGHT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEBACKWARDLEFT; To = CHARANIM_2_SHOOTDODGEBACKWARDLEFT;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEBACKWARDRIGHT; To = CHARANIM_2_SHOOTDODGEBACKWARDRIGHT;
+
+	[Revert] From = CHARANIM_W_2_SHOOTDODGELEFT_GETUP; To = CHARANIM_2_SHOOTDODGELEFT_GETUP;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGERIGHT_GETUP; To = CHARANIM_2_SHOOTDODGERIGHT_GETUP;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEFORWARD_GETUP; To = CHARANIM_2_SHOOTDODGEFORWARD_GETUP;
+	[Revert] From = CHARANIM_W_2_SHOOTDODGEBACKWARD_GETUP; To = CHARANIM_2_SHOOTDODGEBACKWARD_GETUP;
+
+	[Revert] From = CHARANIM_W_2_JUMP; 				To = CHARANIM_2_JUMP;
+	[Revert] From = CHARANIM_W_2_JUMPFORWARD;		To = CHARANIM_2_JUMPFORWARD;
+	[Revert] From = CHARANIM_W_2_JUMPFORWARDLEFT;	To = CHARANIM_2_JUMPFORWARDLEFT;
+	[Revert] From = CHARANIM_W_2_JUMPFORWARDRIGHT;	To = CHARANIM_2_JUMPFORWARDRIGHT;
+
+	[Revert] From = CHARANIM_W_2_FALL; To = CHARANIM_2_FALL;
+	[Revert] From = CHARANIM_W_2_LAND; To = CHARANIM_2_LAND;
+
+	[Revert] From = CHARANIM_W_2_USE; To = CHARANIM_2_USE;
+	[Revert] From = CHARANIM_W_2_GETWEAPON; To = CHARANIM_2_GETWEAPON;
+	[Revert] From = CHARANIM_W_2_HOLSTERWEAPON; To = CHARANIM_2_HOLSTERWEAPON;
+
+	[Revert] From = CHARANIM_W_2_GETDAMAGE; To = CHARANIM_2_GETDAMAGE;
+	[Revert] From = CHARANIM_W_2_GETDAMAGECROUCHED; To = CHARANIM_2_GETDAMAGECROUCHED;
+	
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH1; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH2; To = CHARANIM_RANDOMDEATH2;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH3; To = CHARANIM_RANDOMDEATH3;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH4; To = CHARANIM_RANDOMDEATH4;
+	[Revert] From = CHARANIM_W_2_SHOTGUNDEATH; To = CHARANIM_SHOTGUNDEATH;
+	[Revert] From = CHARANIM_W_2_SHOTGUNDEATH2; To = CHARANIM_SHOTGUNDEATH2;
+	[Revert] From = CHARANIM_W_2_BURNINGDEATH; To = CHARANIM_BURNINGDEATH;
+	[Revert] From = CHARANIM_W_2_BURNINGDEATH2; To = CHARANIM_BURNINGDEATH2;
+	[Revert] From = CHARANIM_W_2_GRENADEDEATH; To = CHARANIM_GRENADEDEATH;
+
+	[Revert] From = CHARANIM_W_2_FALLINGDEATH; To = CHARANIM_FALLINGDEATH;
+	[Revert] From = CHARANIM_W_2_CUSTOMDEATH1; To = CHARANIM_CUSTOMDEATH1;
+	[Revert] From = CHARANIM_W_2_CUSTOMDEATH2; To = CHARANIM_CUSTOMDEATH2;
+
+	[Revert] From = CHARANIM_W_2_FORWARDLEFT; To = CHARANIM_2_FORWARDLEFT;
+	[Revert] From = CHARANIM_W_2_FORWARDRIGHT; To = CHARANIM_2_FORWARDRIGHT;
+	[Revert] From = CHARANIM_W_2_BACKWARDLEFT; To = CHARANIM_2_BACKWARDLEFT;
+	[Revert] From = CHARANIM_W_2_BACKWARDRIGHT; To = CHARANIM_2_BACKWARDRIGHT;
+
+// ------------------------------------------------------------------
+// Reloading
+// ------------------------------------------------------------------
+
+// No need to define reloads for LEADPIPE and BASEBALLBAT as they have unlimited ammo
+	[Revert] From = CHARANIM_RELOADEMPTY; To = CHARANIM_RELOADGRENADE;
+	[Revert] From = CHARANIM_RELOADLEADPIPE; To = CHARANIM_SHOOTLEADPIPE;
+	[Revert] From = CHARANIM_RELOADBASEBALLBAT; To = CHARANIM_SHOOTBASEBALLBAT;
+
+	[Animation] Index = CHARANIM_RELOADBERETTA; Filename = anim\reloadberetta.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Hide( FALSE );";
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADBERETTADUAL; Filename = anim\reloadberettadual.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 10; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADDESERTEAGLE; Filename = anim\reloaddeserteagle.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 35; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADSAWEDSHOTGUN; Filename = anim\reloadsawedshotgun.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 37; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADPUMPSHOTGUN; Filename = anim\reloadpumpshotgun.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 2; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 17; String = "this->A_Play3DSound( weapons, Reload_PumpShotgun, gun);";
+		[Message] Frame = 17; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADINGRAM; Filename = anim\reloadingram.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 30; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 59; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADINGRAMDUAL; Filename = anim\reloadberettadual.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 10; String = "LeftHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Revert] From = CHARANIM_RELOADSNIPER; To = CHARANIM_RELOADMP5;
+
+	[Animation] Index = CHARANIM_RELOADMP5; Filename = anim\reloadmp5.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADJACKHAMMER; Filename = anim\reloadjackhammer.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Revert] From = CHARANIM_RELOADMOLOTOV; To = CHARANIM_RELOADGRENADE;
+
+	[Animation] Index = CHARANIM_RELOADGRENADE; Filename = anim\reloadgrenade.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 14;  String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 14; String = "this->C_Reload();";
+	}
+
+	[Animation] Index = CHARANIM_RELOADM79; Filename = anim\reloadm79.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 20; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_RELOAD ");";
+		[Message] Frame = 39; String = "this->C_Reload();";
+	}
+
+	[Revert] From = CHARANIM_RELOADPAINKILLER; To = CHARANIM_RELOADGRENADE;
+
+// ------------------------------------------------------------------
+// Shooting
+// ------------------------------------------------------------------
+	[Animation] Index = CHARANIM_SHOOTEMPTY; Filename = anim\shootempty.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+	
+	[Revert] From = CHARANIM_SHOOTLOWEMPTY; To = CHARANIM_SHOOTEMPTY;
+	[Revert] From = CHARANIM_SHOOTHIGHEMPTY; To = CHARANIM_SHOOTEMPTY;
+
+	[Animation] Index = CHARANIM_SHOOTLEADPIPE; Filename = anim\shootleadpipe.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_DODGESHOOTGRINTIME ");";
+		[Message] Frame = 7; String = "this->p_createprojectiletobone( bullet_leadpipe, 1, neck );";
+		[Message] Frame = 9; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_leadpipe, \"\" );";
+		[Message] Frame = 29; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_leadpipe, \"\" );";
+		[Message] Frame = 31; String = "this->p_createprojectiletobone( bullet_leadpipe, 1, neck );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWLEADPIPE; Filename = anim\shootleadpipe_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHLEADPIPE; Filename = anim\shootleadpipe_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTBASEBALLBAT; Filename = anim\shootbaseballbat.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0;  String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_DODGESHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_Animate(" WEAPONANIM_SHOOT ");";
+		[Message] Frame = 4;  String = "this->p_createprojectiletobone( bullet_baseballbat, 1, head );";
+		[Message] Frame = 7; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_baseballbat, \"\" );";
+		[Message] Frame = 32; String = "this->p_createprojectiletobone( bullet_baseballbat, 1, head );";
+		[Message] Frame = 30; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_baseballbat, \"\" );";
+	}
+	
+	[Animation] Index = CHARANIM_SHOOTLOWBASEBALLBAT; Filename = anim\shootbaseballbat_down.kf2;
+//	[Animation] Index = CHARANIM_SHOOTLOWBASEBALLBAT; Filename = anim\shootbaseballbat.kf2;
+
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHBASEBALLBAT; Filename = anim\shootbaseballbat_up.kf2;
+//	[Animation] Index = CHARANIM_SHOOTHIGHBASEBALLBAT; Filename = anim\shootbaseballbat.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTBERETTA; Filename = anim\shootberetta.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWBERETTA; Filename = anim\shootberetta_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHBERETTA; Filename = anim\shootberetta_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTBERETTADUAL; Filename = anim\shootberettadual.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 3; String = "LeftHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+
+		[Message] Frame = 0; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_beretta, \"\");";
+		[Message] Frame = 0; String = "RightHandWeapon->PS_StartEffect ( Muzzle_Beretta, \"\" );";
+		[Message] Frame = 8; String = "LeftHandWeapon->A_Play3DSound ( weapons, shoot_beretta, \"\");";
+		[Message] Frame = 8; String = "LeftHandWeapon->PS_StartEffect ( Muzzle_Beretta, \"\" );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWBERETTADUAL; Filename = anim\shootberettadual_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHBERETTADUAL; Filename = anim\shootberettadual_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTDESERTEAGLE; Filename = anim\shootdeserteagle.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWDESERTEAGLE; Filename = anim\shootdeserteagle_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHDESERTEAGLE; Filename = anim\shootdeserteagle_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTSAWEDSHOTGUN; Filename = anim\shootsawedshotgun.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWSAWEDSHOTGUN; Filename = anim\shootsawedshotgun_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHSAWEDSHOTGUN; Filename = anim\shootsawedshotgun_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 	}
+
+	[Animation] Index = CHARANIM_SHOOTPUMPSHOTGUN; Filename = anim\shootpumpshotgun.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+ 		[Message] Frame = 14; String = "this->A_Play3DSound( weapons, Shoot_PumpShotgun_Cock, gun );";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWPUMPSHOTGUN; Filename = anim\shootpumpshotgun_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHPUMPSHOTGUN; Filename = anim\shootpumpshotgun_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+
+	[Animation] Index = CHARANIM_SHOOTINGRAM; Filename = anim\shootingram.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "RightHandWeapon->PS_StartEffect ( Muzzle_ingram, \"\" );";
+		[Message] Frame = 0; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_ingram, \"\" );";
+		[Message] Frame = 2; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 5; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT_NOEFFECTS "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 8; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 11; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT_NOEFFECTS "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+	
+	[Animation] Index = CHARANIM_SHOOTLOWINGRAM; Filename = anim\shootingram_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHINGRAM; Filename = anim\shootingram_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTINGRAMDUAL; Filename = anim\shootingramdual.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "RightHandWeapon->PS_StartEffect ( Muzzle_ingramdual, \"\" );";
+		[Message] Frame = 0; String = "RightHandWeapon->A_Play3DSound ( weapons, shoot_ingramdual, \"\" );";
+
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 1; String = "LeftHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT_NOEFFECTS "," WEAPONANIM_SHOOTEMPTY ");";
+
+		[Message] Frame = 2; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 3; String = "LeftHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT_NOEFFECTS "," WEAPONANIM_SHOOTEMPTY ");";
+
+		[Message] Frame = 4; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 5; String = "LeftHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT_NOEFFECTS "," WEAPONANIM_SHOOTEMPTY ");";
+
+		[Message] Frame = 6; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 7; String = "LeftHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT_NOEFFECTS "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+
+	[Animation] Index = CHARANIM_SHOOTHIGHINGRAMDUAL; Filename = anim\shootingramdual_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWINGRAMDUAL; Filename = anim\shootingramdual_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTSNIPER; Filename = anim\shootmp5.kf2;
+	[Properties]
+	{
+ 		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWSNIPER; Filename = anim\shootmp5_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHSNIPER; Filename = anim\shootmp5_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTMP5; Filename = anim\shootColt.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWMP5; Filename = anim\shootColt_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHMP5; Filename = anim\shootColt_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTJACKHAMMER; Filename = anim\shootjackhammer.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWJACKHAMMER; Filename = anim\shootjackhammer_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHJACKHAMMER; Filename = anim\shootjackhammer_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTMOLOTOV; Filename = anim\shootgrenade.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 14; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Revert]	From = CHARANIM_SHOOTLOWMOLOTOV; To = CHARANIM_SHOOTLOWGRENADE;
+	[Revert]	From = CHARANIM_SHOOTHIGHMOLOTOV; To = CHARANIM_SHOOTHIGHGRENADE;
+
+	[Animation] Index = CHARANIM_SHOOTGRENADE; Filename = anim\shootgrenade.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 10; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 14; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWGRENADE; Filename = anim\shootgrenade_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHGRENADE; Filename = anim\shootgrenade_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTM79; Filename = anim\shootm79.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWM79; Filename = anim\shootm79_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHM79; Filename = anim\shootm79_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTPAINKILLER; Filename = anim\shootpainkiller.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		//[Message] Frame = 1; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "maxpayne_gamemode->a_playsound( characters, use_painkillers);";
+		[Message] Frame = 40; String = "MaxPayne_HudMode->mphm_flashtocolor( 0xffffff70, 0.01, 0.02, 0.1 );";
+		[Message] Frame = 40; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+		[Message] Frame = 40; String = "this->C_AddHealth(20);";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWPAINKILLER; Filename = anim\shootpainkiller.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHPAINKILLER; Filename = anim\shootpainkiller.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+// ----------------------------------------------------------------------------
+// Discarding weapons
+// ----------------------------------------------------------------------------
+
+	[Revert]	From = CHARANIM_DISCARDEMPTY; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDLEADPIPE; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDBASEBALLBAT; To = CHARANIM_DISCARDBERETTA;
+
+	[Animation] Index = CHARANIM_DISCARDBERETTA; Filename = anim\holsterweapon.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Revert]	From = CHARANIM_DISCARDBERETTADUAL; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDDESERTEAGLE; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDSAWEDSHOTGUN; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDPUMPSHOTGUN;  To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDINGRAM; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDINGRAMDUAL; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDSNIPER; To = CHARANIM_DISCARDBERETTA;
+
+	[Revert]	From = CHARANIM_DISCARDMP5; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDJACKHAMMER; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDMOLOTOV; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDGRENADE; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDM79; To = CHARANIM_DISCARDBERETTA;
+	[Revert]	From = CHARANIM_DISCARDPAINKILLER; To = CHARANIM_DISCARDBERETTA;
+
+// Modeswitch animations
+	[Revert]	From = CHARANIM_MODESWITCHEMPTY; 		To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHLEADPIPE;		To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHBASEBALLBAT;	To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHBERETTA;		To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHBERETTADUAL;	To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHDESERTEAGLE;	To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHSAWEDSHOTGUN;	To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHPUMPSHOTGUN;	To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHINGRAM;		To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHINGRAMDUAL;	To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHSNIPER;		To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHMP5;			To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHJACKHAMMER;	To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHMOLOTOV;		To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHGRENADE;		To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHM79;			To = CHARANIM_HOLSTERWEAPON;
+	[Revert]	From = CHARANIM_MODESWITCHPAINKILLER;	To = CHARANIM_HOLSTERWEAPON;
+}
+
+// ---------------------------------------------------
+
+[Attributes]
+LeaningAngleWhileRunning = 4;		// in degrees
+LeaningSpeedWhileRunning = 30;		// in degrees per second
+
+DefaultAimingPointOffset 		= ( 0.12, 1.50, 0.00 );
+CrouchingAimingPointOffset 		= ( 0.12, 1.00, 0.00 ); // this is  not in use
+ShootDodgingAimingPointOffset	= ( 0.12, 1.00, 0.00 ); // this is  not in use
+
+// z is -0.12 so that camera prediction sphere collisions in front of max can be avoided
+// that yields to better results than the error prone code hack to ignore those collisions
+// z value may need adjustment later if character capsule or camera sphere radius changes
+DefaultCameraPointOffset		= ( 0.12, 1.75, -0.12 ); 
+CrouchingCameraPointOffset		= ( 0.12, 1.15, -0.12 );
+ShootDodgingCameraPointOffset	= ( 0.12, 0.90, -0.12 );
+
+SoundListenerPointOffset 	= ( 0.00, 1.75, 0.00 );
+LeftHandWeaponOffset = (0, 0.01, 0.04);
+
+LookAtBoneName 			= "Head";
+LookAtPivotBoneName 	= "Neck";
+LookAtHorizontalLimit	= 90.0;		// in degrees
+LookAtVerticalLimit		= 70.0;		// in degrees
+LookAtBlendTime			= 0.15;		// in seconds
+
+RightShadowBoneName		= "Foot-R";
+LeftShadowBoneName		= "Foot-L";
+
+AutoAimTargetBoneName	= "JBack";
+AIAimingTargetBoneName	= "JBack";
+
+DeadBodyMidpointBoneName		= "Torso";
+DeadBodyCapsuleRadiusMultiplier	= 4.0;
+DeadBodyCapsuleHeightMultiplier	= 0.1;
+
+DeathAngleAdjustingEnabled = true;
+DeathAngleHeadBoneName = "neck";
+DeathAngleLeftFootBoneName = "loleg-l";
+DeathAngleRightFootBoneName = "loleg-r";
+
+// One handed Boneset
+[OneHandedLowerBodyBone] Name = "Pelvis";		// Lower Body Pelvis
+
+[OneHandedUpperBodyBone]  Name = "Torso";		// Upper Body Torso
+[OneHandedUpperBodyBone]   Name = "Neck";		// Neck
+[OneHandedUpperBodyBone]    Name = "Head";		// Head
+[OneHandedLowerBodyBone]   Name = "shoulders";	// Jacket Shoulders
+[OneHandedLowerBodyBone]    Name = "JBack";		// Jacket Back Upper
+[OneHandedLowerBodyBone]     Name = "JBLL";		// Jacket Back Lower Left
+[OneHandedLowerBodyBone]     Name = "JBRL";		// Jacket Back Lower Right
+[OneHandedLowerBodyBone]     Name = "Belt";		// Jacket Back Belt
+[OneHandedLowerBodyBone]    Name = "JfUL";		// Jacket Front Upper Left
+[OneHandedLowerBodyBone]     Name = "JFLL";		// Jacket Front Lower Left
+[OneHandedLowerBodyBone]    Name = "JfUR";		// Jacket Front Upper Right
+[OneHandedLowerBodyBone]     Name = "JFLR";		// Jacket Front Lower Right
+[OneHandedUpperBodyBone]   Name = "UpArm-R";		// Right Hand (Upper)
+[OneHandedUpperBodyBone]    Name = "LoArm-R";	// Right Hand (Lower)
+[OneHandedUpperBodyBone]     Name = "Hand-R";	// Right Hand (Fist)
+[OneHandedUpperBodyBone]      Name = "Gun";		// Right Hand (Gun)
+[OneHandedLowerBodyBone]    Name = "UpArm-L";	// Left Hand (Upper)
+[OneHandedLowerBodyBone]     Name = "LoArm-L";	// Left Hand (Lower)
+[OneHandedLowerBodyBone]      Name = "Hand-L";	// Left Hand (Fist)
+[OneHandedLowerBodyBone]  Name = "UpLeg-R";		// Right Leg (Tie)
+[OneHandedLowerBodyBone]   Name = "LoLeg-R";	// Right Leg (Calf)
+[OneHandedLowerBodyBone]    Name = "Foot-R";	// Right Foot
+[OneHandedLowerBodyBone]     Name = "Toe-R";	// Right Toes
+[OneHandedLowerBodyBone]  Name = "UpLeg-L";		// Left Leg (Tie)
+[OneHandedLowerBodyBone]   Name = "LoLeg-L";	// Left Leg (Calf)
+[OneHandedLowerBodyBone]    Name = "Foot-L";	// Left Foot
+[OneHandedLowerBodyBone]     Name = "Toe-L";	// Left Toes
+
+// -------------------------------------------------------------------------
+
+// Two Handed Boneset
+[TwoHandedLowerBodyBone] Name = "Pelvis";		// Lower Body Pelvis
+
+[TwoHandedUpperBodyBone]  Name = "Torso";		// Upper Body Torso
+[TwoHandedUpperBodyBone]   Name = "Neck";		// Neck
+[TwoHandedUpperBodyBone]    Name = "Head";		// Head
+[TwoHandedLowerBodyBone]   Name = "shoulders";	// Jacket Shoulders
+[TwoHandedLowerBodyBone]    Name = "JBack";		// Jacket Back Upper
+[TwoHandedLowerBodyBone]     Name = "Belt";		// Jacket Back Belt
+[TwoHandedLowerBodyBone]     Name = "JBLL";		// Jacket Back Lower Left
+[TwoHandedLowerBodyBone]     Name = "JBRL";		// Jacket Back Lower Right
+[TwoHandedLowerBodyBone]    Name = "JfUL";		// Jacket Front Upper Left  !!!
+[TwoHandedLowerBodyBone]     Name = "JFLL";		// Jacket Front Lower Left
+[TwoHandedLowerBodyBone]    Name = "JfUR";		// Jacket Front Upper Right !!!
+[TwoHandedLowerBodyBone]     Name = "JFLR";		// Jacket Front Lower Right
+[TwoHandedUpperBodyBone]   Name = "UpArm-R";		// Right Hand (Upper)
+[TwoHandedUpperBodyBone]    Name = "LoArm-R";	// Right Hand (Lower)
+[TwoHandedUpperBodyBone]     Name = "Hand-R";	// Right Hand (Fist)
+[TwoHandedUpperBodyBone]      Name = "Gun";		// Right Hand (Gun)
+[TwoHandedUpperBodyBone]    Name = "UpArm-L";	// Left Hand (Upper)
+[TwoHandedUpperBodyBone]     Name = "LoArm-L";	// Left Hand (Lower)
+[TwoHandedUpperBodyBone]      Name = "Hand-L";	// Left Hand (Fist)
+[TwoHandedLowerBodyBone]  Name = "UpLeg-R";		// Right Leg (Tie)
+[TwoHandedLowerBodyBone]   Name = "LoLeg-R";	// Right Leg (Calf)
+[TwoHandedLowerBodyBone]    Name = "Foot-R";	// Right Foot
+[TwoHandedLowerBodyBone]     Name = "Toe-R";	// Right Toes
+[TwoHandedLowerBodyBone]  Name = "UpLeg-L";		// Left Leg (Tie)
+[TwoHandedLowerBodyBone]   Name = "LoLeg-L";	// Left Leg (Calf)
+[TwoHandedLowerBodyBone]    Name = "Foot-L";	// Left Foot
+[TwoHandedLowerBodyBone]     Name = "Toe-L";	// Left Toes
+
+// GunBones
+[RightHandGunBone] Name = "gun";
+[LeftHandGunBone] Name = "hand-l";
+
+// Aiming pivot bones
+[OneHandedAimingPivotBone] Name = "Torso";
+[TwoHandedAimingPivotBone] Name = "Torso";

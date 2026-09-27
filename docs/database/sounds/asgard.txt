@@ -1,0 +1,472 @@
+#include <..\soundid.h>
+
+[P3L5a_005_cam]	// Max: It was an impressive floorshow... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5a_005_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L5b_002_cam]	// Max: Now I was close... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5b_002_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L5a_01]	// Merc acknowledges target location
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5a_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L5a_02]	// Merc asks for cover before entering control room
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5a_02.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L5a_03]	// Mercs talk about movies
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5a_03.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L5b_01]	// Merc boss commanding to take Max down.
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5b_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L5b_02]	// Killersuit: CIA, FBI, seen one, seen em all...
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5b_02.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L5a_Max_01]	// Max: comments on security monitors
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5a_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+[P3L5a_Max_02]	// Max: comments on video tape on desk
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5a_Max_02.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L5a_Max_03]	// Max: comments on blueprints
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5a_Max_03.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P3L5b_Max_01]	// Max: comments on open file cabinet
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part3\P3L5b_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[rockstar]	// radio talk
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\misc\rockstar.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 3;
+		FallOff = 25;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+//--------------------------------------------------------------------
+[doorcode_invalid]  		// The beeping of a security panel, wrong code
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = asgard\security_access_denied.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 5;
+		FallOff = 15;
+        Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+}
+[doorcode_valid]  		// The beeping of a security panel, right code
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = asgard\security_access_granted.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 5;
+		FallOff = 15;
+        Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+}
+
+[archive_fall]  		// The beeping of a security panel, right code
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = asgard\archive_shelf_falls.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 20;
+		FallOff = 50;
+        Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+}
+
+[helicopter_near]  			// Helicopter distance sounds
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = dynamic\chopper\helicopter_near.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 2;
+		FallOff = 90;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+
+[monolith_falling]  		// Monolith starts to fall
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = asgard\monolith_falling.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 30;
+		FallOff = 70;
+        Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+}
+
+[monolith_hits_platform]  		// Monolith hits platform
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = asgard\monolith_hits_platform.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 30;
+		FallOff = 70;
+        Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+}
+
+[monolith_crashes_down]  		// Monolith hits ground
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = asgard\monolith_crashes_down.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+		Hotspot = 30;
+		FallOff = 70;
+        Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+
+}
+
+
+
+

@@ -1,0 +1,39 @@
+#include <..\level_items.h>
+#include <..\object_lods.h>
+#include <..\weaponid.h>
+
+[LOD]
+{
+    [Geometry]
+	ExportData = medipack_small.kf2;
+    Distance = PROJECTILE_LOD_DRAW_ALWAYS;
+}
+
+[Properties]
+TriggerRadius = 0.75;
+CantPickupMessagesTimeout = CANTPICKUP_TIMEOUT;
+MatchingWeaponID = WEAPONID_PAINKILLER;
+PickupIfAmmoNotFull = true;
+
+[OnFirstPickup]
+{
+	[Message] string = "activator->c_pickupweapon( painkiller );";
+	[Message] string = "activator->c_pickupammo( painkiller, 1 );";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_painkiller );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_PAINKILLERS\" );";
+//	[Message] string = "maxpayne_gamemode->A_PlaySound(characters, get_painkillers);";
+}
+
+[OnPickUp]
+{
+	[Message] string = "activator->c_pickupweapon( painkiller );";
+	[Message] string = "activator->c_pickupammo( painkiller, 1 );";
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_painkiller );";
+	[Message] string = "maxpayne_hudmode->mphm_print( \"HUDPRINT_PICKUP_PAINKILLERS\" );";
+}
+
+[OnCantPickup]
+{
+	[Message] string = "maxpayne_gamemode->a_playsound( level_items, pickup_ammo_full );";
+	[Message] string = "maxpayne_hudmode->mphm_print( HUDPRINT_PICKUP_PAINKILLERS_FULL );";
+}

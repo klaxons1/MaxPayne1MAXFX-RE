@@ -38,12 +38,27 @@ enum CharacterAnimIndex {
     kCharAnimShootBeretta = 313
 };
 
+// One scripted clip frame hook: [Animation] [Properties]
+// [Message] Frame = N; String = "...". Cinematic clips drive the whole
+// cutscene through these (CAM_Animate*, fades, FSM_Send at the last frame).
+struct ClipFrameMessage {
+    int frame;
+    std::string text;
+
+    ClipFrameMessage() : frame(0) {}
+};
+
 struct CharacterAnimClip {
     int index;
     std::string filename;
     std::string resolvedPath;
     Vec3 endPosition;
     Vec3 endRotation;
+    // [Movement] Filename: a separate root-motion KF2 ("*_mov.kf2") sampled
+    // alongside the clip; cinematic clips move the character with it.
+    std::string movementFile;
+    std::string resolvedMovement;
+    std::vector<ClipFrameMessage> frameMessages;
 
     CharacterAnimClip() : index(-1) {}
 };
@@ -155,6 +170,18 @@ struct CharacterActor {
     bool sawPlayer;
     bool grounded;
     float clipLock;
+    // Cross-fade (engine crossAnimateObject): the previous clip keeps
+    // sampling for a short blend after a switch instead of hard-popping.
+    int prevAnimIndex;
+    float blendTime;
+    float prevAnimTime;  // the outgoing clip keeps its own clock while blending
+    // Locomotion speed in m/s. The engine moves a character along the
+    // movement spline (origin -> [Movement] EndPosition) over the clip
+    // duration (X_CRSplineMovementUpdate), so speed = |EndPosition| /
+    // clipLength. The app fills this once the walk clip has been loaded;
+    // 0 = not resolved yet, < 0 = unresolvable (missing clip); both fall
+    // back to the script-only estimate in clipWalkSpeed().
+    float moveSpeed;
     const CharacterConfig* config;
 
     CharacterActor()
@@ -169,6 +196,10 @@ struct CharacterActor {
           sawPlayer(false),
           grounded(false),
           clipLock(0.0f),
+          prevAnimIndex(-1),
+          blendTime(0.0f),
+          prevAnimTime(0.0f),
+          moveSpeed(0.0f),
           config(0) {}
 
     void spawn(const Vec3& pos, float yawRadians, int room, const CharacterConfig* cfg,

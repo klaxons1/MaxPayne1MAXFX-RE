@@ -33,6 +33,9 @@ add_library(maxfx_ldb STATIC
     src/maxfx/game/Message.cpp
     src/maxfx/game/Catalog.cpp
     src/maxfx/game/Runtime.cpp
+    src/maxfx/game/Effects.cpp
+        src/maxfx/game/CameraPaths.cpp
+    src/maxfx/game/Hud.cpp
 )
 target_include_directories(maxfx_ldb PUBLIC src third_party)
 
@@ -45,7 +48,24 @@ target_link_libraries(levels-dump PRIVATE maxfx_ldb)
 add_executable(levels-test src/apps/levels_test.cpp)
 target_link_libraries(levels-test PRIVATE maxfx_ldb)
 
-if(MAXFX_BUILD_VIEWER)
+    if(MAXFX_BUILD_VIEWER)
+    # Visible build stamp (git short hash) so a stale exe copied next to the
+    # game data is easy to tell from a fresh build — see scripts/build-windows.bat.
+    set(MAXFX_BUILD_HASH "dev")
+    find_package(Git QUIET)
+    if(Git_FOUND)
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            OUTPUT_VARIABLE MAXFX_BUILD_HASH_RAW
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            ERROR_QUIET
+        )
+        if(NOT "${MAXFX_BUILD_HASH_RAW}" STREQUAL "")
+            set(MAXFX_BUILD_HASH "${MAXFX_BUILD_HASH_RAW}")
+        endif()
+    endif()
+    message(STATUS "ldb-viewer build stamp: ${MAXFX_BUILD_HASH}")
     find_package(SDL3 CONFIG QUIET)
     if(NOT SDL3_FOUND)
         include(FetchContent)
@@ -97,6 +117,7 @@ if(MAXFX_BUILD_VIEWER)
         src/viewer/Audio.cpp
     )
     target_include_directories(ldb-viewer PRIVATE src)
+    target_compile_definitions(ldb-viewer PRIVATE MAXFX_BUILD_HASH="${MAXFX_BUILD_HASH}")
     target_link_libraries(ldb-viewer PRIVATE maxfx_ldb SDL3::SDL3 ${MAXFX_OPENAL})
     if(MAXFX_OPENAL STREQUAL "OpenAL")
         target_compile_definitions(ldb-viewer PRIVATE AL_LIBTYPE_STATIC)

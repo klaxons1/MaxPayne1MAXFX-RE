@@ -1,0 +1,141 @@
+// --------------------------------------------------------
+// BB, Special, Max Payne Skeleton
+// --------------------------------------------------------
+
+#include <..\ai_ranges.h>
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponid.h>
+#include <..\weaponanimid.h>
+#include <..\object_lods.h>
+
+[AI]
+AimingSpeed 				= AI_KILLER_SUIT_AIMING_SPEED ;
+AimingSpeedCone 			= AI_KILLER_SUIT_AIMING_SPEEDCONE ;
+AimUpDownSpeed 				= 30.0;
+TurnLeftRightSpeed 			= AI_KILLER_SUIT_TURNING_SPEED ;
+VisualPerceivingRadius 		= AI_KILLER_SUIT_VISUAL_RADIUS ;
+GeneralPerceivingRadius 	= AI_KILLER_SUIT_GENERAL_RADIUS ;
+ActivationReactionTime 		= AI_KILLER_SUIT_REACTION_TIME ;
+ShootingCone 				= AI_KILLER_SUIT_SHOOTING_CONE ;
+PerceivingGroupOneRadius 	= AI_KILLER_SUIT_GROUP_ONE ;
+PerceivingGroupTwoRadius 	= AI_KILLER_SUIT_GROUP_TWO ;
+PerceivingGroupThreeRadius 	= AI_KILLER_SUIT_GROUP_THREE ;
+EnemyInterestTime 			= AI_BOSS_INTEREST_TIME ;
+ActivateOtherCharactersRadius = AI_MOBSTER_ACTIVATE_OTHER_CHARACTERS_RADIUS;
+
+[Properties]
+Skeleton = default_skeleton;
+CapsuleTop = 1.95;
+CapsuleBottom = 0.0;
+CapsuleRadius = ENEMY_COLLISION_RADIUS ;
+AirborneSpeed = 1.5;
+CanShootDodgeFrame = 13;
+CanAbortShootDodgeFrame = 85;
+RandomizeTextureSet = FALSE;
+MaximumHealth = HEALTH_CLASS_10;
+WoundedHealth = WOUNDEDHEALTH_CLASS_10;
+HealthBonusForKiller = HEALTHBONUS_MEDIUM;
+SlowMotionBonusForKiller = BONUS_SLOWMOTION; // percents of full slowmotion
+WoundedHealthUpperLimit = 10;
+AutoAimTarget = YES;
+ShootingFrequencyMultiplier = 0.5;
+ShadowsEnabled = true;
+CanPlayerSwitchToThisSkin = true; // true=player is able to change to this skin with PGUP/PGDN
+GiveTimedModeBonusForKiller = true; // timed mode bonus defined in levels.txt
+
+[Target]
+{
+	[General] name = "Arms"; Multiplier = MULTIPLIER_ARMS ;
+	[Bone] name = "UpArm-R";
+	[Bone] name = "LoArm-R";
+	[Bone] name = "Hand-R";
+	[Bone] name = "UpArm-L";
+	[Bone] name = "LoArm-L";
+	[Bone] name = "Hand-L";
+}
+
+[Target]
+{
+	[General] name = "Legs"; Multiplier = MULTIPLIER_LEGS ;
+	[Bone] name = "UpLeg-R";
+	[Bone] name = "LoLeg-R";
+	[Bone] name = "Foot-R";
+	[Bone] name = "Toe-R";
+	[Bone] name = "UpLeg-L";
+	[Bone] name = "LoLeg-L";
+	[Bone] name = "Foot-L";
+	[Bone] name = "Toe-L";
+}
+
+
+[OnInit]
+{
+	[Message] String = "this->c_pickupweapon ( beretta );";
+	[Message] String = "this->C_SetInfiniteAmmo ( beretta, 1 );";
+}
+
+[OnDeath]
+{
+	[Message] String = "this->A_StopAll3DSounds(head);";
+}
+
+[TextureAnimation]
+Texturename = "FaceTexture";
+GroupIndex = 0;
+
+[LOD]
+{
+	[Geometry] ExportData = bb_l0.kfs; SkinData = bb_l0.skd;
+	Distance = SKIN_LOD_FAR;
+
+	EnableBoundingSphere	= TRUE;
+	BoundingSphereRadius	= 1.90;
+	EnableBoundingBox		= FALSE;
+}
+
+
+[Modifiers]		// These override any default Skeleton settings
+{
+	[Animation] Index = CHARANIM_GETDAMAGE; Filename = anim\getHit_0250ms.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_gethit, head );";
+	}
+
+	[Animation] Index = CHARANIM_2_GETDAMAGE; Filename = anim\2_getHit_0250ms.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, mobster_gethit, head );";
+	}
+
+	[Animation]
+	Index = CHARANIM_CUSTOMIDLE3; Filename = anim\idle_bb_aim_deserteagle.kf2;
+	[Properties]
+	{ 
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+	[Revert] From = CHARANIM_2_CUSTOMIDLE3; To = CHARANIM_CUSTOMIDLE3;
+
+	[Animation] Index = CHARANIM_SHOOTBERETTA; Filename = anim\shootdeserteagle.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+		[Message] Frame = 0; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_GRIN_ID "," FACETEXTURE_SHOOTGRINTIME ");";
+		[Message] Frame = 0; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_SHOOT "," WEAPONANIM_SHOOTEMPTY ");";
+	}
+
+	[Animation] Index = CHARANIM_SHOOTLOWBERETTA; Filename = anim\shootdeserteagle_down.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_SHOOTHIGHBERETTA; Filename = anim\shootdeserteagle_up.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+}

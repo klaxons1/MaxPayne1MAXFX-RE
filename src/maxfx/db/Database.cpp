@@ -170,7 +170,11 @@ void collectGeometry(const ScriptBlock& block, const std::string& dbRoot, const 
 void fillSoundFields(const ScriptBlock& block, SoundDef* def) {
     const std::string fn = assignmentOf(block, "filename");
     if (!fn.empty()) {
-        def->filename = nativeFromScriptPath(parseScriptString(fn));
+        if (block.name == "random") {
+            def->randomFiles.push_back(nativeFromScriptPath(parseScriptString(fn)));
+        } else if (def->filename.empty()) {
+            def->filename = nativeFromScriptPath(parseScriptString(fn));
+        }
     }
     const std::string vol = assignmentOf(block, "volume");
     if (!vol.empty()) {
@@ -221,10 +225,16 @@ void collectTopSounds(const Script& script, const std::string& dbRoot, const std
         def.name = block.name;
         def.category = category;
         fillSoundFields(block, &def);
-        if (def.filename.empty()) {
+        if (def.filename.empty() && def.randomFiles.empty()) {
             continue;
         }
         def.resolvedPath = resolveSoundPath(dbRoot, subdir, def.filename);
+        for (std::size_t r = 0; r < def.randomFiles.size(); ++r) {
+            const std::string p = resolveSoundPath(dbRoot, subdir, def.randomFiles[r]);
+            if (!p.empty()) {
+                def.randomPaths.push_back(p);
+            }
+        }
         out->push_back(def);
     }
 }

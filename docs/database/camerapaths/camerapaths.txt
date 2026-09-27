@@ -1,0 +1,686 @@
+#define HUD_FADEOUT_TIME 0.25
+#define HUD_FADEIN_TIME 0.25
+
+//-----------------------------------------------------------------------------------------
+// Shake etc cameras start
+//-----------------------------------------------------------------------------------------
+[rumble_low]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\camera_shake_rumble_low_6s.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[rumble_medium]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\camera_shake_rumble_medium_6s.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[gunshot_big]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\gunshot_big.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[gunshot_small]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\gunshot_small.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[shootdodge]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\shootdodge.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[shootdodge_getup]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\shootdodge_getup.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[reset]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\reset.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[explosion]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\explosion.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[shake_quick]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\explosion.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[shake_normal]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\shake_quick.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[shake_slow]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\shake_slow.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[shake_slow_slomo]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\shake_slow_slomo.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[shake_subway]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\camera_shake_subway.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+[shake_drugtrip]
+{
+	[Attributes]
+	FadeInTime 	= 0;
+	FadeOutTime = 0;
+	Abortable 	= FALSE;
+
+	[Animationset]
+	{
+		[Animation]
+		Index = 0;
+		Filename = "effects\camera_shake_handycam.kf2";
+	}
+	[Exit]	
+	{
+		// NOP
+	}
+}
+
+
+//-----------------------------------------------------------------------------------------
+
+[test]
+{
+	[Animationset]
+	{
+		[animation]
+		index = 0;
+		filename = "cinematic\test_path.kf2";
+		[Properties]
+		{
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0," HUD_FADEOUT_TIME ");";
+		}
+	}
+
+	[exit]	
+	{
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1," HUD_FADEIN_TIME ");";
+		[message] String = "MaxPayne_GameMode->A_PlaySound( story, empty );";
+	}
+}
+
+// Used when the player types Resurrect from the console.
+[restartplayer]
+{
+	[attributes]
+	FadeInTime = 0.1;
+	FadeOutTime = 0.1;
+	Abortable = false;
+	
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "player\restartplayer.kf2";
+
+		[Properties]
+		{
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_SetPlayerControls( 1 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeFOV( 1.0, 0 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed( 1.0, 0 );";
+			[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablewidescreen( 0, 0 );";
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 1,0 );";
+		}
+	}
+
+	[Exit]	
+	{
+	}
+}
+
+[circle]
+{
+	// if attributes block doesn't exist 0 times are used
+	// fades are in use only when activating with
+	// CAM_AnimatePlayerParented message
+	[attributes]
+	FadeInTime = 0.3;
+	FadeOutTime = 0.3;
+	Abortable = false;
+	
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\circle_2s.kf2";
+
+		[Properties]
+		{
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0," HUD_FADEOUT_TIME ");";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.2, 0.25 );";
+		}
+	}
+
+	[Exit]	
+	{
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1," HUD_FADEIN_TIME ");";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(1.0, 0.25 );";
+	}
+}
+
+[reload]
+{
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\reload.kf2";
+
+		[Properties]
+		{
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0," HUD_FADEOUT_TIME ");";
+		}
+	}
+
+	[Exit]	
+	{
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1," HUD_FADEIN_TIME ");";
+	}
+}
+
+[half_circle]
+{
+	[attributes]
+	FadeInTime = 0.3;
+	FadeOutTime = 0.3;
+	Abortable = false;
+
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\180_3s.kf2";
+
+		[Properties]
+		{
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0," HUD_FADEOUT_TIME ");";
+		}
+	}
+
+	[Exit]	
+	{
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1," HUD_FADEIN_TIME ");";
+	}
+}
+
+[bullet_behind]
+{
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\bullet_behind_static_loop.kf2";
+		[Properties]
+		{
+			[Message] Frame = 0; String = "MaxPayne_Hudmode->mphm_changehudvisibility( 0, 0.1 );";
+			[Message] Frame = 0; String = "maxpayne_gamemode->gm_setplayercontrols( false );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeFOV(1.0, 0.0 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.01, 0.0 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->A_PlaySound(camera, shot_01);";
+			[Message] Frame = 20; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.4, 1.0 );";
+			[Message] Frame = 23; String = "MaxPayne_GameMode->GM_ChangeFOV(1.4, 0.4 );";
+		}
+	}
+
+	[exit]	
+	{
+		[Message] String = "maxpayne_gamemode->gm_setplayercontrols( true );";
+		[Message] String = "MaxPayne_Hudmode->mphm_changehudvisibility( 1, 0.1 );";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(1.0, 0.0 );";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeFOV( 1.0, 0.0 );";
+	}
+}
+
+[bullet_behind2x]
+{
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\bullet_behind_static_loop.kf2";
+		[Properties]
+		{
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeFOV(1.0, 0.0 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGameSpeed(0.01, 0.0 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->A_PlaySound(camera, shot_01);";
+			[Message] Frame = 20; String = "MaxPayne_GameMode->GM_ChangeGameSpeed(0.4, 1.0 );";
+			[Message] Frame = 23; String = "MaxPayne_GameMode->GM_ChangeFOV(1.4, 0.4 );";
+		}
+	}
+
+	[exit]	
+	{
+		[Message] String = "MaxPayne_GameMode->GM_ChangeGameSpeed(1.0, 0.0 );";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeFOV( 1.0, 0.0 );";
+	}
+}
+
+[bullet_behind4x]
+{
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\bullet_behind_static_loop.kf2";
+		[Properties]
+		{
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeFOV(1.0, 0.0 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.01, 0.0 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->A_PlaySound(camera, shot_01);";
+			[Message] Frame = 20; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.4, 1.0 );";
+			[Message] Frame = 23; String = "MaxPayne_GameMode->GM_ChangeFOV(1.4, 0.4 );";
+		}
+	}
+
+	[exit]	
+	{
+		[Message] String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(1.0, 0.0 );";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeFOV( 1.0, 0.0 );";
+	}
+}
+
+[Death_01]		// 3 second circle
+{
+	[attributes]
+	FadeInTime = 0.0;
+	FadeOutTime = 0.0;
+	Abortable = TRUE;
+	
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\Death_01.kf2";
+		[Properties]
+		{
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0," HUD_FADEOUT_TIME ");";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.2, 0.25 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->A_PlaySound(camera, shot_01);";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeFOV(1.3, 0.8 );";
+			[Message] Frame = 30; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.1, 0.25 );";
+			[Message] Frame = 80; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.8, 5 );";
+		}
+	}
+	[exit]	
+	{
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1," HUD_FADEIN_TIME ");";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(1.0, 0.5 );";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeFOV(1.0, 0.0 );";
+	}
+}
+
+[Death_02]
+{
+	[attributes]
+	FadeInTime = 0.0;
+	FadeOutTime = 0.0;
+	Abortable = TRUE;
+
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\Death_02.kf2";
+		[Properties]
+		{
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0," HUD_FADEOUT_TIME ");";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.3, 0.25 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->A_PlaySound(camera, shot_01);";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeFOV(1.3, 0.8 );";
+			[Message] Frame = 40; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.8, 5 );";
+
+		}
+	}
+	[exit]	
+	{
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1," HUD_FADEIN_TIME ");";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(1.0, 0.5 );";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeFOV(1.0, 0.0 );";
+	}
+}
+
+[Death_03]
+{
+	[attributes]
+	FadeInTime = 0.0;
+	FadeOutTime = 0.0;
+	Abortable = TRUE;
+
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\death_03.kf2";
+		[Properties]
+		{
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0," HUD_FADEOUT_TIME ");";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.25, 0.25 );";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->A_PlaySound(camera, shot_01);";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeFOV(1.35, 0.8 );";
+			[Message] Frame = 30; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.05, 0.1 );";
+
+		}
+	}
+
+	[exit]	
+	{
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1," HUD_FADEIN_TIME ");";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(1.0, 0.5 );";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeFOV(1.0, 0.0 );";
+	}
+}
+
+//-----------------------------------------------------------------------------------------
+// Player cameras start here
+//-----------------------------------------------------------------------------------------
+
+// Moving the camera up a bit when jumping
+[jump]
+{
+	[Attributes]
+	FadeInTime = 0.0;
+	FadeOutTime = 0.0;
+	Abortable = FALSE;
+
+	[Animationset]
+	{
+		[animation] 
+		Index = 0;
+		Filename = "player\jump.kf2";
+	}
+}
+
+[special_killed]
+{
+	[attributes]
+	FadeInTime = 8.0;
+	FadeOutTime = 0.0;
+	Abortable = TRUE;
+
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "cinematic\special_killed.kf2";
+		[Properties]
+		{
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.3, 0.3 );";
+			[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablewidescreen( 1, 0.25 );";
+			[Message] Frame = 0; String = "maxpayne_gamemode->gm_setplayercontrols( " FALSE ");";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->A_PlaySound(camera, shot_01);";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeFOV(1.3, 0.8 );";
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0, 0 );";
+			[Message] Frame = 319; String = "maxpayne_hudmode->mphm_printtip( HUDPRINT_PRESS_USE_TO_LOAD );";
+		}
+	}
+
+	[exit]	
+	{
+		[Message] String = "maxpayne_gamemode->gm_enablewidescreen( 0, 0 );";
+		[Message] String = "maxpayne_gamemode->gm_setplayercontrols( " TRUE ");";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeFOV( 1.0, 0.0 );";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed( 1.0, 0.0 );";
+		[Message] String = "X_Modeswitch->S_LoadLastSavedGame();";
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1, 0.0 );";
+	}
+}
+
+[player_death_01]
+{
+	[attributes]
+	FadeInTime = 8.0;
+	FadeOutTime = 0.0;
+	Abortable = TRUE;
+
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "player\player_death_01.kf2";
+		[Properties]
+		{
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed(0.3, 0.3 );";
+			[Message] Frame = 0; String = "maxpayne_gamemode->gm_enablewidescreen( 1, 0.25 );";
+			[Message] Frame = 0; String = "maxpayne_gamemode->gm_setplayercontrols( " FALSE ");";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->A_PlaySound(camera, shot_01);";
+			[Message] Frame = 0; String = "MaxPayne_GameMode->GM_ChangeFOV(1.3, 0.8 );";
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0, 0 );";
+			[Message] Frame = 319; String = "maxpayne_hudmode->mphm_printtip( HUDPRINT_PRESS_USE_TO_LOAD );";
+		}
+	}
+
+	[exit]	
+	{
+		[Message] String = "maxpayne_gamemode->gm_enablewidescreen( 0, 0 );";
+		[Message] String = "maxpayne_gamemode->gm_setplayercontrols( " TRUE ");";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeFOV( 1.0, 0.0 );";
+		[Message] String = "MaxPayne_GameMode->GM_ChangeGlobalGameSpeed( 1.0, 0.0 );";
+		[Message] String = "X_Modeswitch->S_LoadLastSavedGame();";
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1, 0.0 );";
+	}
+}
+
+[pause]
+{
+	[attributes]
+	FadeInTime = 0.2;
+	FadeOutTime = 0.0;
+	Abortable = FALSE;
+
+	[animationset]
+	{
+		[animation] 
+		index = 0;
+		filename = "player\pause.kf2";
+
+		[Properties]
+		{
+			// DO NOT SET PLAYERCONTROLS HERE IN PAUSE CAMERA, THE MESSAGE FLUSHES INPUT STATE MACHINE
+			// SETTING PLAYER CONTROLS IS DONE MANUALLY IN PAUSE/RESUME FUNCTIONS
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_changehudvisibility( 0, 0 );";
+			[Message] Frame = 0; String = "maxpayne_hudmode->mphm_printtip( TIP_PAUSECAMERA );";
+		}
+	}
+
+	[exit]	
+	{
+		// DO NOT SET PLAYERCONTROLS HERE IN PAUSE CAMERA, THE MESSAGE FLUSHES INPUT STATE MACHINE
+		// SETTING PLAYER CONTROLS IS DONE MANUALLY IN PAUSE/RESUME FUNCTIONS
+		[Message] String = "maxpayne_hudmode->mphm_changehudvisibility( 1, 0 );";
+		[Message] String = "maxpayne_hudmode->mphm_printinventory( \"\", 3 );";
+	}
+}

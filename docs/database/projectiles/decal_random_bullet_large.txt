@@ -1,0 +1,47 @@
+#include <..\projectiles.h>
+#include <..\projectileanimid.h>
+#include <..\object_lods.h>
+
+
+// -------------------------------------------------------------------
+// Dummy bullet decals
+// -------------------------------------------------------------------
+[LOD] { [Geometry] exportdata = ..\dummy\dummy_l0.kf2; Distance = 0.0001; }
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = ..\dummy\dummy_l0.kf2;
+}
+
+[Decal]
+String = "this->D_CreateDecal( bullethit_large );";
+
+[Attributes]
+Direction 	= (0,1,0);
+Accuracy 	= 0;
+Speed 		= 100;
+SpeedRandom = 0%;
+Damage 		= 0;			 
+
+RicochetMaximumAngle 	= 0;
+RicochetSpeedMultiplier = 0.1;
+RicochetMinimumSpeed 	= 10;
+RicochetUntilOnGround	= false; // true for projectiles that create level items
+VisibilityMaximumSpeed  = 0;
+
+SmallProjectile	 		= TRUE;
+Debris 					= FALSE;	
+RandomizeDirection 		= TRUE;	
+RandomizeRotation		= FALSE;
+
+CollisionExplosion		= FALSE;
+DelayedExplosion 		= FALSE;
+ExplosionDelay			= 0.0;
+GravityMultiplier		= 0.0;
+UseLookAt				= FALSE;
+DamagesCharacter		= FALSE;
+ItemsToCache			= 16;
+MeshesToCache			= 1;
+DeathCause				= PROJECTILEDEATH_RANDOM;
+AdultContent			= FALSE;
+BloodProjectile			= FALSE;	// uses same detail level settings as debris but is not debris

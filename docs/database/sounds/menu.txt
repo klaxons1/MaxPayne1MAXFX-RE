@@ -1,0 +1,108 @@
+#include <..\soundid.h>
+
+[TimeOut]
+{
+	[properties]
+	id = SOUNDID_MENUMOVE;
+
+	[Default]
+	{
+		[Sound]
+        Filename = menu\time_out_beep.wav;
+		Volume = 0.4;
+		Pitch = 22050;
+		Random = 0%; // of the pitch
+        3DSound = no;
+        Looping = no;
+		Streamed = no;
+		Priority = 1;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+
+[SelectionChanges]
+{
+	[properties]
+	id = SOUNDID_MENUMOVE;
+
+	[Default]
+	{
+		[Sound]
+        Filename = menu\move.wav;
+		Volume = 0.5;
+		Pitch = 44100;
+		Random = 1%; // of the pitch
+        3DSound = no;
+        Looping = no;
+		Streamed = no;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Selection]
+{
+	[properties]
+	id = SOUNDID_MENUSELECT;
+
+	[Default]
+	{
+		[Sound]
+        Filename = menu\select.wav;
+		Volume = 0.5;
+		Pitch = 44100;
+		Random = 1%; // of the pitch
+        3DSound = no;
+        Looping = no;
+		Streamed = no;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[SliderMoves]
+{
+	[properties]
+	id = SOUNDID_MENUSLIDERMOVE;
+
+	[Default]
+	{
+		[Sound]
+        Filename = menu\slidermove.wav;
+		Volume = 0.2;
+		Pitch = 44100;
+		Random = 1%; // of the pitch
+        3DSound = no;
+        Looping = no;
+		Streamed = no;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[slomo_heartbeat]
+{
+	[properties]
+	id = 0;
+
+	[Default]
+	{
+		[Sound]
+        Filename = menu\slomo_heartbeat.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 2%; // of the pitch
+        3DSound = no;
+        Looping = no;
+		Streamed = no;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+

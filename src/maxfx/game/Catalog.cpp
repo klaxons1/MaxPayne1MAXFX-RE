@@ -5,6 +5,7 @@
 #include "maxfx/script/Script.h"
 
 #include <cmath>
+#include <cstdio>
 
 namespace maxfx {
 namespace {
@@ -92,25 +93,51 @@ void loadWeapons(const std::string& dir, GameCatalog* cat) {
                 w.clipSize = parseIntCatch(assignmentOf(*attrs, "clipsize"), w.clipSize);
                 w.pocketSize = parseIntCatch(assignmentOf(*attrs, "pocketsize"), w.pocketSize);
                 w.shootHz = parseFloatCatch(assignmentOf(*attrs, "defaultshootingfrequency"), w.shootHz);
+                w.maxShootHz = parseFloatCatch(assignmentOf(*attrs, "maximumshootingfrequency"), w.maxShootHz);
+                w.weaponId = parseIntCatch(assignmentOf(*attrs, "weaponid"), w.weaponId);
+                w.slotIndex = parseIntCatch(assignmentOf(*attrs, "slotindex"), w.slotIndex);
+                w.inventoryId = parseIntCatch(assignmentOf(*attrs, "inventoryid"), w.inventoryId);
+                // shooting.h style: "<NAME>_BULLETDAMAGE" etc. live in the
+                // includes; the script resolver already folded them.
+                w.damage = parseFloatCatch(assignmentOf(*attrs, "bulletdamage"), w.damage);
+                w.spread = parseFloatCatch(assignmentOf(*attrs, "bulletspread"), w.spread);
             }
             const ScriptBlock* cross = childNamed(sc.root(), "crosshairattributes");
             if (cross) {
                 w.castLength = parseFloatCatch(assignmentOf(*cross, "castlength"), w.castLength);
                 w.sphereRadius = parseFloatCatch(assignmentOf(*cross, "sphereradius"), w.sphereRadius);
             }
-            std::vector<const ScriptBlock*> msgs;
-            walkNamed(sc.root(), "message", &msgs);
-            for (std::size_t m = 0; m < msgs.size(); ++m) {
-                const std::string str = assignmentOf(*msgs[m], "string");
+            // WEAPONANIM_* blocks carry the per-shot messages. The shoot
+            // variants (WEAPONANIM_SHOOT / SHOOTLOW / SHOOTHIGH) fire with
+            // every trigger pull: projectile, fire sound, muzzle flash.
+            std::vector<const ScriptBlock*> animMsgs;
+            for (std::size_t b = 0; b < sc.root().children.size(); ++b) {
+                const ScriptBlock& blk = sc.root().children[b];
+                const std::string bn = blk.name;
+                if (bn.compare(0, 11, "weaponanim_") != 0) {
+                    continue;
+                }
+                const bool isShoot = bn == "weaponanim_shoot" || bn == "weaponanim_shootlow" ||
+                                     bn == "weaponanim_shoothigh";
+                walkNamed(blk, "message", &animMsgs);
+                (void)isShoot;
+            }
+            for (std::size_t m = 0; m < animMsgs.size(); ++m) {
+                const std::string str = assignmentOf(*animMsgs[m], "string");
                 const std::vector<GameMessage> parsed = parseGameMessages(str);
                 for (std::size_t k = 0; k < parsed.size(); ++k) {
                     if (methodIs(parsed[k], "p_createprojectile") && !parsed[k].args.empty()) {
                         const std::string pn = lowerCopy(parsed[k].args[0]);
-                        if (pn.find("bullet_") == 0 || pn.find("case_") == std::string::npos) {
-                            if (pn.find("bullet_") == 0) {
-                                w.projectileName = pn;
-                            }
+                        if (pn.find("bullet_") == 0) {
+                            w.projectileName = pn;
                         }
+                    } else if (methodIs(parsed[k], "a_play3dsound") && parsed[k].args.size() >= 2 &&
+                               w.shootSoundName.empty()) {
+                        w.shootSoundCategory = lowerCopy(parsed[k].args[0]);
+                        w.shootSoundName = lowerCopy(parsed[k].args[1]);
+                    } else if (methodIs(parsed[k], "ps_starteffect") && !parsed[k].args.empty() &&
+                               w.muzzleEffect.empty()) {
+                        w.muzzleEffect = lowerCopy(parsed[k].args[0]);
                     }
                 }
             }
@@ -137,6 +164,14 @@ void loadProjectiles(const std::string& dir, GameCatalog* cat) {
                 const std::string dc = assignmentOf(*attrs, "damagescharacter");
                 if (!dc.empty()) {
                     p.damagesCharacter = truthy(dc);
+                }
+            }
+            std::vector<const ScriptBlock*> msgs;
+            walkNamed(sc.root(), "message", &msgs);
+            for (std::size_t m = 0; m < msgs.size(); ++m) {
+                const std::string str = assignmentOf(*msgs[m], "string");
+                if (!str.empty()) {
+                    p.messages.push_back(str);
                 }
             }
             cat->projectiles[p.name] = p;
@@ -312,6 +347,127 @@ void buildGraphicNovelChapters(const std::vector<GraphicNovelPageDef>& pages,
     }
 }
 
+// data/weaponpriority.txt: [BestWeapons] / [CycleWeapons] with
+// "[weapon] ID = WEAPONID_X;" lines. The engine cycles [CycleWeapons];
+// we keep the order as weapon names (WeaponID resolved through the weapon
+// scripts, falling back to WEAPONID_<name>).
+void loadWeaponPriority(const std::string& dbRoot, GameCatalog* cat) {
+    std::string hit;
+    const char* cands[] = {"../weaponpriority.txt", "weaponpriority.txt"};
+    for (int i = 0; i < 2; ++i) {
+        const std::string f = existingPathIgnoreCase(joinPath(dbRoot, cands[i]));
+        if (!f.empty() && isFile(f)) {
+            hit = f;
+            break;
+        }
+    }
+    if (hit.empty()) {
+        return;
+    }
+    try {
+        const Script sc = Script::loadFile(hit, false);
+        std::vector<int> cycleIds;
+        for (std::size_t b = 0; b < sc.root().children.size(); ++b) {
+            const ScriptBlock& blk = sc.root().children[b];
+            if (blk.name != "cycleweapons") {
+                continue;
+            }
+            for (std::size_t c = 0; c < blk.children.size(); ++c) {
+                const ScriptBlock& w = blk.children[c];
+                if (w.name != "weapon") {
+                    continue;
+                }
+                const std::string id = assignmentOf(w, "id");
+                if (id.empty()) {
+                    continue;
+                }
+                cycleIds.push_back(parseIntCatch(id, -1));
+            }
+        }
+        if (cycleIds.empty()) {
+            return;
+        }
+        // Map WeaponID -> weapon name through the parsed weapon defs.
+        for (std::size_t i = 0; i < cycleIds.size(); ++i) {
+            if (cycleIds[i] < 0) {
+                continue;
+            }
+            for (std::map<std::string, WeaponDef>::iterator it = cat->weapons.begin();
+                 it != cat->weapons.end(); ++it) {
+                if (it->second.weaponId == cycleIds[i]) {
+                    cat->cycleOrder.push_back(it->first);
+                    break;
+                }
+            }
+        }
+    } catch (...) {
+    }
+}
+
+// Fallback for weapon scripts whose #include of weaponid.h / shooting.h did
+// not resolve: read "#define <NAME> <value>" from the .h files next to the
+// database and fill the missing WeaponID / SlotIndex.
+void loadWeaponIdDefines(const std::string& dbRoot, GameCatalog* cat) {
+    if (dbRoot.empty() || cat->weapons.empty()) {
+        return;
+    }
+    std::map<std::string, int> defines;
+    const std::vector<std::string> files = listFilesWithExtension(dbRoot, ".h");
+    for (std::size_t i = 0; i < files.size(); ++i) {
+        std::FILE* f = std::fopen(files[i].c_str(), "rb");
+        if (f == 0) {
+            continue;
+        }
+        char line[512];
+        while (std::fgets(line, sizeof(line), f) != 0) {
+            const std::string s = line;
+            if (s.compare(0, 7, "#define") != 0) {
+                continue;
+            }
+            std::size_t p = 7;
+            while (p < s.size() && (s[p] == ' ' || s[p] == '\t')) {
+                ++p;
+            }
+            std::string name;
+            while (p < s.size() && s[p] != ' ' && s[p] != '\t' && s[p] != '\r' && s[p] != '\n') {
+                name.push_back(s[p]);
+                ++p;
+            }
+            while (p < s.size() && (s[p] == ' ' || s[p] == '\t')) {
+                ++p;
+            }
+            std::string value;
+            while (p < s.size() && s[p] != ' ' && s[p] != '\t' && s[p] != '\r' && s[p] != '\n') {
+                value.push_back(s[p]);
+                ++p;
+            }
+            if (!name.empty() && !value.empty()) {
+                defines[lowerCopy(name)] = parseIntCatch(value, 0);
+            }
+        }
+        std::fclose(f);
+    }
+    if (defines.empty()) {
+        return;
+    }
+    for (std::map<std::string, WeaponDef>::iterator it = cat->weapons.begin(); it != cat->weapons.end();
+         ++it) {
+        WeaponDef& w = it->second;
+        if (w.weaponId < 0) {
+            std::map<std::string, int>::const_iterator d = defines.find("weaponid_" + w.name);
+            if (d != defines.end()) {
+                w.weaponId = d->second;
+            }
+        }
+        if (w.slotIndex < 0) {
+            std::map<std::string, int>::const_iterator d = defines.find("slotid_" + w.name);
+            if (d != defines.end()) {
+                w.slotIndex = d->second;
+            }
+        }
+    }
+}
+
 GameCatalog loadGameCatalog(const std::string& dbRoot) {
     GameCatalog cat;
     if (dbRoot.empty()) {
@@ -320,6 +476,8 @@ GameCatalog loadGameCatalog(const std::string& dbRoot) {
     loadWeapons(joinPath(dbRoot, "weapons"), &cat);
     loadProjectiles(joinPath(dbRoot, "projectiles"), &cat);
     loadPages(dbRoot, &cat);
+    loadWeaponIdDefines(dbRoot, &cat);
+    loadWeaponPriority(dbRoot, &cat);
     for (std::map<std::string, WeaponDef>::iterator it = cat.weapons.begin(); it != cat.weapons.end();
          ++it) {
         if (it->second.projectileName.empty()) {

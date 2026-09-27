@@ -53,6 +53,26 @@ inline float soundOmniGain(float dist, float hotspot, float falloff) {
     return (falloff - dist) / (falloff - hotspot);
 }
 
+// X_SoundFactory<X_SoundOmni>::getSound (Android decompile):
+//   Pitch = X_SharedDBSoundSound::getPitch(sound);            // script, Hz
+//   setFrequency(Pitch / S_Sound::getSamplesPerSecond(sound)); // / WAV rate
+// i.e. the script Pitch divided by the file's own sample rate. 0 = not set
+// (play at the native rate). Dividing by a hardcoded 22050 made every
+// 44.1 kHz cue (graphic-novel narration) run at double speed.
+inline float soundPitchMultiplier(int scriptPitch, int wavSampleRate) {
+    if (scriptPitch <= 0 || wavSampleRate <= 0) {
+        return 1.0f;
+    }
+    const float f = static_cast<float>(scriptPitch) / static_cast<float>(wavSampleRate);
+    if (f < 0.05f) {
+        return 0.05f;
+    }
+    if (f > 20.0f) {
+        return 20.0f;
+    }
+    return f;
+}
+
 }  // namespace maxfx
 
 #endif  // MAXFX_SOUND_SOUND_H

@@ -1,0 +1,140 @@
+#include <..\soundid.h>
+
+// -------------------------------------------------------------------
+// Level items picked up sounds
+// -------------------------------------------------------------------
+
+[pickup_handgun]
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+		Filename = level_items\pickup_handgun.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 3;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[pickup_rifle]
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+		Filename = level_items\pickup_rifle.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 3;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[pickup_painkiller]
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+		Filename = level_items\pickup_painkiller.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 4;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[pickup_ammo]
+{
+	[Properties] ID = 0;
+
+	[Default]
+	{
+		[Sound]
+		Filename = level_items\pickup_ammo_01.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 3;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = level_items\pickup_ammo_02.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = level_items\pickup_ammo_box.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[pickup_ammo_full]
+{
+	[Properties] ID = 0;
+
+	[Default]
+	{
+		[Sound]
+		Filename = level_items\pickup_ammo_full.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+	}
+}

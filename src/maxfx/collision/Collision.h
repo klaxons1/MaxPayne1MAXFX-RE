@@ -42,6 +42,10 @@ public:
     void addTriangle(const Vec3& a, const Vec3& b, const Vec3& c, int roomId, int polygonId);
     void addBsp(const BspTree& bsp);
     void addStaticMesh(const StaticMesh& mesh, const std::vector<TextureVertex>& texVerts);
+    // Dynamic level object at an animated world transform (doors): triangles
+    // are transformed on insert, so the caller rebuilds on pose changes.
+    void addDynamicMesh(const DynamicMesh& mesh, const std::vector<TextureVertex>& texVerts,
+                        const Mat4x3& world);
     // Room static meshes in world space. This is what characters stand on.
     void addLevelGeometry(const Level& level);
 

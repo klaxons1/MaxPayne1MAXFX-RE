@@ -1,0 +1,27 @@
+#include <..\soundid.h>
+
+// -------------------------------------------------------------------
+// Cigarette Burn
+// -------------------------------------------------------------------
+
+[Cigarette_Burn]
+{
+	[Properties] ID = SOUNDID_DEFAULT;
+
+	[Default]
+	{
+		[Sound]
+		Filename = skin_items\cigarette_burn.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 5%;
+		3DSound = YES;
+		FallOff = 10.0;
+		Hotspot = 5.0;
+		Looping = NO;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	

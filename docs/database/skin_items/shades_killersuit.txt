@@ -1,0 +1,17 @@
+[LOD]
+{
+	[Geometry]
+	ExportData = shades_killersuit_l0.kfs;
+	Distance = 10;
+}
+
+[Animationset]
+{
+	[Animation]
+	Index = 0;
+	Filename = shades_killersuit_default.kfs;
+
+	[Properties]
+	{
+	}
+}

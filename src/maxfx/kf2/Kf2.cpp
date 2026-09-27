@@ -652,7 +652,10 @@ Kf2NodeAnimation parseKeyframeAnimation(TaggedReader& in, const ChunkHeader& hea
     if (header.version > 3 && !in.eof() && in.peekTag() != kKf2ChunkTag) {
         anim.maintainMatrixScaling = readKf2Bool(in);
     }
-    if (header.version <= 4 && anim.totalKeyframeCount >= 0) {
+    if (header.version <= 4) {
+        // operator>>(R_MemoryFile&, KeyframeAnimationChunk&) in the Android
+        // decompile adds 1 unconditionally for version <= 4: on-disk the
+        // count is "last frame index", in memory it is "frame count".
         anim.totalKeyframeCount += 1;
     }
     return anim;
@@ -880,6 +883,11 @@ void kf2BuildDrawMeshes(const Kf2File& file, std::vector<Kf2DrawMesh>& out) {
     }
 }
 
+// KF2::KF_ObjectAnimation::getAnimationLength in the decompile is
+// `maximumAnimationIndex / animationFPS`, i.e. frame count over frame rate.
+// Frame count is the in-memory TotalKeyframeCount (already +1 for chunk
+// version <= 4); the last-key fallback only covers broken files whose
+// channel totals are zero.
 float kf2AnimationDuration(const Kf2File& file) {
     float best = 0.0f;
     for (std::size_t i = 0; i < file.animations.size(); ++i) {
@@ -900,53 +908,177 @@ float kf2AnimationDuration(const Kf2File& file) {
     return best;
 }
 
+// ---------------------------------------------------------------------------
+// Keyframe channel sampling - a port of the Android decompile:
+//
+//   KF2::KF_KeyframeAnimation::animate                     t[s] -> fps * t
+//   LinearlyOptimizedContainer<M_Matrix4x3>::getItem       wrap + segment lerp
+//   KF2::KF_KeyframeAnimation::animateFrameWithLastFrame   3x3 post-processing
+//
+// Per-channel container state (KF_KeyframeAnimation::construct):
+//
+//   total      = TotalKeyframeCount (the reader adds 1 for chunk version <= 4)
+//   looping    = AnimationChunk::isLooping (nested 0x10013 chunk)
+//   loopInterp = UseLoopInterpolation
+//   loopFrom   = LoopToFrame when looping (or total == 0), else total
+//
+// getItem wrap / hold / blend rules:
+//
+//   wrapLimit = (looping && loopInterp) ? total : total - 1
+//   frame > wrapLimit -> frame = loopFrom + fmod(frame - loopFrom,
+//                                                total - loopFrom)
+//                         (span == 0 -> frame = loopFrom; !looping therefore
+//                          pins to `total`, which the hold below clamps)
+//   frame < 0         -> frame = wrapLimit - fmod(-frame, wrapLimit)
+//   !looping && frame >= total - 1          -> hold the last key
+//   loopInterp && floor(frame) >= total - 1 -> SEAM BLEND: lerp the last key
+//                         towards the first key at/after loopFrom with
+//                         t = frac(frame) (the smooth loop wrap-around)
+//   otherwise         -> lerp keys[from]..keys[to], `to` being the first key
+//                         with frame# > floor(frame), t in frame space
+//
+// animateFrameWithLastFrame post-processing (always applied, exact keys too):
+//
+//   interpolationMethod 1 -> normalizeMat3Rows   (row directions kept)
+//   interpolationMethod 2 -> orthonormalizeMat3  (M_Matrix3::orthonormalize)
+//   maintainMatrixScaling -> multiply the 3x3 rows by the source key row
+//                         lengths; between two keys the lengths themselves
+//                         are lerped in frame space
+//
+// The lerp itself is a plain component-wise blend of all 12 floats; PC play
+// clips store interpolationMethod 0, so mid-blend rows shrink slightly on
+// large rotations - that is what the engine does.
+// ---------------------------------------------------------------------------
+
+static Mat4x3 sampleChannelPost(const Kf2NodeAnimation& a, Mat4x3 m, const Kf2AnimKey* fromKey,
+                                const Kf2AnimKey* toKey, float frame) {
+    if (a.interpolationMethod == 1) {
+        normalizeMat3Rows(m);
+    } else if (a.interpolationMethod == 2) {
+        orthonormalizeMat3(m);
+    }
+    if (!a.maintainMatrixScaling || fromKey == 0 || toKey == 0) {
+        return m;
+    }
+    if (fromKey == toKey) {
+        for (int r = 0; r < 3; ++r) {
+            m.rows[r] = m.rows[r] * length(fromKey->objectToParent.rows[r]);
+        }
+        return m;
+    }
+    const float f0 = static_cast<float>(fromKey->frame);
+    const float f1 = static_cast<float>(toKey->frame);
+    if (f1 == f0) {
+        return m;
+    }
+    for (int r = 0; r < 3; ++r) {
+        const float l0 = length(fromKey->objectToParent.rows[r]);
+        const float l1 = length(toKey->objectToParent.rows[r]);
+        const float blend = (l0 * (f1 - frame) + l1 * (frame - f0)) / (f1 - f0);
+        m.rows[r] = m.rows[r] * blend;
+    }
+    return m;
+}
+
 Mat4x3 sampleChannel(const Kf2NodeAnimation& a, float timeSeconds) {
-    if (a.keys.empty()) {
+    const std::vector<Kf2AnimKey>& keys = a.keys;
+    if (keys.empty()) {
         return Mat4x3();
     }
+    const std::size_t numKeys = keys.size();
     const float fps = a.frameRate > 0 ? static_cast<float>(a.frameRate) : 30.0f;
-    float duration = static_cast<float>(a.totalKeyframeCount) / fps;
-    if (duration < 1.0e-4f) {
-        duration = (static_cast<float>(a.keys.back().frame) + 1.0f) / fps;
-    }
-    if (duration < 1.0e-4f) {
-        return a.keys[0].objectToParent;
-    }
-    float t = timeSeconds;
-    if (a.looping) {
-        t = t - duration * std::floor(t / duration);
-        if (t < 0.0f) {
-            t += duration;
+    float frame = timeSeconds * fps;
+
+    float total = static_cast<float>(a.totalKeyframeCount);
+    if (total <= 0.0f) {
+        // The engine pins every wrap to loopFrom when total == 0 (which can
+        // only come from a broken file). Keep interpolation alive by falling
+        // back to the last key frame.
+        total = static_cast<float>(keys.back().frame) + 1.0f;
+        if (total <= 0.0f) {
+            return sampleChannelPost(a, keys.front().objectToParent, &keys.front(), &keys.front(),
+                                     0.0f);
         }
-    } else if (t > duration) {
-        t = duration;
     }
-    if (t < 0.0f) {
-        t = 0.0f;
+    const bool loopInterp = a.loopInterpolation;
+    float loopFrom = (a.looping || a.totalKeyframeCount == 0)
+                         ? static_cast<float>(a.loopToFrame)
+                         : total;
+    if (loopFrom < 0.0f) {
+        loopFrom = 0.0f;
     }
-    const float frame = t * fps;
-    if (a.keys.size() == 1 || frame <= static_cast<float>(a.keys.front().frame)) {
-        return a.keys.front().objectToParent;
+    if (loopFrom > total) {
+        loopFrom = total;
     }
-    if (frame >= static_cast<float>(a.keys.back().frame)) {
-        return a.keys.back().objectToParent;
-    }
-    for (std::size_t i = 0; i + 1 < a.keys.size(); ++i) {
-        const float f0 = static_cast<float>(a.keys[i].frame);
-        const float f1 = static_cast<float>(a.keys[i + 1].frame);
-        if (frame > f1) {
-            continue;
+
+    const float wrapLimit = (a.looping && loopInterp) ? total : total - 1.0f;
+    if (frame > wrapLimit) {
+        const float span = total - loopFrom;
+        if (span != 0.0f) {
+            frame = loopFrom + std::fmod(frame - loopFrom, span);
+        } else {
+            frame = loopFrom;
         }
-        if (f1 <= f0 + 1.0e-4f) {
-            return a.keys[i].objectToParent;
+    } else if (frame < 0.0f) {
+        frame = wrapLimit > 0.0f ? wrapLimit - std::fmod(-frame, wrapLimit) : 0.0f;
+        if (wrapLimit > 0.0f && frame >= wrapLimit) {
+            frame = 0.0f;
         }
-        // PC clips store interpolationMethod 0; the engine still lerps in
-        // LinearlyOptimizedContainer<M_Matrix4x3>::getItem. Stepping sparse
-        // Stand keys (2 samples over 250 frames) froze shoulders / neck.
-        const float u = (frame - f0) / (f1 - f0);
-        return lerpMat(a.keys[i].objectToParent, a.keys[i + 1].objectToParent, u);
     }
-    return a.keys.back().objectToParent;
+    const float fl = std::floor(frame);
+    const float frac = frame - fl;
+
+    // Non-looping channels hold the last key from total-1 on (getItem's
+    // `!looping` clamp; the wrap above already pinned frame to `total`).
+    if (!a.looping && frame >= total - 1.0f) {
+        return sampleChannelPost(a, keys[numKeys - 1].objectToParent, &keys[numKeys - 1],
+                                 &keys[numKeys - 1], frame);
+    }
+
+    // Loop seam blend: during the final frame the engine blends the last key
+    // towards the loop-start key instead of snapping at the wrap point.
+    if (loopInterp && fl >= total - 1.0f) {
+        const std::size_t from = numKeys - 1;
+        std::size_t to = 0;
+        if (numKeys > 1 && loopFrom > static_cast<float>(keys[0].frame)) {
+            to = numKeys - 1;
+            for (std::size_t k = 1; k + 1 < numKeys; ++k) {
+                if (static_cast<float>(keys[k].frame) >= loopFrom) {
+                    to = k;
+                    break;
+                }
+            }
+        }
+        if (frac <= 0.0f) {
+            return sampleChannelPost(a, keys[from].objectToParent, &keys[from], &keys[from], frame);
+        }
+        return sampleChannelPost(
+            a, lerpMat(keys[from].objectToParent, keys[to].objectToParent, frac), &keys[from],
+            &keys[to], frame);
+    }
+
+    // Segment search: `to` = first key with frame# > floor(frame) (the engine
+    // walks from a cached index; the resolved segment is the same).
+    if (fl >= static_cast<float>(keys[numKeys - 1].frame)) {
+        return sampleChannelPost(a, keys[numKeys - 1].objectToParent, &keys[numKeys - 1],
+                                 &keys[numKeys - 1], frame);
+    }
+    std::size_t to = 0;
+    while (to < numKeys && static_cast<float>(keys[to].frame) <= fl) {
+        ++to;
+    }
+    if (to == 0) {
+        return sampleChannelPost(a, keys[0].objectToParent, &keys[0], &keys[0], frame);
+    }
+    const std::size_t from = to - 1;
+    const float f0 = static_cast<float>(keys[from].frame);
+    const float f1 = static_cast<float>(keys[to].frame);
+    if (f1 <= f0) {
+        return sampleChannelPost(a, keys[from].objectToParent, &keys[from], &keys[to], frame);
+    }
+    const float u = (frame - f0) / (f1 - f0);
+    return sampleChannelPost(a, lerpMat(keys[from].objectToParent, keys[to].objectToParent, u),
+                             &keys[from], &keys[to], frame);
 }
 
 void kf2SampleAnimation(const Kf2File& file, float timeSeconds, std::vector<std::string>* names,
@@ -1214,7 +1346,7 @@ void poseVertexArrays(const Kf2Mesh& mesh, const Kf2Skin* skin, std::size_t skin
 void prepareSkeleton(const Kf2File& meshFile, const Kf2File* bindAnim, const Kf2File* playAnim,
                      float timeSeconds, std::vector<std::string>* bindNames,
                      std::vector<Mat4x3>* bindWorlds, std::vector<std::string>* playNames,
-                     std::vector<Mat4x3>* playWorlds) {
+                     std::vector<Mat4x3>* playWorlds, bool lockRootToBind) {
     const Kf2File* play = playAnim != 0 ? playAnim : bindAnim;
     if (bindAnim != 0 && !bindAnim->animations.empty()) {
         kf2BuildSkeletonWorlds(*bindAnim, 0.0f, 0, bindNames, bindWorlds);
@@ -1223,15 +1355,52 @@ void prepareSkeleton(const Kf2File& meshFile, const Kf2File* bindAnim, const Kf2
     }
     if (play != 0 && !play->animations.empty()) {
         kf2BuildSkeletonWorlds(*play, timeSeconds, bindAnim, playNames, playWorlds);
-        lockRootXZ(*play, *bindNames, *bindWorlds, *playNames, *playWorlds);
+        // Locomotion plays in place (the capsule carries the character);
+        // cinematic / root-motion clips must keep their animated root.
+        if (lockRootToBind) {
+            lockRootXZ(*play, *bindNames, *bindWorlds, *playNames, *playWorlds);
+        }
     } else {
         *playNames = *bindNames;
         *playWorlds = *bindWorlds;
     }
 }
 
+// X_ObjectAnimation::crossAnimateObject + fixCrossAnimation: blend two sampled
+// skeletons by lerping the bone worlds, then re-orthonormalizing the result.
+void blendSkeletons(const std::vector<std::string>& fromNames,
+                    const std::vector<Mat4x3>& fromWorlds, std::vector<Mat4x3>* playWorlds,
+                    std::vector<std::string>* playNames, float blend) {
+    if (fromWorlds.empty() || blend >= 1.0f) {
+        return;  // fully on the current clip
+    }
+    if (blend <= 0.0f) {
+        *playNames = fromNames;
+        *playWorlds = fromWorlds;
+        return;
+    }
+    for (std::size_t i = 0; i < playNames->size(); ++i) {
+        const int fi = findNameIndex(fromNames, (*playNames)[i]);
+        if (fi < 0) {
+            continue;
+        }
+        Mat4x3& cur = (*playWorlds)[i];
+        const Mat4x3& prev = fromWorlds[static_cast<std::size_t>(fi)];
+        Mat4x3 m;
+        for (int r = 0; r < 4; ++r) {
+            m.rows[r].x = prev.rows[r].x + (cur.rows[r].x - prev.rows[r].x) * blend;
+            m.rows[r].y = prev.rows[r].y + (cur.rows[r].y - prev.rows[r].y) * blend;
+            m.rows[r].z = prev.rows[r].z + (cur.rows[r].z - prev.rows[r].z) * blend;
+        }
+        orthonormalizeMat3(m);
+        cur = m;
+    }
+}
+
 void kf2SkinDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile, const Kf2File* bindAnim,
-                       const Kf2File* playAnim, float timeSeconds, std::vector<Kf2DrawMesh>& draws) {
+                       const Kf2File* playAnim, float timeSeconds, std::vector<Kf2DrawMesh>& draws,
+                       bool lockRootToBind, const Kf2File* crossAnim, float crossTimeSeconds,
+                       float crossBlend) {
     const Kf2Skin* skin = pickSkin(meshFile, skinFile);
     if (skin == 0 || draws.empty()) {
         return;
@@ -1241,7 +1410,14 @@ void kf2SkinDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile, const K
     std::vector<std::string> playNames;
     std::vector<Mat4x3> playWorlds;
     prepareSkeleton(meshFile, bindAnim, playAnim, timeSeconds, &bindNames, &bindWorlds, &playNames,
-                    &playWorlds);
+                    &playWorlds, lockRootToBind);
+    if (crossAnim != 0 && crossBlend > 0.0f && !crossAnim->animations.empty()) {
+        std::vector<std::string> crossNames;
+        std::vector<Mat4x3> crossWorlds;
+        prepareSkeleton(meshFile, bindAnim, crossAnim, crossTimeSeconds, &bindNames, &bindWorlds,
+                        &crossNames, &crossWorlds, lockRootToBind);
+        blendSkeletons(crossNames, crossWorlds, &playWorlds, &playNames, crossBlend);
+    }
     std::vector<std::string> nodeNames;
     std::vector<Mat4x3> nodeWorlds;
     kf2NodeWorldTransforms(meshFile, &nodeNames, &nodeWorlds);

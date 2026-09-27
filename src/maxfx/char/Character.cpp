@@ -1,5 +1,7 @@
 #include "maxfx/char/Character.h"
 
+#include "maxfx/script/Script.h"
+
 #include "maxfx/collision/Collision.h"
 #include "maxfx/core/Fs.h"
 
@@ -116,6 +118,20 @@ const ScriptBlock* findChild(const ScriptBlock& block, const char* name) {
     return 0;
 }
 
+void collectFrameMessages(const ScriptBlock& block, std::vector<ClipFrameMessage>* out) {
+    if (block.name == "message") {
+        ClipFrameMessage m;
+        m.frame = intField(block, "frame", 0);
+        m.text = parseScriptString(assignmentOf(block, "string"));
+        if (!m.text.empty()) {
+            out->push_back(m);
+        }
+    }
+    for (std::size_t i = 0; i < block.children.size(); ++i) {
+        collectFrameMessages(block.children[i], out);
+    }
+}
+
 void collectClips(const ScriptBlock& block, const std::string& scriptPath, const std::string& skeleton,
                   const std::string& dbRoot, std::vector<CharacterAnimClip>* out) {
     if (block.name == "animation") {
@@ -129,8 +145,16 @@ void collectClips(const ScriptBlock& block, const std::string& scriptPath, const
             if (mov != 0) {
                 clip.endPosition = vecField(*mov, "endposition", Vec3());
                 clip.endRotation = vecField(*mov, "rotation", Vec3());
+                const std::string mf = parseScriptString(assignmentOf(*mov, "filename"));
+                if (!mf.empty()) {
+                    clip.movementFile = mf;
+                    clip.resolvedMovement = resolveClipPath(mf, scriptPath, skeleton, dbRoot);
+                }
             }
         }
+        // [Message] Frame hooks anywhere under the clip (authored inside
+        // [Properties]) — cinematic scripts are made of these.
+        collectFrameMessages(block, &clip.frameMessages);
         if (clip.index >= 0 && !clip.filename.empty()) {
             out->push_back(clip);
         }
@@ -199,6 +223,9 @@ void applyProperties(CharacterConfig& cfg, const ScriptBlock& block) {
     cfg.airborneSpeed = floatField(block, "airbornespeed", cfg.airborneSpeed);
 }
 
+// Script-only estimate used until the app has loaded the walk clip KF2:
+// |EndPosition| assumes a 1-second clip. The engine's real speed is
+// |EndPosition| / clipLength (see CharacterActor::moveSpeed).
 float clipWalkSpeed(const CharacterConfig& cfg) {
     const CharacterAnimClip* walk = findAnimClip(cfg, kCharAnimWalk);
     if (walk != 0 && std::fabs(walk->endPosition.z) > 0.01f) {
@@ -344,6 +371,7 @@ void CharacterActor::spawn(const Vec3& pos, float yawRadians, int room, const Ch
     sawPlayer = false;
     grounded = false;
     clipLock = 0.0f;
+    moveSpeed = 0.0f;
     lastSeen = pos;
 }
 
@@ -471,11 +499,22 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
         clipLock -= dt;
     }
     if (want != animIndex && clipLock <= 0.0f) {
+        prevAnimIndex = animIndex;
+        prevAnimTime = animTime;  // outgoing clip continues where it was
+        blendTime = 0.25f;        // crossAnimateObject blend window
         animIndex = want;
         animTime = 0.0f;
         clipLock = 0.4f;
     } else {
         animTime += dt;
+        if (blendTime > 0.0f) {
+            prevAnimTime += dt;
+            blendTime -= dt;
+            if (blendTime < 0.0f) {
+                blendTime = 0.0f;
+                prevAnimIndex = -1;
+            }
+        }
     }
 
     if (activity == kCharCombat || activity == kCharAlert || activity == kCharHunt) {
@@ -486,7 +525,7 @@ void CharacterActor::update(float dt, const Vec3& playerPos, CollisionWorld& wor
 
     Vec3 delta(0.0f, 0.0f, 0.0f);
     if (activity == kCharHunt || activity == kCharPatrol) {
-        const float speed = clipWalkSpeed(*config);
+        const float speed = moveSpeed > 0.0f ? moveSpeed : clipWalkSpeed(*config);
         const Vec3 fwd = Vec3(std::sin(yaw), 0.0f, std::cos(yaw));
         if (activity == kCharHunt && targetDist > 1.0f) {
             delta = fwd * (speed * dt);

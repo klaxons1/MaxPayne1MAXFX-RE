@@ -23,7 +23,10 @@ CORE_SRCS = \
 	src/maxfx/char/Character.cpp \
 	src/maxfx/game/Message.cpp \
 	src/maxfx/game/Catalog.cpp \
-	src/maxfx/game/Runtime.cpp
+	src/maxfx/game/Runtime.cpp \
+	src/maxfx/game/Effects.cpp \
+	src/maxfx/game/CameraPaths.cpp \
+	src/maxfx/game/Hud.cpp
 
 DUMP_SRCS = $(CORE_SRCS) src/apps/ldb_dump.cpp
 LEVELS_DUMP_SRCS = $(CORE_SRCS) src/apps/levels_dump.cpp

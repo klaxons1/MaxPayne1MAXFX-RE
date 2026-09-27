@@ -1,0 +1,86 @@
+// --------------------------------------------------------
+// Invisible character, used as AI target
+// --------------------------------------------------------
+
+#include <..\ai_ranges.h>
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponid.h>
+#include <..\weaponanimid.h>
+#include <..\object_lods.h>
+
+[AI]
+AimingSpeed 				= AI_MOBSTER_AIMING_SPEED ;
+AimingSpeedCone 			= AI_MOBSTER_AIMING_SPEEDCONE ;
+AimUpDownSpeed 				= 30.0;
+TurnLeftRightSpeed 			= AI_MOBSTER_TURNING_SPEED ;
+VisualPerceivingRadius 		= AI_MOBSTER_VISUAL_RADIUS ;
+GeneralPerceivingRadius 	= AI_MOBSTER_GENERAL_RADIUS ;
+ActivationReactionTime 		= AI_MOBSTER_REACTION_TIME ;
+ShootingCone 				= AI_MOBSTER_SHOOTING_CONE ;
+PerceivingGroupOneRadius 	= AI_MOBSTER_GROUP_ONE ;
+PerceivingGroupTwoRadius 	= AI_MOBSTER_GROUP_TWO ;
+PerceivingGroupThreeRadius 	= AI_MOBSTER_GROUP_THREE ;
+EnemyInterestTime 			= AI_MOBSTER_INTEREST_TIME ;
+ActivateOtherCharactersRadius = AI_MOBSTER_ACTIVATE_OTHER_CHARACTERS_RADIUS;
+
+[Properties]
+Skeleton = default_skeleton;
+CapsuleTop = 0.4;
+CapsuleBottom = 0.0;
+CapsuleRadius = 0.16;
+AirborneSpeed = 0;
+CanShootDodgeFrame = 13;
+CanAbortShootDodgeFrame = 85;
+RandomizeTextureSet = FALSE;
+MaximumHealth = 2;
+WoundedHealth = 1;
+HealthBonusForKiller = HEALTHBONUS_MEDIUM;
+SlowMotionBonusForKiller = BONUS_SLOWMOTION; // percents of full slowmotion
+WoundedHealthUpperLimit = 1;
+AutoAimTarget = NO;
+ShootingFrequencyMultiplier = 0.5;
+ShadowsEnabled = false;
+CanPlayerSwitchToThisSkin = false; // true=player is able to change to this skin with PGUP/PGDN
+GiveTimedModeBonusForKiller = true; // timed mode bonus defined in levels.txt
+
+[OnInit]
+{
+	[Message] String = "this->C_SetInvulnerable( true );";
+	[Message] String = "this->C_EnableProjectileCollisions( false );";
+	[Message] String = "this->c_removeallweapons( "empty" );";
+}
+
+[OnDeath]
+{
+	[Message] String = "this->A_StopAll3DSounds(head);";
+}
+
+[TextureAnimation]
+Texturename = "FaceTexture";
+GroupIndex = 0;
+
+[LOD]
+{
+	[Geometry] ExportData = invisible_l0.kfs; SkinData = invisible_l0.skd;
+	Distance = 0.0;
+
+	EnableBoundingSphere	= TRUE;
+	BoundingSphereRadius	= 0.0;
+	EnableBoundingBox		= FALSE;
+}
+
+[Modifiers]
+{
+	[Animation] Index = CHARANIM_CUSTOMDEATH1; Filename = anim\dead_body.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+
+	[Animation] Index = CHARANIM_CUSTOMDEATH2; Filename = anim\dead_body.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+}

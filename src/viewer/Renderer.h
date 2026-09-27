@@ -3,6 +3,7 @@
 
 #include "maxfx/core/Math.h"
 #include "maxfx/db/Database.h"
+#include "maxfx/game/Effects.h"
 #include "maxfx/ldb/Ldb.h"
 #include "viewer/GL.h"
 
@@ -61,9 +62,16 @@ public:
     void shutdown();
 
     void beginAnimated();
+    // Room transform of a level room (identity when unknown) — shared with
+    // the dynamic-mesh streaming below.
+    static Mat4x3 roomMatrix(const Level& level, int roomId);
+    // Stream one dynamic level mesh (doors, platforms, ...) with its
+    // animated world transform. Call between beginAnimated() and render().
+    void appendDynamicLevelMesh(const Level& level, std::size_t meshIndex, const Mat4x3& world);
     int appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, const Kf2File* bindAnim,
                                 const Kf2File* playAnim, float timeSeconds, const Mat4x3& entity,
-                                int roomId);
+                                int roomId, bool lockRootToBind = true, const Kf2File* crossAnim = 0,
+                                float crossTimeSeconds = 0.0f, float crossBlend = 0.0f);
     int appendOverlayKf2(const Kf2File& kf, const Mat4x3& entity);
 
     void resize(int width, int height);
@@ -108,7 +116,20 @@ public:
 
     void drawHudText(int x, int y, const char* text, float r, float g, float b);
     void drawHudQuad(int x, int y, int w, int h, float r, float g, float b, float a);
+    // Textured HUD sprite (hud.txt [Sprite]): pixel coords / size in the
+    // current window, anchored per hudReferencePoint(). `colorPath` loads via
+    // the shared image loader (composites a sibling _alpha file); when
+    // `alphaPath` is set it is merged explicitly.
+    void drawHudImage(const std::string& colorPath, const std::string& alphaPath, float x, float y,
+                      float w, float h, int refPoint, float alpha);
     void presentHud();
+
+    // World-space effects pass: bullet decals (textured quads projected on the
+    // hit surface) and particle billboards. `decalFiles` maps the decal
+    // material name to (color, alpha) image paths.
+    void renderEffects(const Mat4& view, const Vec3& cameraPos, const std::vector<Decal>& decals,
+                       const std::vector<ParticleEffectInstance>& effects,
+                       const std::map<std::string, std::pair<std::string, std::string> >* decalFiles);
 
 private:
     struct GpuMesh {
@@ -196,6 +217,11 @@ private:
     GLuint hudVao_;
     GLuint hudVbo_;
     std::vector<float> hudVerts_;
+    GLuint hudImageProgram_;
+    GLuint effectProgram_;
+    GLuint effectVao_;
+    GLuint effectVbo_;
+    GLuint particleTex_;
 
     ShadingMode shading_;
     bool wireframe_;
@@ -214,6 +240,10 @@ private:
 
     const Database* database_;
     std::vector<WorldLight> lights_;
+    // GPU texture ids of the loaded level (materials by list index,
+    // lightmaps by id) so dynamic meshes can stream without re-uploading.
+    std::vector<GLuint> levelMaterialTextures_;
+    std::vector<GLuint> levelLightmapTextures_;
     std::map<std::string, GLuint> textureByPath_;
     std::map<std::string, std::vector<Kf2DrawMesh> > restKf2Draws_;
     std::map<std::string, std::vector<Kf2DrawMesh> > posedKf2Draws_;

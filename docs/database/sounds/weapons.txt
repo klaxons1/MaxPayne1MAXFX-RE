@@ -1,0 +1,691 @@
+#include <..\soundid.h>
+
+// -------------------------------------------------------------------
+// Note to Teque:
+// Add more variations to guns where appropriate. 3 Samples per gun 
+// at the most
+// -------------------------------------------------------------------
+
+[Shoot_NoBulletsLeft]		// No bullets left in Beretta
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\shoot_empty.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Generic]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\shoot_generic.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Throwable]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\shoot_throwable.wav;
+		Volume = 0.4;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Leadpipe]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_baseballbat.wav;
+		Volume = 0.25;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = 2;
+		FallOff = 3;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Baseballbat]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_baseballbat.wav;
+		Volume = 0.175;
+		Pitch = 33000;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = 2;
+		FallOff = 3;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Beretta]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\shoot_beretta.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 6;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Deserteagle]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_Deserteagle.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 33050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Ingram]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_Ingram.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 0.1%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Ingramdual]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_IngramDual.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 0.1%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_SawedShotgun]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_SawedShotgun.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_PumpShotgun]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_PumpShotgun.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 2;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_PumpShotgun_Cock]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_PumpShotgun_Cock.wav;
+		Volume = ID_WEAPONRELOAD_VOLUME;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Mp5]
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_Mp5_1shot_adpcm.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Shoot_ColtCommando]
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_Colt.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 2%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[Shoot_Sniper]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_Sniper.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[chamber_Sniper]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\chamber_Sniper.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = 2;
+		FallOff = 4;
+		Priority = 20;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Shoot_Jackhammer]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_Jackhammer.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+
+[Shoot_m79]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Shoot_m79.wav;
+		Volume = ID_WEAPON_VOLUME;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPON_HOTSPOT;
+		FallOff = ID_WEAPON_FALLOFF;
+		Priority = ID_WEAPON_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+// -------------------------------------------------------------------
+// Reload
+// -------------------------------------------------------------------
+
+[Reload_Beretta]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_Beretta.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 3;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_Deserteagle]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_Deserteagle.wav;
+		Volume = 0.3;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_Ingram]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_Ingram.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_SawedShotgun]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_SawedShotgun.wav;
+		Volume = 0.3;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_PumpShotgun]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_PumpShotgun01.wav;
+		Volume = ID_WEAPONRELOAD_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = weapons\Reload_PumpShotgun02.wav;
+		Volume = ID_WEAPONRELOAD_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+		Filename = weapons\Reload_PumpShotgun03.wav;
+		Volume = ID_WEAPONRELOAD_VOLUME;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_Mp5]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\reload_Colt.wav;
+		Volume = 0.25;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_Sniper]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_Sniper.wav;
+		Volume = 0.2;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_Jackhammer]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_Jackhammer.wav;
+		Volume = 0.1;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_m79]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_m79.wav;
+		Volume = 0.15;
+		Pitch = 22050;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_m79_1]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_m79_1.wav;
+		Volume = 0.15;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_m79_2]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_m79_2.wav;
+		Volume = 0.25;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_m79_3]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_m79_3.wav;
+		Volume = 0.25;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[Reload_grenade]
+{
+	[Properties] ID = ID_WEAPON;
+	[Default]
+	{
+		[Sound]
+		Filename = weapons\Reload_m79_3.wav;
+		Volume = 0.25;
+		Pitch = 44100;
+		Random = 5%;
+		Looping = NO;
+		Streamed = NO;
+		3DSound = YES;
+		Hotspot = ID_WEAPONRELOAD_HOTSPOT;
+		FallOff = ID_WEAPONRELOAD_FALLOFF;
+		Priority = ID_WEAPONRELOAD_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	

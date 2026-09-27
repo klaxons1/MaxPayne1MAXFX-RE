@@ -104,6 +104,44 @@ const char* kFontFS =
     "  frag = vec4(vColor.rgb, vColor.a);\n"
     "}\n";
 
+const char* kHudImageFS =
+    "#version 330 core\n"
+    "in vec2 vUV;\n"
+    "in vec4 vColor;\n"
+    "uniform sampler2D uFont;\n"
+    "out vec4 frag;\n"
+    "void main(){\n"
+    "  if (vUV.x < 0.0) {\n"
+    "    frag = vColor;\n"
+    "    return;\n"
+    "  }\n"
+    "  frag = texture(uFont, vUV) * vColor;\n"
+    "}\n";
+
+const char* kEffectVS =
+    "#version 330 core\n"
+    "layout(location = 0) in vec3 aPos;\n"
+    "layout(location = 1) in vec2 aUV;\n"
+    "layout(location = 2) in vec4 aColor;\n"
+    "uniform mat4 uViewProj;\n"
+    "out vec2 vUV;\n"
+    "out vec4 vColor;\n"
+    "void main(){\n"
+    "  gl_Position = uViewProj * vec4(aPos, 1.0);\n"
+    "  vUV = aUV;\n"
+    "  vColor = aColor;\n"
+    "}\n";
+
+const char* kEffectFS =
+    "#version 330 core\n"
+    "in vec2 vUV;\n"
+    "in vec4 vColor;\n"
+    "uniform sampler2D uTex;\n"
+    "out vec4 frag;\n"
+    "void main(){\n"
+    "  frag = texture(uTex, vUV) * vColor;\n"
+    "}\n";
+
 Vec3 mirrorX(const Vec3& v) { return Vec3(-v.x, v.y, v.z); }
 
 std::map<std::string, std::string> gKf2TexCache;
@@ -310,6 +348,11 @@ Renderer::Renderer()
     : meshProgram_(0),
       lineProgram_(0),
       fontProgram_(0),
+      hudImageProgram_(0),
+      effectProgram_(0),
+      effectVao_(0),
+      effectVbo_(0),
+      particleTex_(0),
       whiteTex_(0),
       greyTex_(0),
       fontTex_(0),
@@ -354,6 +397,14 @@ bool Renderer::init(char* error, std::size_t errorSize) {
     }
     fontProgram_ = compileProgram(kFontVS, kFontFS, error, errorSize);
     if (fontProgram_ == 0) {
+        return false;
+    }
+    hudImageProgram_ = compileProgram(kFontVS, kHudImageFS, error, errorSize);
+    if (hudImageProgram_ == 0) {
+        return false;
+    }
+    effectProgram_ = compileProgram(kEffectVS, kEffectFS, error, errorSize);
+    if (effectProgram_ == 0) {
         return false;
     }
     whiteTex_ = makeSolidTexture(255, 255, 255);
@@ -457,7 +508,23 @@ void Renderer::shutdown() {
     if (fontProgram_) {
         glDeleteProgram(fontProgram_);
         fontProgram_ = 0;
-    }
+            if (hudImageProgram_) {
+            glDeleteProgram(hudImageProgram_);
+            hudImageProgram_ = 0;
+        }
+        if (effectProgram_) {
+            glDeleteProgram(effectProgram_);
+            effectProgram_ = 0;
+        }
+        if (effectVao_) {
+            glDeleteVertexArrays(1, &effectVao_);
+            effectVao_ = 0;
+        }
+        if (effectVbo_) {
+            glDeleteBuffers(1, &effectVbo_);
+            effectVbo_ = 0;
+        }
+}
     whiteTex_ = greyTex_ = fontTex_ = 0;
 }
 
@@ -528,6 +595,46 @@ void Renderer::buildFont() {
     glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                           reinterpret_cast<void*>(4 * sizeof(float)));
     glBindVertexArray(0);
+
+    // Effects pass: pos3 uv2 color4.
+    glGenVertexArrays(1, &effectVao_);
+    glGenBuffers(1, &effectVbo_);
+    glBindVertexArray(effectVao_);
+    glBindBuffer(GL_ARRAY_BUFFER, effectVbo_);
+    glBufferData(GL_ARRAY_BUFFER, 4, 0, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(float),
+                          reinterpret_cast<void*>(3 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(float),
+                          reinterpret_cast<void*>(5 * sizeof(float)));
+    glBindVertexArray(0);
+
+    // Soft round particle texture (no game-data dependency; the particles.txt
+    // material bitmaps get used once the PS_ binary graphs are decoded).
+    {
+        const int pw = 32;
+        const int ph = 32;
+        std::vector<unsigned char> rgba(static_cast<std::size_t>(pw * ph * 4), 0);
+        for (int y = 0; y < ph; ++y) {
+            for (int x = 0; x < pw; ++x) {
+                const float dx = (x + 0.5f) / pw - 0.5f;
+                const float dy = (y + 0.5f) / ph - 0.5f;
+                const float d = std::sqrt(dx * dx + dy * dy) * 2.0f;
+                float a = 1.0f - d;
+                a = std::max(0.0f, std::min(1.0f, a));
+                a = a * a * (3.0f - 2.0f * a);  // smoothstep edge
+                const std::size_t i = static_cast<std::size_t>((y * pw + x) * 4);
+                rgba[i + 0] = 255;
+                rgba[i + 1] = 255;
+                rgba[i + 2] = 255;
+                rgba[i + 3] = static_cast<unsigned char>(a * 255.0f);
+            }
+        }
+        particleTex_ = uploadTexture(&rgba[0], pw, ph, false, true);
+    }
 }
 
 bool Renderer::loadLevel(const Level& level, const Database* database, char* error,
@@ -641,6 +748,9 @@ bool Renderer::loadLevel(const Level& level, const Database* database, char* err
     }
     lights_ = lights;
 
+    levelMaterialTextures_ = matTex;
+    levelLightmapTextures_ = lmGpu;
+
     for (std::size_t i = 0; i < level.staticMeshes.size(); ++i) {
         const StaticMesh& mesh = level.staticMeshes[i];
         int roomId = -1;
@@ -655,13 +765,8 @@ bool Renderer::loadLevel(const Level& level, const Database* database, char* err
                    mesh.transform, roomId, false, level, database, matTex, lmGpu, mesh.radiosity, lights);
     }
 
-    for (std::size_t i = 0; i < level.dynamicMeshes.size(); ++i) {
-        const DynamicMesh& mesh = level.dynamicMeshes[i];
-        const Mat4x3 roomX = roomTransform(level, mesh.properties.roomId);
-        const Mat4x3 world = combine(roomX, mesh.properties.objectToRoom);
-        appendMesh(mesh.vertices, mesh.normals, level.dynamicTextureVertices, mesh.polygons, world,
-                   mesh.properties.roomId, true, level, database, matTex, lmGpu, mesh.radiosity, lights);
-    }
+    // Dynamic meshes are NOT baked: they stream every frame via
+    // appendDynamicLevelMesh with their animated transform (doors, lifts).
 
     for (std::size_t i = 0; i < level.items.size(); ++i) {
         const LevelItem& it = level.items[i];
@@ -1097,6 +1202,20 @@ void Renderer::destroyAnimatedGpu() {
     animBatches_.clear();
 }
 
+Mat4x3 Renderer::roomMatrix(const Level& level, int roomId) {
+    return roomTransform(level, roomId);
+}
+
+void Renderer::appendDynamicLevelMesh(const Level& level, std::size_t meshIndex, const Mat4x3& world) {
+    if (!recordingAnimated_ || meshIndex >= level.dynamicMeshes.size()) {
+        return;
+    }
+    const DynamicMesh& mesh = level.dynamicMeshes[meshIndex];
+    appendMesh(mesh.vertices, mesh.normals, level.dynamicTextureVertices, mesh.polygons, world,
+               mesh.properties.roomId, true, level, database_, levelMaterialTextures_,
+               levelLightmapTextures_, mesh.radiosity, lights_);
+}
+
 void Renderer::beginAnimated() {
     recordingAnimated_ = true;
     // Keep GpuMesh capacity — clearing the vectors dropped ~6 MB of vertex
@@ -1109,7 +1228,8 @@ void Renderer::beginAnimated() {
 
 int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, const Kf2File* bindAnim,
                                       const Kf2File* playAnim, float timeSeconds, const Mat4x3& entity,
-                                      int roomId) {
+                                      int roomId, bool lockRootToBind, const Kf2File* crossAnim,
+                                      float crossTimeSeconds, float crossBlend) {
     recordingAnimated_ = true;
     std::vector<Kf2DrawMesh>& rest = restKf2Draws_[mesh.sourcePath];
     if (rest.empty()) {
@@ -1119,7 +1239,8 @@ int Renderer::appendAnimatedCharacter(const Kf2File& mesh, const Kf2File* skin, 
     if (!sameDrawLayout(draws, rest)) {
         draws = rest;
     }
-    kf2SkinDrawMeshes(mesh, skin, bindAnim, playAnim, timeSeconds, draws);
+    kf2SkinDrawMeshes(mesh, skin, bindAnim, playAnim, timeSeconds, draws, lockRootToBind, crossAnim,
+                      crossTimeSeconds, crossBlend);
     if (draws.empty()) {
         return appendKf2File(mesh, entity, roomId, lights_, database_);
     }
@@ -1625,6 +1746,225 @@ void Renderer::drawHudQuad(int x, int y, int w, int h, float r, float g, float b
 }
 
 void Renderer::presentHud() { flushHud(); }
+
+void Renderer::drawHudImage(const std::string& colorPath, const std::string& alphaPath, float x,
+                            float y, float w, float h, int refPoint, float alpha) {
+    if (width_ <= 0 || height_ <= 0 || colorPath.empty() || w <= 0.0f || h <= 0.0f) {
+        return;
+    }
+    GLuint tex = 0;
+    if (!alphaPath.empty()) {
+        tex = textureFromColorAlpha(colorPath, alphaPath);
+    } else {
+        tex = textureFromFile(colorPath);
+    }
+    if (tex == 0) {
+        return;
+    }
+    // Anchor the sprite per the hud.txt ReferencePoint.
+    if (refPoint == 1) {  // CENTER
+        x -= w * 0.5f;
+        y -= h * 0.5f;
+    } else if (refPoint == 2) {  // DOWNRIGHT
+        x -= w;
+        y -= h;
+    } else if (refPoint == 3) {  // DOWNLEFT
+        y -= h;
+    }
+    // Draw immediately after flushing whatever the font batch holds.
+    flushHud();
+    const float invW = 2.0f / static_cast<float>(width_);
+    const float invH = 2.0f / static_cast<float>(height_);
+    const float x0 = x * invW - 1.0f;
+    const float y0 = 1.0f - y * invH;
+    const float x1 = (x + w) * invW - 1.0f;
+    const float y1 = 1.0f - (y + h) * invH;
+    const float quad[6][8] = {
+        {x0, y0, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, alpha}, {x0, y1, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, alpha},
+        {x1, y0, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, alpha}, {x1, y0, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, alpha},
+        {x0, y1, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, alpha}, {x1, y1, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, alpha},
+    };
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glUseProgram(hudImageProgram_);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glUniform1i(glGetUniformLocation(hudImageProgram_, "uFont"), 0);
+    glBindVertexArray(hudVao_);
+    glBindBuffer(GL_ARRAY_BUFFER, hudVbo_);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quad), quad, GL_DYNAMIC_DRAW);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+}
+
+namespace {
+
+// Tangent basis for a decal quad projected on a surface.
+void decalBasis(const Vec3& n, Vec3* t, Vec3* b) {
+    Vec3 up = std::fabs(n.y) < 0.95f ? Vec3(0.0f, 1.0f, 0.0f) : Vec3(1.0f, 0.0f, 0.0f);
+    Vec3 tv = Vec3(n.y * up.z - n.z * up.y, n.z * up.x - n.x * up.z, n.x * up.y - n.y * up.x);
+    const float tl = std::sqrt(tv.x * tv.x + tv.y * tv.y + tv.z * tv.z);
+    if (tl > 1.0e-6f) {
+        tv = Vec3(tv.x / tl, tv.y / tl, tv.z / tl);
+    } else {
+        tv = Vec3(1.0f, 0.0f, 0.0f);
+    }
+    const Vec3 bt = Vec3(n.y * tv.z - n.z * tv.y, n.z * tv.x - n.x * tv.z, n.x * tv.y - n.y * tv.x);
+    *t = tv;
+    *b = bt;
+}
+
+}  // namespace
+
+void Renderer::renderEffects(const Mat4& view, const Vec3& cameraPos, const std::vector<Decal>& decals,
+                             const std::vector<ParticleEffectInstance>& effects,
+                             const std::map<std::string, std::pair<std::string, std::string> >* decalFiles) {
+    if (decals.empty() && effects.empty()) {
+        return;
+    }
+    const float aspect = static_cast<float>(width_) / static_cast<float>(height_);
+    const float fov = fovY_ > 1.0f ? fovY_ : 70.0f;
+    const Mat4 proj = perspectiveRH(toRadians(fov), aspect, 0.05f, 400.0f);
+    const Mat4 vp = multiply(proj, view);
+
+    // Camera right/up for billboards (view space rows of the view matrix).
+    const Vec3 camRight = Vec3(view.m[0], view.m[4], view.m[8]);
+    const Vec3 camUp = Vec3(view.m[1], view.m[5], view.m[9]);
+
+    std::vector<float> verts;
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glDepthMask(GL_FALSE);
+    glUseProgram(effectProgram_);
+    glUniformMatrix4fv(glGetUniformLocation(effectProgram_, "uViewProj"), 1, GL_FALSE, vp.m);
+    glUniform1i(glGetUniformLocation(effectProgram_, "uTex"), 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindVertexArray(effectVao_);
+    glBindBuffer(GL_ARRAY_BUFFER, effectVbo_);
+
+    // --- Decals: one textured quad per decal, grouped by material. ---
+    for (std::size_t d = 0; d < decals.size(); ++d) {
+        const Decal& dec = decals[d];
+        std::string colorPath;
+        std::string alphaPath;
+        if (decalFiles != 0) {
+            std::map<std::string, std::pair<std::string, std::string> >::const_iterator it =
+                decalFiles->find(dec.material);
+            if (it != decalFiles->end()) {
+                colorPath = it->second.first;
+                alphaPath = it->second.second;
+            }
+        }
+        GLuint tex = 0;
+        if (!colorPath.empty()) {
+            tex = alphaPath.empty() ? textureFromFile(colorPath) : textureFromColorAlpha(colorPath, alphaPath);
+        }
+        if (tex == 0) {
+            tex = greyTex_;
+        }
+        Vec3 t;
+        Vec3 b;
+        decalBasis(dec.normal, &t, &b);
+        // Roll the quad around the surface normal.
+        const float cs = std::cos(dec.rotation);
+        const float sn = std::sin(dec.rotation);
+        const Vec3 rt = Vec3(t.x * cs + b.x * sn, t.y * cs + b.y * sn, t.z * cs + b.z * sn);
+        const Vec3 rb = Vec3(b.x * cs - t.x * sn, b.y * cs - t.y * sn, b.z * cs - t.z * sn);
+        const Vec3 c = Vec3(dec.position.x + dec.normal.x * 0.01f, dec.position.y + dec.normal.y * 0.01f,
+                            dec.position.z + dec.normal.z * 0.01f);
+        const float r = dec.radius;
+        const Vec3 corners[4] = {
+            Vec3(c.x - rt.x * r - rb.x * r, c.y - rt.y * r - rb.y * r, c.z - rt.z * r - rb.z * r),
+            Vec3(c.x + rt.x * r - rb.x * r, c.y + rt.y * r - rb.y * r, c.z + rt.z * r - rb.z * r),
+            Vec3(c.x + rt.x * r + rb.x * r, c.y + rt.y * r + rb.y * r, c.z + rt.z * r + rb.z * r),
+            Vec3(c.x - rt.x * r + rb.x * r, c.y - rt.y * r + rb.y * r, c.z - rt.z * r + rb.z * r),
+        };
+        const float uvs[4][2] = {{0.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f}};
+        verts.clear();
+        const int order[6] = {0, 1, 2, 0, 2, 3};
+        for (int i = 0; i < 6; ++i) {
+            const Vec3& p = corners[order[i]];
+            verts.push_back(p.x);
+            verts.push_back(p.y);
+            verts.push_back(p.z);
+            verts.push_back(uvs[order[i]][0]);
+            verts.push_back(uvs[order[i]][1]);
+            verts.push_back(1.0f);
+            verts.push_back(1.0f);
+            verts.push_back(1.0f);
+            verts.push_back(1.0f);
+        }
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(verts.size() * sizeof(float)),
+                     verts.empty() ? 0 : &verts[0], GL_DYNAMIC_DRAW);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+    // --- Particle billboards, grouped by blend mode. ---
+    for (int pass = 0; pass < 2; ++pass) {
+        const bool additive = pass == 1;
+        verts.clear();
+        for (std::size_t e = 0; e < effects.size(); ++e) {
+            const ParticleEffectInstance& fx = effects[e];
+            if (fx.def == 0 || fx.def->additive != additive) {
+                continue;
+            }
+            for (std::size_t i = 0; i < fx.particles.size(); ++i) {
+                const Particle& pt = fx.particles[i];
+                const float t = pt.age / std::max(0.01f, pt.lifetime);
+                const float size = 0.5f * (pt.sizeStart + (pt.sizeEnd - pt.sizeStart) * t);
+                const float r = pt.colorStart.x + (pt.colorEnd.x - pt.colorStart.x) * t;
+                const float g = pt.colorStart.y + (pt.colorEnd.y - pt.colorStart.y) * t;
+                const float bcol = pt.colorStart.z + (pt.colorEnd.z - pt.colorStart.z) * t;
+                const float a = pt.alphaStart + (pt.alphaEnd - pt.alphaStart) * t;
+                const Vec3& p = pt.position;
+                const Vec3 corners[4] = {
+                    Vec3(p.x - camRight.x * size - camUp.x * size, p.y - camRight.y * size - camUp.y * size,
+                         p.z - camRight.z * size - camUp.z * size),
+                    Vec3(p.x + camRight.x * size - camUp.x * size, p.y + camRight.y * size - camUp.y * size,
+                         p.z + camRight.z * size - camUp.z * size),
+                    Vec3(p.x + camRight.x * size + camUp.x * size, p.y + camRight.y * size + camUp.y * size,
+                         p.z + camRight.z * size + camUp.z * size),
+                    Vec3(p.x - camRight.x * size + camUp.x * size, p.y - camRight.y * size + camUp.y * size,
+                         p.z - camRight.z * size + camUp.z * size),
+                };
+                const float uvs[4][2] = {{0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}};
+                const int order[6] = {0, 1, 2, 0, 2, 3};
+                for (int k = 0; k < 6; ++k) {
+                    const Vec3& cp = corners[order[k]];
+                    verts.push_back(cp.x);
+                    verts.push_back(cp.y);
+                    verts.push_back(cp.z);
+                    verts.push_back(uvs[order[k]][0]);
+                    verts.push_back(uvs[order[k]][1]);
+                    verts.push_back(r);
+                    verts.push_back(g);
+                    verts.push_back(bcol);
+                    verts.push_back(a);
+                }
+            }
+        }
+        if (verts.empty()) {
+            continue;
+        }
+        glBindTexture(GL_TEXTURE_2D, particleTex_);
+        glBlendFunc(GL_SRC_ALPHA, additive ? GL_ONE : GL_ONE_MINUS_SRC_ALPHA);
+        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(verts.size() * sizeof(float)), &verts[0],
+                     GL_DYNAMIC_DRAW);
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(verts.size() / 9));
+    }
+
+    glBindVertexArray(0);
+    glDepthMask(GL_TRUE);
+    glDisable(GL_BLEND);
+    glEnable(GL_CULL_FACE);
+    (void)cameraPos;
+}
 
 void Renderer::flushHud() {
     if (!showHud_ || hudVerts_.empty()) {

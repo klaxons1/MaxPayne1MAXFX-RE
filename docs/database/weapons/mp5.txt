@@ -1,0 +1,91 @@
+#include <..\object_lods.h>
+#include <..\shooting.h>
+#include <..\weaponanimid.h>
+#include <..\weaponid.h>
+
+// MP5 Default
+
+[LOD]
+{
+	[Geometry]
+	ExportData = ..\coltCommando\coltCommando_Lod0.kf2;
+	Distance = WEAPON_LOD_FAR ;
+}
+
+[Animationset]
+{
+	[Animation] Index = WEAPONANIM_DEFAULT; Filename = ..\coltCommando\coltCommando_Stand.kf2;
+	[Animation] Index = WEAPONANIM_SHOOT; Filename = ..\coltCommando\coltCommando_Default.kf2;
+	[Properties]
+	{
+		[Message] Frame = 0; String = "this->PS_StartEffect ( muzzle_coltCommando, \"\" );";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( bullet_mp5, 1 );";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( case_300cal, 1 );";
+		[Message] Frame = 0; String = "this->A_Play3DSound ( weapons, shoot_coltCommando, \"\" );";
+	}
+	[Animation] Index = WEAPONANIM_RELOAD; Filename = ..\coltCommando\coltCommando_Default.kf2;
+	[Properties]
+	{
+		[Message] Frame = 0; String = "this->A_Play3DSound ( weapons, reload_mp5, \"\");";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( clip_coltcommando, 1 );";
+	}
+	[Animation] Index = WEAPONANIM_SHOOTEMPTY; Filename = ..\coltCommando\coltCommando_Default.kf2;
+
+	[Animation]	
+	Index = WEAPONANIM_DROPONDEATH; Filename = ..\coltCommando\coltCommando_Default.kf2;
+	[Properties]
+	{
+		[Message] Frame = 0; String = "this->WS_Hide( " TRUE " );";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( enemy_mp5, 1 );";
+	}
+}
+
+[Attributes]
+TwoHandedBones 		= YES;
+TwoHandedAnimation 	= YES;
+UseMultipleGunBones = NO;
+ShootDodgeAllowed 	= YES;
+AutoAimingAllowed 	= YES;
+ProjectileOffset	= (0,0.08,0);
+
+SlotIndex 	= SLOTID_MP5;
+InventoryID = INVENTORYID_MP5;
+WeaponID 	= WEAPONID_MP5;
+
+Clipsize 	= MP5_CLIPSIZE;
+Pocketsize	= MP5_POCKETSIZE;
+
+MaximumShootingFrequency = MP5_MAXSHOOTINGFREQUENCY;
+DefaultShootingFrequency = MP5_SHOOTINGFREQUENCY;
+// [0..1] affects only player character
+// when multiplier is close to 0, shooting will slow down when time slows down
+// when multiplier is close to 1, shooting will happen with constant speed when time slows down 
+ShootingFrequencyMultiplier		= 0.8;
+
+UseModeSwitchAnimation = TRUE;
+
+ReloadAmount = -1;
+SidewaysAimingMultiplier = 1.0;
+
+FOVMultiplier = 1.0;
+// shakes are only applied when sniper zoom is on
+ShakeLength = 0.0;
+ShakeStrengthX = 0.0;
+ShakeStrengthY = 0.0;
+CrouchingShakeLength = 0.0;
+CrouchingShakeStrengthX = 0.0;
+CrouchingShakeStrengthY = 0.0;
+UsesLowerActivationGroup = false;
+
+[CrosshairAttributes]
+CastLength				= CROSSHAIR_CASTLENGTH ;
+SphereRadius 			= CROSSHAIR_SPHERERADIUS ;
+SmallProjectile 		= TRUE ;
+ScreenSizeFrontLimit	= CROSSHAIR_SIZEFRONTLIMIT ;
+ScreenSizeBackLimit		= CROSSHAIR_SIZEBACKLIMIT ;
+
+[Crosshair] 
+{ 
+	[Geometry] 
+	ExportData = ..\crosshairs\dot.kf2;
+}

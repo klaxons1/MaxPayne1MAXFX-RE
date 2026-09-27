@@ -1,0 +1,475 @@
+#include <..\soundid.h>
+
+// ------------------------------------------------
+[P1L4a_003_cam]	// Max: When the train he was riding... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_003_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L4a_01]      // Police: NYPD, you on the rooftop...
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_01.wav;
+		
+		Volume = 1;
+		Pitch = 22050;
+		
+		Random = 0%;
+		Hotspot = 10;
+		FallOff = 70;
+		Looping = NO;
+		
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L4a_02-05]	// Vinnie commanding three mobsters at stairs
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_02-05.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L4a_06]	// Mobsters doing a drug deal, Max looks thru a skylight
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_06.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L4a_07]	// Mobsters see Max on the roof
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_07.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L4a_08]	// Vinnie shouts for someone to open the door
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_08.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 7;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L4a_09]	// Vinnie shouts he'll kill Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_09.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 7;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L4a_10]	// Vinnie falls and dies
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_10.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 7;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L4a_11]	// Shouting thru the door, they hear Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_11.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 7;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L4a_12]	// Mobsters talking thru the door
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L4a_12.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 7;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// ------------------------------------------------
+// Normal 3D sounds
+// ------------------------------------------------
+
+[helicopter_near]  			// Helicopter distance sounds
+{
+	[Properties] ID = ID_DEFAULT;
+	[Default]
+	{
+		[Sound]
+        Filename = dynamic\chopper\helicopter_near.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 0%;
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 20;
+		FallOff = 150;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[subway_train_loop]             //subway train rumble
+{
+    [Properties] ID = ID_DEFAULT;
+    [Default]
+	{
+        [Sound]
+        Filename = ambient\subway\subway_train_close_loop.wav;
+        Volume = 0.8;
+        Pitch = 22050;
+        Random = 2%;
+        3DSound = YES;
+        Looping = YES;
+        Streamed = NO;
+        Hotspot = 4;
+        FallOff = 100;
+        Priority = 50;
+        ItemsToCache = 1;
+        FrequencyScaling = TRUE;
+    }
+}
+
+[cinematic_reload_sniper]
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "weapons\reload_sniper.wav";
+		Volume = 0.5;
+		Pitch = 22050;
+
+		Random = 5%;
+		Hotspot = 10;
+		FallOff = 10;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+[cinematic_reload_m79]
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "weapons\reload_m79.wav";
+		Volume = 0.5;
+		Pitch = 22050;
+
+		Random = 5%;
+		Hotspot = 10;
+		FallOff = 10;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[camera_cut]
+{
+	[Properties]
+	ID = ID_DEFAULT;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "camera\camera_cut_01.wav";
+		Volume = 0.3;
+		Pitch = 44100;
+
+		Random = 0%;
+		Hotspot = 2;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+		Filename = "camera\camera_cut_02.wav";
+		Volume = 0.3;
+		Pitch = 44100;
+
+		Random = 0%;
+		Hotspot = 2;
+		FallOff = 50;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = NO;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+
+// ------------------------------------------------
+// Streamed 3D speech
+// ------------------------------------------------
+
+[cinematic_mobster_alert01]
+{
+	[Properties]
+	ID = ID_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "enemy\mobster\mobster_alert_known_02b.wav";
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = 10;
+		FallOff = 11;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// ------------------------------------------------
+// Streamed 2D speech (Max's narrations)
+// ------------------------------------------------
+/*
+[old_station]
+{
+	[Properties]
+	ID = ID_PLAYER_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = "story\part1\P1L1_Ingame_old_station.wav";
+
+		Volume = 1.0;
+		Pitch = 44100;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+*/

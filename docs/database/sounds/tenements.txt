@@ -1,0 +1,1028 @@
+#include <..\soundid.h>
+
+// -------------------------------------------------------------------
+[P1L3a_004_cam]	// Max: Another bomb exploded... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3a_004_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_007_cam]	// Max: Vinnie gognitti was running scared... (same as GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_007_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3a_01]	// Mobsters in pawn shop
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3a_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3a_02]	// Bravuva on megaphone
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3a_02.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3a_03]      // Mobsters: It's never been this cold..
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3a_03.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 0%;
+		Hotspot = 7;
+		FallOff = 50;
+		Looping = NO;
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3a_Max_02]	// Max: comments on letter on counter
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3a_Max_02.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3a_Max_03]	// Max: The whole building was rigged with explosives
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3a_Max_03.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// Begin Tenements B
+[P1L3b_002_cam]	// Max: The alternate route... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_002_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_Max_01]	// Max: comments on the locked metal door
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_01]	// Max fakes as a pizza man
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_01.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_02-08]	// Conversation between Max and scared mobster
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_02-08.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_02b-d]	// Mickey_Helper idle talk
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100%;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_02b.wav;
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+		Filename = ingame\part1\P1L3b_02c.wav;
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+
+		[Sound]
+		Filename = ingame\part1\P1L3b_02d.wav;
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_09-12]	// Scared mobster and Max at laundry door
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_09-12.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_13]	// Mobster screams it's a trap after door opens
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_13.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_14]	// Mobster shouts from the bathroom
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_14.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_15]	// Mobster shouts again from the bathroom
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_15.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_16]	// Mobsters at a bomb
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_16.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_17]	// Vinnie shouting hysterically
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+	AdultContent = TRUE;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_17.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_18c]	// Vinnie breathing
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_18c.wav;
+
+		Volume = 0.5;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3a_Max_01]	// Max: comments on headlines
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3a_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_Max_02]	// Max: comments on the Xerox machine
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_Max_02.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_Max_03]	// Max: comments on the letter on Gognitti's desk
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_Max_03.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[P1L3b_Max_04]	// Max: Gognitti gone, need to follow
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part1\P1L3b_Max_04.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+
+// -------------------------------------------------------------------
+
+[car_skid]		// Car skids
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\car_skid.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mercedes_accelerate]		// Mercedes accelerates
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\mercedes_accelerate.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mercedes_driving]		// Mercedes driving
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\mercedes_driving.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mercedes_hits_truck]		// Mercedes hits the truck
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\mercedes_hits_truck.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[mercedes_skid]		// Mercedes skidding
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\mercedes_skid.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+[mercedes_skid_02]		// Mercedes skidding
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\mercedes_skid_02.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+[mercedes_starts_revs]		// Mercedes ignites and revs
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\mercedes_starts_revs.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[truck_braking_skidding]		// Truck braking
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\truck_braking_skidding.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[truck_driving]		// Truck driving
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\truck_driving.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[truck_fall_crash]		// Truck falling
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\truck_fall_crash.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[truck_horn]		// Truck horn
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\truck_horn.wav;
+		Volume = 0.75;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 10;
+		FallOff = 100;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[siren_loop]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\siren_loop.wav;
+		Volume = 1.0;
+		Pitch = 44100;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = YES;
+		Hotspot = 20;
+		FallOff = 270;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[chopper_blades]  			// Chopper rotors moving in the air
+{
+	[Properties] ID = ID_LOOPING; 
+	[Default]
+	{
+		[Sound]
+        Filename = dynamic\chopper\chopper_fly2.wav;
+		Volume = 1.0;
+		Pitch = 44100;
+		Random = 3%;  
+        3DSound = YES;
+		Hotspot = 10;
+		FallOff = 200;
+        Looping = YES;
+		Streamed = NO;
+		Priority = SOUND_PRIORITY_DEFAULT;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[concrete_wall_cracking]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\concrete_wall_cracking.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 50;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[concrete_wall_falling]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\concrete_wall_falling.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 50;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[concrete_wall_falls]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\concrete_wall_falls.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 50;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[gognitti_breathing]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\gognitti_breathing.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 15;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[gognitti_argh]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\gognitti_argh.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 15;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[gognitti_oof]
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = tenements\gognitti_oof.wav;
+		Volume = 1;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 1;
+		FallOff = 15;
+		Priority = 100;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}

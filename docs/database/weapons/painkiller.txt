@@ -1,0 +1,69 @@
+#include <..\object_lods.h>
+#include <..\shooting.h>
+#include <..\weaponanimid.h>
+#include <..\weaponid.h>
+
+// Painkiller
+
+[LOD]
+{
+	[Geometry] ExportData = painkiller_l0.kf2; Distance = WEAPON_LOD_FAR ;
+}
+
+[Animationset]
+{
+	[Animation] Index = WEAPONANIM_DEFAULT; Filename = painkiller_l0.kf2;  
+	[Animation] Index = WEAPONANIM_SHOOT; Filename = painkiller_l0.kf2;
+	[Animation] Index = WEAPONANIM_RELOAD; Filename = painkiller_l0.kf2;
+	[Animation] Index = WEAPONANIM_SHOOTEMPTY; Filename = painkiller_l0.kf2;
+	[Animation]	Index = WEAPONANIM_DROPONDEATH; Filename = painkiller_l0.kf2;	
+}
+
+[Attributes]
+TwoHandedBones 		= NO;
+TwoHandedAnimation	= NO;
+UseMultipleGunBones	= NO;
+ShootDodgeAllowed	= NO;
+AutoAimingAllowed 	= NO;
+SidewaysAimingMultiplier = 0.0;
+
+SlotIndex 	= SLOTID_PAINKILLER;
+InventoryID = INVENTORYID_PAINKILLER;
+WeaponID 	= WEAPONID_PAINKILLER;
+
+Clipsize 	= 1;
+Pocketsize	= 8;
+
+MaximumShootingFrequency = 0.51;
+DefaultShootingFrequency = 0.50;
+// [0..1] affects only player character
+// when multiplier is close to 0, shooting will slow down when time slows down
+// when multiplier is close to 1, shooting will happen with constant speed when time slows down 
+ShootingFrequencyMultiplier		= 0.8;
+
+ReloadAmount = -1;
+ProjectileOffset = ( 0, 0, 0 );
+UseModeSwitchAnimation = NO;
+
+FOVMultiplier = 1.0;
+// shakes are only applied when sniper zoom is on
+ShakeLength = 0.0;
+ShakeStrengthX = 0.0;
+ShakeStrengthY = 0.0;
+CrouchingShakeLength = 0.0;
+CrouchingShakeStrengthX = 0.0;
+CrouchingShakeStrengthY = 0.0;
+UsesLowerActivationGroup = false;
+
+[CrosshairAttributes]
+CastLength				= CROSSHAIR_CASTLENGTH ;
+SphereRadius 			= CROSSHAIR_SPHERERADIUS ;
+SmallProjectile 		= TRUE ;
+ScreenSizeFrontLimit	= CROSSHAIR_SIZEFRONTLIMIT ;
+ScreenSizeBackLimit		= CROSSHAIR_SIZEBACKLIMIT ;
+
+[Crosshair] 
+{ 
+	[Geometry] 
+	ExportData = ..\crosshairs\invisible.kf2;
+}

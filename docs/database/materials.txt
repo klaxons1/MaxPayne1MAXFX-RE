@@ -1,0 +1,997 @@
+#define ID_MAXEDGELENGTH    8.0
+#define ID_LOWEDGELENGTH	16.0
+#define ID_MAXANGLE         30.0
+#define ID_NONE             4096.0
+#define ID_ALPHAREFERENCE   15
+
+//these are predefined for sortPriority (the greater the later), 0 is base level
+#define ID_SORT1	1
+#define ID_SORT2	2
+#define ID_SORT3	3
+#define ID_SORT4	4
+
+//these are predefined for detailOffset (the greater the closer), 0 is base level
+#define ID_DETAIL1	1
+#define ID_DETAIL2	2
+#define ID_DETAIL3	3
+#define ID_DETAIL4	4
+
+// use these to drop some materials in some detail levels
+#define ID_DETAIL_LEVELS_ALL			0
+#define ID_DETAIL_LEVELS_MEDIUM_OR_HIGH	1
+#define ID_DETAIL_LEVELS_ONLY_HIGH		2
+
+// these point to data\database\sharedtextures folder
+#define ID_DETAIL_COLOR_TEXTURE_NAME	"..\..\sharedtextures\cardboard.jpg"
+#define ID_DETAIL_ALPHA_TEXTURE_NAME	"..\..\sharedtextures\cardboard.pcx"
+#define ID_DETAIL_TILES_PER_METER		2.684
+
+// -----------------------------------------
+// DEFAULT MATERIAL SET
+// -----------------------------------------
+
+[AI_Node_Collision_NoDraw]
+CharacterCollides 			= FALSE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= FALSE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= FALSE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[CameraCollision]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= FALSE;
+DrawPolygons 				= FALSE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ALL;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Cardboard]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= 3.75;
+DetailColorTextureName		= "..\..\sharedtextures\cardboard.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\cardboard.pcx";
+
+[Carpet]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 4.25;
+DetailColorTextureName		= "..\..\sharedtextures\carpet.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\carpet.pcx";
+
+[Character]
+CharacterCollides 			= FALSE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= FALSE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= FALSE;
+DrawPolygons 				= FALSE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ALL;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[CharacterCollision_NoDraw]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= FALSE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= FALSE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Couch]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 5.783;
+DetailColorTextureName		= "..\..\sharedtextures\noise.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\noise.pcx";
+
+[Default]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ALL;
+DetailTilesPerMeter			= 2.21;
+DetailColorTextureName		= "..\..\sharedtextures\default.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\default.pcx";
+
+[Drape]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= TRUE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 2.21;
+DetailColorTextureName		= "..\..\sharedtextures\default.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\default.pcx";
+
+[Dummy]
+CharacterCollides 			= FALSE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= FALSE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= FALSE;
+DrawPolygons 				= FALSE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[ElectricPanel]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides	  	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[ExternalWall]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 0.382;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Flesh]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 1.35;
+DetailColorTextureName		= "..\..\sharedtextures\default.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\default.pcx";
+
+[Glass]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= TRUE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Glass_Bulletproof]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Graffiti]
+CharacterCollides 			= FALSE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= FALSE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= FALSE;
+DrawPolygons 				= TRUE;
+DetailOffset				= ID_DETAIL1;
+SortPriority				= ID_SORT1;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= FALSE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Gravel]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 3.7324;
+DetailColorTextureName		= "..\..\sharedtextures\gravel.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\gravel.pcx";
+
+[Laser]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= FALSE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= FALSE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Leaves]
+CharacterCollides 			= FALSE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= FALSE;
+SmallProjectilePenetrates	= TRUE;
+AINodeCollides				= FALSE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= 127;
+BlendedAlphaTest			= FALSE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Lights]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Marble]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= 4.3543;
+DetailColorTextureName		= "..\..\sharedtextures\noise.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\noise.pcx";
+
+[Metal]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= 3.65;
+DetailColorTextureName		= "..\..\sharedtextures\metal.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\metal.pcx";
+
+[Metal_Hollow]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 3.12;
+DetailColorTextureName		= "..\..\sharedtextures\metal_hollow.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\metal_hollow.pcx";
+
+[Metal_Outside]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ALL;
+DetailTilesPerMeter			= 3.65;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Metal_Solid]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 4.2113;
+DetailColorTextureName		= "..\..\sharedtextures\metal_solid.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\metal_solid.pcx";
+
+[Mirror]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[NoCollision]
+CharacterCollides 			= FALSE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= FALSE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= FALSE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[NoDecals]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ALL;
+DetailTilesPerMeter			= 2.35;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Paper]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= 4.38;
+DetailColorTextureName		= "..\..\sharedtextures\paper.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\paper.pcx";
+
+[Pipes]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 5.35;
+DetailColorTextureName		= "..\..\sharedtextures\metal.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\metal.pcx";
+
+[Pipes_Steam]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= 5.35;
+DetailColorTextureName		= "..\..\sharedtextures\metal.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\metal.pcx";
+
+[Plastic]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 3.35;
+DetailColorTextureName		= "..\..\sharedtextures\metal_hollow.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\metal_hollow.pcx";
+
+[Rock]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 2.35;
+DetailColorTextureName		= "..\..\sharedtextures\rock.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\rock.pcx";
+
+[Skybox]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= FALSE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= TRUE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ALL;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[SortMaterial_Medium]		// Sort of workaround for Aesir/Penthouse 16bit z-fight problems
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= ID_SORT2;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ALL;
+DetailTilesPerMeter			= 4.2113;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[SortMaterial_High]			// Sort of workaround for Aesir/Penthouse 16bit z-fight problems
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= ID_SORT4;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ALL;
+DetailTilesPerMeter			= 4.2113;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Snow]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_LOWEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= 2.42;
+DetailColorTextureName		= "..\..\sharedtextures\snow.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\snow.pcx";
+
+[Stucco]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 3.1124;
+DetailColorTextureName		= "..\..\sharedtextures\stucco.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\stucco.pcx";
+
+[Tile]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= 4.3832;
+DetailColorTextureName		= "..\..\sharedtextures\noise.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\noise.pcx";
+
+[Water]
+CharacterCollides 			= FALSE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= FALSE;
+CameraCollides 				= FALSE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= FALSE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Water_Bottom]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_NONE;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Watertank]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Winebarrel]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= 2.78;
+DetailColorTextureName		= "..\..\sharedtextures\wood.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\wood.pcx";
+
+[Wireframe]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= TRUE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= ID_DETAIL_TILES_PER_METER;
+DetailColorTextureName		= "";
+DetailAlphaTextureName		= "";
+
+[Wood]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= TRUE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= FALSE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_MEDIUM_OR_HIGH;
+DetailTilesPerMeter			= 2.78;
+DetailColorTextureName		= "..\..\sharedtextures\wood.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\wood.pcx";
+
+[Woodframe]
+CharacterCollides 			= TRUE;
+SmallProjectileCollides 	= FALSE;
+BigProjectileCollides 		= TRUE;
+CameraCollides 				= TRUE;
+SmallProjectilePenetrates	= TRUE;
+AINodeCollides				= TRUE;
+DrawPolygons 				= TRUE;
+DetailOffset				= 0;
+SortPriority				= 0;
+DefaultMaxEdgeLength		= ID_MAXEDGELENGTH;
+DefaultMaxAngle				= ID_MAXANGLE;
+AlphaReference				= ID_ALPHAREFERENCE;
+BlendedAlphaTest			= TRUE;
+SkyBox						= FALSE;
+WritesZBuffer				= TRUE;
+AvailableInDetailLevels		= ID_DETAIL_LEVELS_ONLY_HIGH;
+DetailTilesPerMeter			= 2.78;
+DetailColorTextureName		= "..\..\sharedtextures\wood.jpg";
+DetailAlphaTextureName		= "..\..\sharedtextures\wood.pcx";

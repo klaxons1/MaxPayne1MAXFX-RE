@@ -326,7 +326,9 @@ void kf2BuildSkinnedDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile,
 // Pose `draws` built from the same mesh (via kf2BuildDrawMeshes) in place.
 // Avoids recopying the KF2 file and rebuilding triangle lists every frame.
 void kf2SkinDrawMeshes(const Kf2File& meshFile, const Kf2File* skinFile, const Kf2File* bindAnim,
-                       const Kf2File* playAnim, float timeSeconds, std::vector<Kf2DrawMesh>& draws);
+                       const Kf2File* playAnim, float timeSeconds, std::vector<Kf2DrawMesh>& draws,
+                       bool lockRootToBind = true, const Kf2File* crossAnim = 0,
+                       float crossTimeSeconds = 0.0f, float crossBlend = 0.0f);
 
 inline const char* kf2ChunkName(unsigned int id) {
     switch (id) {

@@ -1,0 +1,89 @@
+#include <..\object_lods.h>
+#include <..\shooting.h>
+#include <..\weaponanimid.h>
+#include <..\weaponid.h>
+
+// Pump Shotgun
+
+[LOD]
+{
+	[Geometry] ExportData = pumpshotgun_Lod0.kf2;
+	Distance = WEAPON_LOD_FAR ;
+}
+
+[Animationset]
+{
+	[Animation] Index = WEAPONANIM_DEFAULT; Filename = pumpshotgun_Default.kf2;
+	[Animation] Index = WEAPONANIM_SHOOT; Filename = pumpshotgun_Shoot.kf2;;
+	[Properties]
+	{
+		[Message] Frame = 0; String = "this->A_Play3DSound ( weapons, shoot_pumpshotgun, \"\");";
+		[Message] Frame = 0; String = "this->PS_StartEffect ( Muzzle_pumpshotgun, \"\" );";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( bullet_shotgun_straight, 1 );";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( bullet_pumpshotgun, 2 );";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( bullet_pumpshotgun_group, 2 );";
+		[Message] Frame = 16; String = "this->P_CreateProjectile ( Case_12ga, 1 );";
+	}
+
+	[Animation] Index = WEAPONANIM_RELOAD; Filename = pumpshotgun_Static.kf2;
+
+	[Animation] Index = WEAPONANIM_SHOOTEMPTY; Filename = pumpshotgun_Static.kf2;
+
+	[Animation]	
+	Index = WEAPONANIM_DROPONDEATH; Filename = pumpshotgun_Default.kf2;
+	[Properties]
+	{
+		[Message] Frame = 0; String = "this->WS_Hide( " TRUE " );";
+		[Message] Frame = 0; String = "this->P_CreateProjectile ( enemy_pumpshotgun, 1 );";
+	}
+}
+
+[Attributes]
+TwoHandedBones 		= YES;
+TwoHandedAnimation 	= YES;
+UseMultipleGunBones = NO;
+ShootDodgeAllowed 	= YES;
+AutoAimingAllowed 	= YES;
+ProjectileOffset	= (0,0.05,0.2);
+
+SlotIndex 	= SLOTID_PUMPSHOTGUN;
+InventoryID = INVENTORYID_PUMPSHOTGUN;
+WeaponID 	= WEAPONID_PUMPSHOTGUN;
+
+Clipsize 	= PUMPSHOTGUN_CLIPSIZE;
+Pocketsize	= SHOTGUN_POCKETSIZE;
+
+ReloadAmount = 1;
+
+MaximumShootingFrequency = PUMPSHOTGUN_MAXSHOOTINGFREQUENCY;
+DefaultShootingFrequency = PUMPSHOTGUN_SHOOTINGFREQUENCY;
+// [0..1] affects only player character
+// when multiplier is close to 0, shooting will slow down when time slows down
+// when multiplier is close to 1, shooting will happen with constant speed when time slows down 
+ShootingFrequencyMultiplier		= PUMPSHOTGUN_SLOWMOTIONMULTIPLIER;
+
+UseModeSwitchAnimation = NO;
+SidewaysAimingMultiplier = 0.8;
+
+FOVMultiplier = 1.0;
+// shakes are only applied when sniper zoom is on
+ShakeLength = 0.0;
+ShakeStrengthX = 0.0;
+ShakeStrengthY = 0.0;
+CrouchingShakeLength = 0.0;
+CrouchingShakeStrengthX = 0.0;
+CrouchingShakeStrengthY = 0.0;
+UsesLowerActivationGroup = false;
+
+[CrosshairAttributes]
+CastLength				= CROSSHAIR_CASTLENGTH ;
+SphereRadius 			= CROSSHAIR_SPHERERADIUS ;
+SmallProjectile 		= TRUE ;
+ScreenSizeFrontLimit	= CROSSHAIR_SIZEFRONTLIMIT ;
+ScreenSizeBackLimit		= CROSSHAIR_SIZEBACKLIMIT ;
+
+[Crosshair] 
+{ 
+	[Geometry] 
+	ExportData = ..\crosshairs\dot.kf2;
+}

@@ -18,6 +18,7 @@
 #include "maxfx/sound/Sound.h"
 
 #include <algorithm>
+#include <cctype>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -550,6 +551,203 @@ static void testCollisionAndMath() {
     checkNear(actor.position.y, 4.0f, "missing collision does not drop the actor");
 }
 
+// Hand-built keyframe channels that encode the Android decompile semantics
+// (LinearlyOptimizedContainer<M_Matrix4x3>::getItem +
+// KF_KeyframeAnimation::animateFrameWithLastFrame). These run without any
+// game data and pin the sampler so it cannot silently drift from the engine.
+static maxfx::Mat4x3 sampleChannelAt(const maxfx::Kf2File& file, float timeSeconds) {
+    std::vector<std::string> names;
+    std::vector<maxfx::Mat4x3> locals;
+    maxfx::kf2SampleAnimation(file, timeSeconds, &names, &locals);
+    if (locals.size() != 1) {
+        return maxfx::Mat4x3();
+    }
+    return locals[0];
+}
+
+// Key with a Y rotation and translation (0, frame, 0) so the sampled
+// translation directly reports the wrapped frame number.
+static maxfx::Kf2AnimKey frameKey(int frame, float yawRadians) {
+    maxfx::Kf2AnimKey key;
+    key.frame = frame;
+    const float c = std::cos(yawRadians);
+    const float s = std::sin(yawRadians);
+    key.objectToParent.rows[0] = maxfx::Vec3(c, 0.0f, -s);
+    key.objectToParent.rows[1] = maxfx::Vec3(0.0f, 1.0f, 0.0f);
+    key.objectToParent.rows[2] = maxfx::Vec3(s, 0.0f, c);
+    key.objectToParent.rows[3] = maxfx::Vec3(0.0f, static_cast<float>(frame), 0.0f);
+    return key;
+}
+
+static void testKf2EngineSampling() {
+    // --- 1. Plain component lerp (interpolationMethod 0) -----------------
+    // The engine lerps all 12 floats and does NOT re-orthonormalize: a 0-90
+    // degree blend at t=0.5 shrinks the rotated rows to cos(45 deg).
+    {
+        maxfx::Kf2File file;
+        maxfx::Kf2NodeAnimation ch;
+        ch.targetName = "Bone";
+        ch.frameRate = 10;
+        ch.looping = false;
+        ch.loopInterpolation = false;
+        ch.totalKeyframeCount = 11;
+        ch.interpolationMethod = 0;
+        ch.keys.push_back(frameKey(0, 0.0f));
+        ch.keys.push_back(frameKey(10, 1.5707964f));
+        file.animations.push_back(ch);
+        checkNear(maxfx::kf2AnimationDuration(file), 1.1f, "duration is total/fps");
+        const maxfx::Mat4x3 mid = sampleChannelAt(file, 0.5f);
+        checkNear(mid.translation().y, 5.0f, "lerp translation");
+        checkNear(maxfx::length(mid.rows[0]), 0.70710678f, "method 0 shrinks rows mid-blend");
+        const maxfx::Mat4x3 start = sampleChannelAt(file, 0.0f);
+        checkNear(maxfx::length(start.rows[0]), 1.0f, "exact key keeps row length");
+        // Non-looping hold: frame >= total-1 clamps to the last key.
+        const maxfx::Mat4x3 held = sampleChannelAt(file, 1.5f);
+        checkNear(held.translation().y, 10.0f, "non-looping holds last key");
+        checkNear(held.rows[0].x, 0.0f, "held key rotation");
+        checkNear(held.rows[0].z, -1.0f, "held key rotation z");
+    }
+
+    // --- 2. Loop wrap honours LoopToFrame ---------------------------------
+    // looping, total 21, loopToFrame 5: frames past total-1 wrap into
+    // [5, 21), so the intro [0, 5) plays exactly once. Translations carry
+    // the frame number, so y == wrapped frame.
+    {
+        maxfx::Kf2File file;
+        maxfx::Kf2NodeAnimation ch;
+        ch.targetName = "Bone";
+        ch.frameRate = 10;
+        ch.looping = true;
+        ch.loopInterpolation = false;
+        ch.totalKeyframeCount = 21;
+        ch.loopToFrame = 5;
+        ch.interpolationMethod = 0;
+        ch.keys.push_back(frameKey(0, 0.0f));
+        ch.keys.push_back(frameKey(5, 0.0f));
+        ch.keys.push_back(frameKey(10, 0.0f));
+        ch.keys.push_back(frameKey(20, 0.0f));
+        file.animations.push_back(ch);
+        checkNear(sampleChannelAt(file, 1.9f).translation().y, 19.0f, "pre-wrap frame");
+        // frame 21.5 -> 5 + fmod(16.5, 16) = 5.5 (not fmod(21.5, 21) = 0.5)
+        checkNear(sampleChannelAt(file, 2.15f).translation().y, 5.5f, "wrap lands in [loopToFrame, total)");
+        // frame 30.0 -> 5 + fmod(25, 16) = 14
+        checkNear(sampleChannelAt(file, 3.0f).translation().y, 14.0f, "second wrap cycle");
+    }
+
+    // --- 3. Loop seam blend (UseLoopInterpolation) -------------------------
+    // During the final frame [total-1, total) the engine blends the last key
+    // towards the loop-start key instead of holding and snapping.
+    {
+        maxfx::Kf2File file;
+        maxfx::Kf2NodeAnimation ch;
+        ch.targetName = "Bone";
+        ch.frameRate = 10;
+        ch.looping = true;
+        ch.loopInterpolation = true;
+        ch.totalKeyframeCount = 11;
+        ch.loopToFrame = 0;
+        ch.interpolationMethod = 0;
+        ch.keys.push_back(frameKey(0, 0.0f));
+        ch.keys.push_back(frameKey(10, 1.5707964f));
+        file.animations.push_back(ch);
+        // frame 10.5 -> seam blend keys[1] -> keys[0] with t = 0.5
+        const maxfx::Mat4x3 seam = sampleChannelAt(file, 1.05f);
+        checkNear(seam.translation().y, 5.0f, "seam blend midpoint");
+        // frame 11.1 wraps to 0.1 -> regular segment, u = 0.01
+        checkNear(sampleChannelAt(file, 1.11f).translation().y, 0.1f, "post-wrap frame");
+        // frame 10.0 exactly -> last key, no blend
+        checkNear(sampleChannelAt(file, 1.0f).translation().y, 10.0f, "seam start is exact key");
+    }
+
+    // --- 4. Seam blend picks the key at/after LoopToFrame ------------------
+    {
+        maxfx::Kf2File file;
+        maxfx::Kf2NodeAnimation ch;
+        ch.targetName = "Bone";
+        ch.frameRate = 1;
+        ch.looping = true;
+        ch.loopInterpolation = true;
+        ch.totalKeyframeCount = 13;
+        ch.loopToFrame = 4;
+        ch.interpolationMethod = 0;
+        ch.keys.push_back(frameKey(0, 0.0f));
+        ch.keys.push_back(frameKey(4, 0.0f));
+        ch.keys.push_back(frameKey(8, 0.0f));
+        ch.keys.push_back(frameKey(12, 0.0f));
+        file.animations.push_back(ch);
+        // frame 12.5: seam blend keys[3] (frame 12) -> keys[1] (frame 4)
+        checkNear(sampleChannelAt(file, 12.5f).translation().y, 8.0f, "seam blends to loop key");
+        // frame 13.2 wraps to 4 + fmod(9.2, 9) = 4.2
+        checkNear(sampleChannelAt(file, 13.2f).translation().y, 4.2f, "wrap into loop segment");
+    }
+
+    // --- 5. interpolationMethod 2 orthonormalizes --------------------------
+    {
+        maxfx::Kf2File file;
+        maxfx::Kf2NodeAnimation ch;
+        ch.targetName = "Bone";
+        ch.frameRate = 10;
+        ch.looping = false;
+        ch.loopInterpolation = false;
+        ch.totalKeyframeCount = 11;
+        ch.interpolationMethod = 2;
+        ch.keys.push_back(frameKey(0, 0.0f));
+        ch.keys.push_back(frameKey(10, 1.5707964f));
+        file.animations.push_back(ch);
+        const maxfx::Mat4x3 mid = sampleChannelAt(file, 0.5f);
+        checkNear(maxfx::length(mid.rows[0]), 1.0f, "method 2 keeps unit rows");
+        checkNear(mid.rows[0].x, 0.70710678f, "method 2 half rotation x");
+        checkNear(mid.rows[0].z, -0.70710678f, "method 2 half rotation z");
+        checkNear(mid.translation().y, 5.0f, "method 2 translation untouched");
+    }
+
+    // --- 6. maintainMatrixScaling re-applies row lengths -------------------
+    {
+        maxfx::Kf2File file;
+        maxfx::Kf2NodeAnimation ch;
+        ch.targetName = "Bone";
+        ch.frameRate = 10;
+        ch.looping = false;
+        ch.loopInterpolation = false;
+        ch.totalKeyframeCount = 11;
+        ch.interpolationMethod = 1;
+        ch.maintainMatrixScaling = true;
+        maxfx::Kf2AnimKey a = frameKey(0, 0.0f);
+        maxfx::Kf2AnimKey b = frameKey(10, 1.5707964f);
+        for (int r = 0; r < 3; ++r) {
+            a.objectToParent.rows[r] = a.objectToParent.rows[r] * 2.0f;
+            b.objectToParent.rows[r] = b.objectToParent.rows[r] * 2.0f;
+        }
+        ch.keys.push_back(a);
+        ch.keys.push_back(b);
+        file.animations.push_back(ch);
+        // Exact key: normalize then re-scale restores the original length 2.
+        checkNear(maxfx::length(sampleChannelAt(file, 0.0f).rows[0]), 2.0f,
+                  "method 1 + maintain keeps exact key scale");
+        // Mid blend: lengths lerped in frame space stay 2 for uniform scale.
+        checkNear(maxfx::length(sampleChannelAt(file, 0.5f).rows[0]), 2.0f,
+                  "method 1 + maintain keeps blended scale");
+    }
+
+    // --- 7. Frames before the first key hold it ---------------------------
+    {
+        maxfx::Kf2File file;
+        maxfx::Kf2NodeAnimation ch;
+        ch.targetName = "Bone";
+        ch.frameRate = 10;
+        ch.looping = true;
+        ch.loopInterpolation = false;
+        ch.totalKeyframeCount = 31;
+        ch.loopToFrame = 0;
+        ch.interpolationMethod = 0;
+        ch.keys.push_back(frameKey(5, 0.0f));
+        ch.keys.push_back(frameKey(30, 0.0f));
+        file.animations.push_back(ch);
+        checkNear(sampleChannelAt(file, 0.2f).translation().y, 5.0f, "frame before first key holds it");
+        checkNear(sampleChannelAt(file, 2.0f).translation().y, 20.0f, "segment lerp");
+    }
+}
+
 static void testKf2AnimationAndSkinAi() {
     const std::string pose = "docs/database/skeletons/default_skeleton/anim/Widepose.kf2";
     const std::string walk = "docs/database/skeletons/default_skeleton/anim/Walk.kf2";
@@ -781,6 +979,415 @@ static void testSoundOmniAndFsmCues() {
     }
 }
 
+// X_LevelRuntimeTrigger semantics against the shipped sample level
+// (docs/Part1_Level1.ldb): one-shot latch, own-FSM-only T_Activate dispatch,
+// T_Enable re-arm, use-button types, and the level intro comic queue.
+static void testTriggerSemantics() {
+    if (!maxfx::isFile("docs/Part1_Level1.ldb")) {
+        std::fprintf(stderr, "skip trigger semantics (Part1_Level1.ldb missing)\n");
+        return;
+    }
+    maxfx::Level level;
+    try {
+        level = maxfx::LdbReader::loadFromFile("docs/Part1_Level1.ldb");
+    } catch (const std::exception& e) {
+        std::fprintf(stderr, "FAIL: trigger level load: %s\n", e.what());
+        ++gFails;
+        return;
+    }
+    // Every trigger must wire to the FSM named like it minus ".TRIGGER"
+    // (X_LevelDBTrigger::getFSM).
+    {
+        int wired = 0;
+        for (std::size_t i = 0; i < level.triggers.size(); ++i) {
+            std::string want = level.triggers[i].sharedName;
+            const std::string suf = ".TRIGGER";
+            if (want.size() > suf.size() &&
+                want.compare(want.size() - suf.size(), suf.size(), suf) == 0) {
+                want = want.substr(0, want.size() - suf.size());
+            }
+            std::string wl = want;
+            for (std::size_t c = 0; c < wl.size(); ++c) {
+                wl[c] = static_cast<char>(std::tolower(static_cast<unsigned char>(wl[c])));
+            }
+            for (std::size_t f = 0; f < level.fsms.size(); ++f) {
+                std::string fl = level.fsms[f].sharedName;
+                for (std::size_t c = 0; c < fl.size(); ++c) {
+                    fl[c] = static_cast<char>(std::tolower(static_cast<unsigned char>(fl[c])));
+                }
+                if (fl == wl) {
+                    ++wired;
+                    break;
+                }
+            }
+        }
+        check(wired == static_cast<int>(level.triggers.size()),
+              "every trigger wires to its own FSM");
+    }
+
+    maxfx::GameRuntime game;
+    game.resetLevel(level, 0, maxfx::Vec3(0, 0, 0), 0.0f);
+    // Fabricate the intro pages (::startroom::fsm_start picks P1L1a_001..004).
+    const char* introIds[4] = {"P1L1a_001", "P1L1a_002", "P1L1a_003", "P1L1a_004"};
+    for (int i = 0; i < 4; ++i) {
+        maxfx::GraphicNovelPageDef pg;
+        pg.id = introIds[i];
+        game.catalog.pages.push_back(pg);
+    }
+
+    // --- Level startup: the intro comic queues once ------------------------
+    std::vector<maxfx::CharacterActor> noActors;
+    game.startLevel(level, noActors);
+    check(game.mode == maxfx::kModeGraphicNovel, "level startup opens the intro comic");
+    check(game.comicIndex == 0, "intro comic starts at the first picked note");
+    check(game.pendingNotes.size() == 3, "three intro pages remain queued");
+    check(game.nextPendingNote() == 1, "queue pops in pickup order");
+    check(game.nextPendingNote() == 2, "queue pops in pickup order (2)");
+    check(game.nextPendingNote() == 3, "queue pops in pickup order (3)");
+    check(game.nextPendingNote() == -1, "queue exhausted");
+    game.mode = maxfx::kModePlaying;
+
+    // Locate the sample triggers used below.
+    int controlDesk = -1, buttonLookat = -1, cameraTrigger = -1, trainOn = -1, trainOff = -1,
+        unrelated = -1;
+    for (std::size_t i = 0; i < level.triggers.size(); ++i) {
+        const std::string& n = level.triggers[i].sharedName;
+        if (n == "::2nd_rail::control_desk::trigger.TRIGGER") controlDesk = static_cast<int>(i);
+        if (n == "::2nd_rail::button_lookat.TRIGGER") buttonLookat = static_cast<int>(i);
+        if (n == "::2nd_rail::camera_trigger.TRIGGER") cameraTrigger = static_cast<int>(i);
+        if (n == "::bridget01::p5_train_on.TRIGGER") trainOn = static_cast<int>(i);
+        if (n == "::bridget01::p5_train_off.TRIGGER") trainOff = static_cast<int>(i);
+        if (n == "::c::pt1.TRIGGER") unrelated = static_cast<int>(i);
+    }
+    check(controlDesk >= 0 && buttonLookat >= 0 && cameraTrigger >= 0 && trainOn >= 0 &&
+              trainOff >= 0 && unrelated >= 0,
+          "sample triggers found");
+
+    // --- One-shot latch (no self-disable in this T_Activate) ----------------
+    if (buttonLookat >= 0 && unrelated >= 0) {
+        check(game.activateTrigger(buttonLookat, level, noActors), "first T_Activate fires");
+        check(game.triggers[static_cast<std::size_t>(buttonLookat)].activated, "latch state set");
+        check(!game.activateTrigger(buttonLookat, level, noActors),
+              "latch blocks the second fire");
+        // Its T_Activate runs "::2nd_rail::button_lookat->FSM_Switch(2)" in
+        // state "1" — the runtime state must have switched.
+        for (std::size_t f = 0; f < level.fsms.size(); ++f) {
+            if (level.fsms[f].sharedName == "::2nd_rail::button_lookat") {
+                check(f < game.fsmStates.size() && game.fsmStates[f].state == "2",
+                      "T_Activate switches the FSM state");
+            }
+        }
+        // No broadcast: an unrelated trigger must stay armed and untouched.
+        check(game.triggers[static_cast<std::size_t>(unrelated)].enabled &&
+                  !game.triggers[static_cast<std::size_t>(unrelated)].activated,
+              "unrelated trigger untouched");
+    }
+
+    // --- Authored one-shot: self T_Enable(false) + targeted disables --------
+    if (controlDesk >= 0 && buttonLookat >= 0 && unrelated >= 0) {
+        const bool wasEnabled =
+            game.triggers[static_cast<std::size_t>(buttonLookat)].enabled;
+        check(game.activateTrigger(controlDesk, level, noActors), "control desk fires");
+        check(!game.triggers[static_cast<std::size_t>(controlDesk)].enabled,
+              "self T_Enable(false) disables the control desk trigger");
+        check(!game.activateTrigger(controlDesk, level, noActors),
+              "disabled trigger refuses to fire");
+        if (wasEnabled) {
+            check(!game.triggers[static_cast<std::size_t>(buttonLookat)].enabled,
+                  "T_Activate disables the targeted look-at trigger");
+        }
+        // T_Enable(true) re-arms (X_LevelRuntimeTrigger::receive resets +1613).
+        maxfx::GameMessage enable;
+        enable.target = "::2nd_rail::button_lookat.TRIGGER";
+        enable.method = "t_enable";
+        enable.args.push_back("true");
+        game.dispatch(enable, level, noActors, -1);
+        check(game.triggers[static_cast<std::size_t>(buttonLookat)].enabled &&
+                  !game.triggers[static_cast<std::size_t>(buttonLookat)].activated,
+              "T_Enable(true) re-arms the latch");
+        check(game.triggers[static_cast<std::size_t>(unrelated)].enabled,
+              "unrelated trigger still enabled");
+    }
+
+    // --- Type 0 fires only on Use ------------------------------------------
+    if (cameraTrigger >= 0) {
+        const maxfx::Trigger& tr = level.triggers[static_cast<std::size_t>(cameraTrigger)];
+        const maxfx::Mat4x3 wx = maxfx::combine(maxfx::roomWorldTransform(level, tr.properties.roomId),
+                                                tr.properties.objectToRoom);
+        game.player.position = maxfx::transformPoint(wx, maxfx::Vec3(0, 0, 0));
+        game.tickTriggers(0.016f, level, false, maxfx::Vec3(0, 0, 1), noActors);
+        check(!game.triggers[static_cast<std::size_t>(cameraTrigger)].activated,
+              "action trigger waits for Use");
+        game.tickTriggers(0.016f, level, true, maxfx::Vec3(0, 0, 1), noActors);
+        check(game.triggers[static_cast<std::size_t>(cameraTrigger)].activated,
+              "action trigger fires on Use");
+        game.tickTriggers(0.016f, level, true, maxfx::Vec3(0, 0, 1), noActors);
+        // No observable counter; the latch flag staying set is the contract.
+        check(game.triggers[static_cast<std::size_t>(cameraTrigger)].activated,
+              "action trigger stays latched");
+    }
+
+    // --- Type 1 fires on player entry, exactly once -------------------------
+    if (trainOn >= 0) {
+        const maxfx::Trigger& tr = level.triggers[static_cast<std::size_t>(trainOn)];
+        const maxfx::Mat4x3 wx = maxfx::combine(maxfx::roomWorldTransform(level, tr.properties.roomId),
+                                                tr.properties.objectToRoom);
+        const maxfx::Vec3 center = maxfx::transformPoint(wx, maxfx::Vec3(0, 0, 0));
+        game.player.position = center + maxfx::Vec3(5.0f, 0.0f, 0.0f);
+        game.tickTriggers(0.016f, level, false, maxfx::Vec3(0, 0, 1), noActors);
+        check(!game.triggers[static_cast<std::size_t>(trainOn)].activated,
+              "collide trigger armed outside the sphere");
+        game.player.position = center;
+        game.tickTriggers(0.016f, level, false, maxfx::Vec3(0, 0, 1), noActors);
+        check(!game.triggers[static_cast<std::size_t>(trainOn)].enabled,
+              "collide trigger fires on entry (self-disables)");
+        if (trainOff >= 0) {
+            check(game.triggers[static_cast<std::size_t>(trainOff)].enabled,
+                  "train_on T_Activate re-enables train_off");
+        }
+        game.player.position = center + maxfx::Vec3(5.0f, 0.0f, 0.0f);
+        game.tickTriggers(0.016f, level, false, maxfx::Vec3(0, 0, 1), noActors);
+        game.player.position = center;
+        check(!game.activateTrigger(trainOn, level, noActors),
+              "collide trigger fires only once");
+    }
+
+    // --- Engine pitch formula ------------------------------------------------
+    checkNear(maxfx::soundPitchMultiplier(0, 44100), 1.0f, "no script pitch = native rate");
+    checkNear(maxfx::soundPitchMultiplier(44100, 44100), 1.0f, "44100/44100 = 1x");
+    checkNear(maxfx::soundPitchMultiplier(22050, 44100), 0.5f, "22050/44100 = half speed");
+    checkNear(maxfx::soundPitchMultiplier(44100, 22050), 2.0f, "44100/22050 = double speed");
+}
+
+// Cinematics: camera-path parsing, clip frame hooks and the runtime
+// cutscene state machine (frame-message edges, fades, [Exit] dispatch).
+static void testCinematics(const std::string& tmpDir) {
+    using namespace maxfx;
+    // --- camerapaths.txt parsing ---
+    const std::string dbRoot = joinPath(tmpDir, "cine_db");
+    const std::string cpDir = joinPath(dbRoot, "camerapaths");
+    check(isDirectory(cpDir) || std::system((std::string("mkdir -p ") + cpDir).c_str()) == 0,
+          "mkdir camerapaths");
+    const std::string cpPath = joinPath(cpDir, "camerapaths.txt");
+    std::FILE* f = std::fopen(cpPath.c_str(), "wb");
+    check(f != 0, "open camerapaths.txt for write");
+    if (f != 0) {
+        std::fputs("[intro_fly]\n{\n"
+                   "  [Attributes]\n  {\n"
+                   "    FadeInTime = 0.5;\n"
+                   "    FadeOutTime = 0.25;\n"
+                   "    Abortable = TRUE;\n"
+                   "  }\n"
+                   "  [AnimationSet]\n  {\n"
+                   "    [Animation] Filename = \"..\\\\camerapaths\\\\intro.kf2\";\n"
+                   "  }\n"
+                   "  [Exit]\n  {\n"
+                   "    [Message] String = \"this->C_SetHealth( 0.25 );\";\n"
+                   "  }\n"
+                   "}\n"
+                   "[pause]\n{\n"
+                   "  [AnimationSet]\n  {\n"
+                   "    [Animation] Filename = \"pause.kf2\";\n"
+                   "  }\n"
+                   "}\n",
+                   f);
+        std::fclose(f);
+    }
+    CameraPathCatalog cats;
+    cats.load(dbRoot);
+    check(cats.size() == 2, "two camera paths parsed");
+    const CameraPathDef* fly = cats.find("Intro_Fly");
+    check(fly != 0, "camera path lookup case-insensitive");
+    if (fly != 0) {
+        checkNear(fly->fadeInTime, 0.5f, "FadeInTime");
+        checkNear(fly->fadeOutTime, 0.25f, "FadeOutTime");
+        check(fly->abortable, "Abortable");
+        check(fly->exitMessages.size() == 1 && fly->exitMessages[0].find("SetHealth") != std::string::npos,
+              "exit message");
+        check(!fly->animationFile.empty(), "animation filename kept");
+    }
+    const CameraPathDef* pause = cats.find("pause");
+    check(pause != 0 && !pause->abortable, "second path defaults");
+
+    // --- runtime cutscene state machine ---
+    GameRuntime rt;
+    rt.cameraPaths = cats;
+    Level level;  // empty level is enough: dispatch only touches state
+    std::vector<CharacterActor> noActors;
+
+    // CAM_AnimateAbsolute(block, room) via dispatch.
+    std::vector<GameMessage> msgs =
+        parseGameMessages("this->CAM_AnimateAbsolute( intro_fly, ::startroom );");
+    check(msgs.size() == 1, "parse CAM_AnimateAbsolute");
+    if (!msgs.empty()) {
+        rt.dispatch(msgs[0], level, noActors, -1);
+        check(rt.cine.cameraActive, "camera path activated");
+        check(rt.cine.cameraMode == 1, "absolute mode");
+        checkEq(rt.cine.cameraPath, "intro_fly", "path name");
+        checkEq(rt.cine.cameraRoom, "startroom", "room arg strips ::");
+    }
+
+    // Start a cinematic clip with frame hooks; drive the edges.
+    std::vector<ClipFrameMessage> hooks;
+    ClipFrameMessage h0;
+    h0.frame = 0;
+    h0.text = "MaxPayne_GameMode->GM_EnableWideScreen( true, 0 );";
+    hooks.push_back(h0);
+    ClipFrameMessage h5;
+    h5.frame = 5;
+    h5.text = "MaxPayne_HudMode->MPHM_FadeToColor(0x00000000,0x000000ff,0.5);";
+    hooks.push_back(h5);
+    ClipFrameMessage h8;
+    h8.frame = 8;
+    h8.text = "this->C_EnableCinematicMode( false );";
+    hooks.push_back(h8);
+    rt.startCinematic(297, 0.4f, 30, hooks, "");
+    check(rt.cine.active && rt.cine.clipIndex == 297, "cinematic started");
+    // 0.05s at 30fps -> frame 1: hook 0 fired only.
+    rt.tickCinematic(0.05f, level, noActors);
+    check(rt.cine.widescreen, "frame 0 hook ran (widescreen)");
+    checkNear(rt.cine.fadeDuration, 0.0f, "fade not started yet");
+    // 0.2s -> frame 6: fade hook ran.
+    rt.tickCinematic(0.15f, level, noActors);
+    checkNear(rt.cine.fadeDuration, 0.5f, "frame 5 hook ran (fade)");
+    checkNear(rt.cine.fadeTo[3], 1.0f, "fade target alpha ff");
+    check(rt.cine.fadeElapsed > 0.0f, "fade progresses");
+    // 0.25s more -> past frame 8 (0.28s) and past duration 0.4s: clip done.
+    rt.tickCinematic(0.25f, level, noActors);
+    check(!rt.cine.cinematicMode, "frame 8 hook ran (cinematic mode off)");
+    check(!rt.cine.active, "clip ended at duration");
+    // Camera path still running (no duration resolved): exit fires at 2s.
+    rt.cine.cameraDuration = 1.0f;
+    rt.cine.cameraTime = 0.9f;
+    rt.tickCinematic(0.2f, level, noActors);
+    check(!rt.cine.cameraActive, "camera path ended");
+    // The [Exit] message ran (C_SetHealth scales by max health).
+    checkNear(rt.player.health, 0.25f * rt.player.maxHealth, "camera path [Exit] message dispatched");
+
+    // MPHM_FadeToColor arg parsing (hex colours).
+    rt.cine = CinematicState();
+    msgs = parseGameMessages("this->MPHM_FadeToColor(0x10203040,0x50607080,1.5);");
+    check(msgs.size() == 1, "parse MPHM_FadeToColor");
+    if (!msgs.empty()) {
+        rt.dispatch(msgs[0], level, noActors, -1);
+        checkNear(rt.cine.fadeFrom[0], 0x10 / 255.0f, "fade from r");
+        checkNear(rt.cine.fadeFrom[3], 0x40 / 255.0f, "fade from a");
+        checkNear(rt.cine.fadeTo[2], 0x70 / 255.0f, "fade to b");
+        checkNear(rt.cine.fadeDuration, 1.5f, "fade time");
+    }
+
+    // stopCinematic only stops the clip; the presentation clears once the
+    // whole cutscene (clip + camera path) is over.
+    rt.startCinematic(1, 1.0f, 30, hooks, "");
+    rt.stopCinematic();
+    check(!rt.cine.active, "stopCinematic stops the clip");
+    rt.tickCinematic(0.016f, level, noActors);
+    check(!rt.cine.widescreen && rt.cine.hudVisible, "presentation cleared when fully over");
+
+    // A finished fade-to-black does not outlive the cutscene.
+    rt.cine = CinematicState();
+    rt.startCameraPath("intro_fly", 1, "");
+    check(rt.cine.cameraActive, "second path start");
+    rt.cine.cameraDuration = 0.2f;
+    msgs = parseGameMessages("this->MPHM_FadeToColor(0x00000000,0x000000ff,0.1);");
+    rt.dispatch(msgs[0], level, noActors, -1);
+    checkNear(rt.cine.fadeDuration, 0.1f, "fade running");
+    rt.tickCinematic(0.05f, level, noActors);
+    check(rt.cine.cameraActive, "path still flying");
+    rt.tickCinematic(0.3f, level, noActors);
+    check(!rt.cine.cameraActive && rt.cine.fadeDuration <= 0.0f,
+          "fade cleared when the cutscene is over");
+
+    // Esc-style full abort clears everything at once.
+    rt.startCinematic(1, 1.0f, 30, hooks, "");
+    rt.startCameraPath("intro_fly", 1, "");
+    msgs = parseGameMessages("MaxPayne_GameMode->GM_EnableWideScreen( true, 0 );");
+    rt.dispatch(msgs[0], level, noActors, -1);
+    msgs = parseGameMessages("this->MPHM_FadeToColor(0x00000000,0x000000ff,1.0);");
+    rt.dispatch(msgs[0], level, noActors, -1);
+    check(rt.cine.widescreen && rt.cine.fadeDuration > 0.0f, "cutscene presentation on");
+    rt.abortCinematic();
+    check(!rt.cine.active && !rt.cine.cameraActive && !rt.cine.widescreen &&
+              rt.cine.hudVisible && rt.cine.fadeDuration <= 0.0f,
+          "abortCinematic clears everything");
+
+    // Abortable flag drives user aborts (movement) of camera paths.
+    rt.cine = CinematicState();
+    rt.startCameraPath("intro_fly", 1, "");
+    check(rt.cameraPathAbortable(), "intro_fly is abortable");
+    rt.startCameraPath("pause", 1, "");
+    check(!rt.cameraPathAbortable(), "pause is not abortable");
+    rt.abortCameraPath(level, noActors);
+    check(!rt.cine.cameraActive, "abortCameraPath ends the path");
+}
+
+// Dynamic-object poses (doors), noclip descend and the cinematic duration
+// fallback.
+static void testDynamicObjectsAndNoclip() {
+    using namespace maxfx;
+    GameRuntime rt;
+    Level level;
+
+    // --- dynamicMeshPose: MeshAnimation start -> end interpolation ---
+    MeshAnimation anim;
+    anim.lengthSeconds = 2.0f;
+    anim.startTransform = makeEntity(Vec3(0.0f, 0.0f, 0.0f), 0.0f);
+    anim.endTransform = makeEntity(Vec3(2.0f, 0.0f, 0.0f), toRadians(90.0f));
+    const Mat4x3 p0 = rt.dynamicMeshPose(anim, 0.0f);
+    checkNear(p0.rows[3].x, 0.0f, "door pose t=0 at start");
+    const Mat4x3 p1 = rt.dynamicMeshPose(anim, 1.0f);
+    checkNear(p1.rows[3].x, 2.0f, "door pose t=1 at end");
+    // 90-degree yaw at t=1: X axis rotates onto Z.
+    checkNear(std::fabs(p1.rows[0].z), 1.0f, "door pose t=1 rotation");
+    const Mat4x3 pH = rt.dynamicMeshPose(anim, 0.5f);
+    checkNear(pH.rows[3].x, 1.0f, "door pose half-way translation");
+    // Rotated pose stays orthonormal (fixCrossAnimation-style).
+    const Vec3 rx = normalize(pH.rows[0]);
+    const Vec3 rz = normalize(pH.rows[2]);
+    checkNear(std::fabs(dot(rx, rz)), 0.0f, "door pose orthonormal");
+
+    // --- tickDoors still drives the state machine ---
+    DynamicMesh dm;
+    dm.name = "door_test";
+    dm.animations.push_back(anim);
+    level.dynamicMeshes.push_back(dm);
+    rt.resetLevel(level, 0, Vec3(), 0.0f);
+    check(rt.doors.size() == 1, "one door state");
+    std::vector<GameMessage> open = parseGameMessages("X.DO->DO_Animate( door_test );");
+    std::vector<CharacterActor> noActors;
+    // The dispatch target carries the mesh name; fall back to the first idle.
+    rt.dispatch(open[0], level, noActors, -1);
+    check(rt.doors[0].dir == 1, "DO_Animate starts opening");
+    rt.tickDoors(1.0f, level);
+    check(rt.doors[0].t > 0.4f, "door half open after half the clip");
+    rt.tickDoors(1.5f, level);
+    check(rt.doors[0].open && rt.doors[0].dir == 0, "door open at clip end");
+
+    // --- noclip: N toggles, Ctrl descends ---
+    CollisionWorld emptyWorld;
+    rt.player.noclip = true;
+    rt.player.position = Vec3(0.0f, 10.0f, 0.0f);
+    rt.tickPlayer(0.5f, false, false, false, false, false, false, emptyWorld, true);
+    check(rt.player.position.y < 10.0f, "noclip descend lowers the player");
+    const float yAfterDescend = rt.player.position.y;
+    rt.tickPlayer(0.5f, false, false, false, false, true, false, emptyWorld, false);
+    check(rt.player.position.y > yAfterDescend, "noclip jump raises the player");
+
+    // --- cinematic duration fallback (no clip KF2 available) ---
+    std::vector<ClipFrameMessage> hooks;
+    ClipFrameMessage h;
+    h.frame = 60;
+    h.text = "this->C_SetHealth( 1.0 );";
+    hooks.push_back(h);
+    rt.startCinematic(1, 0.0f, 30, hooks, "");
+    check(rt.cine.duration > 2.5f && rt.cine.duration < 3.5f, "duration from last hook + 1s");
+    check(rt.cine.active, "cinematic active");
+    for (int i = 0; i < 80 && rt.cine.active; ++i) {
+        rt.tickCinematic(0.05f, level, noActors);
+    }
+    check(!rt.cine.active, "cinematic terminates without a KF2");
+}
+
 static void testWavPlaceholder() {
     if (!maxfx::isFile("docs/database/sounds/placeholder.wav")) {
         std::fprintf(stderr, "skip wav (placeholder.wav missing)\\n");
@@ -803,9 +1410,13 @@ int main() {
     testKf2Beretta();
     testDatabase();
     testCollisionAndMath();
+    testKf2EngineSampling();
     testKf2AnimationAndSkinAi();
     testGameMessagesAndCatalog();
     testSoundOmniAndFsmCues();
+    testTriggerSemantics();
+    testCinematics("/tmp");
+    testDynamicObjectsAndNoclip();
     testWavPlaceholder();
 
     // Official sample shipped in docs/.

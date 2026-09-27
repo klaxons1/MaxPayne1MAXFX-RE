@@ -271,20 +271,51 @@ inline Mat4x3 inverseRigid(const Mat4x3& t) {
     return inv;
 }
 
+// What LinearlyOptimizedContainer<M_Matrix4x3>::getItem does in the Android
+// decompile: a plain component-wise lerp of all 12 floats. No re-
+// orthogonalization happens here — the engine only fixes the 3x3 part
+// afterwards, and only when the chunk asks for it
+// (KF_KeyframeAnimation::animateFrameWithLastFrame, see Kf2.cpp).
 inline Mat4x3 lerpMat(const Mat4x3& a, const Mat4x3& b, float t) {
     Mat4x3 out;
     for (int i = 0; i < 4; ++i) {
         out.rows[i] = lerp(a.rows[i], b.rows[i], t);
     }
-    out.rows[0] = normalize(out.rows[0]);
-    Vec3 y = out.rows[1];
-    y = y - out.rows[0] * dot(out.rows[0], y);
-    if (length(y) > 1.0e-6f) {
-        out.rows[1] = normalize(y);
-    }
-    out.rows[2] = normalize(cross(out.rows[0], out.rows[1]));
-    out.rows[1] = normalize(cross(out.rows[2], out.rows[0]));
     return out;
+}
+
+// KF_KeyframeAnimation interpolationMethod 1: scale every row of the 3x3 part
+// to unit length (animateFrameWithLastFrame, `v8 == 1` branch). Keeps row
+// directions, drops scaling.
+inline void normalizeMat3Rows(Mat4x3& m) {
+    for (int r = 0; r < 3; ++r) {
+        const float len = length(m.rows[r]);
+        if (len > 1.0e-8f) {
+            m.rows[r] = m.rows[r] * (1.0f / len);
+        }
+    }
+}
+
+// M_Matrix3Template<float>::orthonormalize exactly as decompiled
+// (KF_KeyframeAnimation interpolationMethod 2): Gram-Schmidt over the rows.
+//   r0 = normalize(r0)
+//   r1 -= r0 * dot(r0, r1); r1 = normalize(r1)
+//   r2 -= r0 * dot(r0, r2); r2 -= r1 * dot(r1, r2); r2 = normalize(r2)
+inline void orthonormalizeMat3(Mat4x3& m) {
+    m.rows[0] = normalize(m.rows[0]);
+    Vec3 r1 = m.rows[1] - m.rows[0] * dot(m.rows[0], m.rows[1]);
+    const float len1 = length(r1);
+    if (len1 > 1.0e-8f) {
+        r1 = r1 * (1.0f / len1);
+    }
+    m.rows[1] = r1;
+    Vec3 r2 = m.rows[2] - m.rows[0] * dot(m.rows[0], m.rows[2]);
+    r2 = r2 - m.rows[1] * dot(m.rows[1], r2);
+    const float len2 = length(r2);
+    if (len2 > 1.0e-8f) {
+        r2 = r2 * (1.0f / len2);
+    }
+    m.rows[2] = r2;
 }
 
 inline Mat4x3 rotationY(float yaw) {

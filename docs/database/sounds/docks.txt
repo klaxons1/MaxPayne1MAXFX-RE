@@ -1,0 +1,331 @@
+#include <..\soundid.h>
+
+// ------------------------------------------------
+[P2L2a_006_cam]	// Max: No minotaur lurked... (continued from GN)
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\P2L2a_006_cam.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l2a_01]	// Mobsters talking about a boxing match
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l2a_01.wav;
+
+		Volume = 0.6;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l2a_02]	// Mobster calls his friend to raise the bridge
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l2a_02.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l2a_03]	// Mobster calls for Rico Muerte to get in
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l2a_03.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l2a_04]	// Mobsters warn Dime
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l2a_04.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l2a_05]	// Dime shouts to Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l2a_05.wav;
+
+		Volume = 1.0;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l2a_06]	// Dime dies
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l2a_06.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l2a_07]	// Vladimir congratulates Max
+{
+	[Properties]
+	ID = ID_INGAME_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l2a_07.wav;
+
+		Volume = ID_INGAME_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Hotspot = ID_INGAME_SPEECH_HOTSPOT;
+		FallOff = ID_INGAME_SPEECH_FALLOFF;
+		Looping = NO;
+
+		3DSound = YES;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l2a_Max_01]	// Max: comments on letter in a money briefcase
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l2a_Max_01.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+[p2l2a_Max_02]	// Max: found Boris Dime's ship
+{
+	[Properties]
+	ID = ID_PLAYER_2D_SPEECH;
+	Probability = 100;
+
+	[Default]
+	{
+		[Sound]
+		Filename = ingame\part2\p2l2a_Max_02.wav;
+
+		Volume = ID_PLAYER_2D_SPEECH_VOLUME;
+		Pitch = 22050;
+
+		Random = 0%;
+		Looping = NO;
+
+		3DSound = NO;
+		Streamed = YES;
+		Priority = ID_INGAME_SPEECH_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = FALSE;
+	}
+}
+
+// ------------------------------------------------
+
+[container_truck_start_up]	// Huge truck starts
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = docks\container_truck_start_up.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = YES;
+		Hotspot = 3;
+		FallOff = 20;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[container_truck_driving]	// Truck drives with metal banging. 
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = docks\container_truck_driving.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = YES;
+		Streamed = NO;
+		Hotspot = 8;
+		FallOff = 40;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[container_truck_crash]	// Huge truck crashes into bridge
+{
+	[Properties] ID = SOUNDID_DEFAULT; 
+	[Default]
+	{
+		[Sound]
+        Filename = docks\container_truck_crash.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 0%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 5;
+		FallOff = 30;
+		Priority = 50;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}

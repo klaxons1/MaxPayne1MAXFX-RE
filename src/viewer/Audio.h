@@ -20,8 +20,18 @@ public:
     bool init();
     void shutdown();
 
-    // Looping level theme (max_payne, else first existing music wav).
+    // Looping level theme is NOT auto-started: the original plays level
+    // music only through scripted A_PlayMusic cues, so this just counts the
+    // available music tracks (status line).
     void playLevel(const Database& db, const std::string& worldSphereName);
+    // A_PlayMusic(name) — (re)start the named music track (loops).
+    void playMusic(const Database& db, const std::string& name);
+    void stopMusic();
+    // One gameplay sound (A_Play3DSound / weapon fire / impacts). 3D requests
+    // need mono buffers (OpenAL positions mono sources only).
+    void playOneShot(const Database& db, const SoundRequest& q);
+    // Queue drain helper: play every request, then clear the queue.
+    void playRequests(const Database& db, const std::vector<SoundRequest>& requests);
     // FSM startup A_Play3DSound emitters (Hotspot / FallOff omni).
     void startCues(const Database& db, const std::vector<SoundCueRequest>& cues);
     // One-shot 2D (graphic-novel OnInit A_PlaySound).
@@ -51,7 +61,7 @@ private:
         Buffer() : id(0), channels(0), rate(0) {}
     };
 
-    unsigned int loadBuffer(const std::string& path, bool forceMono);
+    unsigned int loadBuffer(const std::string& path, bool forceMono, int* rateOut = 0);
     unsigned int makeSource();
     void stopSource(unsigned int* src);
     void clearEnv();
@@ -71,6 +81,8 @@ private:
     unsigned int musicSource_;
     unsigned int storySource_;
     std::vector<unsigned int> envSources_;
+    // One-shot gameplay sources; pump() reaps the finished ones.
+    std::vector<unsigned int> oneShotSources_;
     std::map<std::string, Buffer> buffers_;
 };
 

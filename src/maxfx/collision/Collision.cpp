@@ -239,6 +239,35 @@ void CollisionWorld::addStaticMesh(const StaticMesh& mesh,
     }
 }
 
+void CollisionWorld::addDynamicMesh(const DynamicMesh& mesh, const std::vector<TextureVertex>& texVerts,
+                                    const Mat4x3& world) {
+    for (std::size_t p = 0; p < mesh.polygons.size(); ++p) {
+        const Polygon& poly = mesh.polygons[p];
+        if (poly.vertexCount < 3) {
+            continue;
+        }
+        std::vector<Vec3> pts;
+        pts.reserve(static_cast<std::size_t>(poly.vertexCount));
+        for (int i = 0; i < poly.vertexCount; ++i) {
+            const int tvi = poly.textureVertexStart + i;
+            if (tvi < 0 || static_cast<std::size_t>(tvi) >= texVerts.size()) {
+                continue;
+            }
+            const int vi = texVerts[static_cast<std::size_t>(tvi)].vertexIndex;
+            if (vi < 0 || static_cast<std::size_t>(vi) >= mesh.vertices.size()) {
+                continue;
+            }
+            pts.push_back(transformPoint(world, mesh.vertices[static_cast<std::size_t>(vi)]));
+        }
+        if (pts.size() < 3) {
+            continue;
+        }
+        for (std::size_t i = 1; i + 1 < pts.size(); ++i) {
+            addTriangle(pts[0], pts[i], pts[i + 1], mesh.properties.roomId, poly.id);
+        }
+    }
+}
+
 void CollisionWorld::addLevelGeometry(const Level& level) {
     for (std::size_t i = 0; i < level.staticMeshes.size(); ++i) {
         addStaticMesh(level.staticMeshes[i], level.staticTextureVertices);

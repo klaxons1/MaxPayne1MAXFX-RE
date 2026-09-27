@@ -73,7 +73,15 @@ struct SoundDef {
     std::string category;  // file stem (ambient, weapons, music, ...)
     std::string filename;  // script Filename, native separators
     std::string resolvedPath;
+    // [Random] sub-blocks: alternative files; the engine picks one per play
+    // (S_Sound random variation).
+    std::vector<std::string> randomFiles;
+    std::vector<std::string> randomPaths;
     float volume;
+    // Pitch from the script is a playback rate in Hz. The engine plays at
+    // pitch / wavSampleRate (X_SoundFactory::getSound ->
+    // S_Sound::setFrequency(Pitch / getSamplesPerSecond)); 0 = not set
+    // (play at the file's native rate).
     int pitch;
     bool looping;
     bool is3d;
@@ -83,7 +91,7 @@ struct SoundDef {
 
     SoundDef()
         : volume(1.0f),
-          pitch(22050),
+          pitch(0),
           looping(false),
           is3d(false),
           streamed(false),

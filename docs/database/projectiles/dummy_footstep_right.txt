@@ -1,0 +1,51 @@
+#include <..\projectiles.h>
+#include <..\projectileanimid.h>
+#include <..\object_lods.h>
+
+// -------------------------------------------------------------------
+// Footstep right
+// -------------------------------------------------------------------
+
+[LOD] { [Geometry] exportdata = ..\dummy\dummy_l0.kf2; Distance = 0.0001; }
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = ..\dummy\dummy_l0.kf2;
+	[Animation] Index = PROJECTILEANIM_RICOCHET; Filename = ..\dummy\dummy_l0.kf2;
+	[Animation] Index = PROJECTILEANIM_FROZEN; Filename = ..\dummy\dummy_l0.kf2;
+	[Animation] Index = PROJECTILEANIM_EXPLODE; Filename = ..\dummy\dummy_l0.kf2;
+	[Properties]
+	{
+		[Message] Frame = 0; String ="this->d_createdecal( footstep_right );";
+	}
+}
+
+[Attributes]
+Direction 	= (0,0,1);
+Accuracy 	= 0;
+Speed 		= 10;
+SpeedRandom = 0%;
+Damage 		= 0;			 
+
+RicochetMaximumAngle 	= 0;
+RicochetSpeedMultiplier = 0;
+RicochetMinimumSpeed 	= 0.0;
+RicochetUntilOnGround	= false; // true for projectiles that create level items
+VisibilityMaximumSpeed  = 0; // m/s
+
+SmallProjectile	 		= FALSE;
+Debris 					= FALSE;	
+RandomizeDirection 		= FALSE;	
+RandomizeRotation		= FALSE;
+
+CollisionExplosion		= TRUE;
+DelayedExplosion 		= TRUE;
+ExplosionDelay			= 0.06;
+GravityMultiplier		= 0.8;
+UseLookAt				= FALSE;
+DamagesCharacter		= FALSE;
+ItemsToCache			= 2;
+MeshesToCache			= 1;
+DeathCause				= PROJECTILEDEATH_RANDOM;
+AdultContent			= FALSE;
+BloodProjectile			= FALSE;	// uses same detail level settings as debris but is not debris

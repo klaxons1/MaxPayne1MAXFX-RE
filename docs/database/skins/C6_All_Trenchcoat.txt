@@ -1,0 +1,214 @@
+// --------------------------------------------------------
+// DiCola Bruno, Max Payne Skeleton
+// --------------------------------------------------------
+
+#include <..\ai_ranges.h>
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponid.h>
+#include <..\weaponanimid.h>
+#include <..\object_lods.h>
+
+[AI]
+AimingSpeed 				= AI_MOBSTER_AIMING_SPEED ;
+AimingSpeedCone 			= AI_MOBSTER_AIMING_SPEEDCONE ;
+AimUpDownSpeed 				= 30.0;
+TurnLeftRightSpeed 			= AI_MOBSTER_TURNING_SPEED ;
+VisualPerceivingRadius 		= AI_MOBSTER_VISUAL_RADIUS ;
+GeneralPerceivingRadius 	= AI_MOBSTER_GENERAL_RADIUS ;
+ActivationReactionTime 		= AI_MOBSTER_REACTION_TIME ;
+ShootingCone 				= AI_MOBSTER_SHOOTING_CONE ;
+PerceivingGroupOneRadius 	= AI_MOBSTER_GROUP_ONE ;
+PerceivingGroupTwoRadius 	= AI_MOBSTER_GROUP_TWO ;
+PerceivingGroupThreeRadius 	= AI_MOBSTER_GROUP_THREE ;
+EnemyInterestTime 			= AI_MOBSTER_INTEREST_TIME ;
+ActivateOtherCharactersRadius = AI_MOBSTER_ACTIVATE_OTHER_CHARACTERS_RADIUS;
+
+[Properties]
+Skeleton = default_skeleton;
+CapsuleTop = 1.95;
+CapsuleBottom = 0.0;
+CapsuleRadius = ENEMY_COLLISION_RADIUS ;
+AirborneSpeed = 1.5;
+CanShootDodgeFrame = 13;
+CanAbortShootDodgeFrame = 85;
+RandomizeTextureSet = FALSE;
+MaximumHealth = HEALTH_CLASS_6;
+WoundedHealth = WOUNDEDHEALTH_CLASS_6;
+HealthBonusForKiller = 0;
+SlowMotionBonusForKiller = BONUS_SLOWMOTION; // percents of full slowmotion
+WoundedHealthUpperLimit = WOUNDEDHEALTH_CLASS_6;
+AutoAimTarget = YES;
+ShootingFrequencyMultiplier = SHOOTRATE_CLASS_6;
+ShadowsEnabled = true;
+CanPlayerSwitchToThisSkin = true; // true=player is able to change to this skin with PGUP/PGDN
+GiveTimedModeBonusForKiller = true; // timed mode bonus defined in levels.txt
+
+[Target]
+{
+	[General] name = "Head"; Multiplier = MULTIPLIER_HEAD ;
+	[Bone] name = "Head";
+	[Bone] name = "Neck";
+}
+
+[Target]
+{
+	[General] name = "Arms"; Multiplier = MULTIPLIER_ARMS ;
+	[Bone] name = "UpArm-R";
+	[Bone] name = "LoArm-R";
+	[Bone] name = "Hand-R";
+	[Bone] name = "UpArm-L";
+	[Bone] name = "LoArm-L";
+	[Bone] name = "Hand-L";
+}
+
+[Target]
+{
+	[General] name = "Legs"; Multiplier = MULTIPLIER_LEGS ;
+	[Bone] name = "UpLeg-R";
+	[Bone] name = "LoLeg-R";
+	[Bone] name = "Foot-R";
+	[Bone] name = "Toe-R";
+	[Bone] name = "UpLeg-L";
+	[Bone] name = "LoLeg-L";
+	[Bone] name = "Foot-L";
+	[Bone] name = "Toe-L";
+}
+
+[OnInit]
+{
+	[Message] String = "this->C_PickupWeapon ( "beretta" );";
+	[Message] String = "this->C_SetInfiniteAmmo ( "beretta", 1 );";
+}
+
+[OnDeath]
+{
+	[Message] String = "this->A_StopAll3DSounds(head);";
+}
+
+[TextureAnimation]
+Texturename = "FaceTexture";
+GroupIndex = 0;
+
+[LOD] 	// LOD 0 Polygons: 1500
+{
+	[Geometry] ExportData = dicola_bruno_l0.kfs; SkinData = dicola_bruno_l0.skd;
+	Distance = SKIN_LOD_FAR;
+
+	EnableBoundingSphere	= TRUE;
+	BoundingSphereRadius	= 1.90;
+	EnableBoundingBox		= FALSE;
+}
+
+[Modifiers]
+{
+	[Animation] Index = CHARANIM_RANDOMDEATH1; Filename = anim\death_backward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 0, -0.5 ); Rotation = (0,0,0); MiddlePosition1 = (0,0,-0.4); MiddlePosition2 = (0,0,-0.8);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, killersuit_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_AnimateShooting(" WEAPONANIM_DROPONDEATH "," WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 1; String = "this->P_CreateProjectileToBone( blood_dummy, 3, neck );";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_DROPONDEATH "," WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 5; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 20; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 46; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_RANDOMDEATH2; Filename = anim\death_flip.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (-0.403,0.0,-0.277); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, killersuit_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_AnimateShooting(" WEAPONANIM_DROPONDEATH "," WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 1; String = "this->P_CreateProjectileToBone( blood_dummy, 3, neck );";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_DROPONDEATH "," WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 5; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 35; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 46; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_RANDOMDEATH3; Filename = anim\death_woospin.kf2;
+	[Properties]
+	{
+		[Movement] MiddlePosition1 = ( 0.176, 0, 0.113 ); MiddlePosition2 = ( 1.129, 0, 0.733 ); EndPosition = ( 1.330, 0, 0.866 ); Rotation = ( 0, 0, 0 );
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, killersuit_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_AnimateShooting(" WEAPONANIM_DROPONDEATH "," WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 1; String = "this->P_CreateProjectileToBone( blood_dummy, 3, neck );";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_DROPONDEATH "," WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 5; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 32; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 46; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Animation] Index = CHARANIM_RANDOMDEATH4; Filename = anim\death_forward.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = ( 0, 1, 0 ); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, killersuit_death, head );";
+		[Message] Frame = 0; String = "LeftHandWeapon->WS_AnimateShooting(" WEAPONANIM_DROPONDEATH "," WEAPONANIM_DROPONDEATH ");";
+ 		[Message] Frame = 1; String = "this->P_CreateProjectileToBone( blood_dummy, 3, neck );";
+		[Message] Frame = 1; String = "RightHandWeapon->WS_AnimateShooting(" WEAPONANIM_DROPONDEATH "," WEAPONANIM_DROPONDEATH ");";
+		[Message] Frame = 5; String = "this->C_AnimateTexture( " FACETEXTURE_ID "," FACETEXTURE_DEATH_ID "," 0 ");";
+ 		[Message] Frame = 24; String = "this->A_Play3DSound ( characters, death_medium, pelvis );";
+		[Message] Frame = 46; String = "this->P_CreateprojectileToBone( dummy_character_land, 1, torso );";
+	}
+
+	[Revert] From = CHARANIM_2_RANDOMDEATH1; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_2_RANDOMDEATH2; To = CHARANIM_RANDOMDEATH2;
+	[Revert] From = CHARANIM_2_RANDOMDEATH3; To = CHARANIM_RANDOMDEATH3;
+	[Revert] From = CHARANIM_2_RANDOMDEATH4; To = CHARANIM_RANDOMDEATH4;
+	[Revert] From = CHARANIM_W_RANDOMDEATH1; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_RANDOMDEATH2; To = CHARANIM_RANDOMDEATH2;
+	[Revert] From = CHARANIM_W_RANDOMDEATH3; To = CHARANIM_RANDOMDEATH3;
+	[Revert] From = CHARANIM_W_RANDOMDEATH4; To = CHARANIM_RANDOMDEATH4;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH1; To = CHARANIM_RANDOMDEATH1;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH2; To = CHARANIM_RANDOMDEATH2;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH3; To = CHARANIM_RANDOMDEATH3;
+	[Revert] From = CHARANIM_W_2_RANDOMDEATH4; To = CHARANIM_RANDOMDEATH4;
+
+	// GetDamage
+	[Animation] Index = CHARANIM_GETDAMAGE; Filename = anim\gethit_0350ms.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, killersuit_gethit, head );";
+	}
+	[Revert] From = CHARANIM_W_GETDAMAGE; To = CHARANIM_GETDAMAGE;
+
+	[Animation] Index = CHARANIM_2_GETDAMAGE; Filename = anim\2_gethit_0350ms.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+ 		[Message] Frame = 0; String = "this->A_Play3DSound ( enemy, killersuit_gethit, head );";
+	}
+	[Revert] From = CHARANIM_W_2_GETDAMAGE; To = CHARANIM_2_GETDAMAGE;
+
+	[Animation] Index = CHARANIM_RUN; Filename = anim\run.kf2;
+	[Properties]
+	{
+		[Movement] EndPosition = (0,0,3.0); Rotation = (0,0,0);
+	}
+}
+
+[Item]
+Name = Cigarette;
+Probability = 25%;
+Attachbone = head;
+Offset = (-0.02,-0.085,-0.01);
+Rotation = (-95,-15,-25);
+
+[TextureSet]
+ExportData = Dicola_Bruno_Set05.kfs;
+
+[TextureSet]
+ExportData = Dicola_Bruno_Set01.kfs;
+
+[TextureSet]
+ExportData = Dicola_Bruno_Set02.kfs;
+
+[TextureSet]
+ExportData = Dicola_Bruno_Set03.kfs;
+
+[TextureSet]
+ExportData = Dicola_Bruno_Set04.kfs;

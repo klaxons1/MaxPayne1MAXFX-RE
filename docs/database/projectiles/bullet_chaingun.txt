@@ -1,0 +1,63 @@
+#include <..\object_lods.h>
+#include <..\projectileanimid.h>
+#include <..\projectiles.h>
+#include <..\shooting.h>
+
+// -------------------------------------------------------------------
+// Chaingun bullet (aka Chopper bullet)
+// -------------------------------------------------------------------
+
+[LOD]
+{
+	[Geometry]
+	ExportData = ..\bullet_shared\bullet_7_62mm_l2.kf2;
+	Distance = 2.0 ;
+}
+
+[LOD]
+{
+	[Geometry]
+	ExportData = ..\bullet_shared\bullet_7_62mm_l6.kf2;
+	Distance = 4.0 ;
+}
+
+[Animationset]
+{
+	[Animation] Index = PROJECTILEANIM_DEFAULT; Filename = ..\bullet_shared\bullet_7_62mm_default.kf2;
+}
+
+[Decal]
+String = "this->D_CreateDecal( bullethit_chaingun );";
+
+[CharacterHit]
+String = "this->P_CreateProjectile( blood_bullet, 1 );";
+
+[Attributes]
+Direction 	= (0,0,1);
+Accuracy 	= 200 ;
+Speed 		= BULLET_DEFAULTVELOCITY ;
+SpeedRandom = 0%;
+Damage 		= 20 ;
+
+RicochetMaximumAngle 	= 0;
+RicochetSpeedMultiplier = 0;
+RicochetMinimumSpeed 	= 0;
+RicochetUntilOnGround	= false; // true for projectiles that create level items
+VisibilityMaximumSpeed  = BULLET_VISIBILITYSPEED ;
+
+SmallProjectile	 		= TRUE;
+Debris 					= FALSE;
+RandomizeDirection 		= FALSE;
+RandomizeRotation		= FALSE;
+
+CollisionExplosion		= FALSE;	// play explosion animation when collides first time
+DelayedExplosion 		= FALSE;	// play explosion animation after ExplosionDelay
+ExplosionDelay			= 0.0; 		// matters only if DelayedExplosion == TRUE
+GravityMultiplier		= 0.0;		// keep 1.0 for normal gravity
+UseLookAt				= TRUE;		// TRUE: align to fly direction, FALSE: for discarded weapons
+DamagesCharacter		= TRUE;		// TRUE: projectile makes damage to character, otherwise FALSE
+ItemsToCache			= 1;
+MeshesToCache			= 1;
+DeathCause				= PROJECTILEDEATH_RANDOM;
+AdultContent			= FALSE;
+BloodProjectile			= FALSE;	// uses same detail level settings as debris but is not debris

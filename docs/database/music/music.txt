@@ -1,0 +1,335 @@
+// =============================================================
+// Begin real soundtracks
+// =============================================================
+
+#define	MUSIC_FADETIME		1.0
+#define	AMBIENT_FADETIME	2.0
+
+[max_payne]		//  1. Max Payne Theme
+Filename 	= "wavs\max_theme.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[max_payne_short]		//  1. Max Payne Theme SoundCue
+Filename 	= "wavs\max_theme_short.wav";
+FadeInTime	= 0.5;
+Looping		= true;
+
+[just_forget]	//  2. Just Forget About It
+Filename	= "wavs\just_forget_about_it.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[whack_him]		//  3. Whack Him
+Filename	= "wavs\whack_him.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[mr_big]		//  4. Mr. Big
+Filename	= "wavs\mr_big.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[men_in_blue]	//  5. Men in Blue
+Filename	= "wavs\men_in_blue.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[fallen_angels]	//  6. The Flesh of The Fallen Angels
+Filename	= "wavs\flesh_of_fallen_angels.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[byzantine]		//  7. Byzantine Power Game
+Filename	= "wavs\byzantine_power_game.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[ms_valkyr]		//  8. Ms Valkyr
+Filename 	= "wavs\ms_valkyr.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[killer_suits]	//  9. Killer suits
+Filename 	= "wavs\killer_suits.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[graphic_novel]	//  10. A Cold Day in Hell
+Filename 	= "wavs\graphic_novel.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[cold_day_in_hell]	//  10. A Cold Day in Hell
+Filename 	= "wavs\graphic_novel.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[the_godfather]		//  11. The Good, The Bad and The Godfather
+Filename 	= "wavs\graphic_novel.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[closer_to_heaven]	//  12. A Bit Closer to Heaven
+Filename 	= "wavs\graphic_novel.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+[nightmare]			//  13. Max's nightmare (downsampled byzantine)
+Filename 	= "wavs\nightmare.wav";
+FadeInTime	= MUSIC_FADETIME ;
+Looping		= true;
+
+// =============================================================
+// Noise tracks
+// =============================================================
+
+[city_ambience]
+Filename	= "noise\city_ambience.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[docks]
+Filename	= "noise\docks.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[docks_loading_area]
+Filename	= "noise\docks_loading_area.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[drug_infused_nightmare]
+Filename	= "noise\drug_nightmare.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[eerie_junkie_atmosphere]
+Filename	= "noise\eerie_junkie_atmosphere.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[elevated_city_ambience]
+Filename	= "noise\elevated_city_ambience.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[garage]
+Filename	= "noise\garage.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[inner_sanctum]
+Filename	= "noise\inner_sanctum.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[drug_trip]
+Filename	= "noise\drug_trip.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[old_building]
+Filename	= "noise\old_building.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[rumble_flames_explosions]
+Filename	= "noise\rumble_flames_explosions.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[skyscraper_indoors_stormy]
+Filename	= "noise\skyscraper_indoors_stormy.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[skyscraper_rooftop_stormy]
+Filename	= "noise\skyscraper_rooftop_stormy.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[steelmill_ambience]
+Filename	= "noise\steelmill_ambience.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[subway_station]
+Filename	= "noise\subway_station.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[underground_bunker]
+Filename	= "noise\underground_bunker.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+[valkyr_junkies]		// points to eerie_junkie_atmosphere
+Filename	= "noise\eerie_junkie_atmosphere.wav";
+FadeInTime	= AMBIENT_FADETIME ;
+Looping		= true;
+
+// =============================================================
+// Fadeouts
+// =============================================================
+
+[fadeout1s]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[fadeout2s]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 2.0;
+Looping		= false;
+
+[fadeout4s]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 4.0;
+Looping		= false;
+
+// =============================================================
+// START TEMP SONGS
+// =============================================================
+
+// Wav (44kHz, ADPCM) soundtracks
+[none]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[empty]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[normal]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[aesir]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[tenement]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[action]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[menu]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[graphicnovel]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_01]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_02]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_03]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_04]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_05]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_06]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_07]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_08]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_09]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_10]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_11]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_12]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_13]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_14]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_15]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_16]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_17]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_18]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_19]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+
+[track_20]
+Filename 	= "wavs\empty.wav";
+FadeInTime	= 1.0;
+Looping		= false;
+

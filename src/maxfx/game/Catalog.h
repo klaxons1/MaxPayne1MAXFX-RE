@@ -18,20 +18,36 @@ struct WeaponDef {
     int clipSize;
     int pocketSize;
     float shootHz;
+    float maxShootHz;
     float damage;
     float spread;
     float castLength;
     float sphereRadius;
     std::string projectileName;
+    // [Attributes] WeaponID / SlotIndex / InventoryID (resolved #defines).
+    // The HUD [ActiveWeapon] blocks and weaponpriority.txt key by WeaponID.
+    int weaponId;
+    int slotIndex;
+    int inventoryId;
+    // From the WEAPONANIM_SHOOT* message lists: the fire sound and the
+    // muzzle-flash particle system (X_Character shooting plays these with
+    // every shot).
+    std::string shootSoundCategory;
+    std::string shootSoundName;
+    std::string muzzleEffect;
 
     WeaponDef()
         : clipSize(18),
           pocketSize(162),
           shootHz(4.0f),
+          maxShootHz(0.0f),
           damage(5.0f),
           spread(100.0f),
           castLength(100.0f),
-          sphereRadius(0.01f) {}
+          sphereRadius(0.01f),
+          weaponId(-1),
+          slotIndex(-1),
+          inventoryId(-1) {}
 };
 
 struct ProjectileDef {
@@ -39,6 +55,10 @@ struct ProjectileDef {
     float damage;
     float speed;
     bool damagesCharacter;
+    // [Message] String lists from the projectile script. X_Projectile runs
+    // them when it hits something: D_CreateDecal, PS_StartEffect,
+    // A_Play3DSound, LI_CreateLevelItem ...
+    std::vector<std::string> messages;
 
     ProjectileDef() : damage(5.0f), speed(80.0f), damagesCharacter(true) {}
 };
@@ -65,6 +85,9 @@ struct GameCatalog {
     std::map<std::string, ProjectileDef> projectiles;
     std::vector<GraphicNovelPageDef> pages;
     std::vector<GraphicNovelChapter> chapters;
+    // data/weaponpriority.txt [CycleWeapons] — the player's weapon cycle
+    // order (weapon names, resolved through WeaponID).
+    std::vector<std::string> cycleOrder;
 
     const WeaponDef* findWeapon(const std::string& name) const;
     const ProjectileDef* findProjectile(const std::string& name) const;

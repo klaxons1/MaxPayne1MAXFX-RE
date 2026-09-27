@@ -1,0 +1,155 @@
+// Begin
+#include <..\soundid.h>
+
+// Breakable items
+
+[wood_crate_freeze] 			// Wooden crate freezing
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = debris\wood\Wood_plank_freeze01.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 20%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = debris\wood\Wood_plank_freeze02.wav;
+		Volume = 0.4;
+		Pitch = 22050;
+		Random = 20%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+	}
+}
+
+[wood_crate_ricochet] 			// Wooden crate ricoches
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = debris\wood\Wood_plank_ricochet01.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 20%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = debris\wood\Wood_plank_ricochet02.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 20%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = debris\wood\Wood_plank_ricochet03.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 20%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = debris\wood\Wood_plank_ricochet04.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 20%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = debris\wood\Wood_plank_ricochet05.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 20%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = debris\wood\Wood_plank_ricochet06.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 20%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+	}
+}
+
+[metal_plate_crash] 			// Metallic plate hitting ground
+{
+	[Properties] ID = 0; Probability = 20%;
+	[Default]
+	{
+		[Sound]
+        Filename = debris\metal\metal_plate_crash01.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 20%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = 0;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+// End of sounds

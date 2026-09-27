@@ -1,0 +1,91 @@
+// --------------------------------------------------------
+// Dead Baby
+// --------------------------------------------------------
+
+#include <..\ai_ranges.h>
+#include <..\characters.h>
+#include <..\characteranimid.h>
+#include <..\weaponid.h>
+#include <..\weaponanimid.h>
+#include <..\object_lods.h>
+
+[AI]
+AimingSpeed 				= AI_MOBSTER_AIMING_SPEED ;
+AimingSpeedCone 			= AI_MOBSTER_AIMING_SPEEDCONE ;
+AimUpDownSpeed 				= 30.0;
+TurnLeftRightSpeed 			= AI_MOBSTER_TURNING_SPEED ;
+VisualPerceivingRadius 		= AI_MOBSTER_VISUAL_RADIUS ;
+GeneralPerceivingRadius 	= AI_MOBSTER_GENERAL_RADIUS ;
+ActivationReactionTime 		= AI_MOBSTER_REACTION_TIME ;
+ShootingCone 				= AI_MOBSTER_SHOOTING_CONE ;
+PerceivingGroupOneRadius 	= AI_MOBSTER_GROUP_ONE ;
+PerceivingGroupTwoRadius 	= AI_MOBSTER_GROUP_TWO ;
+PerceivingGroupThreeRadius 	= AI_MOBSTER_GROUP_THREE ;
+EnemyInterestTime 			= AI_MOBSTER_INTEREST_TIME ;
+ActivateOtherCharactersRadius = AI_MOBSTER_ACTIVATE_OTHER_CHARACTERS_RADIUS;
+
+[Properties]
+Skeleton = default_skeleton;
+CapsuleTop = 1.0;
+CapsuleBottom = 0.0;
+CapsuleRadius = 0.25;
+AirborneSpeed = 1.5;
+CanShootDodgeFrame = 13;
+CanAbortShootDodgeFrame = 85;
+RandomizeTextureSet = FALSE;
+MaximumHealth = 30;
+WoundedHealth = 10;
+HealthBonusForKiller = HEALTHBONUS_MEDIUM;
+SlowMotionBonusForKiller = BONUS_SLOWMOTION; // percents of full slowmotion
+WoundedHealthUpperLimit = 15;
+AutoAimTarget = YES;
+ShootingFrequencyMultiplier = 0.5;
+ShadowsEnabled = false;
+CanPlayerSwitchToThisSkin = false; // true=player is able to change to this skin with PGUP/PGDN
+GiveTimedModeBonusForKiller = false; // timed mode bonus defined in levels.txt
+
+[OnInit]
+{
+	[Message] String = "this->C_PickupWeapon ( "empty" );";
+	[Message] String = "this->C_SetInfiniteAmmo ( "empty", 1 );";
+	[Message] String = "this->C_SetInvulnerable ( TRUE );"; 			// Just in case some weirdo would try to shoot the baby
+	[Message] String = "this->C_EnableProjectileCollisions( FALSE );";	// Just in case some weirdo would try to shoot the baby
+}
+
+[OnDeath]
+{
+	[Message] String = "this->A_StopAll3DSounds(head);";
+}
+
+[TextureAnimation]
+Texturename = "FaceTexture";
+GroupIndex = 0;
+
+[LOD] 	// LOD 0 Polygons: 1500
+{
+	[Geometry] ExportData = baby_payne_l0.kfs; SkinData = baby_payne_l0.skd;
+	Distance = SKIN_LOD_FAR;
+
+	EnableBoundingSphere	= TRUE;
+	BoundingSphereRadius	= 1.90;
+	EnableBoundingBox		= FALSE;
+}
+
+[Modifiers]		// These override any default Skeleton settings
+{
+	[Animation]
+	Index = CHARANIM_STAND; Filename = anim\baby_payne_pose.kf2;
+	[Properties]
+	{ 
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+	[Revert] From = CHARANIM_2_STAND; To = CHARANIM_STAND;
+
+	[Animation]
+	Index = CHARANIM_CUSTOMIDLE1; Filename = anim\baby_payne_wave.kf2;
+	[Properties]
+	{ 
+		[Movement] EndPosition = (0,0,0); Rotation = (0,0,0);
+	}
+	[Revert] From = CHARANIM_2_CUSTOMIDLE1; To = CHARANIM_CUSTOMIDLE1;
+}

@@ -1,0 +1,477 @@
+// Begin
+#include <..\soundid.h>
+
+// Breakable items
+//
+//
+
+[videotape_break]                       // videocasette breaking
+{
+	[Properties] ID = ID_DEFAULT;
+	[default]
+	{
+		[Sound]
+        Filename = subway\Crash_Junk.wav;
+        Volume = 0.5;
+		Pitch = 22050;
+        Random = 1%;
+        3Dsound = YES;
+        Looping = NO;
+        Streamed = NO;
+        Hotspot = 5;
+        Falloff = 10;
+        Priority = 10;
+        ItemsToCache = 1;
+        FrequencyScaling = TRUE;
+	}
+}
+
+[break_vase] 			// Porcelain vase breaking
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\break_vase.wav;
+		Volume = 0.6;
+		Pitch = 22050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = ID_NOISE_HOTSPOT;
+		FallOff = ID_NOISE_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_NOISE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[break_bottle_full] 			// Full bottle breaking
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\break_bottle_full.wav;
+		Volume = 0.7;
+		Pitch = 22050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = 2;
+		FallOff = 10;
+        Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[bottle_smash] 			// Bottle breaks
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\glass\bottle_smash_01.wav;
+		Volume = 0.7;
+		Pitch = 22050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 10;
+        Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = breakable\glass\bottle_smash_02.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 10;
+        Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[break_water_cooler] 			// Water cooler breaks
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\break_water_cooler.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = ID_NOISE_HOTSPOT;
+		FallOff = ID_NOISE_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_NOISE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[ceiling_break]                         // Normal ceiling breaking loose
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+		Filename = breakable\tunnel\ceiling_break02.wav;
+		Volume = 1.0;
+		Pitch = 33050;
+		Random = 2%;
+		3DSound = YES;
+		Hotspot = 2;
+		FallOff = 25;
+		Looping = NO;
+		Streamed = NO;
+		Priority = ID_HUGE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[ceiling_crash_large] 		// Ceiling debris hits ground
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\tunnel\roofcrash.wav;
+		Volume = 1.0;
+		Pitch = 33050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = ID_HUGE_HOTSPOT;
+		FallOff = ID_HUGE_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_HUGE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[ceiling_crash] 			// Ceiling debris hits ground, muted
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\tunnel\ceiling_crash_small.wav;
+		Volume = 1.0;
+		Pitch = 33050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = ID_HUGE_HOTSPOT;
+		FallOff = ID_HUGE_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_HUGE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[ceiling_fan] 		// Ceiling debris hits ground, muted
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\break_ceiling_fan.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = 4;
+		FallOff = 8;
+        Looping = NO;
+		Streamed = NO;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[electronic_device_break]  			// Electronic device breaking
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = dynamic\electric\device_break1.wav;
+		Volume = 1.0;
+		Pitch = 33050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = ID_ELECTRIC_HOTSPOT;
+		FallOff = ID_ELECTRIC_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_ELECTRIC_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[glass_shatter]  			// Glass breaking
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\glass\break_glass_default.wav;
+		Volume = 0.6;
+		Pitch = 33050;
+		Random = 6%;  
+        3DSound = YES;
+		Hotspot = ID_NOISE_HOTSPOT;
+		FallOff = ID_NOISE_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_NOISE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[glass_bottle_break]  			// Glass breaking
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\glass\break_glass_default.wav;
+		Volume = 0.7;
+		Pitch = 22050;
+		Random = 6%;  
+        3DSound = YES;
+		Hotspot = ID_NOISE_HOTSPOT;
+		FallOff = ID_NOISE_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_NOISE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[piano_top_crash_down]  			// A piano/flygel top crashing down
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\piano_top_crash_down.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 1%;  
+        3DSound = YES;
+        Looping = NO;
+		Streamed = NO;
+		Hotspot = 4;
+		FallOff = 10;
+		Priority = 10;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[metal_hollow_crash]  			// Metal Barrel (or door) hitting ground
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\metal\metal_hollow_crash01.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 5%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[window_break_medium]  			// Glass breaking
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\glass\break_glass_medium.wav;
+		Volume = 0.6;
+		Pitch = 33050;
+		Random = 6%;  
+        3DSound = YES;
+		Hotspot = ID_NOISE_HOTSPOT;
+		FallOff = ID_NOISE_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_NOISE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[window_break_large]  			// Glass breaking
+{
+	[Properties] ID = 0; 
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\glass\break_glass_large.wav;
+		Volume = 0.6;
+		Pitch = 33050;
+		Random = 6%;  
+        3DSound = YES;
+		Hotspot = ID_NOISE_HOTSPOT;
+		FallOff = ID_NOISE_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_NOISE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}	
+
+[wood_small]  			// Wooden chair etc breaking
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\wood\break_wood_box_01.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 10%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = breakable\wood\break_wood_box_02.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 10%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = breakable\wood\break_wood_box_03.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 10%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = breakable\wood\break_wood_box_04.wav;
+		Volume = 0.5;
+		Pitch = 22050;
+		Random = 10%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[wood_break]  			// Wooden stuff breaking
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\wood\Wood_Crash01.wav;
+		Volume = 0.8;
+		Pitch = 22050;
+		Random = 5%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+
+		[Sound]
+        Filename = breakable\wood\Wood_Crash02.wav;
+		Volume = 1.0;
+		Pitch = 22050;
+		Random = 5%;  
+        3DSound = YES;
+		Hotspot = ID_WOOD_MEDIUM_HOTSPOT;
+		FallOff = ID_WOOD_MEDIUM_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_WOOD_MEDIUM_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+[tunnel_ceiling] 		// old, not used
+{
+	[Properties] ID = 0;
+	[Default]
+	{
+		[Sound]
+        Filename = breakable\tunnel\roofcrash.wav;
+		Volume = 1.0;
+		Pitch = 33050;
+		Random = 2%;  
+        3DSound = YES;
+		Hotspot = ID_HUGE_HOTSPOT;
+		FallOff = ID_HUGE_FALLOFF;
+        Looping = NO;
+		Streamed = NO;
+		Priority = ID_HUGE_PRIORITY;
+		ItemsToCache = 1;
+		FrequencyScaling = TRUE;
+	}
+}
+
+// End of sounds
