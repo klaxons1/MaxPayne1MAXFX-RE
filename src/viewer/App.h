@@ -83,6 +83,7 @@ private:
     Mat4x3 cameraBase_;            // LDB-space base for parented camera paths
     int cinematicClipCursor_;
     bool wasCineOn_;
+    bool wasCineActive_;
     // Dynamic-mesh (door) collision bookkeeping: solid state per mesh so the
     // collision world is rebuilt only when a door actually opens / closes.
     std::vector<char> doorSolid_;

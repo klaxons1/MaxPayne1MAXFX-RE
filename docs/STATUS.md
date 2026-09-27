@@ -1,9 +1,9 @@
 # MAX-FX reverse engineering — current status
 
-Last updated 2026-09-27 (keyframe sampler ported from the decompile —
-`docs/ANIMATION.md`; engine trigger semantics `T_Activate`/`T_Enable`;
-FSM startup dispatch with the level intro comic; sound pitch =
-script Pitch / WAV rate).
+Last updated 2026-09-27 (noclip + cutscene regression fixes against the
+Android 1.0 decompile; `[Animation]`/`[Properties]` sibling pairing;
+GM_ChangeGameSpeed / bullet-time game speed; skinning verified — see
+`docs/ANIMATION.md`).
 Comments and this file are in English; the code is C++11. The target is the **PC** Max Payne 1
 MAX-FX format. The Android `libMaxPayne.so` decompile in `docs/` is used for
 names and version numbers only — its loaders were stripped and can disagree
@@ -257,6 +257,40 @@ abort (clip + camera path + fade + letterbox), moving cancels an
 stay unresolved (0 would mean "not resolved yet" every frame), and a
 finished fade-to-black no longer outlives the cutscene - the
 presentation state clears when the whole cutscene (clip + path) is over.
+`C_EnableCinematicMode` is cutscene-scoped: a clip that ends while
+cinematic mode is still on hands the controls back (scripts pair the
+message with `false`, clips that end first must not leave the player
+uncontrollable).
+
+Two regressions found against the real database and the Android 1.0
+decompile (`docs/Android1.0V/libMaxPayne.so.c`) are fixed:
+
+* **Noclip / walking was dead.** `tickCinematicFrame` applied the
+  cinematic start entity to the player EVERY frame, and outside
+  cutscenes that entity is a stale identity - the player was teleported
+  to the world origin and pinned there every frame. Root motion now
+  applies only while `cine.active`, the start entity is captured on the
+  cutscene's rising edge (whichever entry point started it) and anchored
+  to the spawn point at level load.
+* **Scripted clips found no frame hooks.** Authored skins and cinematics
+  write `[Animation] Index = ..; Filename = ..;` unbraced followed by a
+  braced `[Properties] { [Message] Frame = N; ... }` as a **sibling**
+  block (`X_SharedDBAnimationContainer::construct` pairs animation *i*
+  with the block at `getBlockIndex("animation", i) + 1` when it is
+  `properties` - `X_SharedDBAnimationContainer::construct`,
+  `docs/Android1.0V` @ `0xAD5B90`). The clip harvest
+  now pairs each `[Animation]` with the immediately following
+  `[Properties]` sibling (children-first, then sibling, so synthetic
+  fixtures keep working). `max_payne.txt` alone yields 127 hooked clips
+  with 528 frame messages (previously 0), so key **C** plays real clips
+  with live effects (dust puffs, sounds, slow motion).
+
+`GM_ChangeGameSpeed(speed, seconds)` and `GM_EnableBulletTime(bool)` now
+drive a global game speed (`GameRuntime::gameSpeed`, linear ramp on real
+time): the simulation (player, actors, doors, triggers, effects,
+cinematic timing) runs on scaled time while audio and UI stay real. The
+dodge-clip demo plays at 0.5x exactly like the scripted slow motion,
+then ramps back to 1.0.
 
 Cutscene camera sampling walks the KF2 parent chain (the camera node is
 parented to a root that carries the path placement — sampling the bare

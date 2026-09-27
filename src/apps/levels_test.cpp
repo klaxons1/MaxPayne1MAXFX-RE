@@ -1311,6 +1311,94 @@ static void testCinematics(const std::string& tmpDir) {
               rt.cine.hudVisible && rt.cine.fadeDuration <= 0.0f,
           "abortCinematic clears everything");
 
+    // --- [Animation] + sibling [Properties] pairing (real skin format) ---
+    // R_ScriptLoader keeps the unbraced [Animation] assignments and the
+    // braced [Properties]{...} as consecutive SIBLING blocks;
+    // X_SharedDBAnimationContainer::construct pairs animation i with the
+    // block at getBlockIndex("animation", i) + 1 when it is "properties".
+    {
+        const std::string skinText =
+            "[Configuration]\n{\n"
+            "  [Properties]\n  {\n"
+            "    MaximumHealth = 60;\n"
+            "  }\n"
+            "  [Modifiers]\n  {\n"
+            "    [Animation] Index = 999; Filename = \"cinematics\\demo.kf2\";\n"
+            "    [Properties]\n    {\n"
+            "      [Movement]\n      {\n"
+            "        Filename = \"cinematics\\demo_mov.kf2\";\n"
+            "      }\n"
+            "      [Message] Frame = 5; String = \"this->GM_ChangeGameSpeed( 0.01, 0.25 );\";\n"
+            "      [Message] Frame = 30; String = \"this->C_EnableCinematicMode( false );\";\n"
+            "    }\n"
+            "    [Animation] Index = 1000; Filename = \"anim\\plain.kf2\";\n"
+            "  }\n"
+            "}\n";
+        Script script = Script::parseText(skinText, "demo_skin.txt");
+        CharacterConfig cfg;
+        fillCharacterConfig(cfg, script.root(), "demo_skin.txt", "");
+        const CharacterAnimClip* demo = findAnimClip(cfg, 999);
+        check(demo != 0, "sibling-properties clip parsed");
+        if (demo != 0) {
+            check(demo->frameMessages.size() == 2, "hooks come from the sibling [Properties]");
+            check(demo->movementFile.find("demo_mov.kf2") != std::string::npos,
+                  "movement file comes from the sibling [Properties]");
+            checkNear(demo->frameMessages[0].frame, 5.0f, "hook frame");
+        }
+        const CharacterAnimClip* plain = findAnimClip(cfg, 1000);
+        check(plain != 0 && plain->frameMessages.empty(),
+              "clip without a following [Properties] has no hooks");
+    }
+
+    // --- game speed (GM_ChangeGameSpeed / GM_EnableBulletTime) ---
+    {
+        GameRuntime gs;
+        checkNear(gs.gameSpeed, 1.0f, "game speed starts normal");
+        std::vector<GameMessage> m = parseGameMessages("this->GM_ChangeGameSpeed( 0.5, 2.0 );");
+        gs.dispatch(m[0], level, noActors, -1);
+        checkNear(gs.gameSpeedTarget, 0.5f, "GM_ChangeGameSpeed target");
+        gs.tickGameSpeed(1.0f);  // half of the 2s ramp
+        checkNear(gs.gameSpeed, 0.75f, "game speed ramps linearly");
+        gs.tickGameSpeed(1.0f);
+        checkNear(gs.gameSpeed, 0.5f, "game speed reaches the target");
+        m = parseGameMessages("this->GM_ChangeGameSpeed( 0.01, 0 );");
+        gs.dispatch(m[0], level, noActors, -1);
+        checkNear(gs.gameSpeed, 0.01f, "zero transition snaps");
+        m = parseGameMessages("this->GM_EnableBulletTime( true );");
+        gs.dispatch(m[0], level, noActors, -1);
+        check(gs.bulletTime && gs.gameSpeedTarget < 1.0f, "bullet time slows the game");
+        m = parseGameMessages("this->GM_EnableBulletTime( false );");
+        gs.dispatch(m[0], level, noActors, -1);
+        check(!gs.bulletTime && gs.gameSpeedTarget == 1.0f, "bullet time restores the target");
+        gs.gameSpeed = 0.3f;
+        gs.resetLevel(level, 0, Vec3(), 0.0f);
+        checkNear(gs.gameSpeed, 1.0f, "level reset clears game speed");
+    }
+
+    // --- cinematic mode releases controls when the clip ends ---
+    {
+        GameRuntime cm;
+        cm.player.controlsEnabled = true;
+        std::vector<ClipFrameMessage> hooks;
+        hooks.push_back(ClipFrameMessage());
+        hooks.back().frame = 0;
+        hooks.back().text = "this->C_EnableCinematicMode( true );";
+        cm.startCinematic(1, 0.5f, 30, hooks, "");
+        cm.tickCinematic(0.1f, level, noActors);
+        check(!cm.player.controlsEnabled && cm.cine.cinematicMode,
+              "C_EnableCinematicMode hook disables controls");
+        cm.stopCinematic();
+        check(cm.player.controlsEnabled && !cm.cine.cinematicMode,
+              "clip end restores controls");
+        // C_EnableCinematicMode( false ) alone also re-enables them.
+        cm.startCinematic(1, 0.5f, 30, hooks, "");
+        cm.tickCinematic(0.1f, level, noActors);
+        std::vector<GameMessage> off = parseGameMessages("this->C_EnableCinematicMode( false );");
+        cm.dispatch(off[0], level, noActors, -1);
+        check(cm.player.controlsEnabled, "C_EnableCinematicMode( false ) re-enables controls");
+        cm.stopCinematic();
+    }
+
     // Abortable flag drives user aborts (movement) of camera paths.
     rt.cine = CinematicState();
     rt.startCameraPath("intro_fly", 1, "");

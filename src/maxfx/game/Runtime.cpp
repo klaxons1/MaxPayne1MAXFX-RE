@@ -220,9 +220,28 @@ GameRuntime::GameRuntime()
       comicChapter(0),
       comicFromMenu(false),
       soundOrigin(0.0f, 0.0f, 0.0f),
-      impactNormal(0.0f, 1.0f, 0.0f) {}
+      impactNormal(0.0f, 1.0f, 0.0f),
+      gameSpeed(1.0f),
+      gameSpeedTarget(1.0f),
+      gameSpeedStart(1.0f),
+      gameSpeedElapsed(0.0f),
+      gameSpeedSeconds(0.0f),
+      bulletTime(false) {}
 
 void GameRuntime::loadCatalog(const std::string& dbRoot) { catalog = loadGameCatalog(dbRoot); }
+
+void GameRuntime::tickGameSpeed(float realDt) {
+    if (gameSpeedSeconds <= 0.0f || realDt <= 0.0f) {
+        gameSpeed = gameSpeedTarget;
+        return;
+    }
+    gameSpeedElapsed += realDt;
+    const float t = std::min(1.0f, gameSpeedElapsed / gameSpeedSeconds);
+    gameSpeed = gameSpeedStart + (gameSpeedTarget - gameSpeedStart) * t;
+    if (t >= 1.0f) {
+        gameSpeedSeconds = 0.0f;
+    }
+}
 
 void GameRuntime::loadCameraPaths(const std::string& dbRoot) { cameraPaths.load(dbRoot); }
 
@@ -280,7 +299,14 @@ void GameRuntime::startCinematic(int clipIndex, float duration, int frameRate,
 
 void GameRuntime::stopCinematic() {
     cine.active = false;
-    cine.cinematicMode = false;
+    if (cine.cinematicMode) {
+        // C_EnableCinematicMode is cutscene-scoped: scripts pair it with a
+        // matching false, but clips that end first must not leave the player
+        // uncontrollable (GM_SetPlayerControls outside cutscenes is untouched
+        // — this only fires when cinematic mode was actually on).
+        cine.cinematicMode = false;
+        player.controlsEnabled = true;
+    }
     // Widescreen / HUD / the fade hold while the camera path may still be
     // flying; tickCinematic clears them once the whole cutscene is over and
     // abortCinematic clears them on Esc.
@@ -410,6 +436,12 @@ void GameRuntime::resetLevel(const Level& level, const LevelInfo* info, const Ve
     player.yaw = spawnYaw;
     player.grounded = true;
     cine = CinematicState();  // no cutscene survives a level change
+    gameSpeed = 1.0f;
+    gameSpeedTarget = 1.0f;
+    gameSpeedStart = 1.0f;
+    gameSpeedElapsed = 0.0f;
+    gameSpeedSeconds = 0.0f;
+    bulletTime = false;
     if (info && info->playerSkinName.size()) {
         // max_payne.txt: MaximumHealth 60, CapsuleRadius 0.48, AirborneSpeed 2.5,
         // PLAYER_MOVEMENT 4.2, C_Jump(7.5).
@@ -924,7 +956,14 @@ void GameRuntime::dispatch(const GameMessage& msg, const Level& level, std::vect
         return;
     }
     if (methodIs(msg, "gm_enablebullettime")) {
-        pushLog("GM_EnableBulletTime");
+        // MP1 bullet time: the world drops to a slow crawl (the player with
+        // it) with a short ramp; scripts end shootdodges with false.
+        bulletTime = boolArg(msg, 0, true);
+        gameSpeedStart = gameSpeed;
+        gameSpeedTarget = bulletTime ? 0.3f : 1.0f;
+        gameSpeedSeconds = 0.35f;
+        gameSpeedElapsed = 0.0f;
+        pushLog(std::string("bullet time ") + (bulletTime ? "on" : "off"));
         return;
     }
     if (methodIs(msg, "gm_init") || methodIs(msg, "gm_setgamelevel")) {
@@ -1145,11 +1184,22 @@ void GameRuntime::dispatch(const GameMessage& msg, const Level& level, std::vect
         }
         return;
     }
+    if (methodIs(msg, "gm_changegamespeed")) {
+        // GM_ChangeGameSpeed(speed, seconds): linear ramp of the global
+        // simulation speed; cinematic scripts use 0.01..0.5 for slow motion.
+        gameSpeedTarget = floatArg(msg, 0, 1.0f);
+        gameSpeedStart = gameSpeed;
+        gameSpeedElapsed = 0.0f;
+        gameSpeedSeconds = floatArg(msg, 1, 0.0f);
+        if (gameSpeedSeconds <= 0.0f) {
+            gameSpeed = gameSpeedTarget;
+        }
+        pushLog("game speed -> " + std::to_string(gameSpeedTarget));
+        return;
+    }
     if (methodIs(msg, "c_enablecinematicmode")) {
         cine.cinematicMode = boolArg(msg, 0, true);
-        if (cine.cinematicMode) {
-            player.controlsEnabled = false;
-        }
+        player.controlsEnabled = !cine.cinematicMode;
         return;
     }
     if (methodIs(msg, "gm_enablewidescreen")) {

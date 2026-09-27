@@ -198,7 +198,8 @@ ViewerApp::ViewerApp()
       levelIndex_(-1),
       lastComicPage_(-1),
       cinematicClipCursor_(-1),
-      wasCineOn_(false) {}
+      wasCineOn_(false),
+      wasCineActive_(false) {}
 
 ViewerApp::~ViewerApp() { destroyWindow(); }
 
@@ -471,6 +472,13 @@ bool ViewerApp::loadLevelIndex(int index, bool showLoading) {
     const SkinDef* playerSkin = database_.findSkin(playerSkinName_);
     game_.applyPlayerOnInit(playerSkin != 0 ? &playerSkin->character : 0);
     cinematicClipCursor_ = -1;
+    // Camera paths parented to the character (CAM_AnimateParented) need a
+    // sane origin even before any clip ran: anchor the cinematic entity to
+    // the spawn point.
+    cinematicStartEntity_ = makeEntity(game_.player.position, -game_.player.yaw);
+    cinematicEntity_ = cinematicStartEntity_;
+    wasCineActive_ = false;
+    wasCineOn_ = false;
     game_.mode = kModePlaying;
     // X_LevelRuntimeFSM startup messages run at level load — on Part1_Level1
     // ::startroom::fsm_start queues the intro graphic-novel pages and switches
@@ -925,13 +933,18 @@ void ViewerApp::update(float dt) {
     }
     audio_.setEnvPaused(false);
     const bool* keys = SDL_GetKeyboardState(0);
+    // GM_ChangeGameSpeed / bullet time: the simulation runs on scaled time
+    // (movement, actors, doors, triggers, effects, cinematic), while audio
+    // and UI stay on real time.
+    game_.tickGameSpeed(dt);
+    const float gdt = dt * game_.gameSpeed;
     const bool scriptOwned = game_.cine.active;  // the clip drives the player
     if (!scriptOwned) {
         const bool jump = keys[SDL_SCANCODE_SPACE] != 0;
         const bool sprint = keys[SDL_SCANCODE_LSHIFT] != 0;
         game_.player.yaw = camera_.yaw;
         game_.player.pitch = camera_.pitch;
-        game_.tickPlayer(dt, keys[SDL_SCANCODE_W] != 0, keys[SDL_SCANCODE_S] != 0,
+        game_.tickPlayer(gdt, keys[SDL_SCANCODE_W] != 0, keys[SDL_SCANCODE_S] != 0,
                          keys[SDL_SCANCODE_A] != 0, keys[SDL_SCANCODE_D] != 0, jump, sprint,
                          collision_, keys[SDL_SCANCODE_LCTRL] != 0);
         syncCameraFromPlayer();
@@ -950,7 +963,7 @@ void ViewerApp::update(float dt) {
     }
     // Cutscene timing (clip frame hooks, fades, camera path + [Exit]) always
     // advances, even when the player is controllable again.
-    tickCinematicFrame(dt);
+    tickCinematicFrame(gdt);
     const Vec3 look = playerLookLdb();
     const Vec3 eye = Vec3(game_.player.position.x, game_.player.position.y + game_.player.eyeHeight,
                           game_.player.position.z);
@@ -959,7 +972,7 @@ void ViewerApp::update(float dt) {
     const bool useNow = !scriptOwned && keys[SDL_SCANCODE_E] != 0;
     const bool usePress = useNow && !useWasDown;
     useWasDown = useNow;
-    game_.tickDoors(dt, level_);
+    game_.tickDoors(gdt, level_);
     // Door collision refresh: only when a dynamic object crossed the
     // half-open threshold (a full rebuild per frame would be wasteful).
     if (doorSolid_.size() == level_.dynamicMeshes.size()) {
@@ -977,11 +990,11 @@ void ViewerApp::update(float dt) {
             rebuildCollision();
         }
     }
-    game_.tickTriggers(dt, level_, usePress, look, actors_);
+    game_.tickTriggers(gdt, level_, usePress, look, actors_);
     // Runtime-queued one-shots (trigger / door / weapon / impact messages).
     audio_.playRequests(database_, game_.pendingSounds);
     game_.pendingSounds.clear();
-    game_.effects.update(dt);
+    game_.effects.update(gdt);
     if (weaponListTimer_ > 0.0f) {
         weaponListTimer_ -= dt;
     }
@@ -997,7 +1010,7 @@ void ViewerApp::update(float dt) {
         audio_.pump();
         return;
     }
-    updateActors(dt);
+    updateActors(gdt);
     audio_.pump();
 }
 
@@ -1246,17 +1259,40 @@ void ViewerApp::startNextCinematic() {
         return;
     }
     // Scripted clips: any clip with [Message] Frame hooks (the cinematics on
-    // the stock skins are CHARANIM_CUSTOM* / cinematic blocks).
+    // the stock skins are CHARANIM_CUSTOM* / cinematic blocks). Clips whose
+    // hooks direct the scene (camera paths, fades, game speed, sounds,
+    // teleports) come first — real level cinematics are per-level, so on
+    // stock skins this falls back to gameplay clips (footstep dust, reload,
+    // bullet-time) which still exercise the whole hook machinery.
     std::vector<const CharacterAnimClip*> scripted;
+    std::vector<const CharacterAnimClip*> directed;
     for (std::size_t i = 0; i < def->character.animations.size(); ++i) {
         const CharacterAnimClip& clip = def->character.animations[i];
-        if (!clip.frameMessages.empty()) {
-            scripted.push_back(&clip);
+        if (clip.frameMessages.empty()) {
+            continue;
+        }
+        scripted.push_back(&clip);
+        for (std::size_t m = 0; m < clip.frameMessages.size(); ++m) {
+            const std::string& t = clip.frameMessages[m].text;
+            if (t.find("cam_animate") != std::string::npos ||
+                t.find("mphm_fadetocolor") != std::string::npos ||
+                t.find("mphm_showintroductionsprite") != std::string::npos ||
+                t.find("gm_enablewidescreen") != std::string::npos ||
+                t.find("gm_changegamespeed") != std::string::npos ||
+                t.find("c_enablecinematicmode") != std::string::npos ||
+                t.find("c_teleport") != std::string::npos ||
+                t.find("a_play3dsound") != std::string::npos) {
+                directed.push_back(&clip);
+                break;
+            }
         }
     }
     if (scripted.empty()) {
         statusMessage_ = "cinematic: no scripted clips on " + playerSkinName_;
         return;
+    }
+    if (!directed.empty() && directed.size() < scripted.size()) {
+        scripted = directed;  // prefer directed clips while any remain
     }
     cinematicClipCursor_ = (cinematicClipCursor_ + 1) % static_cast<int>(scripted.size());
     const CharacterAnimClip* clip = scripted[static_cast<std::size_t>(cinematicClipCursor_)];
@@ -1299,23 +1335,36 @@ void ViewerApp::tickCinematicFrame(float dt) {
         // check), so clamp to a minimal fly-by instead.
         game_.cine.cameraDuration = d > 0.01f ? d : 0.05f;
     }
-    // Movement root motion ("*_mov.kf2"): the clip acts in place while the
-    // movement file carries the character.
-    cinematicEntity_ = cinematicStartEntity_;
-    if (game_.cine.active && !game_.cine.movementFile.empty()) {
-        const Kf2File* mov = database_.loadModel(game_.cine.movementFile);
-        if (mov != 0 && !mov->animations.empty()) {
-            std::vector<std::string> mn;
-            std::vector<Mat4x3> ml;
-            kf2BuildSkeletonWorlds(*mov, game_.cine.time, 0, &mn, &ml);
-            if (!ml.empty()) {
-                cinematicEntity_ = combine(cinematicStartEntity_, ml[0]);
+    // Root motion applies ONLY while a cinematic clip is playing. Outside
+    // cutscenes the start entity is a stale identity and pinning the player
+    // to it every frame froze noclip and normal walking (the player kept
+    // being teleported to the world origin).
+    if (game_.cine.active && !wasCineActive_) {
+        // Rising edge: capture where the cutscene starts from, whichever
+        // entry point started it (C key demo or scripted FSM messages).
+        cinematicStartEntity_ = makeEntity(game_.player.position, -game_.player.yaw);
+        cinematicEntity_ = cinematicStartEntity_;
+    }
+    if (game_.cine.active) {
+        // Movement root motion ("*_mov.kf2"): the clip acts in place while
+        // the movement file carries the character.
+        cinematicEntity_ = cinematicStartEntity_;
+        if (!game_.cine.movementFile.empty()) {
+            const Kf2File* mov = database_.loadModel(game_.cine.movementFile);
+            if (mov != 0 && !mov->animations.empty()) {
+                std::vector<std::string> mn;
+                std::vector<Mat4x3> ml;
+                kf2BuildSkeletonWorlds(*mov, game_.cine.time, 0, &mn, &ml);
+                if (!ml.empty()) {
+                    cinematicEntity_ = combine(cinematicStartEntity_, ml[0]);
+                }
             }
         }
+        game_.player.position = cinematicEntity_.translation();
+        const Vec3 ldbFwd = cinematicEntity_.rows[2];  // Z axis = forward (rotationY)
+        game_.player.yaw = -std::atan2(ldbFwd.x, ldbFwd.z);  // LDB -> view yaw
     }
-    game_.player.position = cinematicEntity_.translation();
-    const Vec3 ldbFwd = cinematicEntity_.rows[2];  // Z axis = forward (rotationY)
-    game_.player.yaw = -std::atan2(ldbFwd.x, ldbFwd.z);  // LDB -> view yaw
+    wasCineActive_ = game_.cine.active;
 
     // Cutscene over: hand the camera back to the player.
     const bool on = game_.cine.active || game_.cine.cameraActive;

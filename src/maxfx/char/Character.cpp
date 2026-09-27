@@ -132,32 +132,57 @@ void collectFrameMessages(const ScriptBlock& block, std::vector<ClipFrameMessage
     }
 }
 
-void collectClips(const ScriptBlock& block, const std::string& scriptPath, const std::string& skeleton,
-                  const std::string& dbRoot, std::vector<CharacterAnimClip>* out) {
-    if (block.name == "animation") {
-        CharacterAnimClip clip;
-        clip.index = intField(block, "index", -1);
-        clip.filename = assignmentOf(block, "filename");
-        clip.resolvedPath = resolveClipPath(clip.filename, scriptPath, skeleton, dbRoot);
-        const ScriptBlock* props = findChild(block, "properties");
-        if (props != 0) {
-            const ScriptBlock* mov = findChild(*props, "movement");
-            if (mov != 0) {
-                clip.endPosition = vecField(*mov, "endposition", Vec3());
-                clip.endRotation = vecField(*mov, "rotation", Vec3());
-                const std::string mf = parseScriptString(assignmentOf(*mov, "filename"));
-                if (!mf.empty()) {
-                    clip.movementFile = mf;
-                    clip.resolvedMovement = resolveClipPath(mf, scriptPath, skeleton, dbRoot);
-                }
+// Harvest one [Animation] block plus its paired [Properties] block.
+// X_SharedDBAnimationContainer::construct pairs an animation with the
+// [Properties] block that immediately FOLLOWS it as a sibling
+// (getBlockIndex("animation", i) + 1 == "properties"); authored skins and
+// cinematics always use this form because R_ScriptLoader keeps the unbraced
+// [Animation] assignments and the braced [Properties]{...} as consecutive
+// child blocks of [Modifiers]. A nested [Properties] inside [Animation] is
+// also accepted (synthetic fixtures use it).
+void collectOneClip(const ScriptBlock& anim, const ScriptBlock* props, const std::string& scriptPath,
+                    const std::string& skeleton, const std::string& dbRoot,
+                    std::vector<CharacterAnimClip>* out) {
+    CharacterAnimClip clip;
+    clip.index = intField(anim, "index", -1);
+    clip.filename = assignmentOf(anim, "filename");
+    clip.resolvedPath = resolveClipPath(clip.filename, scriptPath, skeleton, dbRoot);
+    if (props != 0) {
+        const ScriptBlock* mov = findChild(*props, "movement");
+        if (mov != 0) {
+            clip.endPosition = vecField(*mov, "endposition", Vec3());
+            clip.endRotation = vecField(*mov, "rotation", Vec3());
+            const std::string mf = parseScriptString(assignmentOf(*mov, "filename"));
+            if (!mf.empty()) {
+                clip.movementFile = mf;
+                clip.resolvedMovement = resolveClipPath(mf, scriptPath, skeleton, dbRoot);
             }
         }
-        // [Message] Frame hooks anywhere under the clip (authored inside
-        // [Properties]) — cinematic scripts are made of these.
-        collectFrameMessages(block, &clip.frameMessages);
-        if (clip.index >= 0 && !clip.filename.empty()) {
-            out->push_back(clip);
+    }
+    // [Message] Frame hooks anywhere under the clip or its [Properties] —
+    // cinematic scripts are made of these.
+    collectFrameMessages(anim, &clip.frameMessages);
+    if (props != 0) {
+        collectFrameMessages(*props, &clip.frameMessages);
+    }
+    if (clip.index >= 0 && !clip.filename.empty()) {
+        out->push_back(clip);
+    }
+}
+
+void collectClips(const ScriptBlock& block, const std::string& scriptPath, const std::string& skeleton,
+                  const std::string& dbRoot, std::vector<CharacterAnimClip>* out) {
+    for (std::size_t i = 0; i < block.children.size(); ++i) {
+        const ScriptBlock& child = block.children[i];
+        if (child.name != "animation") {
+            continue;
         }
+        const ScriptBlock* props = findChild(child, "properties");
+        if (props == 0 && i + 1 < block.children.size() &&
+            block.children[i + 1].name == "properties") {
+            props = &block.children[i + 1];
+        }
+        collectOneClip(child, props, scriptPath, skeleton, dbRoot, out);
     }
     if (block.name == "revert") {
         return;

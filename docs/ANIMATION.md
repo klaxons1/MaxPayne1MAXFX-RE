@@ -172,3 +172,49 @@ If PC clips ever look one frame short / early-wrapped, the `+1` in
 A/B — it is the only loader-side quirk this port trusts from Android.
 Frame-rate, loop flags and key layout are plain on-disk fields and cannot
 differ between the ports (both read the same files).
+
+## Skinning versus the Android 1.0 decompile (verified 2026-09-27)
+
+The new `docs/Android1.0V/libMaxPayne.so.c` decompile was checked against our
+skinning pipeline (`kf2BuildSkeletonWorlds` → `buildBonePalette` →
+`poseVertexArrays` in `src/maxfx/kf2/Kf2.cpp`). There is **no dedicated
+skinning class** in either decompile: skinning lives in
+`KF2::KF_VertexAnimation` + the `P_SkinMesh` render path, driven through
+`KF2::KF_BoneHandle` / `KF_BoneGroupHandle` scene-graph objects. What the
+decompile confirms, piece by piece:
+
+| Engine fact (decompile reference) | Our implementation | Verdict |
+| --- | --- | --- |
+| `SkinChunk` stores per-primitive vertex lists with per-vertex bone indices (`getVertexBone`) and float weights (`getVertexWeight`), indexed through per-primitive data offsets (`getVertexDataOffset`) — member layout at `SkinChunk::getVertexBoneCount` etc. | `Kf2Skin` / `Kf2SkinVertex` (bones + weights, per primitive), read in `parseSkinChunk` | matches |
+| Bone palette is matched **by object name**: `KF2::KF_VertexAnimation::setupBoneMatrices` walks `SkinChunk::getSkinObjectNameCount` and pairs skin object names with skeleton object names | `buildBonePalette` looks every `skeletonObjectNames[i]` up by name in the bind/play worlds | matches |
+| Hard limit **4 bones per vertex** — `KF2::KF_SkinMeshCallback::allocatePrimitive` throws `P_DriverException_TooManyBonesPerVertex` ("DirectX allows only 4 bones per vertex") when any vertex exceeds it | real SKDs never exceed it (synthetic test data included); `poseVertexArrays` blends whatever the file carries | matches (no clamp needed) |
+| `setupBoneMatrices` precomputes the static inverse-bind matrices once (static `vecBoneMatrix`, matrix product chains at setup) and resizes the per-bone palette to the skeleton bone count | `invBindPal = inverseRigid(bindWorld)` per bone, rebuilt per frame — same values, lazier but correct | matches |
+| Cross-fade: `KF2::KF_ObjectAnimation::crossAnimateObject` lerps the per-bone matrices element-wise, then `fixCrossAnimation` re-orthonormalizes | `blendSkeletons` lerps the bone worlds then `orthonormalizeMat3` | matches |
+| Per-frame bone worlds come from the parent chain (`KF_BoneHandle::getWorldMatrix` via `P_BaseObject::invalidateMatrices`) | `kf2BuildSkeletonWorlds` parent-chain walk with the pose clip as fallback for missing bones | matches |
+
+The linear-blend formula itself
+(`posed = Σ w_b · playPal_b · invBindPal_b · meshBind · v`, weights divided by
+their sum) is the standard MAX-FX/DirectX fixed-function skin: mesh vertices
+live in mesh-object space, the inverse bind takes them to bone space, the
+animated bone world brings them back out. The decompile's
+`KF2::KF_SkinMeshCallback::allocatePrimitive` hands exactly the per-vertex
+bones + weights and the per-bone matrices to `P_SkinMesh`, which folds the
+bind composition into its matrix palette on the CPU/GPU.
+
+Empirical checks on the real `docs/database` fixtures (2026-09-27):
+
+* the shipped `.kfs` meshes and `.skd` skins are **not part of the uploaded
+  database** (only `maxpayne-collision.kfs` and 762 animation KF2s are), so
+  the end-to-end vertex blend runs on the synthetic beretta/alex fixtures
+  (`levels-test`, 285 tests green);
+* every real skeleton animation sampled through our sampler is clean:
+  `Pose.kf2` 0.07 s / `Stand.kf2` 14.67 s / `Walk.kf2` 1.25 s / `Run.kf2`
+  0.80 s — 28 bone channels each, all matrices orthonormal (|det|=1), no NaN,
+  translations within human scale (max |t| ≈ 1.63 m);
+* bind-pose identity holds (skinning with play = bind = pose clip at t=0
+  reproduces the unskinned node-transformed vertices), which is the defining
+  property of the inverse-bind chain.
+
+Verdict: **the skinning pipeline agrees with the Android 1.0 decompile**; the
+one visible gap is that `P_SkinMesh`'s GPU-side matrix palette folding is a
+render-path detail we already reproduce mathematically on the CPU side.

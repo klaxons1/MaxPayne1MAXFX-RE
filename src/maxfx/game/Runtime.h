@@ -211,6 +211,15 @@ struct GameRuntime {
     // In-engine cutscene state + the camera-path catalog.
     CinematicState cine;
     CameraPathCatalog cameraPaths;
+    // Global game speed (GM_ChangeGameSpeed / GM_EnableBulletTime): the
+    // simulation advances on scaled time; cinematic scripts drive it to
+    // 0.01..0.3 for slow motion and back to 1.0.
+    float gameSpeed;
+    float gameSpeedTarget;
+    float gameSpeedStart;    // ramp origin (GM_ChangeGameSpeed lerp)
+    float gameSpeedElapsed;  // ramp progress in real seconds
+    float gameSpeedSeconds;  // transition time to the target, 0 = snap
+    bool bulletTime;
 
     GameRuntime();
 
@@ -226,6 +235,9 @@ struct GameRuntime {
     void setLook(float yawView, float pitch);
     void tickPlayer(float dt, bool forward, bool back, bool left, bool right, bool jump, bool sprint,
                     CollisionWorld& world, bool descend = false);
+    // Move gameSpeed toward gameSpeedTarget (GM_ChangeGameSpeed ramp) on
+    // REAL time, not scaled time.
+    void tickGameSpeed(float realDt);
     void tickDoors(float dt, const Level& level);
 
     // X_LevelRuntimeDynamicObject pose: the MeshAnimation interpolates the
